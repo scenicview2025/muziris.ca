@@ -10,11 +10,17 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: #F8F8F2;
       color: #2C3E50;
+    }
+
+    /* Center hero card */
+    .hero {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      padding: 20px;
     }
+
     .card {
       text-align: center;
       padding: 40px 28px;
@@ -23,12 +29,19 @@
       box-shadow: 0 18px 45px rgba(0,0,0,0.08);
       background: #FFFFFF;
     }
+
+    .logo {
+      width: 140px;
+      margin-bottom: 20px;
+    }
+
     h1 {
       font-size: 28px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       margin-bottom: 8px;
     }
+
     h2 {
       font-size: 18px;
       font-weight: 500;
@@ -36,64 +49,153 @@
       margin-top: 0;
       margin-bottom: 20px;
     }
+
     p {
       line-height: 1.6;
       margin: 0 0 16px;
     }
+
     .tagline {
       font-style: italic;
       color: #A94442;
       margin-bottom: 20px;
     }
+
     .highlight {
       color: #D4AF37;
       font-weight: 600;
     }
+
     .contact {
       margin-top: 20px;
       font-size: 14px;
       color: #555;
     }
+
     .contact a {
       color: #2C3E50;
       text-decoration: none;
       font-weight: 600;
     }
+
     .contact a:hover {
       text-decoration: underline;
     }
+
     .badge {
       display: inline-block;
       padding: 4px 10px;
       border-radius: 999px;
-      background: #2C3E50;
-      color: #F8F8F2;
+      background: #D4AF37;
+      color: #2C3E50;
       font-size: 11px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 16px;
     }
+
+    /* Section styling */
+    section {
+      padding: 60px 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    section h2 {
+      color: #2C3E50;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    ul {
+      line-height: 1.8;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #7F8C8D;
+    }
   </style>
 </head>
+
 <body>
-  <div class="card">
-    <div class="badge">Muziris International</div>
-    <h1>Coming Soon</h1>
-    <h2>Where ancient trade meets modern global business</h2>
-    <p class="tagline">
-      Inspired by the legendary port of <span class="highlight">Muziris</span>,  
-      we connect India and Canada through trust-based sourcing and trade.
-    </p>
-    <p>
-      Our full website is currently under development.  
-      We’re building a platform that reflects our heritage, our partners,  
-      and our commitment to clear, human, long-term relationships.
-    </p>
-    <div class="contact">
-      For enquiries and collaborations:<br>
-      📧 <a href="mailto:info@muziris.ca">info@muziris.ca</a><br>
-      📍 Based in Canada, rooted in India
+
+  <!-- HERO CARD -->
+  <div class="hero">
+    <div class="card">
+
+      <!-- LOGO (EDIT THIS FILE NAME) -->
+      <img src="logo.png" alt="Muziris International Logo" class="logo">
+
+      <div class="badge">Muziris International</div>
+
+      <h1>Coming Soon</h1>
+      <h2>Where ancient trade meets modern global business</h2>
+
+      <p class="tagline">
+        Inspired by the legendary port of <span class="highlight">Muziris</span>,  
+        we connect India and Canada through trust-based sourcing and trade.
+      </p>
+
+      <p>
+        Our full website is currently under development.  
+        We’re building a platform that reflects our heritage, our partners,  
+        and our commitment to clear, human, long-term relationships.
+      </p>
+
+      <div class="contact">
+        For enquiries and collaborations:<br>
+        📧 <a href="mailto:info@muziris.ca">info@muziris.ca</a><br>
+        📱 <a href="https://wa.me/YOURNUMBER">WhatsApp us</a><br>
+        📍 Based in Canada, rooted in India
+      </div>
+
     </div>
   </div>
+
+  <!-- ABOUT SECTION -->
+  <section>
+    <h2>About Us</h2>
+    <p>
+      Muziris International connects India and Canada through trust-based sourcing, 
+      heritage-rooted trade, and long-term partnerships. Inspired by the ancient port of Muziris, 
+      we bring clarity, professionalism, and human connection to global commerce.
+    </p>
+  </section>
+
+  <!-- SERVICES SECTION -->
+  <section>
+    <h2>Services</h2>
+    <ul>
+      <li>Multi-category sourcing from India</li>
+      <li>Supplier verification and onboarding</li>
+      <li>Trade facilitation and documentation</li>
+      <li>Buyer–supplier relationship management</li>
+      <li>Market entry support for Indian manufacturers</li>
+    </ul>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section>
+    <h2>Contact</h2>
+    <p>Email: <a href="mailto:info@muziris.ca">info@muziris.ca</a></p>
+    <p>WhatsApp: <a href="https://wa.me/YOURNUMBER">Chat with us</a></p>
+
+    <!-- CONTACT FORM (EDIT YOUR EMAIL BELOW) -->
+    <form action="https://formsubmit.co/YOUR_EMAIL" method="POST" style="max-width:400px; margin:auto;">
+      <input type="text" name="name" placeholder="Your Name" required style="width:100%; padding:10px; margin-bottom:10px;">
+      <input type="email" name="email" placeholder="Your Email" required style="width:100%; padding:10px; margin-bottom:10px;">
+      <textarea name="message" placeholder="Your Message" required style="width:100%; padding:10px; margin-bottom:10px;"></textarea>
+      <button type="submit" style="padding:12px 20px; background:#2C3E50; color:white; border:none; cursor:pointer;">Send</button>
+    </form>
+  </section>
+
+  <footer>
+    © 2026 Muziris International — All Rights Reserved
+  </footer>
+
 </body>
 </html>
