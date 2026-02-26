@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Muziris | Coming Soon</title>
+  <link rel="icon" type="image/png" href="MC.png">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -293,8 +294,8 @@
 <body>
 
   <div class="video-container">
-    <video autoplay loop muted playsinline>
-      <source src="muziris-bg.mp4?v=update1" type="video/mp4">
+    <video id="hero-video" autoplay loop muted playsinline defaultMuted>
+      <source src="https://muziris.ca/muziris-bg.mp4.mp4" type="video/mp4">
     </video>
   </div>
   <div class="overlay"></div>
@@ -358,6 +359,22 @@
     </footer>
 
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var v = document.getElementById("hero-video");
+      if (v) {
+        v.muted = true; // Double-enforce mute
+        var playPromise = v.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function(error) {
+            console.log("Browser tried to block autoplay. Forcing start...");
+            v.play();
+          });
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>
