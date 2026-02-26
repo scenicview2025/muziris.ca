@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Muziris | Coming Soon</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
@@ -24,40 +24,34 @@
       scroll-behavior: smooth;
     }
 
-    /* --- CINEMATIC VIDEO BACKGROUND --- */
-    .video-container {
+    /* --- MOBILE-FIXED CINEMATIC VIDEO BACKGROUND --- */
+    .video-container, .overlay {
       position: fixed;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
-      height: 100vh;
-      z-index: -2;
+      height: 100%;
       overflow: hidden;
+    }
+
+    .video-container {
+      z-index: -2;
       background: #000;
+    }
+
+    .overlay {
+      z-index: -1;
+      background: radial-gradient(circle at center, rgba(7, 9, 13, 0.6) 0%, rgba(7, 9, 13, 0.95) 100%);
     }
     
     .video-container video {
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       opacity: 0.8;
-    }
-
-    /* Radial Vignette Overlay for Depth */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background: radial-gradient(circle at center, rgba(7, 9, 13, 0.6) 0%, rgba(7, 9, 13, 0.95) 100%);
-      z-index: -1;
+      pointer-events: none; /* Stops mobile users from accidentally clicking the video */
     }
 
     /* --- LAYOUT & TYPOGRAPHY --- */
