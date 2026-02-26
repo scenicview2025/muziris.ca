@@ -2,200 +2,261 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Muziris International</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris International | Coming Soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    :root {
+      --gold: #D4AF37;
+      --dark-gold: #b89225;
+      --bg-dark: #0b0e14;
+      --text-light: #e0e0e0;
+    }
+    
+    body, html {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background-color: #F8F8F2;
-      color: #2C3E50;
+      padding: 0;
+      font-family: 'Lato', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
-    /* Center hero card */
-    .hero {
+    /* --- VIDEO BACKGROUND --- */
+    .video-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: -2;
+      overflow: hidden;
+      background: #000;
+    }
+    
+    .video-container video {
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+    }
+
+    /* Dark overlay so text is readable over the video */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(11, 14, 20, 0.85); /* Adjust 0.85 to make video lighter or darker */
+      z-index: -1;
+    }
+
+    /* --- LAYOUT & TYPOGRAPHY --- */
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .card {
+      padding: 60px 20px;
+      max-width: 800px;
+      margin: 0 auto;
       text-align: center;
-      padding: 40px 28px;
-      max-width: 520px;
-      border-radius: 16px;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.08);
-      background: #FFFFFF;
     }
 
-    h1 {
-      font-size: 28px;
-      letter-spacing: 0.08em;
+    h1.brand-title {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 3rem;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
-    h2 {
-      font-size: 18px;
-      font-weight: 500;
-      color: #7F8C8D;
+    h2.coming-soon {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
       margin-top: 0;
-      margin-bottom: 20px;
-    }
-
-    p {
-      line-height: 1.6;
-      margin: 0 0 16px;
+      color: #fff;
     }
 
     .tagline {
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: var(--gold);
       font-style: italic;
-      color: #A94442;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
 
-    .highlight {
-      color: #D4AF37;
-      font-weight: 600;
-    }
-
-    .contact {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #555;
-    }
-
-    .contact a {
-      color: #2C3E50;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .contact a:hover {
-      text-decoration: underline;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #D4AF37;
-      color: #2C3E50;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    /* Section styling */
-    section {
-      padding: 60px 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    section h2 {
-      color: #2C3E50;
-      font-size: 24px;
-      margin-bottom: 16px;
-    }
-
-    ul {
+    p {
       line-height: 1.8;
+      font-size: 1.05rem;
+      margin-bottom: 20px;
+      color: #ccc;
     }
 
-    /* Footer */
+    /* --- REGISTRATION BUTTON --- */
+    .cta-button {
+      display: inline-block;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 16px 45px;
+      background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%);
+      color: #000;
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-weight: bold;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: var(--gold);
+      margin: 40px auto;
+    }
+
+    /* --- SECTIONS --- */
+    .section-title {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    ul.services-list {
+      list-style-type: none;
+      padding: 0;
+      text-align: left;
+      display: inline-block;
+    }
+
+    ul.services-list li {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      position: relative;
+      padding-left: 25px;
+    }
+
+    ul.services-list li::before {
+      content: '✦';
+      color: var(--gold);
+      position: absolute;
+      left: 0;
+      font-size: 1rem;
+    }
+
+    /* --- CONTACT BOX --- */
+    .contact-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 30px;
+      border-radius: 8px;
+      margin-top: 40px;
+      width: 100%;
+      box-sizing: border-box;
+      backdrop-filter: blur(5px);
+    }
+
+    .contact-link {
+      display: inline-block;
+      margin: 10px 15px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 2px;
+      transition: color 0.3s ease;
+    }
+
+    .contact-link:hover {
+      color: var(--gold);
+    }
+
     footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-      color: #7F8C8D;
+      margin-top: 60px;
+      font-size: 0.85rem;
+      color: #666;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 600px) {
+      h1.brand-title { font-size: 2.2rem; }
+      .tagline { font-size: 1rem; }
+      ul.services-list li { font-size: 1rem; }
+      .cta-button { font-size: 0.9rem; padding: 14px 30px; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- HERO CARD -->
-  <div class="hero">
-    <div class="card">
-
-      <!-- LOGO WILL GO HERE LATER -->
-      <!-- Example: <img src="logo.png" class="logo"> -->
-
-      <div class="badge">Muziris International</div>
-
-      <h1>Coming Soon</h1>
-      <h2>Where ancient trade meets modern global business</h2>
-
-      <p class="tagline">
-        Inspired by the legendary port of <span class="highlight">Muziris</span>,  
-        we connect India and Canada through trust-based sourcing and trade.
-      </p>
-
-      <p>
-        Our full website is currently under development.  
-        We’re building a platform that reflects our heritage, our partners,  
-        and our commitment to clear, human, long-term relationships.
-      </p>
-
-      <div class="contact">
-        For enquiries and collaborations:<br>
-        📧 <a href="mailto:info@muziris.ca">info@muziris.ca</a><br>
-
-        <!-- EDIT YOUR WHATSAPP NUMBER HERE -->
-        📱 <a href="https://wa.me/YOURNUMBER">WhatsApp us</a><br>
-
-        📍 Based in Canada, rooted in India
-      </div>
-
-    </div>
+  <div class="video-container">
+    <video autoplay loop muted playsinline>
+      <source src="muziris-bg.mp4" type="video/mp4">
+    </video>
   </div>
+  <div class="overlay"></div>
 
-  <!-- ABOUT SECTION -->
-  <section>
-    <h2>About Us</h2>
-    <p>
-      Muziris International connects India and Canada through trust-based sourcing, 
-      heritage-rooted trade, and long-term partnerships. Inspired by the ancient port of Muziris, 
-      we bring clarity, professionalism, and human connection to global commerce.
-    </p>
-  </section>
+  <div class="content-wrapper">
+    
+    <h1 class="brand-title">Muziris International</h1>
+    <h2 class="coming-soon">Coming Soon</h2>
+    <div class="tagline">Where ancient trade meets modern global business.</div>
 
-  <!-- SERVICES SECTION -->
-  <section>
-    <h2>Services</h2>
-    <ul>
+    <p>Inspired by the legendary port of Muziris, we connect India and Canada through trust-based sourcing and trade.</p>
+    <p>Our full website is currently under development. We are building a platform that reflects our heritage, our partners, and our commitment to clear, human, long-term relationships.</p>
+
+    <a href="https://join.muziris.ca/home" class="cta-button">Join Our Network</a>
+
+    <div class="divider"></div>
+
+    <h3 class="section-title">About Us</h3>
+    <p>Muziris International connects India and Canada through trust-based sourcing, heritage-rooted trade, and long-term partnerships. Inspired by the ancient port of Muziris, we bring clarity, professionalism, and human connection to global commerce.</p>
+
+    <div class="divider"></div>
+
+    <h3 class="section-title">Our Services</h3>
+    <ul class="services-list">
       <li>Multi-category sourcing from India</li>
       <li>Supplier verification and onboarding</li>
       <li>Trade facilitation and documentation</li>
       <li>Buyer–supplier relationship management</li>
       <li>Market entry support for Indian manufacturers</li>
     </ul>
-  </section>
 
-  <!-- CONTACT SECTION -->
-  <section>
-    <h2>Contact</h2>
-    <p>Email: <a href="mailto:info@muziris.ca">info@muziris.ca</a></p>
+    <div class="contact-box">
+      <h3 class="section-title" style="font-size: 1.4rem; margin-top: 0;">For Enquiries & Collaborations</h3>
+      <p style="margin-bottom: 25px;">📍 Based in Canada, rooted in India</p>
+      
+      <a href="mailto:info@muziris.ca" class="contact-link">📧 info@muziris.ca</a>
+      <a href="https://wa.me/YOUR_PHONE_NUMBER" class="contact-link">📱 Chat on WhatsApp</a> 
+      <a href="https://join.muziris.ca/home" class="contact-link">🌐 Register Here</a>
+    </div>
 
-    <!-- EDIT YOUR WHATSAPP NUMBER HERE TOO -->
-    <p>WhatsApp: <a href="https://wa.me/YOURNUMBER">Chat with us</a></p>
+    <footer>
+      &copy; 2026 Muziris International — All Rights Reserved
+    </footer>
 
-    <!-- CONTACT FORM (EDIT YOUR EMAIL BELOW) -->
-    <form action="https://formsubmit.co/YOUR_EMAIL" method="POST" style="max-width:400px; margin:auto;">
-      <input type="text" name="name" placeholder="Your Name" required style="width:100%; padding:10px; margin-bottom:10px;">
-      <input type="email" name="email" placeholder="Your Email" required style="width:100%; padding:10px; margin-bottom:10px;">
-      <textarea name="message" placeholder="Your Message" required style="width:100%; padding:10px; margin-bottom:10px;"></textarea>
-      <button type="submit" style="padding:12px 20px; background:#2C3E50; color:white; border:none; cursor:pointer;">Send</button>
-    </form>
-  </section>
-
-  <footer>
-    © 2026 Muziris International — All Rights Reserved
-  </footer>
+  </div>
 
 </body>
 </html>
