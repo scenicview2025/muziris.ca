@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Supplier Portal</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --bronze: #b89225; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+      --alert: #ff5252; 
+    }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    
+    .view-section { display: none; width: 100%; min-height: 100vh; overflow-y: auto; }
+    
+    /* TOP NAVIGATION */
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+    .back-home:hover { color: #fff; }
+
+    #view-verify {
+      display: flex; align-items: center; justify-content: center;
+      background: url('https://images.unsplash.com/photo-1605337030588-468f3a39e80e?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+      position: relative;
+    }
+    #view-verify::before { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(11, 14, 20, 0.85); }
+    
+    #view-portal { height: auto; padding: 40px 20px; box-sizing: border-box; }
+
+    .card { position: relative; z-index: 2; background: var(--slate); width: 100%; max-width: 380px; padding: 40px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; }
+    h1.brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
+    .subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #666; margin-bottom: 30px; }
+    
+    .verify-input { width: 100%; padding: 14px; background: #000; border: 1px solid #333; border-radius: 4px; color: #fff; font-size: 16px; text-align: center; box-sizing: border-box; outline: none; transition: border 0.3s; letter-spacing: 1px; margin-bottom: 15px; }
+    .verify-input:focus { border-color: var(--gold); }
+    .gold-btn { width: 100%; margin-top: 15px; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; }
+    .gold-btn:hover { transform: translateY(-2px); }
+    
+    #verify-result { margin-top: 20px; min-height: 20px; font-size: 12px; }
+    .success-text { color: var(--gold); font-weight: bold; }
+
+    .container { max-width: 950px; margin: 0 auto; background: var(--slate); padding: 50px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative; }
+    .container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--gold), var(--bronze)); border-radius: 8px 8px 0 0; }
+    h2 { color: var(--gold); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; font-weight: 300; font-family: 'Cinzel', serif; }
+    .badge { background: rgba(212, 175, 55, 0.15); color: var(--gold); padding: 6px 12px; border-radius: 4px; font-size: 11px; letter-spacing: 1px; display: inline-block; margin-bottom: 30px; border: 1px solid rgba(212, 175, 55, 0.3); }
+    
+    .bulk-bar { background: rgba(255, 255, 255, 0.05); border: 1px dashed #444; padding: 10px; margin-bottom: 25px; text-align: center; font-size: 12px; color: #aaa; border-radius: 4px; }
+    .bulk-link { color: var(--gold); text-decoration: underline; cursor: pointer; font-weight: bold; margin: 0 10px; }
+
+    .progress-container { margin-bottom: 40px; }
+    .progress-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); width: 33.33%; transition: width 0.4s ease; }
+    .step-indicator { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    .step-active { color: var(--gold); font-weight: bold; }
+    
+    .form-step { display: none; animation: fadeIn 0.5s ease; }
+    .form-step.active { display: block; }
+    h3.step-title { color: white; font-family: 'Cinzel', serif; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 25px; }
+
+    label { display: block; margin-top: 25px; margin-bottom: 8px; font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+    .sub-label { display: block; font-size: 11px; color: #666; margin-bottom: 10px; margin-top: -5px; text-transform: none; font-style: italic; }
+    input, select, textarea { width: 100%; padding: 14px; background: var(--void); border: 1px solid #333; color: var(--mist); border-radius: 4px; box-sizing: border-box; transition: all 0.3s ease; font-family: 'Lato', sans-serif; }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
+    .id-field { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid #444; font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold; }
+
+    .checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 4px; border: 1px solid #333; }
+    .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--mist); cursor: pointer; }
+    .checkbox-item input { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; }
+
+    .matrix-box { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 4px; border: 1px solid #333; overflow-x: auto; }
+    table { width: 100%; min-width: 850px; text-align: left; border-collapse: separate; border-spacing: 0 10px; }
+    th { color: #666; font-size: 10px; text-transform: uppercase; padding: 0 10px; letter-spacing: 1px; }
+    td { vertical-align: top; padding: 0 5px; }
+    td input, td select { font-size: 13px; background: #0f1219; border: 1px solid #2a2a2a; margin-bottom: 0; }
+    td input[type="file"] { font-size: 10px; padding: 8px; border: 1px dashed #444; width: 100%; }
+    
+    .btn-group { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid #333; padding-top: 25px; }
+    .btn-prev { background: transparent; color: #888; border: 1px solid #444; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .btn-prev:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-next { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .btn-next:hover { background: var(--bronze); }
+    
+    .add-btn { width: auto; background: transparent; border: 1px solid #444; color: #888; padding: 8px 15px; font-size: 11px; margin-top: 15px; box-shadow: none; cursor: pointer; transition: 0.3s; border-radius: 4px; }
+    .add-btn:hover { border-color: var(--gold); color: var(--gold); transform: none; }
+
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 10px; }
+    .image-box { background: #0f1219; padding: 15px; border: 1px solid #333; border-radius: 4px; text-align: center; }
+    .image-label { font-size: 10px; color: var(--gold); margin-bottom: 5px; display: block; text-transform: uppercase; }
+    .image-box input { padding: 5px; font-size: 11px; }
+
+    #loading { display: none; text-align: center; color: var(--gold); margin-top: 20px; letter-spacing: 1px; font-size: 12px; }
+    #success-msg { display: none; text-align: center; color: var(--gold); margin-top: 50px; animation: fadeIn 0.5s; }
+    
+    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+    .alert-box { background: var(--slate); border: 1px solid var(--alert); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .alert-box h3 { color: var(--alert); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
+    .alert-box p { font-size: 14px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
+    .alert-btn { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .alert-btn:hover { background: var(--alert); color: #000; }
+
+    #listings-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; }
+    .modal-box { background: var(--slate); width: 90%; max-width: 600px; max-height: 80vh; padding: 25px; border-radius: 8px; border: 1px solid var(--gold); overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 15px; right: 20px; color: var(--gold); font-size: 24px; cursor: pointer; font-weight: bold; }
+    .listing-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #333; transition: background 0.2s; cursor: pointer; }
+    .listing-item:hover { background: #252a33; border-left: 3px solid var(--gold); }
+    .listing-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #444; background: #000; }
+    .listing-info { flex: 1; text-align: left; }
+    .listing-name { font-size: 14px; font-weight: bold; color: #fff; }
+    .listing-cat { font-size: 11px; color: var(--gold); text-transform: uppercase; }
+    .edit-hint { font-size: 10px; color: #666; font-style: italic; }
+
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @media (max-width: 900px) {
+      .top-nav { top: 20px; left: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="custom-alert">
+    <div class="alert-box">
+      <h3 id="alert-title">Notice</h3>
+      <p id="alert-message">Message</p>
+      <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+    </div>
+  </div>
+
+  <div id="view-verify" class="view-section" style="display:flex;">
+    <div class="top-nav">
+      <a href="https://muziris.ca" class="back-home">← Back to Home</a>
+    </div>
+    <div class="card">
+      <h1 class="brand">Muziris</h1>
+      <div class="subtitle">Global Supplier Portal</div>
+      <input type="text" id="verify-id" class="verify-input" placeholder="ENTER ID" autocomplete="off">
+      <input type="password" id="verify-phone" class="verify-input" placeholder="LAST 4 DIGITS OF PHONE" maxlength="4" autocomplete="off" inputmode="numeric">
+      <button class="gold-btn" id="btn-verify" onclick="runVerification()">Verify Identity</button>
+      <div id="verify-result"></div>
+      
+      <div style="margin-top: 25px; font-size: 11px; color: #888;">
+        Not registered yet? <a href="https://muziris.ca/join" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold);">Apply Here</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-portal" class="view-section">
+    <div class="container">
+      <h2>Global Trade Portal</h2>
+      <div style="text-align:center;"><span class="badge">✓ VERIFIED SUPPLIER ACCESS</span></div>
+
+      <div class="bulk-bar">
+        Options: 
+        <span class="bulk-link" onclick="requestBulk()">Request CSV Format</span>
+        <span style="color:#444;">|</span>
+        <span class="bulk-link" onclick="viewListings()">View Active Listings</span>
+      </div>
+
+      <div id="success-msg">
+        <h1 style="font-family:'Cinzel', serif;">✓ SUCCESS</h1>
+        <p>Product successfully uploaded to the Global Ledger.</p>
+        <br>
+        <button class="gold-btn" onclick="resetForm()" style="width:auto; padding:10px 30px;">
+          + Add Another Product
+        </button>
+      </div>
+
+      <div id="form-container">
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+          </div>
+          <div class="step-indicator">
+            <span id="step1-ind" class="step-active">1. Basic Info</span>
+            <span id="step2-ind">2. Specifications</span>
+            <span id="step3-ind">3. Media Upload</span>
+          </div>
+        </div>
+
+        <form id="mainForm" onsubmit="event.preventDefault(); submitForm(this)">
+          
+          <div class="form-step active" id="step1">
+            <h3 class="step-title">Basic Information</h3>
+            <div style="display:flex; gap:20px;">
+              <div style="flex:1;">
+                <label>SUPPLIER ID</label>
+                <input type="text" id="sid" name="supplierId" class="id-field" readonly>
+              </div>
+              <div style="flex:1;">
+                <label>COMPANY</label>
+                <input type="text" id="cname" name="companyName" class="id-field" readonly>
+              </div>
+            </div>
+
+            <label>MAIN CATEGORY</label>
+            <select id="mainCat" name="category" onchange="loadSubCats()" required>
+              <option value="">Loading Categories...</option>
+            </select>
+            
+            <select id="subCat" name="subCategory" style="margin-top:10px;" required>
+              <option value="">Select Sub-Category</option>
+            </select>
+
+            <label>PRODUCT NAME</label>
+            <input type="text" id="pName" name="productName" placeholder="e.g. Premium Ceramic Coffee Mug" required>
+            
+            <div class="btn-group" style="justify-content: flex-end;">
+              <button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button>
+            </div>
+          </div>
+
+          <div class="form-step" id="step2">
+            <h3 class="step-title">Product Details & Pricing</h3>
+            <label>FACTORY SERVICES</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" id="svc1" name="service_privateLabel" value="Yes"> Private Labeling (OEM)</label>
+              <label class="checkbox-item"><input type="checkbox" id="svc2" name="service_customPack" value="Yes"> Custom Packaging</label>
+              <label class="checkbox-item"><input type="checkbox" id="svc3" name="service_odm" value="Yes"> Custom Design (ODM)</label>
+            </div>
+
+            <label>PACKAGING DETAILS</label>
+            <input type="text" id="packDetails" name="packagingDetails" placeholder="e.g. Polybag + Inner Box + Master Carton">
+
+            <label>DETAILED DESCRIPTION</label>
+            <textarea id="desc" name="description" rows="4" placeholder="Describe materials, certifications, origin..."></textarea>
+
+            <label>VOLUME PRICING & VARIANTS</label>
+            <span class="sub-label">Your pricing currency is auto-locked to: <strong id="ui-currency-text" style="color:var(--gold); font-size:13px;">...</strong></span>
+            
+            <div class="matrix-box">
+              <table id="priceTable">
+                <thead>
+                  <tr>
+                    <th style="width: 15%;">TYPE</th>
+                    <th style="width: 15%;">OPTION</th>
+                    <th style="width: 10%;">UNIT</th>
+                    <th style="width: 10%;">MIN QTY</th>
+                    <th style="width: 10%;">MAX QTY</th>
+                    <th style="width: 15%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
+                    <th style="width: 20%;">IMAGE (Specific)</th>
+                    <th style="width: 5%;"></th>
+                  </tr>
+                </thead>
+                <tbody id="priceBody"></tbody>
+              </table>
+              <button type="button" class="add-btn" onclick="addPriceRow()">+ ADD PRICE TIER</button>
+            </div>
+            <input type="hidden" name="pricingMatrix" id="pricingString">
+
+            <div class="btn-group">
+              <button type="button" class="btn-prev" onclick="prevStep(2)">Back</button>
+              <button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button>
+            </div>
+          </div>
+
+          <div class="form-step" id="step3">
+            <h3 class="step-title">Media Upload</h3>
+            <label>PRODUCT IMAGERY (Max 25MB)</label>
+            <span class="sub-label" style="color:#D4AF37">NOTE: Previous images are saved. Upload new files only if you want to replace them.</span>
+            <div class="image-grid">
+              <div class="image-box">
+                <span class="image-label">1. Hero (White BG) *</span>
+                <input type="file" name="img_hero" accept="image/*" >
+              </div>
+              <div class="image-box">
+                <span class="image-label">2. Lifestyle</span>
+                <input type="file" name="img_life" accept="image/*">
+              </div>
+              <div class="image-box">
+                <span class="image-label">3. Close-Up</span>
+                <input type="file" name="img_detail" accept="image/*">
+              </div>
+              <div class="image-box">
+                <span class="image-label">4. Packaging</span>
+                <input type="file" name="img_pack" accept="image/*">
+              </div>
+              <div class="image-box">
+                <span class="image-label">5. Extra</span>
+                <input type="file" name="img_extra" accept="image/*">
+              </div>
+            </div>
+            
+            <label>CATALOG (PDF)</label>
+            <input type="file" name="catalog" accept="application/pdf">
+
+            <div class="btn-group">
+              <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
+              <button type="submit" class="gold-btn" id="btn" style="width:auto; margin-top:0;">UPLOAD TO GLOBAL LEDGER</button>
+            </div>
+            <div id="loading">Encrypting & Uploading to Server...<br>Please wait...</div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="listings-modal">
+    <div class="modal-box">
+      <div class="modal-close" onclick="closeListings()">×</div>
+      <h3 style="color:var(--gold); text-align:center; margin-top:0;">MY ACTIVE LISTINGS</h3>
+      <div style="text-align:center; margin-bottom:15px; color:#666; font-size:11px;">
+        Click any product to load its data into the form for editing.
+      </div>
+      <div id="listings-content" style="margin-top:10px; color:#aaa; font-size:13px; text-align:center;">
+        Loading...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. YOUR BRAND NEW WEB APP URL IS HERE
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
+
+    var catData = {};
+
+    // 2. THE API BRIDGE
+    function fetchAPI(action, payload = {}) {
+      payload.action = action;
+      return fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }).then(r => r.json());
+    }
+
+    window.onload = function() {
+      document.getElementById('view-verify').style.display = 'flex';
+      document.getElementById('view-portal').style.display = 'none';
+      fetchAPI('getCategoryStructure').then(populateCats);
+      addPriceRow(); 
+    };
+
+    function customAlert(title, message) {
+      document.getElementById('alert-title').innerText = title;
+      document.getElementById('alert-message').innerText = message;
+      document.getElementById('custom-alert').style.display = 'flex';
+    }
+
+    function closeAlert() {
+      document.getElementById('custom-alert').style.display = 'none';
+    }
+
+    function runVerification() {
+      var id = document.getElementById('verify-id').value.trim();
+      var phone = document.getElementById('verify-phone').value.trim();
+      var resultBox = document.getElementById('verify-result');
+      
+      if(!id) { customAlert("Missing Info", "Please enter your ID."); return; }
+      if(!phone) { customAlert("Missing Info", "Please enter the last 4 digits of your phone number."); return; }
+      
+      resultBox.innerHTML = "<span style='color:#666'>Authenticating...</span>";
+      document.getElementById('btn-verify').disabled = true;
+
+      fetchAPI('verifySupplier', { id: id, phoneSuffix: phone })
+        .then(result => {
+          document.getElementById('btn-verify').disabled = false;
+          if(result && result.valid) {
+            resultBox.innerHTML = "<span class='success-text'>✓ Verified. Loading Portal...</span>";
+            document.getElementById('ui-currency-label').innerText = "(" + result.currency + ")";
+            document.getElementById('ui-currency-text').innerText = result.currency;
+            setTimeout(() => {
+              document.getElementById('view-verify').style.display = 'none';
+              document.getElementById('view-portal').style.display = 'block';
+              document.getElementById('sid').value = id;
+              document.getElementById('cname').value = result.company;
+            }, 800); 
+          } else {
+            resultBox.innerHTML = "";
+            customAlert("Access Denied", result.error || "Authentication failed.");
+          }
+        })
+        .catch(err => {
+          document.getElementById('btn-verify').disabled = false;
+          resultBox.innerHTML = "";
+          customAlert("Server Error", "Could not connect to the database.");
+        });
+    }
+
+    function nextStep(current) {
+      if(current === 1 && (!document.getElementById('mainCat').value || !document.getElementById('pName').value)) {
+        customAlert("Required Fields", "Please select a Category and enter a Product Name."); return;
+      }
+      document.getElementById('step' + current).classList.remove('active');
+      document.getElementById('step' + (current+1)).classList.add('active');
+      document.getElementById('progress').style.width = (((current + 1) / 3) * 100) + "%";
+      document.getElementById('step' + current + '-ind').classList.remove('step-active');
+      document.getElementById('step' + (current+1) + '-ind').classList.add('step-active');
+      window.scrollTo(0,0);
+    }
+
+    function prevStep(current) {
+      document.getElementById('step' + current).classList.remove('active');
+      document.getElementById('step' + (current-1)).classList.add('active');
+      document.getElementById('progress').style.width = (((current - 1) / 3) * 100) + "%";
+      document.getElementById('step' + current + '-ind').classList.remove('step-active');
+      document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
+      window.scrollTo(0,0);
+    }
+
+    function viewListings() {
+      var id = document.getElementById('sid').value;
+      document.getElementById('listings-modal').style.display = 'flex';
+      document.getElementById('listings-content').innerHTML = "Fetching data from server...";
+      fetchAPI('getSupplierInventory', { id: id }).then(renderListings);
+    }
+
+    function renderListings(items) {
+      var container = document.getElementById('listings-content');
+      if(!items || items.length === 0) { container.innerHTML = "No products found for this ID."; return; }
+      var html = "";
+      var seen = new Set();
+      items.forEach(function(item) {
+         if(!seen.has(item.name)) {
+           seen.add(item.name);
+           var img = item.image ? '<img src="' + item.image + '" class="listing-img">' : '<div class="listing-img"></div>';
+           html += '<div class="listing-item" onclick="startEdit(\'' + item.name.replace(/'/g, "\\'") + '\')">' + img + '<div class="listing-info"><div class="listing-name">' + item.name + '</div><div class="listing-cat">' + item.category + '</div><div class="edit-hint">Click to Load & Edit</div></div></div>';
+         }
+      });
+      container.innerHTML = html;
+    }
+    
+    function closeListings() { document.getElementById('listings-modal').style.display = 'none'; }
+
+    function startEdit(productName) {
+      var id = document.getElementById('sid').value;
+      document.getElementById('listings-content').innerHTML = "Loading product data...";
+      fetchAPI('getProductDetails', { supplierId: id, productName: productName }).then(fillForm);
+    }
+
+    function fillForm(data) {
+      if(!data) { customAlert("Error", "Error loading product data."); closeListings(); return; }
+      var g = data.general;
+      document.getElementById('pName').value = g.name;
+      document.getElementById('packDetails').value = g.packaging;
+      document.getElementById('desc').value = g.description;
+      document.getElementById('mainCat').value = g.category;
+      loadSubCats(); 
+      setTimeout(() => { document.getElementById('subCat').value = g.subCategory; }, 100);
+      document.getElementById('svc1').checked = (g.services.indexOf("Private Label") > -1);
+      document.getElementById('svc2').checked = (g.services.indexOf("Custom Pkg") > -1);
+      document.getElementById('svc3').checked = (g.services.indexOf("ODM") > -1);
+      var tbody = document.getElementById("priceBody");
+      tbody.innerHTML = ""; 
+      if(data.pricing && data.pricing.length > 0){ 
+        data.pricing.forEach(function(row) { addPriceRowFilled(row); }); 
+      } else { addPriceRow(); }
+      closeListings();
+      
+      document.getElementById('step3').classList.remove('active');
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step1').classList.add('active');
+      document.getElementById('progress').style.width = "33.33%";
+      document.getElementById('step3-ind').classList.remove('step-active');
+      document.getElementById('step2-ind').classList.remove('step-active');
+      document.getElementById('step1-ind').classList.add('step-active');
+      customAlert("Loaded", "Product Loaded for Editing.");
+    }
+    
+    function addPriceRow() {
+      var tbody = document.getElementById("priceBody");
+      var row = document.createElement("tr");
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      tbody.appendChild(row);
+    }
+
+    function addPriceRowFilled(data) {
+      var tbody = document.getElementById("priceBody");
+      var row = document.createElement("tr");
+      var isStd = (data.type === "Standard");
+      var optVal = isStd ? "Standard" : data.opt;
+      var optRead = isStd ? "readonly style='color:#666;'" : "";
+      
+      var tStd = data.type == "Standard" ? "selected" : "";
+      var tCol = data.type == "Color" ? "selected" : "";
+      var tSiz = data.type == "Size" ? "selected" : "";
+      var tSty = data.type == "Style" ? "selected" : "";
+      
+      var uPcs = data.unit == "Pcs" ? "selected" : "";
+      var uKg = data.unit == "Kg" ? "selected" : "";
+      var uTon = data.unit == "Tons" ? "selected" : "";
+      var uSet = data.unit == "Sets" ? "selected" : "";
+      var uMet = data.unit == "Meters" ? "selected" : "";
+
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="number" class="p-min" value="' + data.min + '"></td><td><input type="text" class="p-max" value="' + data.max + '"></td><td><input type="number" class="p-price" step="0.01" value="' + data.price + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      tbody.appendChild(row);
+    }
+
+    function checkVariant(select) {
+      var row = select.parentElement.parentElement;
+      var optInput = row.querySelector(".p-opt");
+      if(select.value === "Standard") { 
+        optInput.value = "Standard"; optInput.readOnly = true; optInput.style.color = "#666"; 
+      } else { 
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Red"; optInput.focus(); 
+      }
+    }
+
+    function requestBulk() {
+      var id = document.getElementById('sid').value;
+      var company = document.getElementById('cname').value;
+      var email = prompt("Please enter your email address to receive the Bulk Upload CSV format:", "");
+      if (email) {
+         if(email.indexOf("@") === -1) { customAlert("Error", "Invalid email address"); return; }
+         fetchAPI('submitBulkRequest', { id: id, company: company, email: email })
+           .then(resp => {
+             if(resp.result === "SUCCESS") { customAlert("Success", "Request received! We will email the CSV to " + email + " shortly."); } 
+             else { customAlert("Error", resp.result || resp.error); }
+           });
+      }
+    }
+
+    function populateCats(data) {
+      var select = document.getElementById("mainCat");
+      select.innerHTML = '<option value="">Select Category...</option>'; 
+      if (!data || data.Error) { select.innerHTML = '<option>Error loading categories</option>'; return; }
+      catData = data;
+      for (var key in data) {
+        var opt = document.createElement("option"); opt.value = key; opt.innerHTML = key;
+        select.appendChild(opt);
+      }
+    }
+
+    function loadSubCats() {
+      var main = document.getElementById("mainCat").value;
+      var sub = document.getElementById("subCat"); 
+      sub.innerHTML = '<option value="">Select Sub-Category</option>';
+      if (catData[main]) {
+        catData[main].forEach(item => {
+          var opt = document.createElement("option"); opt.value = item; opt.innerHTML = item;
+          sub.appendChild(opt);
+        });
+      }
+    }
+
+    const readFile = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve({ name: file.name, mimeType: file.type, data: e.target.result.split(',')[1] });
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const compressImage = (file, maxDim = 1200, quality = 0.8) => new Promise((resolve, reject) => {
+      if (!file.type.match(/image.*/)) return readFile(file).then(resolve).catch(reject); 
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(event) {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = function() {
+          let width = img.width; let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) { height = Math.round((height * maxDim) / width); width = maxDim; } 
+            else { width = Math.round((width * maxDim) / height); height = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL(file.type, quality);
+          resolve({ name: file.name, mimeType: file.type, data: dataUrl.split(',')[1] });
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+    });
+
+    async function submitForm(formElement) {
+      var dataList = [];
+      var rows = document.querySelectorAll("#priceBody tr");
+      for(var i=0; i<rows.length; i++) {
+          var tr = rows[i];
+          var item = {
+             type: tr.querySelector(".p-type").value,
+             opt: tr.querySelector(".p-opt").value,
+             unit: tr.querySelector(".p-unit").value,
+             min: tr.querySelector(".p-min").value,
+             max: tr.querySelector(".p-max").value || "Up",
+             price: tr.querySelector(".p-price").value
+          };
+          if(!item.opt) { customAlert("Missing Data", "Row " + (i+1) + ": Option missing."); return; }
+          if(item.min && item.price) { dataList.push(item); }
+      }
+      if(dataList.length === 0) { customAlert("Missing Data", "Please add at least one price tier."); return; }
+      
+      document.getElementById("btn").disabled = true;
+      document.getElementById("btn").innerHTML = "UPLOADING... (Compressing Images)";
+      document.getElementById("loading").style.display = "block";
+
+      try {
+        var formData = {
+           supplierId: formElement.supplierId.value,
+           companyName: formElement.companyName.value,
+           category: formElement.category.value,
+           subCategory: formElement.subCategory.value,
+           productName: formElement.productName.value,
+           packagingDetails: formElement.packagingDetails.value,
+           description: formElement.description.value,
+           service_privateLabel: document.getElementById('svc1').checked,
+           service_customPack: document.getElementById('svc2').checked,
+           service_odm: document.getElementById('svc3').checked,
+           pricingMatrix: JSON.stringify(dataList),
+           variantImages: []
+        };
+
+        if(formElement.img_hero.files[0]) formData.img_hero = await compressImage(formElement.img_hero.files[0]);
+        if(formElement.img_life.files[0]) formData.img_life = await compressImage(formElement.img_life.files[0]);
+        if(formElement.img_detail.files[0]) formData.img_detail = await compressImage(formElement.img_detail.files[0]);
+        if(formElement.img_pack.files[0]) formData.img_pack = await compressImage(formElement.img_pack.files[0]);
+        if(formElement.img_extra.files[0]) formData.img_extra = await compressImage(formElement.img_extra.files[0]);
+        if(formElement.catalog.files[0]) formData.catalog = await readFile(formElement.catalog.files[0]);
+
+        var variantInputs = document.getElementsByName("variantImages");
+        for(var j=0; j<variantInputs.length; j++) {
+           if(variantInputs[j].files[0]) {
+              var vFile = await compressImage(variantInputs[j].files[0]);
+              formData.variantImages.push(vFile);
+           } else { formData.variantImages.push(null); }
+        }
+
+        document.getElementById("btn").innerHTML = "UPLOADING TO SERVER...";
+        
+        fetchAPI('processForm', { data: formData })
+          .then(resp => {
+            if(resp.result === "SUCCESS") {
+              document.getElementById("form-container").style.display = "none";
+              document.getElementById("success-msg").style.display = "block";
+              document.getElementById("loading").style.display = "none";
+            } else {
+              customAlert("Upload Error", resp.result || resp.error);
+              document.getElementById("btn").disabled = false;
+              document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+              document.getElementById("loading").style.display = "none";
+            }
+          })
+          .catch(err => { throw err; });
+
+      } catch (err) {
+        customAlert("Connection Error", "Upload failed. Please check your internet.");
+        document.getElementById("btn").disabled = false;
+        document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+        document.getElementById("loading").style.display = "none";
+      }
+    }
+
+    function resetForm() {
+      var savedId = document.getElementById('sid').value;
+      var savedCo = document.getElementById('cname').value;
+
+      document.getElementById("success-msg").style.display = "none";
+      document.getElementById("form-container").style.display = "block";
+      document.getElementById("mainForm").reset();
+      document.getElementById("btn").disabled = false;
+      document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+      document.getElementById("priceBody").innerHTML = "";
+      addPriceRow();
+      
+      document.getElementById('step3').classList.remove('active');
+      document.getElementById('step1').classList.add('active');
+      document.getElementById('progress').style.width = "33.33%";
+      document.getElementById('step3-ind').classList.remove('step-active');
+      document.getElementById('step1-ind').classList.add('step-active');
+
+      document.getElementById('sid').value = savedId;
+      document.getElementById('cname').value = savedCo;
+    }
+  </script>
+
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  </body>
+</html>
