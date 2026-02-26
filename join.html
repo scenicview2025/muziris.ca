@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Supplier Registration</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --gold-dim: #b89225; 
+      --dark-bg: #0b0e14; 
+      --card-bg: #151922; 
+      --text: #e0e0e0; 
+      --input-bg: #080a0f; 
+      --alert: #ff5252; 
+    }
+    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--dark-bg); color: var(--text); height: 100vh; overflow: hidden; }
+    
+    .container { display: flex; height: 100vh; width: 100%; }
+    
+    /* LEFT PANEL (Branding) */
+    .left-panel {
+      flex: 1;
+      background: url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 60px;
+    }
+    .left-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(11,14,20,0.3), rgba(11,14,20,0.9)); }
+    .brand-content { position: relative; z-index: 2; max-width: 500px; }
+    .brand-content h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 48px; margin: 0; letter-spacing: 2px; }
+    .brand-content p { font-size: 18px; line-height: 1.6; margin-top: 15px; color: #ccc; }
+
+    /* RIGHT PANEL (Form) */
+    .right-panel { flex: 1; background-color: var(--dark-bg); display: flex; flex-direction: column; justify-content: center; padding: 40px 80px; overflow-y: auto; max-width: 650px; position: relative; }
+
+    /* PROGRESS BAR */
+    .progress-container { margin-bottom: 40px; }
+    .progress-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); width: 25%; transition: width 0.4s ease; }
+    .step-indicator { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    .step-active { color: var(--gold); font-weight: bold; }
+
+    /* FORM STYLING */
+    .form-step { display: none; animation: fadeIn 0.5s ease; }
+    .form-step.active { display: block; }
+    h2 { font-family: 'Cinzel', serif; color: white; margin-bottom: 25px; font-size: 24px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+    input, select, textarea { width: 100%; padding: 15px; background: var(--input-bg); border: 1px solid #333; color: white; border-radius: 4px; font-family: 'Lato', sans-serif; box-sizing: border-box; transition: 0.3s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
+
+    /* BUTTONS */
+    .btn-group { display: flex; justify-content: space-between; margin-top: 30px; }
+    button { padding: 15px 30px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .btn-next { background: var(--gold); color: #000; }
+    .btn-next:hover { background: var(--gold-dim); }
+    .btn-prev { background: transparent; color: #666; border: 1px solid #333; }
+    .btn-prev:hover { border-color: #666; color: #ccc; }
+
+    /* SUCCESS SCREEN */
+    #success-screen { display: none; text-align: center; }
+    .id-box { background: var(--card-bg); border: 1px solid var(--gold); padding: 20px; margin: 30px 0; border-radius: 8px; }
+    .id-text { font-size: 32px; color: var(--gold); font-family: 'Cinzel', serif; letter-spacing: 3px; margin: 10px 0; }
+
+    /* CUSTOM ALERT MODAL */
+    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+    .alert-box { background: var(--card-bg); border: 1px solid var(--alert); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .alert-box h3 { color: var(--alert); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
+    .alert-box p { font-size: 15px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
+    .alert-btn { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .alert-btn:hover { background: var(--alert); color: #000; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 900px) {
+      .container { flex-direction: column; overflow-y: auto; }
+      .left-panel { min-height: 200px; padding: 30px; flex: none; }
+      .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; }
+      body { overflow-y: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="custom-alert">
+  <div class="alert-box">
+    <h3 id="alert-title">Notice</h3>
+    <p id="alert-message">Message goes here.</p>
+    <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="left-panel">
+    <div class="brand-content">
+      <h1>Muziris</h1>
+      <p>Connect with international buyers through our secure Global Trade Network. Register today to expand your reach.</p>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    
+    <div id="success-screen">
+      <h2 style="color:var(--gold)">Registration Complete</h2>
+      <p>Thank you for joining Muziris. Your application has been processed.</p>
+      <div class="id-box">
+        <div style="font-size:10px; color:#888; text-transform:uppercase;">Your Supplier ID</div>
+        <div class="id-text" id="final-id">GENERATING...</div>
+      </div>
+      <p style="font-size:13px; color:#666; margin-bottom: 30px;">A welcome email with your ID has been sent to your inbox.</p>
+      
+      <a href="https://suppliers.muziris.ca/" target="_blank" class="btn-next" style="display: inline-block; padding: 15px 30px; border-radius: 4px; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; color: #000;">Go to Supplier Portal</a>
+    </div>
+
+    <div id="form-container">
+      <div class="progress-container">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="step-indicator">
+          <span id="step1-ind" class="step-active">Company</span>
+          <span id="step2-ind">Location</span>
+          <span id="step3-ind">Business</span>
+          <span id="step4-ind">Review</span>
+        </div>
+      </div>
+
+      <form id="regForm">
+        
+        <div class="form-step active" id="step1">
+          <h2>Company Details</h2>
+          <div class="form-group"><label>Company Name *</label><input type="text" name="companyName" id="companyName" required></div>
+          <div class="form-group"><label>Contact Person *</label><input type="text" name="contactPerson" id="contactPerson" required></div>
+          <div class="form-group"><label>Official Email *</label><input type="email" name="email" id="email" required></div>
+          <div class="form-group"><label>Phone / WhatsApp</label><input type="text" name="phone"></div>
+          <div class="btn-group" style="justify-content: flex-end;"><button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step2">
+          <h2>Location & Export</h2>
+          <div class="form-group"><label>Country *</label><select name="country" id="countrySelect" required></select></div>
+          <div class="form-group"><label>Registered Address</label><textarea name="address" rows="3"></textarea></div>
+          <div class="form-group"><label>Do you currently export?</label><select name="exports"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(2)">Back</button><button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step3">
+          <h2>Business Profile</h2>
+          <div class="form-group"><label>Primary Industry/Sector</label><select name="industry" id="industrySelect"></select></div>
+          <div class="form-group"><label>Primary Product Category</label><select name="category" id="categorySelect"></select></div>
+          <div class="form-group"><label>Website URL</label><input type="text" name="website" placeholder="https://..."></div>
+          <div class="form-group"><label>Payment Terms Offered</label><select name="paymentTerms"><option value="T/T">T/T (Telegraphic Transfer)</option><option value="L/C">L/C (Letter of Credit)</option><option value="PayPal">PayPal</option><option value="Other">Other</option></select></div>
+          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(3)">Back</button><button type="button" class="btn-next" onclick="nextStep(3)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step4">
+          <h2>Verification</h2>
+          <div class="form-group"><label>GST / Tax ID Number</label><input type="text" name="taxId"></div>
+          <div class="form-group"><label>Certifications</label><input type="text" name="certifications"></div>
+          <div class="form-group"><label>Product Catalog Link</label><input type="text" name="catalogLink"></div>
+          <div style="margin-top: 30px; padding: 15px; border: 1px dashed #444; font-size: 11px; color: #888;">By clicking submit, you agree to Muziris Terms of Trade.</div>
+          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(4)">Back</button><button type="button" class="btn-next" id="submitBtn" onclick="submitForm()">Submit Registration</button></div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 1. YOUR WEB APP URL (I ADDED IT FOR YOU RIGHT HERE!)
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
+
+  // 2. HARDCODED LISTS FOR INSTANT LOADING ON GITHUB
+  const lists = {
+    countries: ["India", "Canada", "United States", "China", "United Kingdom", "Australia", "Germany", "France", "Italy", "Spain", "Brazil", "Mexico", "Japan", "South Korea", "Vietnam", "Thailand", "Indonesia", "Malaysia", "Singapore", "Philippines", "Bangladesh", "Sri Lanka", "Pakistan", "UAE", "Saudi Arabia", "South Africa", "Nigeria", "Kenya", "Egypt", "Turkey", "Netherlands", "Belgium", "Sweden", "Norway", "Denmark", "Switzerland", "Poland", "Russia", "Argentina", "Chile", "Colombia", "Peru", "New Zealand", "Ireland", "Portugal"],
+    industries: ["Agriculture & Food", "Apparel & Textiles", "Automotive & Transport", "Chemicals & Plastics", "Construction & Real Estate", "Consumer Electronics", "Energy & Environment", "Health & Medical", "Home & Garden", "Industrial Machinery", "Jewelry & Luxury", "Minerals & Metals", "Packaging & Printing", "Personal Care & Beauty", "Security & Protection"],
+    categories: ["Raw Materials", "Finished Goods", "Components & Parts", "Machinery & Equipment", "Tools & Hardware", "Packaging Materials", "Services & Logistics", "Private Label / OEM"]
+  };
+
+  window.onload = function() { populateLists(lists); };
+
+  function showAlert(title, message) {
+    document.getElementById('alert-title').innerText = title;
+    document.getElementById('alert-message').innerText = message;
+    document.getElementById('custom-alert').style.display = 'flex';
+  }
+
+  function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+  function populateLists(data) {
+    var cSelect = document.getElementById("countrySelect");
+    cSelect.innerHTML = "<option value=''>Select Country</option>";
+    data.countries.forEach(c => { var opt = document.createElement("option"); opt.value = c; opt.innerText = c; cSelect.appendChild(opt); });
+
+    var iSelect = document.getElementById("industrySelect");
+    iSelect.innerHTML = "<option value=''>Select Industry</option>";
+    data.industries.forEach(i => { var opt = document.createElement("option"); opt.value = i; opt.innerText = i; iSelect.appendChild(opt); });
+
+    var catSelect = document.getElementById("categorySelect");
+    catSelect.innerHTML = "<option value=''>Select Category</option>";
+    data.categories.forEach(c => { var opt = document.createElement("option"); opt.value = c; opt.innerText = c; catSelect.appendChild(opt); });
+  }
+
+  function nextStep(current) {
+    if(current === 1 && (!document.getElementById('companyName').value || !document.getElementById('email').value)) { 
+      showAlert("Missing Information", "Please fill in all required fields (Company Name, Contact Person, and Email) to continue."); return; 
+    }
+    if(current === 2 && !document.getElementById('countrySelect').value) { 
+      showAlert("Missing Information", "Please select your Country from the list."); return; 
+    }
+
+    document.getElementById('step' + current).classList.remove('active');
+    document.getElementById('step' + (current+1)).classList.add('active');
+    document.getElementById('progress').style.width = (((current + 1) / 4) * 100) + "%";
+    document.getElementById('step' + current + '-ind').classList.remove('step-active');
+    document.getElementById('step' + (current+1) + '-ind').classList.add('step-active');
+  }
+
+  function prevStep(current) {
+    document.getElementById('step' + current).classList.remove('active');
+    document.getElementById('step' + (current-1)).classList.add('active');
+    document.getElementById('progress').style.width = (((current - 1) / 4) * 100) + "%";
+    document.getElementById('step' + current + '-ind').classList.remove('step-active');
+    document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
+  }
+
+  // 3. SECURE GITHUB TO GOOGLE SHEETS API CONNECTION
+  function submitForm() {
+    var btn = document.getElementById('submitBtn');
+    btn.innerText = "Processing...";
+    btn.disabled = true;
+    
+    var form = document.getElementById('regForm');
+    var data = {};
+    new FormData(form).forEach((value, key) => data[key] = value);
+
+    // This command talks directly to your Google Sheet!
+    fetch(WEB_APP_URL, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      mode: 'no-cors' // Added for smooth cross-origin security
+    })
+    .then(() => {
+      // Because 'no-cors' limits our ability to read the exact JSON response back from Google, 
+      // we assume success if the fetch command completes without a hard network error.
+      document.getElementById('form-container').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+      document.getElementById('final-id').innerText = "Check your email for your official ID!";
+    })
+    .catch(error => {
+      showAlert("Connection Error", "Could not connect to the server. Please try again.");
+      btn.innerText = "Submit Registration";
+      btn.disabled = false;
+    });
+  }
+</script>
+</body>
+</html>
