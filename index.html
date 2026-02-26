@@ -10,7 +10,6 @@
     :root {
       --gold: #D4AF37;
       --dark-gold: #b89225;
-      --bg-dark: #07090d;
       --text-light: #e8e8e8;
       --text-muted: #a0a0a0;
     }
@@ -19,7 +18,8 @@
       margin: 0;
       padding: 0;
       font-family: 'Lato', sans-serif;
-      background-color: var(--bg-dark);
+      /* FIX: Made background transparent so the video shines through! */
+      background-color: transparent; 
       color: var(--text-light);
       overflow-x: hidden;
       scroll-behavior: smooth;
@@ -38,12 +38,14 @@
     }
 
     .video-container {
-      z-index: -2;
+      /* FIX: Brought the video forward to level 0 */
+      z-index: 0; 
       background: #000;
     }
 
     .overlay {
-      z-index: -1;
+      /* FIX: Put the dark overlay on level 1 */
+      z-index: 1; 
       background: radial-gradient(circle at center, rgba(7, 9, 13, 0.6) 0%, rgba(7, 9, 13, 0.95) 100%);
     }
     
@@ -52,13 +54,14 @@
       height: 100%;
       object-fit: cover;
       opacity: 0.8;
-      pointer-events: none; /* Stops mobile users from accidentally clicking the video */
+      pointer-events: none;
     }
 
     /* --- LAYOUT & TYPOGRAPHY --- */
     .content-wrapper {
       position: relative;
-      z-index: 1;
+      /* FIX: Put the text on level 2 so it sits on top of everything */
+      z-index: 2; 
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -295,7 +298,7 @@
 
   <div class="video-container">
     <video autoplay loop muted playsinline>
-      <source src="muziris-bg.mp4.mp4" type="video/mp4">
+      <source src="https://muziris.ca/muziris-bg.mp4.mp4" type="video/mp4">
     </video>
   </div>
   <div class="overlay"></div>
