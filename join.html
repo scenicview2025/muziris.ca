@@ -31,8 +31,16 @@
       padding: 60px;
     }
     .left-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(11,14,20,0.3), rgba(11,14,20,0.9)); }
+    
+    /* TOP NAVIGATION */
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+    .back-home:hover { color: #fff; }
+
     .brand-content { position: relative; z-index: 2; max-width: 500px; }
-    .brand-content h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 48px; margin: 0; letter-spacing: 2px; }
+    .brand-content a { text-decoration: none; }
+    .brand-content h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 48px; margin: 0; letter-spacing: 2px; transition: 0.3s; }
+    .brand-content h1:hover { color: #fff; }
     .brand-content p { font-size: 18px; line-height: 1.6; margin-top: 15px; color: #ccc; }
 
     /* RIGHT PANEL (Form) */
@@ -78,7 +86,8 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 900px) {
       .container { flex-direction: column; overflow-y: auto; }
-      .left-panel { min-height: 200px; padding: 30px; flex: none; }
+      .left-panel { min-height: 250px; padding: 30px; flex: none; justify-content: center; }
+      .top-nav { top: 20px; left: 20px; }
       .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; }
       body { overflow-y: auto; }
     }
@@ -96,8 +105,11 @@
 
 <div class="container">
   <div class="left-panel">
+    <div class="top-nav">
+      <a href="https://muziris.ca" class="back-home">← Back to Home</a>
+    </div>
     <div class="brand-content">
-      <h1>Muziris</h1>
+      <a href="https://muziris.ca"><h1>Muziris</h1></a>
       <p>Connect with international buyers through our secure Global Trade Network. Register today to expand your reach.</p>
     </div>
   </div>
@@ -111,7 +123,7 @@
         <div style="font-size:10px; color:#888; text-transform:uppercase;">Your Supplier ID</div>
         <div class="id-text" id="final-id">GENERATING...</div>
       </div>
-      <p style="font-size:13px; color:#666; margin-bottom: 30px;">A welcome email with your ID has been sent to your inbox.</p>
+      <p style="font-size:13px; color:#666; margin-bottom: 30px;">A welcome email containing your Official ID and Login PIN has been sent to your inbox.</p>
       
       <a href="https://suppliers.muziris.ca/" target="_blank" class="btn-next" style="display: inline-block; padding: 15px 30px; border-radius: 4px; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; color: #000;">Go to Supplier Portal</a>
     </div>
@@ -134,7 +146,7 @@
           <div class="form-group"><label>Company Name *</label><input type="text" name="companyName" id="companyName" required></div>
           <div class="form-group"><label>Contact Person *</label><input type="text" name="contactPerson" id="contactPerson" required></div>
           <div class="form-group"><label>Official Email *</label><input type="email" name="email" id="email" required></div>
-          <div class="form-group"><label>Phone / WhatsApp</label><input type="text" name="phone"></div>
+          <div class="form-group"><label>Phone / WhatsApp *</label><input type="text" name="phone" id="phone" placeholder="+1 234 567 8900" required></div>
           <div class="btn-group" style="justify-content: flex-end;"><button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button></div>
         </div>
 
@@ -170,10 +182,10 @@
 </div>
 
 <script>
-  // 1. YOUR WEB APP URL (I ADDED IT FOR YOU RIGHT HERE!)
+  // WEB APP URL
   const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
 
-  // 2. HARDCODED LISTS FOR INSTANT LOADING ON GITHUB
+  // HARDCODED LISTS
   const lists = {
     countries: ["India", "Canada", "United States", "China", "United Kingdom", "Australia", "Germany", "France", "Italy", "Spain", "Brazil", "Mexico", "Japan", "South Korea", "Vietnam", "Thailand", "Indonesia", "Malaysia", "Singapore", "Philippines", "Bangladesh", "Sri Lanka", "Pakistan", "UAE", "Saudi Arabia", "South Africa", "Nigeria", "Kenya", "Egypt", "Turkey", "Netherlands", "Belgium", "Sweden", "Norway", "Denmark", "Switzerland", "Poland", "Russia", "Argentina", "Chile", "Colombia", "Peru", "New Zealand", "Ireland", "Portugal"],
     industries: ["Agriculture & Food", "Apparel & Textiles", "Automotive & Transport", "Chemicals & Plastics", "Construction & Real Estate", "Consumer Electronics", "Energy & Environment", "Health & Medical", "Home & Garden", "Industrial Machinery", "Jewelry & Luxury", "Minerals & Metals", "Packaging & Printing", "Personal Care & Beauty", "Security & Protection"],
@@ -205,8 +217,9 @@
   }
 
   function nextStep(current) {
-    if(current === 1 && (!document.getElementById('companyName').value || !document.getElementById('email').value)) { 
-      showAlert("Missing Information", "Please fill in all required fields (Company Name, Contact Person, and Email) to continue."); return; 
+    // ADDED PHONE TO VALIDATION
+    if(current === 1 && (!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value)) { 
+      showAlert("Missing Information", "Please fill in all required fields (Company Name, Contact Person, Email, and Phone) to continue."); return; 
     }
     if(current === 2 && !document.getElementById('countrySelect').value) { 
       showAlert("Missing Information", "Please select your Country from the list."); return; 
@@ -227,7 +240,7 @@
     document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
   }
 
-  // 3. SECURE GITHUB TO GOOGLE SHEETS API CONNECTION
+  // UPDATED API CONNECTION - CAN NOW READ GOOGLE'S ERROR MESSAGE
   function submitForm() {
     var btn = document.getElementById('submitBtn');
     btn.innerText = "Processing...";
@@ -237,18 +250,26 @@
     var data = {};
     new FormData(form).forEach((value, key) => data[key] = value);
 
-    // This command talks directly to your Google Sheet!
+    // Using text/plain fixes CORS issues while letting us read the response
     fetch(WEB_APP_URL, {
       method: 'POST',
-      body: JSON.stringify(data),
-      mode: 'no-cors' // Added for smooth cross-origin security
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8',
+      },
+      body: JSON.stringify(data)
     })
-    .then(() => {
-      // Because 'no-cors' limits our ability to read the exact JSON response back from Google, 
-      // we assume success if the fetch command completes without a hard network error.
-      document.getElementById('form-container').style.display = 'none';
-      document.getElementById('success-screen').style.display = 'block';
-      document.getElementById('final-id').innerText = "Check your email for your official ID!";
+    .then(response => response.json())
+    .then(response => {
+      if(response.success) {
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+        document.getElementById('final-id').innerText = response.id;
+      } else {
+        // This will pop up the "Already Registered" error!
+        showAlert("Registration Error", response.error);
+        btn.innerText = "Submit Registration";
+        btn.disabled = false;
+      }
     })
     .catch(error => {
       showAlert("Connection Error", "Could not connect to the server. Please try again.");
