@@ -294,7 +294,7 @@
 <body>
 
   <div class="video-container">
-    <video id="hero-video" autoplay loop muted playsinline defaultMuted>
+    <video autoplay loop muted playsinline>
       <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">
     </video>
   </div>
@@ -359,22 +359,6 @@
     </footer>
 
   </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var v = document.getElementById("hero-video");
-      if (v) {
-        v.muted = true; // Double-enforce mute
-        var playPromise = v.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(function(error) {
-            console.log("Browser tried to block autoplay. Forcing start...");
-            v.play();
-          });
-        }
-      }
-    });
-  </script>
 
 </body>
 </html>
