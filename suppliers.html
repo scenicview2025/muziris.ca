@@ -226,6 +226,10 @@
             <label>PACKAGING DETAILS</label>
             <input type="text" id="packDetails" name="packagingDetails" placeholder="e.g. Polybag + Inner Box + Master Carton">
 
+            <label>SHORT TITLE / TAGLINE</label>
+            <span class="sub-label">A quick title to separate this specific listing (e.g. "Men's Summer Collection 2026")</span>
+            <input type="text" id="shortTitle" name="shortTitle" placeholder="Enter short title...">
+
             <label>DETAILED DESCRIPTION</label>
             <textarea id="desc" name="description" rows="4" placeholder="Describe materials, certifications, origin..."></textarea>
 
@@ -236,11 +240,11 @@
               <table id="priceTable">
                 <thead>
                   <tr>
-                    <th style="width: 13%;">TYPE</th>
-                    <th style="width: 13%;">OPTION</th>
-                    <th style="width: 9%;">UNIT</th>
-                    <th style="width: 9%;">MIN QTY</th>
-                    <th style="width: 9%;">MAX QTY</th>
+                    <th style="width: 14%;">TYPE</th>
+                    <th style="width: 14%;">OPTION</th>
+                    <th style="width: 8%;">UNIT</th>
+                    <th style="width: 8%;">MIN QTY</th>
+                    <th style="width: 8%;">MAX QTY</th>
                     <th style="width: 10%;">
                       TERMS 
                       <a href="https://muziris.ca/incoterms" target="_blank" title="Learn about Incoterms" style="color:var(--gold); text-decoration:none; vertical-align:middle; margin-left:2px;">
@@ -249,7 +253,7 @@
                     </th>
                     <th style="width: 12%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
                     <th style="width: 20%;">IMAGE (Specific)</th>
-                    <th style="width: 5%;"></th>
+                    <th style="width: 6%;"></th>
                   </tr>
                 </thead>
                 <tbody id="priceBody"></tbody>
@@ -446,6 +450,7 @@
       if(!data) { customAlert("Error", "Error loading product data."); closeListings(); return; }
       var g = data.general;
       document.getElementById('pName').value = g.name;
+      document.getElementById('shortTitle').value = g.shortTitle || ""; 
       document.getElementById('packDetails').value = g.packaging;
       document.getElementById('desc').value = g.description;
       document.getElementById('mainCat').value = g.category;
@@ -474,7 +479,8 @@
     function addPriceRow() {
       var tbody = document.getElementById("priceBody");
       var row = document.createElement("tr");
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      // NEW DROPDOWN OPTIONS ADDED HERE
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
@@ -489,6 +495,10 @@
       var tCol = data.type == "Color" ? "selected" : "";
       var tSiz = data.type == "Size" ? "selected" : "";
       var tSty = data.type == "Style" ? "selected" : "";
+      var tColSiz = data.type == "Color & Size" ? "selected" : "";
+      var tMatSiz = data.type == "Material & Size" ? "selected" : "";
+      var tColCap = data.type == "Color & Capacity" ? "selected" : "";
+      var tCust = data.type == "Custom Combo" ? "selected" : "";
       
       var uPcs = data.unit == "Pcs" ? "selected" : "";
       var uKg = data.unit == "Kg" ? "selected" : "";
@@ -501,15 +511,24 @@
       var iCIF = data.incoterms === "CIF" ? "selected" : "";
       var iDDP = data.incoterms === "DDP" ? "selected" : "";
 
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="number" class="p-min" value="' + data.min + '"></td><td><input type="text" class="p-max" value="' + data.max + '"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="number" class="p-price" step="0.01" value="' + data.price + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option><option value="Color & Size" ' + tColSiz + '>Color & Size</option><option value="Material & Size" ' + tMatSiz + '>Material & Size</option><option value="Color & Capacity" ' + tColCap + '>Color & Capacity</option><option value="Custom Combo" ' + tCust + '>Custom Combo</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="number" class="p-min" value="' + data.min + '"></td><td><input type="text" class="p-max" value="' + data.max + '"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="number" class="p-price" step="0.01" value="' + data.price + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
+    // UPDATED PLACEHOLDERS TO TEACH SUPPLIERS
     function checkVariant(select) {
       var row = select.parentElement.parentElement;
       var optInput = row.querySelector(".p-opt");
       if(select.value === "Standard") { 
         optInput.value = "Standard"; optInput.readOnly = true; optInput.style.color = "#666"; 
+      } else if (select.value === "Color & Size") {
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Red - XL"; optInput.focus(); 
+      } else if (select.value === "Material & Size") {
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Cotton - XL"; optInput.focus(); 
+      } else if (select.value === "Color & Capacity") {
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Black - 500ml"; optInput.focus(); 
+      } else if (select.value === "Custom Combo") {
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. 110V - US Plug"; optInput.focus(); 
       } else { 
         optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Red"; optInput.focus(); 
       }
@@ -614,6 +633,7 @@
            category: formElement.category.value,
            subCategory: formElement.subCategory.value,
            productName: formElement.productName.value,
+           shortTitle: formElement.shortTitle.value, // Short Title
            packagingDetails: formElement.packagingDetails.value,
            description: formElement.description.value,
            service_privateLabel: document.getElementById('svc1').checked,
