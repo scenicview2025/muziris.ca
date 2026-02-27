@@ -446,7 +446,7 @@
       document.getElementById('view-portal').style.display = 'none';
       fetchAPI('getCategoryStructure').then(populateCats);
       addPriceRow(); 
-      initGlobe(); // STARTS THE GLOBE ANIMATION
+      initGlobe(); 
     };
 
     function customAlert(title, message) {
@@ -532,12 +532,16 @@
       items.forEach(function(item) {
          if(!seen.has(item.name)) {
            seen.add(item.name);
+           
+           // >>> FIX: GOOGLE DRIVE "UPDATE BROWSER" BYPASS <<<
            var safeImgUrl = item.image || "";
            var idMatch = safeImgUrl.match(/[-\w]{25,}/);
            if(safeImgUrl.indexOf("drive.google.com") > -1 && idMatch) {
-               safeImgUrl = "https://drive.google.com/uc?export=view&id=" + idMatch[0];
+               // We explicitly call Google's Thumbnail endpoint instead of the blocked 'uc' view
+               safeImgUrl = "https://drive.google.com/thumbnail?id=" + idMatch[0] + "&sz=w500";
            }
            var img = safeImgUrl ? '<img src="' + safeImgUrl + '" class="listing-img" onerror="this.onerror=null; this.src=\'MC.png\'; this.style.objectFit=\'contain\';">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
+           
            html += '<div class="listing-item" onclick="startEdit(\'' + item.name.replace(/'/g, "\\'") + '\')">' + img + '<div class="listing-info"><div class="listing-name">' + item.name + '</div><div class="listing-cat">' + item.category + '</div><div class="edit-hint">Click to Load & Edit</div></div></div>';
          }
       });
