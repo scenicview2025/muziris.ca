@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Shipping Terms Guide</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+    }
+    body { 
+      background-color: var(--void); 
+      color: var(--mist); 
+      font-family: 'Lato', sans-serif; 
+      padding: 40px 20px; 
+      margin: 0; 
+      line-height: 1.6;
+    }
+    .container { 
+      max-width: 800px; 
+      margin: 0 auto; 
+      background: var(--slate); 
+      padding: 50px; 
+      border-radius: 8px; 
+      border: 1px solid rgba(212, 175, 55, 0.2); 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8); 
+      border-top: 4px solid var(--gold);
+    }
+    .back-btn {
+      display: inline-block;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      transition: color 0.3s;
+    }
+    .back-btn:hover { color: #fff; }
+    h1 { 
+      font-family: 'Cinzel', serif; 
+      color: var(--gold); 
+      text-align: center; 
+      letter-spacing: 2px; 
+      margin-top: 0; 
+      text-transform: uppercase;
+    }
+    p.intro {
+      text-align: center;
+      color: #aaa;
+      font-size: 15px;
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+    }
+    .term-card {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #333;
+      padding: 25px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .term-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+    .term-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #222;
+      padding-bottom: 15px;
+    }
+    .term-badge {
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--gold);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 1px;
+      font-family: 'Cinzel', serif;
+    }
+    .term-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .responsibility {
+      font-size: 14px;
+      color: #ccc;
+    }
+    .responsibility strong {
+      color: var(--mist);
+    }
+    .sme-note {
+      background: rgba(212, 175, 55, 0.05);
+      border-left: 3px solid var(--gold);
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 14px;
+      color: #ddd;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    @media (max-width: 600px) {
+      .container { padding: 30px 20px; }
+      .term-header { flex-direction: column; align-items: flex-start; gap: 5px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="javascript:history.back()" class="back-btn">← Back to Portal</a>
+    
+    <h1>Shipping Terms Guide</h1>
+    <p class="intro">To sell globally on Muziris, buyers need to know exactly what is included in your price. Please use this simple guide to understand International Commercial Terms (Incoterms).</p>
+
+    <div class="term-card">
+      <div class="term-header">
+        <div class="term-badge">EXW</div>
+        <div class="term-title">Ex Works (Factory Price)</div>
+      </div>
+      <div class="responsibility">
+        <p><strong>Your Responsibility:</strong> You simply manufacture the goods and pack them safely in your factory/warehouse.</p>
+        <p><strong>Buyer's Responsibility:</strong> The buyer sends a truck to your factory, picks up the goods, handles all export licenses, and pays for all shipping.</p>
+      </div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-header">
+        <div class="term-badge">FOB</div>
+        <div class="term-title">Free on Board (Port Price)</div>
+      </div>
+      <div class="responsibility">
+        <p><strong>Your Responsibility:</strong> You manufacture the goods, transport them to your local seaport/airport, handle the customs export clearance, and pay to load them onto the buyer's ship.</p>
+        <p><strong>Buyer's Responsibility:</strong> The buyer pays for the ocean/air freight to their country and handles importing.</p>
+      </div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-header">
+        <div class="term-badge">CIF</div>
+        <div class="term-title">Cost, Insurance, and Freight (Destination Port)</div>
+      </div>
+      <div class="responsibility">
+        <p><strong>Your Responsibility:</strong> You handle everything in FOB, PLUS you pay for the ocean/air freight and shipping insurance to get the goods to the buyer's country port.</p>
+        <p><strong>Buyer's Responsibility:</strong> Unloading the ship in their country, paying import taxes, and trucking it to their final warehouse.</p>
+      </div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-header">
+        <div class="term-badge">DDP</div>
+        <div class="term-title">Delivered Duty Paid (Door-to-Door)</div>
+      </div>
+      <div class="responsibility">
+        <p><strong>Your Responsibility:</strong> You handle absolutely everything. You manufacture, export, pay for shipping, clear customs in the buyer's country, pay the buyer's import taxes, and deliver it directly to their door.</p>
+        <p><strong>Buyer's Responsibility:</strong> They just wait for the delivery.</p>
+      </div>
+    </div>
+
+    <div class="sme-note">
+      <strong>⭐ Recommendation for Small Manufacturers:</strong><br><br>
+      If you do not have an export license, or if you do not have a regular shipping agent (freight forwarder), we highly recommend quoting <strong>EXW (Ex Works)</strong>. This allows Muziris or the buyer to handle the complicated logistics for you.
+    </div>
+
+  </div>
+
+</body>
+</html>
