@@ -236,12 +236,13 @@
               <table id="priceTable">
                 <thead>
                   <tr>
-                    <th style="width: 15%;">TYPE</th>
-                    <th style="width: 15%;">OPTION</th>
-                    <th style="width: 10%;">UNIT</th>
-                    <th style="width: 10%;">MIN QTY</th>
-                    <th style="width: 10%;">MAX QTY</th>
-                    <th style="width: 15%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
+                    <th style="width: 13%;">TYPE</th>
+                    <th style="width: 13%;">OPTION</th>
+                    <th style="width: 9%;">UNIT</th>
+                    <th style="width: 9%;">MIN QTY</th>
+                    <th style="width: 9%;">MAX QTY</th>
+                    <th style="width: 10%;">TERMS</th>
+                    <th style="width: 12%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
                     <th style="width: 20%;">IMAGE (Specific)</th>
                     <th style="width: 5%;"></th>
                   </tr>
@@ -314,12 +315,10 @@
   </div>
 
   <script>
-    // 1. YOUR BRAND NEW WEB APP URL IS HERE
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
 
     var catData = {};
 
-    // 2. THE API BRIDGE
     function fetchAPI(action, payload = {}) {
       payload.action = action;
       return fetch(WEB_APP_URL, {
@@ -465,7 +464,7 @@
     function addPriceRow() {
       var tbody = document.getElementById("priceBody");
       var row = document.createElement("tr");
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
@@ -487,7 +486,12 @@
       var uSet = data.unit == "Sets" ? "selected" : "";
       var uMet = data.unit == "Meters" ? "selected" : "";
 
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="number" class="p-min" value="' + data.min + '"></td><td><input type="text" class="p-max" value="' + data.max + '"></td><td><input type="number" class="p-price" step="0.01" value="' + data.price + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      var iEXW = data.incoterms === "EXW" ? "selected" : "";
+      var iFOB = (!data.incoterms || data.incoterms === "FOB") ? "selected" : "";
+      var iCIF = data.incoterms === "CIF" ? "selected" : "";
+      var iDDP = data.incoterms === "DDP" ? "selected" : "";
+
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="number" class="p-min" value="' + data.min + '"></td><td><input type="text" class="p-max" value="' + data.max + '"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="number" class="p-price" step="0.01" value="' + data.price + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
@@ -581,6 +585,7 @@
              unit: tr.querySelector(".p-unit").value,
              min: tr.querySelector(".p-min").value,
              max: tr.querySelector(".p-max").value || "Up",
+             incoterms: tr.querySelector(".p-incoterms").value,
              price: tr.querySelector(".p-price").value
           };
           if(!item.opt) { customAlert("Missing Data", "Row " + (i+1) + ": Option missing."); return; }
