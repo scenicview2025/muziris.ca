@@ -20,31 +20,35 @@
     
     .container { display: flex; height: 100vh; width: 100%; }
     
-    /* LEFT PANEL (Branding) */
+    /* LEFT PANEL (Branding & 3D Globe) */
     .left-panel {
       flex: 1;
-      background: url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+      background-color: var(--dark-bg);
       position: relative;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding: 60px;
+      overflow: hidden;
     }
-    .left-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(11,14,20,0.3), rgba(11,14,20,0.9)); }
+    .left-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(11,14,20,0.1), rgba(11,14,20,0.95)); z-index: 2;}
     
+    /* 3D CANVAS STYLING */
+    #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
+
     /* TOP NAVIGATION */
     .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
     .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
     .back-home:hover { color: #fff; }
 
-    .brand-content { position: relative; z-index: 2; max-width: 500px; }
+    .brand-content { position: relative; z-index: 3; max-width: 500px; }
     .brand-content a { text-decoration: none; }
     .brand-content h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 48px; margin: 0; letter-spacing: 2px; transition: 0.3s; }
     .brand-content h1:hover { color: #fff; }
-    .brand-content p { font-size: 18px; line-height: 1.6; margin-top: 15px; color: #ccc; }
+    .brand-content p { font-size: 18px; line-height: 1.6; margin-top: 15px; color: #ccc; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
     /* RIGHT PANEL (Form) */
-    .right-panel { flex: 1; background-color: var(--dark-bg); display: flex; flex-direction: column; justify-content: center; padding: 40px 80px; overflow-y: auto; max-width: 650px; position: relative; }
+    .right-panel { flex: 1; background-color: var(--dark-bg); display: flex; flex-direction: column; justify-content: center; padding: 40px 80px; overflow-y: auto; max-width: 650px; position: relative; border-left: 1px solid #222; z-index: 4; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
 
     /* PROGRESS BAR */
     .progress-container { margin-bottom: 40px; }
@@ -86,9 +90,9 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 900px) {
       .container { flex-direction: column; overflow-y: auto; }
-      .left-panel { min-height: 250px; padding: 30px; flex: none; justify-content: center; }
+      .left-panel { min-height: 300px; padding: 30px; flex: none; justify-content: center; }
       .top-nav { top: 20px; left: 20px; }
-      .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; }
+      .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; border-left: none; }
       body { overflow-y: auto; }
     }
   </style>
@@ -105,6 +109,8 @@
 
 <div class="container">
   <div class="left-panel">
+    <canvas id="networkGlobe"></canvas>
+    
     <div class="top-nav">
       <a href="https://muziris.ca" class="back-home">← Back to Home</a>
     </div>
@@ -182,6 +188,102 @@
 </div>
 
 <script>
+  let globeAnimating = true;
+
+  function initGlobe() {
+    const canvas = document.getElementById('networkGlobe');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const parent = canvas.parentElement;
+    let width, height;
+    
+    let nodes = [];
+    const numNodes = 200; 
+    
+    function resize() {
+      width = canvas.width = parent.clientWidth;
+      height = canvas.height = parent.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Responsive radius based on panel size
+    const radius = Math.min(width, height) * 0.45;
+
+    for (let i = 0; i < numNodes; i++) {
+      const phi = Math.acos(-1 + (2 * i) / numNodes);
+      const theta = Math.sqrt(numNodes * Math.PI) * phi;
+      nodes.push({
+        baseX: radius * Math.cos(theta) * Math.sin(phi),
+        baseY: radius * Math.sin(theta) * Math.sin(phi),
+        baseZ: radius * Math.cos(phi)
+      });
+    }
+
+    let rotationY = 0;
+    let rotationX = 0.2; 
+
+    function animate() {
+      if(!globeAnimating) return; 
+      ctx.clearRect(0, 0, width, height);
+      rotationY += 0.0015;
+      
+      // Center the globe within the left panel
+      const cx = width / 2;
+      const cy = height / 2;
+      
+      const projectedNodes = [];
+      
+      for (let i = 0; i < numNodes; i++) {
+        let node = nodes[i];
+        
+        let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
+        let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
+        
+        let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
+        let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
+        
+        const scale = 800 / (800 + z2);
+        const screenX = cx + x2 * scale;
+        const screenY = cy + y1 * scale;
+        
+        projectedNodes.push({ x: screenX, y: screenY, z: z2, scale: scale });
+      }
+      
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < numNodes; i++) {
+        for (let j = i + 1; j < numNodes; j++) {
+          const p1 = projectedNodes[i];
+          const p2 = projectedNodes[j];
+          const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+          
+          if (dist < 80 * p1.scale) {
+            const alpha = Math.max(0, 1 - (dist / (80 * p1.scale))) * (p1.z > -100 ? 0.6 : 0.05);
+            ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      for (let i = 0; i < numNodes; i++) {
+        const p = projectedNodes[i];
+        const alpha = p.z > -100 ? 0.8 : 0.1;
+        ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
+</script>
+
+<script>
   // WEB APP URL
   const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
 
@@ -192,7 +294,10 @@
     categories: ["Raw Materials", "Finished Goods", "Components & Parts", "Machinery & Equipment", "Tools & Hardware", "Packaging Materials", "Services & Logistics", "Private Label / OEM"]
   };
 
-  window.onload = function() { populateLists(lists); };
+  window.onload = function() { 
+    populateLists(lists); 
+    initGlobe(); // STARTS THE 3D GLOBE ON LOAD
+  };
 
   function showAlert(title, message) {
     document.getElementById('alert-title').innerText = title;
@@ -217,7 +322,6 @@
   }
 
   function nextStep(current) {
-    // ADDED PHONE TO VALIDATION
     if(current === 1 && (!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value)) { 
       showAlert("Missing Information", "Please fill in all required fields (Company Name, Contact Person, Email, and Phone) to continue."); return; 
     }
@@ -240,7 +344,6 @@
     document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
   }
 
-  // UPDATED API CONNECTION - CAN NOW READ GOOGLE'S ERROR MESSAGE
   function submitForm() {
     var btn = document.getElementById('submitBtn');
     btn.innerText = "Processing...";
@@ -250,7 +353,6 @@
     var data = {};
     new FormData(form).forEach((value, key) => data[key] = value);
 
-    // Using text/plain fixes CORS issues while letting us read the response
     fetch(WEB_APP_URL, {
       method: 'POST',
       headers: {
@@ -261,11 +363,11 @@
     .then(response => response.json())
     .then(response => {
       if(response.success) {
+        globeAnimating = false; // Turns off the animation to save CPU once done
         document.getElementById('form-container').style.display = 'none';
         document.getElementById('success-screen').style.display = 'block';
         document.getElementById('final-id').innerText = response.id;
       } else {
-        // This will pop up the "Already Registered" error!
         showAlert("Registration Error", response.error);
         btn.innerText = "Submit Registration";
         btn.disabled = false;
