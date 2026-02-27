@@ -24,21 +24,26 @@
     .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
     .back-home:hover { color: #fff; }
 
+    /* LAYOUT UPDATED FOR 3D GLOBE */
     #view-verify {
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: flex-start; padding-left: 12%;
       background: url('https://images.unsplash.com/photo-1605337030588-468f3a39e80e?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
       position: relative;
+      overflow: hidden;
     }
-    #view-verify::before { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: rgba(11, 14, 20, 0.85); }
+    #view-verify::before { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(135deg, rgba(11, 14, 20, 0.95) 0%, rgba(11, 14, 20, 0.75) 100%); z-index: 0; }
     
+    /* 3D CANVAS STYLING */
+    #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
+
     #view-portal { height: auto; padding: 40px 20px; box-sizing: border-box; }
 
-    .card { position: relative; z-index: 2; background: var(--slate); width: 100%; max-width: 380px; padding: 40px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; }
+    .card { position: relative; z-index: 2; background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); width: 100%; max-width: 380px; padding: 40px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; }
     h1.brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
-    .subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #666; margin-bottom: 30px; }
+    .subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #aaa; margin-bottom: 30px; }
     
-    .verify-input { width: 100%; padding: 14px; background: #000; border: 1px solid #333; border-radius: 4px; color: #fff; font-size: 16px; text-align: center; box-sizing: border-box; outline: none; transition: border 0.3s; letter-spacing: 1px; margin-bottom: 15px; }
-    .verify-input:focus { border-color: var(--gold); }
+    .verify-input { width: 100%; padding: 14px; background: rgba(0,0,0,0.6); border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 16px; text-align: center; box-sizing: border-box; outline: none; transition: border 0.3s; letter-spacing: 1px; margin-bottom: 15px; }
+    .verify-input:focus { border-color: var(--gold); background: #000; }
     .gold-btn { width: 100%; margin-top: 15px; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; }
     .gold-btn:hover { transform: translateY(-2px); }
     
@@ -118,6 +123,7 @@
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
     @media (max-width: 900px) {
       .top-nav { top: 20px; left: 20px; }
+      #view-verify { justify-content: center; padding-left: 0; }
     }
   </style>
 </head>
@@ -132,6 +138,8 @@
   </div>
 
   <div id="view-verify" class="view-section" style="display:flex;">
+    <canvas id="networkGlobe"></canvas>
+
     <div class="top-nav">
       <a href="https://muziris.ca" class="back-home">← Back to Home</a>
     </div>
@@ -329,8 +337,99 @@
   </div>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
+    let globeAnimating = true;
 
+    function initGlobe() {
+      const canvas = document.getElementById('networkGlobe');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      
+      let nodes = [];
+      const numNodes = 250; 
+      const radius = window.innerWidth > 900 ? 400 : 250; 
+      
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      for (let i = 0; i < numNodes; i++) {
+        const phi = Math.acos(-1 + (2 * i) / numNodes);
+        const theta = Math.sqrt(numNodes * Math.PI) * phi;
+        nodes.push({
+          baseX: radius * Math.cos(theta) * Math.sin(phi),
+          baseY: radius * Math.sin(theta) * Math.sin(phi),
+          baseZ: radius * Math.cos(phi)
+        });
+      }
+
+      let rotationY = 0;
+      let rotationX = 0.3; 
+
+      function animate() {
+        if(!globeAnimating) return; 
+        ctx.clearRect(0, 0, width, height);
+        rotationY += 0.0015;
+        
+        const cx = width > 900 ? width * 0.75 : width / 2;
+        const cy = height / 2;
+        
+        const projectedNodes = [];
+        
+        for (let i = 0; i < numNodes; i++) {
+          let node = nodes[i];
+          
+          let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
+          let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
+          
+          let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
+          let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
+          
+          const scale = 800 / (800 + z2);
+          const screenX = cx + x2 * scale;
+          const screenY = cy + y1 * scale;
+          
+          projectedNodes.push({ x: screenX, y: screenY, z: z2, scale: scale });
+        }
+        
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < numNodes; i++) {
+          for (let j = i + 1; j < numNodes; j++) {
+            const p1 = projectedNodes[i];
+            const p2 = projectedNodes[j];
+            const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+            
+            if (dist < 90 * p1.scale) {
+              const alpha = Math.max(0, 1 - (dist / (90 * p1.scale))) * (p1.z > -100 ? 0.6 : 0.05);
+              ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+        
+        for (let i = 0; i < numNodes; i++) {
+          const p = projectedNodes[i];
+          const alpha = p.z > -100 ? 0.8 : 0.1;
+          ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 1.5 * p.scale, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  </script>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
     var catData = {};
 
     function fetchAPI(action, payload = {}) {
@@ -347,6 +446,7 @@
       document.getElementById('view-portal').style.display = 'none';
       fetchAPI('getCategoryStructure').then(populateCats);
       addPriceRow(); 
+      initGlobe(); // STARTS THE GLOBE ANIMATION
     };
 
     function customAlert(title, message) {
@@ -378,6 +478,7 @@
             document.getElementById('ui-currency-label').innerText = "(" + result.currency + ")";
             document.getElementById('ui-currency-text').innerText = result.currency;
             setTimeout(() => {
+              globeAnimating = false; // TURNS OFF GLOBE TO SAVE CPU
               document.getElementById('view-verify').style.display = 'none';
               document.getElementById('view-portal').style.display = 'block';
               document.getElementById('sid').value = id;
@@ -431,17 +532,12 @@
       items.forEach(function(item) {
          if(!seen.has(item.name)) {
            seen.add(item.name);
-           
-           // >>> THIS IS THE NEW FIX FOR BROKEN GOOGLE DRIVE IMAGES <<<
            var safeImgUrl = item.image || "";
            var idMatch = safeImgUrl.match(/[-\w]{25,}/);
            if(safeImgUrl.indexOf("drive.google.com") > -1 && idMatch) {
                safeImgUrl = "https://drive.google.com/uc?export=view&id=" + idMatch[0];
            }
-
-           // Uses MC.png (Your Logo) as a fallback if the image still cannot load
            var img = safeImgUrl ? '<img src="' + safeImgUrl + '" class="listing-img" onerror="this.onerror=null; this.src=\'MC.png\'; this.style.objectFit=\'contain\';">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
-
            html += '<div class="listing-item" onclick="startEdit(\'' + item.name.replace(/'/g, "\\'") + '\')">' + img + '<div class="listing-info"><div class="listing-name">' + item.name + '</div><div class="listing-cat">' + item.category + '</div><div class="edit-hint">Click to Load & Edit</div></div></div>';
          }
       });
@@ -489,7 +585,7 @@
     function addPriceRow() {
       var tbody = document.getElementById("priceBody");
       var row = document.createElement("tr");
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP</option></select></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
