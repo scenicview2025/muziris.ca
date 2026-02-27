@@ -85,6 +85,11 @@
     td input, td select { font-size: 13px; background: #0f1219; border: 1px solid #2a2a2a; margin-bottom: 0; }
     td input[type="file"] { font-size: 10px; padding: 8px; border: 1px dashed #444; width: 100%; }
 
+    /* Quantity inputs to look like text inputs, no up/down arrows */
+    td input[type="text"].q-input { -moz-appearance: textfield; }
+    td input[type="text"].q-input::-webkit-outer-spin-button,
+    td input[type="text"].q-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
     /* TOOLTIP CSS */
     .tooltip { position: relative; display: inline-block; cursor: help; color: var(--gold); margin-left: 3px; vertical-align: middle; }
     .tooltip .tooltiptext { visibility: hidden; width: 180px; background-color: #000; color: #fff; text-align: center; border-radius: 4px; padding: 8px; border: 1px solid var(--gold); position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -90px; opacity: 0; transition: opacity 0.3s; font-size: 11px; text-transform: none; letter-spacing: normal; font-weight: normal; }
@@ -213,7 +218,7 @@
 
             <label>MAIN CATEGORY</label>
             <select id="mainCat" name="category" onchange="loadSubCats()" required>
-              <option value="">Loading Categories...</option>
+              <option value="">Select Category...</option>
             </select>
             
             <select id="subCat" name="subCategory" style="margin-top:10px;" required>
@@ -259,16 +264,21 @@
                     <th style="width: 7%;">UNIT</th>
                     <th style="width: 7%;">MIN QTY</th>
                     <th style="width: 7%;">MAX QTY</th>
-                    <th style="width: 8%;">TERMS</th>
-                    <th style="width: 10%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
-                    <th style="width: 9%;">
-                      LEAD TIME
+                    <th style="width: 15%;">
+                      LEAD TIME (DAYS)
                       <div class="tooltip">
                         <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                         <span class="tooltiptext">Estimated manufacturing/lead time in days (e.g., 30).</span>
                       </div>
                     </th>
-                    <th style="width: 20%;">IMAGE (Specific)</th>
+                    <th style="width: 10%;">
+                      TERMS
+                      <a href="https://muziris.ca/incoterms" target="_blank" title="Learn about Incoterms" class="terms-icon" style="color:var(--gold); text-decoration:none; vertical-align:middle; margin-left:3px;">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                      </a>
+                    </th>
+                    <th style="width: 10%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
+                    <th style="width: 15%;">IMAGE (Specific)</th>
                     <th style="width: 5%;"></th>
                   </tr>
                 </thead>
@@ -541,9 +551,11 @@
          if(!seen.has(item.name)) {
            seen.add(item.name);
            
+           // GOOGLE DRIVE "UPDATE BROWSER" BYPASS
            var safeImgUrl = item.image || "";
            var idMatch = safeImgUrl.match(/[-\w]{25,}/);
            if(safeImgUrl.indexOf("drive.google.com") > -1 && idMatch) {
+               // We explicitly call Google's Thumbnail endpoint instead of the blocked 'uc' view
                safeImgUrl = "https://drive.google.com/thumbnail?id=" + idMatch[0] + "&sz=w500";
            }
            var img = safeImgUrl ? '<img src="' + safeImgUrl + '" class="listing-img" onerror="this.onerror=null; this.src=\'MC.png\'; this.style.objectFit=\'contain\';">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
@@ -595,8 +607,8 @@
     function addPriceRow() {
       var tbody = document.getElementById("priceBody");
       var row = document.createElement("tr");
-      // ADDED LEAD TIME COLUMN
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="number" class="p-lead" placeholder="30"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      // Changes inputs to text, adds lead time field, re-adds terms icon
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="text" class="p-min q-input" placeholder="10"></td><td><input type="text" class="p-max q-input" placeholder="100"></td><td><input type="text" class="p-lead q-input" placeholder="30"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="text" class="p-price q-input" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
@@ -627,9 +639,8 @@
       var iCIF = data.incoterms === "CIF" ? "selected" : "";
       var iDDP = data.incoterms === "DDP" ? "selected" : "";
 
-      var rowLead = data.lead || ""; // Added Lead Time Data
-
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option><option value="Color & Size" ' + tColSiz + '>Color & Size</option><option value="Material & Size" ' + tMatSiz + '>Material & Size</option><option value="Color & Capacity" ' + tColCap + '>Color & Capacity</option><option value="Custom Combo" ' + tCust + '>Custom Combo</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="number" class="p-min" value="' + data.min + '"></td><td><input type="text" class="p-max" value="' + data.max + '"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="number" class="p-price" step="0.01" value="' + data.price + '"></td><td><input type="number" class="p-lead" value="' + rowLead + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      // Changes inputs to text, adds lead time field, re-adds terms icon
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option><option value="Color & Size" ' + tColSiz + '>Color & Size</option><option value="Material & Size" ' + tMatSiz + '>Material & Size</option><option value="Color & Capacity" ' + tColCap + '>Color & Capacity</option><option value="Custom Combo" ' + tCust + '>Custom Combo</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="text" class="p-min q-input" value="' + data.min + '"></td><td><input type="text" class="p-max q-input" value="' + data.max + '"></td><td><input type="text" class="p-lead q-input" value="' + data.lead + '"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="text" class="p-price q-input" value="' + data.price + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
@@ -733,7 +744,7 @@
              max: tr.querySelector(".p-max").value || "Up",
              incoterms: tr.querySelector(".p-incoterms").value,
              price: tr.querySelector(".p-price").value,
-             lead: tr.querySelector(".p-lead").value // Added Lead Time capture
+             lead: tr.querySelector(".p-lead").value 
           };
           if(!item.opt) { customAlert("Missing Data", "Row " + (i+1) + ": Option missing."); return; }
           if(item.min && item.price) { dataList.push(item); }
@@ -835,5 +846,6 @@
   s0.parentNode.insertBefore(s1,s0);
   })();
   </script>
-  </body>
+</body>
 </html>
+```cite: image_15.png, image_16.png
