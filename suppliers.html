@@ -431,7 +431,17 @@
       items.forEach(function(item) {
          if(!seen.has(item.name)) {
            seen.add(item.name);
-           var img = item.image ? '<img src="' + item.image + '" class="listing-img">' : '<div class="listing-img"></div>';
+           
+           // >>> THIS IS THE NEW FIX FOR BROKEN GOOGLE DRIVE IMAGES <<<
+           var safeImgUrl = item.image || "";
+           var idMatch = safeImgUrl.match(/[-\w]{25,}/);
+           if(safeImgUrl.indexOf("drive.google.com") > -1 && idMatch) {
+               safeImgUrl = "https://drive.google.com/uc?export=view&id=" + idMatch[0];
+           }
+
+           // Uses MC.png (Your Logo) as a fallback if the image still cannot load
+           var img = safeImgUrl ? '<img src="' + safeImgUrl + '" class="listing-img" onerror="this.onerror=null; this.src=\'MC.png\'; this.style.objectFit=\'contain\';">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
+
            html += '<div class="listing-item" onclick="startEdit(\'' + item.name.replace(/'/g, "\\'") + '\')">' + img + '<div class="listing-info"><div class="listing-name">' + item.name + '</div><div class="listing-cat">' + item.category + '</div><div class="edit-hint">Click to Load & Edit</div></div></div>';
          }
       });
@@ -479,8 +489,7 @@
     function addPriceRow() {
       var tbody = document.getElementById("priceBody");
       var row = document.createElement("tr");
-      // NEW DROPDOWN OPTIONS ADDED HERE
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="number" class="p-min" placeholder="10"></td><td><input type="text" class="p-max" placeholder="100"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP</option></select></td><td><input type="number" class="p-price" step="0.01" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
@@ -515,7 +524,6 @@
       tbody.appendChild(row);
     }
 
-    // UPDATED PLACEHOLDERS TO TEACH SUPPLIERS
     function checkVariant(select) {
       var row = select.parentElement.parentElement;
       var optInput = row.querySelector(".p-opt");
@@ -633,7 +641,7 @@
            category: formElement.category.value,
            subCategory: formElement.subCategory.value,
            productName: formElement.productName.value,
-           shortTitle: formElement.shortTitle.value, // Short Title
+           shortTitle: formElement.shortTitle.value,
            packagingDetails: formElement.packagingDetails.value,
            description: formElement.description.value,
            service_privateLabel: document.getElementById('svc1').checked,
