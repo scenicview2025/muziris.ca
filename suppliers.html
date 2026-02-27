@@ -241,7 +241,12 @@
                     <th style="width: 9%;">UNIT</th>
                     <th style="width: 9%;">MIN QTY</th>
                     <th style="width: 9%;">MAX QTY</th>
-                    <th style="width: 10%;">TERMS</th>
+                    <th style="width: 10%;">
+                      TERMS 
+                      <a href="https://muziris.ca/incoterms" target="_blank" title="Learn about Incoterms" style="color:var(--gold); text-decoration:none; vertical-align:middle; margin-left:2px;">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                      </a>
+                    </th>
                     <th style="width: 12%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
                     <th style="width: 20%;">IMAGE (Specific)</th>
                     <th style="width: 5%;"></th>
@@ -251,6 +256,11 @@
               </table>
               <button type="button" class="add-btn" onclick="addPriceRow()">+ ADD PRICE TIER</button>
             </div>
+
+            <div style="font-size: 11px; color: #888; margin-top: 12px; text-align: left; line-height: 1.5;">
+              <em>* <strong>Note for Small/Medium Enterprises:</strong> If you do not have an export license or shipping agent set up, we highly recommend selecting <strong>EXW (Ex Works)</strong>. <a href="https://muziris.ca/incoterms" target="_blank" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold);">Click here to learn more.</a></em>
+            </div>
+
             <input type="hidden" name="pricingMatrix" id="pricingString">
 
             <div class="btn-group">
