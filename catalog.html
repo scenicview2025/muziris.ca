@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Global Sourcing Catalog</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    
+    /* HEADER */
+    header { background: rgba(11, 14, 20, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; letter-spacing: 3px; margin: 0; text-transform: uppercase; cursor: pointer; }
+    .search-bar { flex: 1; max-width: 400px; margin: 0 30px; position: relative; }
+    .search-bar input { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid #444; background: #000; color: #fff; outline: none; transition: 0.3s; }
+    .search-bar input:focus { border-color: var(--gold); }
+    
+    /* CURRENCY SELECTOR */
+    .currency-selector { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--gold); letter-spacing: 1px; }
+    .currency-selector select { background: transparent; color: #fff; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; outline: none; cursor: pointer; font-weight: bold; }
+    .currency-selector select:focus { border-color: var(--gold); }
+
+    /* CATEGORY NAV */
+    .cat-nav { background: var(--slate); padding: 15px 5%; display: flex; gap: 20px; overflow-x: auto; border-bottom: 1px solid #222; white-space: nowrap; scrollbar-width: none; }
+    .cat-nav::-webkit-scrollbar { display: none; }
+    .cat-pill { background: transparent; color: #aaa; border: 1px solid #444; padding: 8px 20px; border-radius: 20px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
+    .cat-pill:hover, .cat-pill.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: bold; }
+
+    /* PRODUCT GRID */
+    .catalog-container { padding: 40px 5%; min-height: 60vh; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+    .card { background: var(--slate); border: 1px solid #222; border-radius: 8px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; position: relative; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(212,175,55,0.15); border-color: rgba(212,175,55,0.4); }
+    .card-img { width: 100%; height: 250px; object-fit: cover; background: #000; }
+    .card-body { padding: 20px; }
+    .card-cat { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+    .card-title { font-size: 16px; color: #fff; margin: 0 0 10px 0; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-price { font-size: 14px; color: #ccc; }
+    .price-highlight { color: var(--gold); font-size: 18px; font-weight: bold; }
+    
+    /* LOADING STATE */
+    .loader { text-align: center; color: var(--gold); padding: 100px; font-family: 'Cinzel', serif; font-size: 20px; letter-spacing: 2px; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+    /* PRODUCT MODAL (ENTERPRISE DETAILS) */
+    #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+    .modal-content { background: var(--slate); width: 100%; max-width: 1000px; max-height: 90vh; border-radius: 8px; border: 1px solid var(--gold); display: flex; flex-wrap: wrap; overflow: hidden; position: relative; animation: slideUp 0.4s ease; }
+    .modal-close { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 28px; cursor: pointer; z-index: 10; transition: 0.3s; }
+    .modal-close:hover { color: var(--gold); }
+    
+    .modal-left { flex: 1; min-width: 300px; background: #000; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .main-img { width: 100%; max-width: 400px; height: 400px; object-fit: contain; border-radius: 4px; margin-bottom: 15px; }
+    .thumb-row { display: flex; gap: 10px; overflow-x: auto; width: 100%; justify-content: center; }
+    .thumb { width: 60px; height: 60px; object-fit: cover; border: 1px solid #444; cursor: pointer; border-radius: 4px; transition: 0.3s; }
+    .thumb:hover { border-color: var(--gold); }
+
+    .modal-right { flex: 1.5; min-width: 300px; padding: 40px; overflow-y: auto; max-height: 90vh; box-sizing: border-box; }
+    .m-cat { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+    .m-title { font-size: 26px; color: #fff; margin: 10px 0 20px 0; font-family: 'Cinzel', serif; }
+    .m-desc { font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #333; }
+    
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+    .spec-item { font-size: 12px; }
+    .spec-label { color: #888; text-transform: uppercase; display: block; margin-bottom: 3px; font-size: 10px; letter-spacing: 1px; }
+    .spec-val { color: #fff; font-weight: bold; }
+
+    /* PRICING TABLE */
+    .pricing-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 13px; }
+    .pricing-table th { text-align: left; padding: 10px; border-bottom: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+    .pricing-table td { padding: 12px 10px; border-bottom: 1px solid #333; color: #e0e0e0; }
+    .pricing-table tr:hover { background: rgba(255,255,255,0.02); }
+
+    .btn-quote { display: block; width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; text-align: center; padding: 18px; text-decoration: none; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
+    .btn-quote:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(212,175,55,0.5); }
+
+    /* TOAST ALERT */
+    #toast { visibility: hidden; min-width: 250px; background-color: var(--gold); color: #000; text-align: center; border-radius: 4px; padding: 16px; position: fixed; z-index: 2000; left: 50%; transform: translateX(-50%); bottom: 30px; font-weight: bold; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 4.5s; }
+    
+    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+    @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+
+    @media (max-width: 768px) {
+      header { flex-wrap: wrap; gap: 15px; }
+      .search-bar { order: 3; max-width: 100%; margin: 0; }
+      .modal-content { flex-direction: column; overflow-y: auto; }
+      .modal-right { overflow-y: visible; max-height: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="brand" onclick="renderGrid(allProducts, 'All')">Muziris</h1>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search products, materials, IDs..." onkeyup="handleSearch()">
+    </div>
+    <div class="currency-selector">
+      REGION
+      <select id="currencySelect" onchange="updateCurrency()">
+        <option value="USD">USD ($)</option>
+        <option value="CAD" selected>CAD ($)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+        <option value="AUD">AUD ($)</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="cat-nav" id="categoryNav">
+    </div>
+
+  <div class="catalog-container">
+    <div id="loader" class="loader">SYNCING GLOBAL LEDGER...</div>
+    <div class="grid" id="productGrid">
+      </div>
+  </div>
+
+  <div id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-close" onclick="closeModal(event)">&times;</div>
+      
+      <div class="modal-left">
+        <img id="m-main-img" class="main-img" src="" onerror="this.src='MC.png'">
+        <div class="thumb-row" id="m-thumbs"></div>
+      </div>
+      
+      <div class="modal-right">
+        <div class="m-cat" id="m-cat">Category</div>
+        <h2 class="m-title" id="m-title">Product Name</h2>
+        <div class="m-desc" id="m-desc">Description goes here...</div>
+        
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Product ID</span><span class="spec-val" id="m-id" style="font-family:monospace; color:var(--gold);"></span></div>
+          <div class="spec-item"><span class="spec-label">Incoterms</span><span class="spec-val" id="m-terms"></span></div>
+          <div class="spec-item"><span class="spec-label">Lead Time</span><span class="spec-val" id="m-lead"></span></div>
+          <div class="spec-item"><span class="spec-label">Services</span><span class="spec-val" id="m-srv"></span></div>
+          <div class="spec-item" style="grid-column: span 2;"><span class="spec-label">Packaging</span><span class="spec-val" id="m-pkg"></span></div>
+        </div>
+
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Variant / Size</th>
+              <th>Min Qty</th>
+              <th>Unit</th>
+              <th style="text-align:right;">Price (<span class="ui-curr-symbol">CAD</span>)</th>
+            </tr>
+          </thead>
+          <tbody id="m-pricing-body"></tbody>
+        </table>
+
+        <button class="btn-quote" onclick="requestQuote()">REQUEST QUOTE</button>
+        <div style="text-align:center; font-size:10px; color:#666; margin-top:15px; font-style:italic;">
+          * Clicking Request Quote will connect you directly with a Muziris Sourcing Agent.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Product ID Copied! Paste it in the chat to begin.</div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
+    let allProducts = [];
+    let currentActiveId = "";
+    
+    // EXCHANGE RATES (Base is CAD). You can update these manually as needed!
+    const exchangeRates = {
+      "CAD": 1.00,
+      "USD": 0.74,
+      "EUR": 0.68,
+      "GBP": 0.58,
+      "AUD": 1.13
+    };
+    
+    let activeCurrency = "CAD";
+
+    window.onload = function() {
+      fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: "getPublicCatalog" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('loader').style.display = 'none';
+        if(data.products) {
+          allProducts = data.products.reverse(); // Show newest first
+          renderCategories(data.categories);
+          renderGrid(allProducts, 'All');
+        } else {
+          document.getElementById('productGrid').innerHTML = "<p style='color:red;'>Error loading catalog.</p>";
+        }
+      }).catch(err => {
+        document.getElementById('loader').innerHTML = "Network Error. Please refresh.";
+      });
+    };
+
+    // CURRENCY LOGIC
+    function updateCurrency() {
+      activeCurrency = document.getElementById('currencySelect').value;
+      // Update symbols in modal headers
+      document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
+      
+      // Re-render the grid to update prices
+      handleSearch(); 
+      
+      // If modal is open, re-render the modal pricing table
+      if(currentActiveId && document.getElementById('modal-overlay').style.display === 'flex') {
+        openModal(currentActiveId);
+      }
+    }
+
+    function convertPrice(cadPrice) {
+      if(!cadPrice || isNaN(cadPrice)) return "0.00";
+      return (cadPrice * exchangeRates[activeCurrency]).toFixed(2);
+    }
+
+    function renderCategories(catObj) {
+      const nav = document.getElementById('categoryNav');
+      nav.innerHTML = `<button class="cat-pill active" onclick="filterCat('All', this)">All Products</button>`;
+      for (const cat in catObj) {
+        nav.innerHTML += `<button class="cat-pill" onclick="filterCat('${cat}', this)">${cat}</button>`;
+      }
+    }
+
+    function filterCat(catName, btnElement) {
+      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+      document.getElementById('searchInput').value = ""; // Clear search
+      
+      if(catName === 'All') renderGrid(allProducts, 'All');
+      else renderGrid(allProducts.filter(p => p.category === catName), catName);
+    }
+
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      
+      // Only clear active pill if we are actually searching
+      if(query.length > 0) {
+        document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+      }
+      
+      const filtered = allProducts.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        p.id.toLowerCase().includes(query) || 
+        p.category.toLowerCase().includes(query)
+      );
+      renderGrid(filtered, 'Search Results');
+    }
+
+    function renderGrid(products, title) {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = "";
+      if(products.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:#666; padding: 50px;">No products found for "${title}".</div>`;
+        return;
+      }
+
+      products.forEach(p => {
+        let fallbackImg = p.hero ? p.hero : 'MC.png';
+        let displayPrice = convertPrice(p.startingPriceCAD);
+        
+        grid.innerHTML += `
+          <div class="card" onclick="openModal('${p.id}')">
+            <img class="card-img" src="${fallbackImg}" onerror="this.src='MC.png'" loading="lazy">
+            <div class="card-body">
+              <div class="card-cat">${p.category} ${p.subCategory ? ' / ' + p.subCategory : ''}</div>
+              <h3 class="card-title">${p.name}</h3>
+              <div class="card-price">Starting at <span class="price-highlight">${displayPrice} ${activeCurrency}</span></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function openModal(productId) {
+      const p = allProducts.find(x => x.id === productId);
+      if(!p) return;
+      currentActiveId = p.id;
+
+      document.getElementById('m-cat').innerText = p.category + (p.subCategory ? " / " + p.subCategory : "");
+      document.getElementById('m-title').innerText = p.name;
+      document.getElementById('m-desc').innerText = p.desc || "No description provided.";
+      document.getElementById('m-id').innerText = p.id;
+      document.getElementById('m-terms').innerText = p.incoterms || "Standard";
+      document.getElementById('m-lead').innerText = p.leadTime ? p.leadTime + " Days" : "Check with Agent";
+      document.getElementById('m-srv').innerText = p.services || "Standard";
+      document.getElementById('m-pkg').innerText = p.pkg || "Standard Packaging";
+
+      // Set Images
+      const mainImg = document.getElementById('m-main-img');
+      const thumbRow = document.getElementById('m-thumbs');
+      mainImg.src = p.hero || 'MC.png';
+      thumbRow.innerHTML = "";
+      
+      let allImgs = [p.hero, ...p.gallery].filter(Boolean);
+      allImgs.forEach(url => {
+         thumbRow.innerHTML += `<img class="thumb" src="${url}" onclick="document.getElementById('m-main-img').src='${url}'" onerror="this.style.display='none'">`;
+      });
+
+      // Build Pricing Table with Live Currency
+      const tBody = document.getElementById('m-pricing-body');
+      tBody.innerHTML = "";
+      p.variants.forEach(v => {
+        let varName = v.type === "Standard" ? "Standard" : `${v.type}: ${v.opt}`;
+        let convertedPrice = convertPrice(v.priceCAD);
+        
+        tBody.innerHTML += `
+          <tr>
+            <td><strong>${varName}</strong></td>
+            <td>${v.min} - ${v.max}</td>
+            <td>${v.unit}</td>
+            <td style="text-align:right; color:var(--gold); font-weight:bold;">${convertedPrice}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('modal-overlay').style.display = 'flex';
+      document.body.style.overflow = 'hidden'; 
+    }
+
+    function closeModal(e) {
+      if(e.target.id === 'modal-overlay' || e.target.className === 'modal-close') {
+        document.getElementById('modal-overlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    // TAWK.TO INTEGRATION - REQUEST QUOTE
+    function requestQuote() {
+      navigator.clipboard.writeText("Inquiry for Product ID: " + currentActiveId);
+      
+      var x = document.getElementById("toast");
+      x.className = "show";
+      setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+
+      if (typeof Tawk_API !== 'undefined') {
+        Tawk_API.maximize();
+      }
+      closeModal({target: {id: 'modal-overlay'}}); 
+    }
+  </script>
+
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+</body>
+</html>
