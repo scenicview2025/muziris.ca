@@ -8,14 +8,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     :root { --gold: #D4AF37; --gold-dim: #b89225; --dark-bg: #0b0e14; --card-bg: #151922; --text: #e0e0e0; }
-    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--dark-bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; position: relative; }
     
-    /* 3D GLOBE BACKGROUND */
-    #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; pointer-events: none; }
-    .bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, transparent 0%, var(--dark-bg) 80%); z-index: 2; pointer-events: none; }
+    /* UPDATED: Added the static network background pattern */
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Lato', sans-serif; 
+      background-color: var(--dark-bg); 
+      background-image: url('network-bg.png'); 
+      background-size: cover; 
+      background-position: center; 
+      background-attachment: fixed;
+      color: var(--text); 
+      height: 100vh; 
+      overflow: hidden; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      position: relative; 
+    }
+    
+    .bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(11,14,20,0.4) 0%, rgba(11,14,20,0.95) 100%); z-index: 1; pointer-events: none; }
 
     /* LOGIN CARD */
-    .login-box { background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.3); padding: 50px 40px; border-radius: 8px; width: 100%; max-width: 400px; z-index: 3; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: fadeIn 0.8s ease; }
+    .login-box { background: rgba(21, 25, 34, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.2); padding: 50px 40px; border-radius: 8px; width: 100%; max-width: 400px; z-index: 3; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: fadeIn 0.8s ease; }
     
     .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 32px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
     .subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #888; margin-bottom: 40px; }
@@ -36,7 +52,7 @@
     .gold-btn { width: 100%; background: var(--gold); color: #000; padding: 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
     .gold-btn:hover { background: var(--gold-dim); }
 
-    /* QUICK PROFILE MODAL (Hidden by default) */
+    /* QUICK PROFILE MODAL */
     #profile-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
     .profile-box { background: var(--card-bg); border: 1px solid var(--gold); padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-sizing: border-box; }
     .profile-box h3 { color: var(--gold); font-family: 'Cinzel', serif; margin-top: 0; margin-bottom: 5px; font-size: 22px; }
@@ -48,7 +64,6 @@
 </head>
 <body>
 
-  <canvas id="networkGlobe"></canvas>
   <div class="bg-overlay"></div>
 
   <div class="login-box" id="login-ui">
@@ -111,10 +126,10 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // MUZIRIS API
+    // MUZIRIS BUYER API
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
     
-    let tempUser = null; // Store user temporarily if they need to complete profile
+    let tempUser = null;
 
     // 1. GOOGLE SIGN IN
     document.getElementById('btn-google').addEventListener('click', () => {
@@ -135,11 +150,9 @@
       
       document.getElementById('loading').style.display = 'block';
       
-      // Try Sign In first
       signInWithEmailAndPassword(auth, email, pass).then((result) => {
         handleAuthSuccess(result.user);
       }).catch((error) => {
-        // If account doesn't exist, try creating it
         if(error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
            createUserWithEmailAndPassword(auth, email, pass).then((result) => {
               handleAuthSuccess(result.user);
@@ -164,14 +177,14 @@
       .then(res => res.json())
       .then(data => {
         if(data.exists) {
-          // Returning buyer - let them straight in!
-          window.location.href = "catalog.html"; // Redirects to your catalog page
+          window.location.href = "catalog.html"; 
         } else {
-          // New buyer - prompt Quick Profile
           tempUser = user;
           document.getElementById('login-ui').style.display = 'none';
           document.getElementById('profile-modal').style.display = 'flex';
         }
+      }).catch(err => {
+        document.getElementById('loading').innerText = "Database connection error.";
       });
     }
 
@@ -202,82 +215,13 @@
       .then(res => res.json())
       .then(data => {
         if(data.success) {
-          window.location.href = "catalog.html"; // Success! Go to catalog.
+          window.location.href = "catalog.html"; 
         } else {
           alert("Error saving profile.");
           document.getElementById('btn-save-profile').innerText = "Enter Catalog";
         }
       });
     });
-  </script>
-
-  <script>
-    const canvas = document.getElementById('networkGlobe');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let nodes = [];
-    const numNodes = 150; 
-    
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const radius = Math.min(width, height) * 0.5;
-
-    for (let i = 0; i < numNodes; i++) {
-      const phi = Math.acos(-1 + (2 * i) / numNodes);
-      const theta = Math.sqrt(numNodes * Math.PI) * phi;
-      nodes.push({
-        baseX: radius * Math.cos(theta) * Math.sin(phi),
-        baseY: radius * Math.sin(theta) * Math.sin(phi),
-        baseZ: radius * Math.cos(phi)
-      });
-    }
-
-    let rotationY = 0;
-    let rotationX = 0.2; 
-
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      rotationY += 0.0015;
-      
-      const cx = width / 2;
-      const cy = height / 2;
-      const projectedNodes = [];
-      
-      for (let i = 0; i < numNodes; i++) {
-        let node = nodes[i];
-        let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
-        let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
-        let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
-        let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
-        
-        const scale = 800 / (800 + z2);
-        projectedNodes.push({ x: cx + x2 * scale, y: cy + y1 * scale, z: z2, scale: scale });
-      }
-      
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i < numNodes; i++) {
-        for (let j = i + 1; j < numNodes; j++) {
-          const p1 = projectedNodes[i];
-          const p2 = projectedNodes[j];
-          const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-          if (dist < 100 * p1.scale) {
-            const alpha = Math.max(0, 1 - (dist / (100 * p1.scale))) * (p1.z > -100 ? 0.4 : 0.05);
-            ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-    animate();
   </script>
 </body>
 </html>
