@@ -201,19 +201,27 @@
         }
       }
 
-      // 4. AUTO ID GENERATION & DATA MAPPING
+      // 4. AUTO ID GENERATION & DATA MAPPING (UPDATED FOR EXACT INVENTORY MATCH)
       document.getElementById('submitBtn').innerText = "Mapping Database...";
-      logProgress("Generating Database IDs...");
+      logProgress("Generating Secure Database IDs...");
 
       let formattedRows = [];
       let variantCounters = {}; // Tracks variant index per Group ID
+      let groupHashes = {};     // Stores a unique random hash for each Group Number
 
       for(let row of csvData) {
         let groupNum = String(row["Item Group Number"]).trim();
-        let pId = `${supId}-P${groupNum}`;
+        
+        // If this is a new group number, generate a random hash for it (matching your old system)
+        if(!groupHashes[groupNum]) {
+          let randomHash = new Date().getTime().toString(36).toUpperCase().substring(3) + Math.floor(Math.random() * 1000).toString(36).toUpperCase();
+          groupHashes[groupNum] = `${supId}-${randomHash}`;
+        }
+        
+        let pId = groupHashes[groupNum]; // e.g., CA1234SU-X9B2Z
         
         if(!variantCounters[pId]) variantCounters[pId] = 1;
-        let vId = `${pId}-V${variantCounters[pId]}`;
+        let vId = `${pId}-V${variantCounters[pId]}`; // e.g., CA1234SU-X9B2Z-V1
         variantCounters[pId]++;
 
         // Build Final Row Object
