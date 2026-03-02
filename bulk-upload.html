@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Bulk Staging Portal</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    :root { --gold: #D4AF37; --bg-dark: #0b0e14; --card-bg: #151922; --text: #e0e0e0; }
+    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--bg-dark); color: var(--text); background-image: url('network-bg.png'); background-size: cover; background-position: center; background-attachment: fixed;}
+    .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle, rgba(11,14,20,0.7) 0%, rgba(11,14,20,0.98) 100%); z-index: 1; pointer-events: none;}
+    
+    .container { position: relative; z-index: 2; max-width: 800px; margin: 40px auto; padding: 40px; background: rgba(21, 25, 34, 0.95); border: 1px solid var(--gold); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
+    h1 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-top: 0; }
+    p.subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 40px; }
+
+    .step-box { border: 1px solid #333; padding: 25px; border-radius: 6px; margin-bottom: 25px; background: rgba(0,0,0,0.4); }
+    .step-title { color: var(--gold); font-weight: bold; margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;}
+    
+    input[type="text"] { width: 100%; padding: 15px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: white; border-radius: 4px; box-sizing: border-box; margin-bottom: 15px; font-family: 'Lato', sans-serif; outline: none; font-size: 16px; letter-spacing: 1px; }
+    input[type="text"]:focus { border-color: var(--gold); }
+
+    .drop-zone { border: 2px dashed #555; border-radius: 6px; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; background: rgba(255,255,255,0.02); }
+    .drop-zone:hover { border-color: var(--gold); background: rgba(212,175,55,0.05); }
+    .drop-zone p { margin: 0; color: #ccc; font-weight: bold; }
+    .drop-zone span { font-size: 12px; color: #666; display: block; margin-top: 5px; }
+    input[type="file"] { display: none; }
+
+    .btn { background: var(--gold); color: #000; padding: 18px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; width: 100%; font-size: 15px; transition: 0.3s; margin-top: 10px;}
+    .btn:hover { background: #b89225; }
+    .btn:disabled { background: #333; color: #666; cursor: not-allowed; border: 1px solid #444; }
+
+    .alert { padding: 15px; border-radius: 4px; margin-top: 20px; display: none; font-size: 14px; line-height: 1.5; }
+    .alert.error { background: rgba(255, 0, 0, 0.1); border-left: 4px solid #f44336; color: #ffcccc; }
+    .alert.success { background: rgba(76, 175, 80, 0.1); border-left: 4px solid #4caf50; color: #ccffcc; text-align: center; font-size: 16px; padding: 30px;}
+    
+    .template-link { display: inline-block; background: #222; color: var(--gold); padding: 10px 20px; text-decoration: none; border: 1px solid var(--gold); border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .template-link:hover { background: var(--gold); color: #000; }
+
+    #log { margin-top: 20px; font-size: 12px; color: #aaa; max-height: 150px; overflow-y: auto; text-align: left; }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="container" id="mainUI">
+    <h1>Catalog Staging Portal</h1>
+    <p class="subtitle">Securely upload your data and media to the Muziris Ledger</p>
+
+    <div class="step-box">
+      <div class="step-title">Step 1: Supplier Identity</div>
+      <input type="text" id="supId" placeholder="Enter Your Official Supplier ID (e.g. CA1234SU)">
+      <div style="text-align: right; margin-top: 10px;">
+        <a href="Muziris_Template.csv" download class="template-link">Download Blank CSV Template</a>
+      </div>
+    </div>
+
+    <div class="step-box">
+      <div class="step-title">Step 2: Upload CSV Data</div>
+      <div class="drop-zone" onclick="document.getElementById('csvInput').click()">
+        <p id="csvLabel">Click to select your filled CSV file</p>
+      </div>
+      <input type="file" id="csvInput" accept=".csv">
+    </div>
+
+    <div class="step-box">
+      <div class="step-title">Step 3: Upload Media (Images & PDFs)</div>
+      <div class="drop-zone" onclick="document.getElementById('mediaInput').click()">
+        <p id="mediaLabel">Click to select all your high-res images</p>
+        <span>Supports JPG, PNG, PDF</span>
+      </div>
+      <input type="file" id="mediaInput" multiple accept=".jpg,.jpeg,.png,.pdf">
+    </div>
+
+    <button class="btn" id="submitBtn" onclick="processUpload()">Validate & Submit Catalog</button>
+
+    <div id="alertBox" class="alert error"></div>
+    <div id="log"></div>
+  </div>
+
+  <div class="container" id="successUI" style="display: none; text-align: center;">
+    <h1 style="color: #4caf50;">Upload Complete!</h1>
+    <p style="color: #ccc; font-size: 16px; line-height: 1.6;">Your catalog has been successfully mapped, secured, and submitted to the Muziris Staging Ledger.</p>
+    <p style="color: #888; font-size: 14px;">Our Data Team will review your items shortly. You may now close this page.</p>
+    <button class="btn" style="margin-top: 30px;" onclick="window.location.reload()">Submit Another</button>
+  </div>
+
+  <script>
+    // REPLACE WITH YOUR GOOGLE APPS SCRIPT URL
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
+    
+    let csvData = [];
+    let mediaFiles = [];
+    
+    // Listeners for UI updates
+    document.getElementById('csvInput').addEventListener('change', function(e) {
+      if(e.target.files.length > 0) document.getElementById('csvLabel').innerText = "✔ " + e.target.files[0].name;
+    });
+    document.getElementById('mediaInput').addEventListener('change', function(e) {
+      mediaFiles = Array.from(e.target.files);
+      if(mediaFiles.length > 0) document.getElementById('mediaLabel').innerText = "✔ " + mediaFiles.length + " media files selected";
+    });
+
+    function showError(msg) {
+      const box = document.getElementById('alertBox');
+      box.className = "alert error";
+      box.innerHTML = "<strong>Validation Failed:</strong><br>" + msg;
+      box.style.display = "block";
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('submitBtn').innerText = "Validate & Submit Catalog";
+    }
+
+    function logProgress(msg) {
+      const log = document.getElementById('log');
+      log.innerHTML += `<div>${msg}</div>`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function processUpload() {
+      const supId = document.getElementById('supId').value.trim().toUpperCase();
+      const csvFile = document.getElementById('csvInput').files[0];
+
+      if (!supId) return showError("Please enter your Supplier ID.");
+      if (!csvFile) return showError("Please upload your CSV file.");
+
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('submitBtn').innerText = "Analyzing Catalog...";
+      document.getElementById('alertBox').style.display = "none";
+      document.getElementById('log').innerHTML = "";
+
+      // 1. READ CSV (PapaParse)
+      Papa.parse(csvFile, {
+        header: true,
+        skipEmptyLines: true,
+        complete: async function(results) {
+          csvData = results.data;
+          await validateAndExecute(supId);
+        }
+      });
+    }
+
+    async function validateAndExecute(supId) {
+      // 2. THE HOMEWORK CHECKER (Validation)
+      let requiredImages = new Set();
+      let imageColumns = ["Hero Img", "Life Img", "CloseUp Img", "Pack Img", "Extra Img", "Variant Img", "Catalog PDF"];
+      
+      for(let row of csvData) {
+        if(!row["Item Group Number"]) return showError("Missing 'Item Group Number' in CSV. Please group your variants using 1, 2, 3 etc.");
+        
+        for(let col of imageColumns) {
+          if(row[col] && row[col].trim() !== "") {
+            requiredImages.add(row[col].trim());
+          }
+        }
+      }
+
+      // Check if uploaded files match the required files
+      let uploadedFileNames = mediaFiles.map(f => f.name);
+      let missingFiles = [];
+      requiredImages.forEach(img => {
+        if(!uploadedFileNames.includes(img)) missingFiles.push(img);
+      });
+
+      if(missingFiles.length > 0) {
+        return showError("The CSV mentions files you didn't upload:<br>• " + missingFiles.join("<br>• ") + "<br><br>Please add them to the media drop zone.");
+      }
+
+      document.getElementById('submitBtn').innerText = "Uploading Media (Do Not Close)...";
+
+      // 3. SECURE MEDIA UPLOAD
+      let mediaUrls = {}; // Map filename -> Secure Google Drive URL
+      for(let i=0; i<mediaFiles.length; i++) {
+        let file = mediaFiles[i];
+        if(!requiredImages.has(file.name)) continue; // Skip unused files
+        
+        logProgress(`Uploading ${file.name}...`);
+        
+        try {
+          const base64Data = await readFileAsBase64(file);
+          const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: "uploadMedia",
+              supplierId: supId,
+              fileName: file.name,
+              mimeType: file.type,
+              fileData: base64Data.split(',')[1]
+            })
+          });
+          const result = await response.json();
+          if(result.success) {
+            mediaUrls[file.name] = result.url;
+          } else {
+            return showError("Failed to upload " + file.name);
+          }
+        } catch(e) {
+          return showError("Network error while uploading " + file.name);
+        }
+      }
+
+      // 4. AUTO ID GENERATION & DATA MAPPING
+      document.getElementById('submitBtn').innerText = "Mapping Database...";
+      logProgress("Generating Database IDs...");
+
+      let formattedRows = [];
+      let variantCounters = {}; // Tracks variant index per Group ID
+
+      for(let row of csvData) {
+        let groupNum = String(row["Item Group Number"]).trim();
+        let pId = `${supId}-P${groupNum}`;
+        
+        if(!variantCounters[pId]) variantCounters[pId] = 1;
+        let vId = `${pId}-V${variantCounters[pId]}`;
+        variantCounters[pId]++;
+
+        // Build Final Row Object
+        formattedRows.push({
+          supplierId: supId,
+          company: row["Company"] || "Unknown",
+          currency: row["Currency"] || "USD",
+          mainCat: row["Main Category"] || "",
+          subCat: row["Sub Category"] || "",
+          prodName: row["Product Name"] || "",
+          services: row["Services"] || "Standard",
+          pkg: row["Pkg Details"] || "",
+          desc: row["Description"] || "",
+          varType: row["Var Type"] || "Standard",
+          varOpt: row["Var Option"] || "-",
+          unit: row["Unit"] || "Pcs",
+          min: row["Min Qty"] || "1",
+          max: row["Max Qty"] || "Up",
+          price: row["Price"] || "0",
+          incoterms: row["Incoterms"] || "FOB",
+          title: row["Title"] || "",
+          lead: row["Lead Time"] || "30",
+          prodId: pId,
+          varId: vId,
+          // SWAP FILENAMES WITH SECURE LINKS
+          hero: mediaUrls[row["Hero Img"]] || "",
+          life: mediaUrls[row["Life Img"]] || "",
+          close: mediaUrls[row["CloseUp Img"]] || "",
+          pack: mediaUrls[row["Pack Img"]] || "",
+          extra: mediaUrls[row["Extra Img"]] || "",
+          pdf: mediaUrls[row["Catalog PDF"]] || "",
+          varImg: mediaUrls[row["Variant Img"]] || ""
+        });
+      }
+
+      // 5. PUSH TO STAGING SPREADSHEET
+      document.getElementById('submitBtn').innerText = "Finalizing Submission...";
+      logProgress("Pushing to Muziris Ledger...");
+
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: "submitStaging", rows: formattedRows })
+        });
+        const result = await response.json();
+        
+        if(result.success) {
+          document.getElementById('mainUI').style.display = "none";
+          document.getElementById('successUI').style.display = "block";
+        } else {
+          showError("Database Error: " + result.error);
+        }
+      } catch(e) {
+        showError("Failed to connect to Muziris Ledger.");
+      }
+    }
+
+    // Helper function
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+  </script>
+</body>
+</html>
