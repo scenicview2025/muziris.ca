@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | CSV Upload Guide</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --bg-dark: #0b0e14; --card-bg: #151922; --text: #e0e0e0; }
+    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--bg-dark); color: var(--text); }
+    
+    header { background-color: var(--card-bg); padding: 30px; text-align: center; border-bottom: 2px solid var(--gold); }
+    h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; letter-spacing: 3px; text-transform: uppercase; }
+    
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    
+    .card { background: var(--card-bg); padding: 30px; border-radius: 8px; border: 1px solid #333; margin-bottom: 30px; }
+    .card h2 { font-family: 'Cinzel', serif; color: var(--gold); margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+    th { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    td strong { color: #fff; }
+    
+    .alert { background: rgba(212, 175, 55, 0.1); border-left: 4px solid var(--gold); padding: 15px; margin-bottom: 20px; font-size: 14px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Muziris</h1>
+    <p style="color: #888; text-transform: uppercase; letter-spacing: 2px; font-size: 12px;">Bulk CSV Formatting Guide</p>
+  </header>
+
+  <div class="container">
+    <div class="alert">
+      <strong>Important:</strong> Please do not modify, rename, or delete the first row (Header Row) of the provided CSV file. Modifying the headers will cause the upload to fail.
+    </div>
+
+    <div class="card">
+      <h2>Image Upload Protocol</h2>
+      <p style="color: #aaa; line-height: 1.6;">Because high-quality images make the file size too large for a CSV, Muziris uses a separate secure folder for your media.</p>
+      <ol style="color: #ccc; line-height: 1.8;">
+        <li>Open the secure <strong>Google Drive link</strong> sent in your automated email.</li>
+        <li>Upload all your product photos (JPEG, PNG) directly into that folder.</li>
+        <li>In the CSV file, under the image columns (e.g., <em>Hero Img</em>), simply type the exact file name (e.g., <strong>bottle-front.jpg</strong>).</li>
+        <li>Our data team will automatically sync the images from the folder to the data on your CSV.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Column Definitions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Column Name</th>
+            <th>Instructions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Date</strong></td><td>Today's date (YYYY-MM-DD).</td></tr>
+          <tr><td><strong>Supplier ID</strong></td><td>Your official Muziris ID. This MUST be included on every single row.</td></tr>
+          <tr><td><strong>Company</strong></td><td>Your registered company name.</td></tr>
+          <tr><td><strong>Main Category & Sub Category</strong></td><td>The classification of the item.</td></tr>
+          <tr><td><strong>Var Type & Var Option</strong></td><td>If the product has variations (e.g., Var Type: "Color", Var Option: "Red"). For single products, write "Standard".</td></tr>
+          <tr><td><strong>Min Qty & Max Qty</strong></td><td>The minimum and maximum order quantity for this specific price tier.</td></tr>
+          <tr><td><strong>Price</strong></td><td>The numerical price. Do not include currency symbols (e.g., write "12.50", not "$12.50").</td></tr>
+          <tr><td><strong>Product ID & Variant ID</strong></td><td><strong>LEAVE THESE BLANK.</strong> The Muziris ledger will auto-generate unique secure hashes for these when processing.</td></tr>
+          <tr><td><strong>Lead Time</strong></td><td>Estimated production time in days (e.g., "30").</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>
