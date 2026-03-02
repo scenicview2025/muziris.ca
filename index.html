@@ -145,7 +145,7 @@
       font-size: 12px;
     }
 
-    /* --- UPDATED DUAL BUTTONS --- */
+    /* --- UPDATED SINGLE BUTTON --- */
     .action-buttons {
       display: flex;
       gap: 20px;
@@ -169,27 +169,15 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
 
-    /* Solid Gold for Buyers (Primary Action) */
-    .buyer-btn {
+    /* Solid Gold for Primary Action (Supplier Reg) */
+    .primary-btn {
       background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%);
       color: #000;
     }
-    .buyer-btn:hover {
+    .primary-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
       background: linear-gradient(135deg, #eadd8c 0%, #D4AF37 100%);
-    }
-
-    /* Ghost Outline for Suppliers (Secondary Action) */
-    .supplier-btn {
-      background: rgba(0, 0, 0, 0.5);
-      color: var(--gold);
-      border: 1px solid var(--gold);
-    }
-    .supplier-btn:hover {
-      transform: translateY(-3px);
-      background: rgba(212, 175, 55, 0.1);
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
     }
 
     .section-title {
@@ -319,8 +307,7 @@
         <p>Our full website is currently under development. We are building a platform that reflects our heritage, our partners, and our commitment to clear, human, long-term relationships.</p>
         
         <div class="action-buttons">
-          <a href="login.html" class="cta-button buyer-btn">Buyer Access</a>
-          <a href="join.html" class="cta-button supplier-btn">Supplier Registration</a>
+          <a href="join.html" class="cta-button primary-btn">Supplier Registration</a>
         </div>
 
       </div>
