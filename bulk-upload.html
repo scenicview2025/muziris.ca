@@ -115,12 +115,21 @@
       const verifiedId = sessionStorage.getItem('verifiedSupplierId');
       
       if (!verifiedId) {
-        // If there's no ID in memory, kick them back to the login page immediately
         window.location.href = 'suppliers.html'; 
       } else {
-        // Safe to load! Autofill and lock the ID
         document.getElementById('supId').value = verifiedId;
         document.getElementById('mainUI').style.display = 'block';
+        
+        // NEW: Fetch master categories so we can validate their CSV later
+        fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'getCategoryStructure' })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if(!data.Error) window.masterCategories = data;
+        });
       }
     };
 
@@ -129,6 +138,7 @@
     
     let csvData = [];
     let mediaFiles = [];
+    window.masterCategories = null; // Stores allowed categories
     
     // Listeners for UI updates
     document.getElementById('csvInput').addEventListener('change', function(e) {
@@ -178,18 +188,50 @@
     }
 
     async function validateAndExecute(supId) {
-      // 2. THE HOMEWORK CHECKER (Validation)
       let requiredImages = new Set();
       let imageColumns = ["Hero Img", "Life Img", "CloseUp Img", "Pack Img", "Extra Img", "Variant Img", "Catalog PDF"];
       
+      let rowNum = 1; // Track row number for error messages
+      
       for(let row of csvData) {
-        if(!row["Item Group Number"]) return showError("Missing 'Item Group Number' in CSV. Please group your variants using 1, 2, 3 etc.");
+        rowNum++; // CSV header is row 1, data starts at row 2
+
+        // A. Check for Item Group Number
+        if(!row["Item Group Number"]) return showError(`Missing 'Item Group Number' on CSV row ${rowNum}. Please group your variants using 1, 2, 3 etc.`);
         
+        // B. Check Images
         for(let col of imageColumns) {
           if(row[col] && row[col].trim() !== "") {
             requiredImages.add(row[col].trim());
           }
         }
+
+        // ============================================================
+        // C. NEW SMART VALIDATION: Check Categories against Master List
+        // ============================================================
+        if (window.masterCategories) {
+          let cMain = String(row["Main Category"] || "").trim();
+          let cSub = String(row["Sub Category"] || "").trim();
+
+          // Check if Main Category is blank
+          if(!cMain) {
+            return showError(`Missing 'Main Category' on CSV row ${rowNum}.<br><br><a href='csv-guide.html' target='_blank' style='color:#D4AF37; text-decoration: underline;'>Click here to view accepted categories</a>`);
+          }
+
+          // Check if Main Category exists in Master Database
+          if(!window.masterCategories[cMain]) {
+            return showError(`Invalid Main Category "<b>${cMain}</b>" on CSV row ${rowNum}.<br><br>The system does not recognize this spelling. <br><br><a href='csv-guide.html' target='_blank' style='color:#D4AF37; font-weight: bold; text-decoration: underline; letter-spacing: 1px;'>CLICK HERE TO USE THE COPY/PASTE TOOL</a>`);
+          }
+
+          // Check if Sub Category is valid for that Main Category
+          if(cSub) {
+             let validSubs = window.masterCategories[cMain] || [];
+             if(validSubs.indexOf(cSub) === -1) {
+               return showError(`Invalid Sub Category "<b>${cSub}</b>" on CSV row ${rowNum}.<br><br>This sub-category does not exist under "${cMain}". <br><br><a href='csv-guide.html' target='_blank' style='color:#D4AF37; font-weight: bold; text-decoration: underline; letter-spacing: 1px;'>CLICK HERE TO USE THE COPY/PASTE TOOL</a>`);
+             }
+          }
+        }
+        // ============================================================
       }
 
       // Check if uploaded files match the required files
