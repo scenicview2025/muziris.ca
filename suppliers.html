@@ -56,7 +56,8 @@
     .badge { background: rgba(212, 175, 55, 0.15); color: var(--gold); padding: 6px 12px; border-radius: 4px; font-size: 11px; letter-spacing: 1px; display: inline-block; margin-bottom: 30px; border: 1px solid rgba(212, 175, 55, 0.3); }
     
     .bulk-bar { background: rgba(255, 255, 255, 0.05); border: 1px dashed #444; padding: 10px; margin-bottom: 25px; text-align: center; font-size: 12px; color: #aaa; border-radius: 4px; }
-    .bulk-link { color: var(--gold); text-decoration: underline; cursor: pointer; font-weight: bold; margin: 0 10px; }
+    .bulk-link { color: var(--gold); text-decoration: underline; cursor: pointer; font-weight: bold; margin: 0 10px; transition: 0.3s; }
+    .bulk-link:hover { color: #fff; }
 
     .progress-container { margin-bottom: 40px; }
     .progress-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
@@ -178,6 +179,8 @@
         <span class="bulk-link" onclick="launchBulk()" style="text-transform: uppercase;">Launch Bulk Upload Portal</span>
         <span style="color:#444; margin: 0 10px;">|</span>
         <span class="bulk-link" onclick="viewListings()">View Active Listings</span>
+        <span style="color:#444; margin: 0 10px;">|</span>
+        <span class="bulk-link" onclick="logoutSupplier()" style="color: #ff5252;">Logout</span>
       </div>
 
       <div id="success-msg">
@@ -460,11 +463,31 @@
     }
 
     window.onload = function() {
-      document.getElementById('view-verify').style.display = 'flex';
-      document.getElementById('view-portal').style.display = 'none';
+      // 1. Check if the user is already logged in
+      var savedId = sessionStorage.getItem('verifiedSupplierId');
+      var savedCompany = sessionStorage.getItem('verifiedCompany');
+      var savedCurrency = sessionStorage.getItem('verifiedCurrency');
+
+      if (savedId && savedCompany && savedCurrency) {
+        // BYPASS LOGIN: Instantly show the portal
+        document.getElementById('view-verify').style.display = 'none';
+        document.getElementById('view-portal').style.display = 'block';
+        
+        // Restore their data
+        document.getElementById('sid').value = savedId;
+        document.getElementById('cname').value = savedCompany;
+        document.getElementById('ui-currency-label').innerText = "(" + savedCurrency + ")";
+        document.getElementById('ui-currency-text').innerText = savedCurrency;
+        globeAnimating = false; 
+      } else {
+        // SHOW LOGIN: No session found
+        document.getElementById('view-verify').style.display = 'flex';
+        document.getElementById('view-portal').style.display = 'none';
+        initGlobe(); 
+      }
+
       fetchAPI('getCategoryStructure').then(populateCats);
       addPriceRow(); 
-      initGlobe(); 
     };
 
     function customAlert(title, message) {
@@ -495,6 +518,12 @@
             resultBox.innerHTML = "<span class='success-text'>✓ Verified. Loading Portal...</span>";
             document.getElementById('ui-currency-label').innerText = "(" + result.currency + ")";
             document.getElementById('ui-currency-text').innerText = result.currency;
+            
+            // 👇 SAVE FULL SESSION TO MEMORY 👇
+            sessionStorage.setItem('verifiedSupplierId', id);
+            sessionStorage.setItem('verifiedCompany', result.company);
+            sessionStorage.setItem('verifiedCurrency', result.currency);
+
             setTimeout(() => {
               globeAnimating = false; // TURNS OFF GLOBE TO SAVE CPU
               document.getElementById('view-verify').style.display = 'none';
@@ -514,7 +543,6 @@
         });
     }
 
-    // THE NEW LAUNCH BULK UPLOAD PORTAL FUNCTION
     function launchBulk() {
       var id = document.getElementById('sid').value;
       if(id) {
@@ -524,6 +552,11 @@
       } else {
         customAlert("Error", "Please verify your identity first.");
       }
+    }
+
+    function logoutSupplier() {
+      sessionStorage.clear();
+      window.location.reload();
     }
 
     function nextStep(current) {
@@ -617,7 +650,6 @@
     function addPriceRow() {
       var tbody = document.getElementById("priceBody");
       var row = document.createElement("tr");
-      // Notice the maxlength="3" on the Lead Time field
       row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="text" class="p-min q-input" placeholder="10"></td><td><input type="text" class="p-max q-input" placeholder="100"></td><td><input type="text" class="p-lead q-input" placeholder="30" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="text" class="p-price q-input" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
