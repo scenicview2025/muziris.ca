@@ -175,8 +175,8 @@
 
       <div class="bulk-bar">
         Options: 
-        <span class="bulk-link" onclick="requestBulk()">Request CSV Format</span>
-        <span style="color:#444;">|</span>
+        <a href="bulk-upload.html" class="bulk-link" style="text-decoration: none; text-transform: uppercase;">Launch Bulk Upload Portal</a>
+        <span style="color:#444; margin: 0 10px;">|</span>
         <span class="bulk-link" onclick="viewListings()">View Active Listings</span>
       </div>
 
@@ -656,20 +656,6 @@
         optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. 110V - US Plug"; optInput.focus(); 
       } else { 
         optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Red"; optInput.focus(); 
-      }
-    }
-
-    function requestBulk() {
-      var id = document.getElementById('sid').value;
-      var company = document.getElementById('cname').value;
-      var email = prompt("Please enter your email address to receive the Bulk Upload CSV format:", "");
-      if (email) {
-         if(email.indexOf("@") === -1) { customAlert("Error", "Invalid email address"); return; }
-         fetchAPI('submitBulkRequest', { id: id, company: company, email: email })
-           .then(resp => {
-             if(resp.result === "SUCCESS") { customAlert("Success", "Request received! We will email the CSV to " + email + " shortly."); } 
-             else { customAlert("Error", resp.result || resp.error); }
-           });
       }
     }
 
