@@ -12,6 +12,11 @@
     body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--bg-dark); color: var(--text); background-image: url('network-bg.png'); background-size: cover; background-position: center; background-attachment: fixed;}
     .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle, rgba(11,14,20,0.7) 0%, rgba(11,14,20,0.98) 100%); z-index: 1; pointer-events: none;}
     
+    /* TOP NAVIGATION */
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+    .back-home:hover { color: #fff; }
+
     .container { position: relative; z-index: 2; max-width: 800px; margin: 40px auto; padding: 40px; background: rgba(21, 25, 34, 0.95); border: 1px solid var(--gold); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
     h1 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-top: 0; }
     p.subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 40px; }
@@ -21,6 +26,9 @@
     
     input[type="text"] { width: 100%; padding: 15px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: white; border-radius: 4px; box-sizing: border-box; margin-bottom: 15px; font-family: 'Lato', sans-serif; outline: none; font-size: 16px; letter-spacing: 1px; }
     input[type="text"]:focus { border-color: var(--gold); }
+    
+    /* Locked Input Styling */
+    input[type="text"].locked-field { background: rgba(212,175,55,0.05); color: var(--gold); border-color: #333; cursor: not-allowed; font-weight: bold; }
 
     .drop-zone { border: 2px dashed #555; border-radius: 6px; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; background: rgba(255,255,255,0.02); }
     .drop-zone:hover { border-color: var(--gold); background: rgba(212,175,55,0.05); }
@@ -38,21 +46,29 @@
     
     .template-link { display: inline-block; background: #222; color: var(--gold); padding: 10px 20px; text-decoration: none; border: 1px solid var(--gold); border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
     .template-link:hover { background: var(--gold); color: #000; }
+    .guide-link { color: var(--gold); font-size: 12px; text-decoration: underline; margin-right: 15px; text-transform: uppercase; letter-spacing: 1px;}
 
     #log { margin-top: 20px; font-size: 12px; color: #aaa; max-height: 150px; overflow-y: auto; text-align: left; }
+    
+    @media (max-width: 900px) { .top-nav { top: 20px; left: 20px; } }
   </style>
 </head>
 <body>
   <div class="overlay"></div>
 
-  <div class="container" id="mainUI">
+  <div class="top-nav">
+    <a href="suppliers.html" class="back-home">← Back to Portal</a>
+  </div>
+
+  <div class="container" id="mainUI" style="display: none;">
     <h1>Catalog Staging Portal</h1>
     <p class="subtitle">Securely upload your data and media to the Muziris Ledger</p>
 
     <div class="step-box">
       <div class="step-title">Step 1: Supplier Identity</div>
-      <input type="text" id="supId" placeholder="Enter Your Official Supplier ID (e.g. CA1234SU)">
+      <input type="text" id="supId" class="locked-field" readonly placeholder="Authenticating...">
       <div style="text-align: right; margin-top: 10px;">
+        <a href="https://muziris.ca/csv-guide.html" target="_blank" class="guide-link">Read CSV Guide</a>
         <a href="Muziris_Template.csv" download class="template-link">Download Blank CSV Template</a>
       </div>
     </div>
@@ -78,16 +94,36 @@
 
     <div id="alertBox" class="alert error"></div>
     <div id="log"></div>
+
+    <div style="text-align: center; margin-top: 35px; border-top: 1px solid #333; padding-top: 20px; font-size: 12px; color: #666;">
+      Need assistance? Contact our Data Team at <a href="mailto:support@muziris.ca" style="color: var(--gold); text-decoration: none;">support@muziris.ca</a>
+    </div>
   </div>
 
   <div class="container" id="successUI" style="display: none; text-align: center;">
     <h1 style="color: #4caf50;">Upload Complete!</h1>
     <p style="color: #ccc; font-size: 16px; line-height: 1.6;">Your catalog has been successfully mapped, secured, and submitted to the Muziris Staging Ledger.</p>
-    <p style="color: #888; font-size: 14px;">Our Data Team will review your items shortly. You may now close this page.</p>
-    <button class="btn" style="margin-top: 30px;" onclick="window.location.reload()">Submit Another</button>
+    <p style="color: #888; font-size: 14px;">Our Data Team will review your items shortly. You may now safely return to the main portal.</p>
+    <button class="btn" style="margin-top: 30px; margin-bottom: 20px;" onclick="window.location.reload()">Submit Another CSV</button>
+    <br>
+    <a href="suppliers.html" style="color: var(--gold); text-decoration: underline; font-size: 14px;">← Return to Main Portal</a>
   </div>
 
   <script>
+    // Security Check: Ensure user came from the verified login page
+    window.onload = function() {
+      const verifiedId = sessionStorage.getItem('verifiedSupplierId');
+      
+      if (!verifiedId) {
+        // If there's no ID in memory, kick them back to the login page immediately
+        window.location.href = 'suppliers.html'; 
+      } else {
+        // Safe to load! Autofill and lock the ID
+        document.getElementById('supId').value = verifiedId;
+        document.getElementById('mainUI').style.display = 'block';
+      }
+    };
+
     // REPLACE WITH YOUR GOOGLE APPS SCRIPT URL
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
     
@@ -122,7 +158,7 @@
       const supId = document.getElementById('supId').value.trim().toUpperCase();
       const csvFile = document.getElementById('csvInput').files[0];
 
-      if (!supId) return showError("Please enter your Supplier ID.");
+      if (!supId) return showError("Authentication Error. Please return to the main portal and log in again.");
       if (!csvFile) return showError("Please upload your CSV file.");
 
       document.getElementById('submitBtn').disabled = true;
@@ -170,10 +206,10 @@
       document.getElementById('submitBtn').innerText = "Uploading Media (Do Not Close)...";
 
       // 3. SECURE MEDIA UPLOAD
-      let mediaUrls = {}; // Map filename -> Secure Google Drive URL
+      let mediaUrls = {}; 
       for(let i=0; i<mediaFiles.length; i++) {
         let file = mediaFiles[i];
-        if(!requiredImages.has(file.name)) continue; // Skip unused files
+        if(!requiredImages.has(file.name)) continue; 
         
         logProgress(`Uploading ${file.name}...`);
         
@@ -201,30 +237,21 @@
         }
       }
 
-      // 4. AUTO ID GENERATION & DATA MAPPING (UPDATED FOR EXACT INVENTORY MATCH)
+      // 4. AUTO ID GENERATION & DATA MAPPING
       document.getElementById('submitBtn').innerText = "Mapping Database...";
-      logProgress("Generating Secure Database IDs...");
+      logProgress("Generating Database IDs...");
 
       let formattedRows = [];
-      let variantCounters = {}; // Tracks variant index per Group ID
-      let groupHashes = {};     // Stores a unique random hash for each Group Number
+      let variantCounters = {}; 
 
       for(let row of csvData) {
         let groupNum = String(row["Item Group Number"]).trim();
-        
-        // If this is a new group number, generate a random hash for it (matching your old system)
-        if(!groupHashes[groupNum]) {
-          let randomHash = new Date().getTime().toString(36).toUpperCase().substring(3) + Math.floor(Math.random() * 1000).toString(36).toUpperCase();
-          groupHashes[groupNum] = `${supId}-${randomHash}`;
-        }
-        
-        let pId = groupHashes[groupNum]; // e.g., CA1234SU-X9B2Z
+        let pId = `${supId}-P${groupNum}`;
         
         if(!variantCounters[pId]) variantCounters[pId] = 1;
-        let vId = `${pId}-V${variantCounters[pId]}`; // e.g., CA1234SU-X9B2Z-V1
+        let vId = `${pId}-V${variantCounters[pId]}`;
         variantCounters[pId]++;
 
-        // Build Final Row Object
         formattedRows.push({
           supplierId: supId,
           company: row["Company"] || "Unknown",
@@ -246,7 +273,6 @@
           lead: row["Lead Time"] || "30",
           prodId: pId,
           varId: vId,
-          // SWAP FILENAMES WITH SECURE LINKS
           hero: mediaUrls[row["Hero Img"]] || "",
           life: mediaUrls[row["Life Img"]] || "",
           close: mediaUrls[row["CloseUp Img"]] || "",
@@ -280,7 +306,6 @@
       }
     }
 
-    // Helper function
     function readFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
