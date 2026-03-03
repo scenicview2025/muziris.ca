@@ -175,7 +175,7 @@
 
       <div class="bulk-bar">
         Options: 
-        <a href="bulk-upload.html" class="bulk-link" style="text-decoration: none; text-transform: uppercase;">Launch Bulk Upload Portal</a>
+        <span class="bulk-link" onclick="launchBulk()" style="text-transform: uppercase;">Launch Bulk Upload Portal</span>
         <span style="color:#444; margin: 0 10px;">|</span>
         <span class="bulk-link" onclick="viewListings()">View Active Listings</span>
       </div>
@@ -512,6 +512,18 @@
           resultBox.innerHTML = "";
           customAlert("Server Error", "Could not connect to the database.");
         });
+    }
+
+    // THE NEW LAUNCH BULK UPLOAD PORTAL FUNCTION
+    function launchBulk() {
+      var id = document.getElementById('sid').value;
+      if(id) {
+        // Save ID to memory and route them to the new Staging Portal
+        sessionStorage.setItem('verifiedSupplierId', id);
+        window.location.href = 'bulk-upload.html';
+      } else {
+        customAlert("Error", "Please verify your identity first.");
+      }
     }
 
     function nextStep(current) {
