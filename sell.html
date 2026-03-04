@@ -25,6 +25,36 @@
       overflow-x: hidden;
     }
 
+    /* --- TOP NAVIGATION --- */
+    .top-navbar {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      padding: 25px 40px;
+      display: flex;
+      justify-content: flex-end; /* Centered or Right aligned login button */
+      align-items: center;
+      z-index: 10;
+      box-sizing: border-box;
+    }
+
+    .login-link {
+      color: #000;
+      background: var(--gold);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 25px;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+    .login-link:hover {
+      background: #fff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
     /* --- 3D WEALTH CANVAS BACKGROUND --- */
     #wealthCanvas {
       position: fixed;
@@ -168,7 +198,8 @@
     }
 
     @media (max-width: 768px) {
-      .inner-wrap { padding: 40px 20px; }
+      .top-navbar { justify-content: center; } /* Center login button on mobile */
+      .inner-wrap { padding: 40px 20px; margin-top: 40px;}
       h1.brand-title { font-size: 2.2rem; }
       .features-grid { grid-template-columns: 1fr; }
       .action-buttons { flex-direction: column; width: 100%; }
@@ -180,6 +211,10 @@
 
   <canvas id="wealthCanvas"></canvas>
 
+  <div class="top-navbar">
+    <a href="suppliers.html" class="login-link">Portal Login</a>
+  </div>
+
   <div class="scrolling-layer">
     <div class="inner-wrap">
       
@@ -190,8 +225,7 @@
       
       <div class="action-buttons">
         <a href="join.html" class="cta-button primary-btn">Apply to Network</a>
-        <a href="suppliers.html" class="cta-button solid-gold-btn">Portal Login</a>
-        <a href="payment-system.html" class="cta-button secondary-btn">How You Get Paid</a>
+        <a href="how-it-works.html" class="cta-button secondary-btn">How You Get Paid</a>
       </div>
 
       <div class="features-grid">
