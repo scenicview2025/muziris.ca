@@ -150,7 +150,7 @@
         <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
         <div class="step-indicator">
           <span id="step1-ind" class="step-active">Company</span>
-          <span id="step2-ind">Location</span>
+          <span id="step2-ind">Address</span>
           <span id="step3-ind">Business</span>
           <span id="step4-ind">Review</span>
         </div>
@@ -184,19 +184,20 @@
         </div>
 
         <div class="form-step" id="step2">
-          <h2>Location & Export</h2>
+          <h2>Registered Address</h2>
+          
+          <div class="form-group"><label>Address Line 1 *</label><input type="text" name="address1" id="address1" placeholder="Street address, company building" required></div>
+          <div class="form-group"><label>Address Line 2 (Optional)</label><input type="text" name="address2" id="address2" placeholder="Suite, unit, building, floor, etc."></div>
           
           <div class="input-row">
-            <div class="form-group"><label>State / Province</label><input type="text" name="state" placeholder="e.g. Ontario, Gujarat"></div>
-            <div class="form-group"><label>City</label><input type="text" name="city" placeholder="e.g. Toronto, Mumbai"></div>
+            <div class="form-group"><label>City *</label><input type="text" name="city" id="city" placeholder="e.g. Toronto, Mumbai" required></div>
+            <div class="form-group"><label>State / Province *</label><input type="text" name="state" id="state" placeholder="e.g. Ontario, Gujarat" required></div>
           </div>
 
           <div class="input-row">
-            <div class="form-group"><label>Zip / Postal Code</label><input type="text" name="zipcode" placeholder="Postal Code"></div>
+            <div class="form-group"><label>Zip / Postal Code *</label><input type="text" name="zipcode" id="zipcode" placeholder="Postal Code" required></div>
             <div class="form-group"><label>Do you currently export?</label><select name="exports"><option value="Yes">Yes</option><option value="No">No</option></select></div>
           </div>
-
-          <div class="form-group"><label>Registered Address</label><textarea name="address" rows="2"></textarea></div>
           
           <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(2)">Back</button><button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button></div>
         </div>
@@ -244,7 +245,6 @@
     window.addEventListener('resize', resize);
     resize();
 
-    // Responsive radius based on panel size
     const radius = Math.min(width, height) * 0.45;
 
     for (let i = 0; i < numNodes; i++) {
@@ -265,7 +265,6 @@
       ctx.clearRect(0, 0, width, height);
       rotationY += 0.0015;
       
-      // Center the globe within the left panel
       const cx = width / 2;
       const cy = height / 2;
       
@@ -273,18 +272,12 @@
       
       for (let i = 0; i < numNodes; i++) {
         let node = nodes[i];
-        
         let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
         let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
-        
         let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
         let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
-        
         const scale = 800 / (800 + z2);
-        const screenX = cx + x2 * scale;
-        const screenY = cy + y1 * scale;
-        
-        projectedNodes.push({ x: screenX, y: screenY, z: z2, scale: scale });
+        projectedNodes.push({ x: cx + x2 * scale, y: cy + y1 * scale, z: z2, scale: scale });
       }
       
       ctx.lineWidth = 0.5;
@@ -324,7 +317,6 @@
   // WEB APP URL
   const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
 
-  // NEW SMART COUNTRY DATA
   const lists = {
     countries: [
       { name: "Canada", code: "+1" }, { name: "United States", code: "+1" }, { name: "India", code: "+91" }, 
@@ -350,7 +342,7 @@
 
   window.onload = function() { 
     populateLists(lists); 
-    initGlobe(); // STARTS THE 3D GLOBE ON LOAD
+    initGlobe();
   };
 
   function showAlert(title, message) {
@@ -378,7 +370,6 @@
     data.categories.forEach(c => { var opt = document.createElement("option"); opt.value = c; opt.innerText = c; catSelect.appendChild(opt); });
   }
 
-  // Instantly update the dial code box when country changes
   function updatePhoneCode() {
     const select = document.getElementById("countrySelect");
     const selectedOption = select.options[select.selectedIndex];
@@ -393,8 +384,17 @@
   }
 
   function nextStep(current) {
-    if(current === 1 && (!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value || !document.getElementById('countrySelect').value)) { 
-      showAlert("Missing Information", "Please fill in all required fields on this page to continue."); return; 
+    // Validate Step 1 (Identity)
+    if(current === 1) {
+      if(!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value || !document.getElementById('countrySelect').value) { 
+        showAlert("Missing Information", "Please fill in all required Company Details before proceeding."); return; 
+      }
+    }
+    // Validate Step 2 (Structured Address)
+    if(current === 2) {
+      if(!document.getElementById('address1').value || !document.getElementById('city').value || !document.getElementById('state').value || !document.getElementById('zipcode').value) {
+        showAlert("Missing Information", "Please fill in all required Address fields to ensure successful registration."); return;
+      }
     }
 
     document.getElementById('step' + current).classList.remove('active');
@@ -417,7 +417,6 @@
     btn.innerText = "Processing...";
     btn.disabled = true;
     
-    // Combine Dial Code and Phone before submitting
     const finalPhone = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
     document.getElementById('fullPhone').value = finalPhone;
 
@@ -435,7 +434,7 @@
     .then(response => response.json())
     .then(response => {
       if(response.success) {
-        globeAnimating = false; // Turns off the animation to save CPU once done
+        globeAnimating = false; 
         document.getElementById('form-container').style.display = 'none';
         document.getElementById('success-screen').style.display = 'block';
         document.getElementById('final-id').innerText = response.id;
