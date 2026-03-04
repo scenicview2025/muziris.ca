@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Muziris | Secure Payment Workflow</title>
+  <title>Muziris | How It Works for Suppliers</title>
   <link rel="icon" type="image/png" href="MC.png">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
@@ -62,7 +62,6 @@
       margin: 0 auto;
     }
 
-    /* The vertical line */
     .timeline::after {
       content: '';
       position: absolute;
@@ -83,11 +82,9 @@
       margin-bottom: 40px;
     }
 
-    /* Left and Right positioning */
     .left { left: 0; text-align: right; }
     .right { left: 50%; text-align: left; }
 
-    /* The gold dots */
     .timeline-step::after {
       content: '';
       position: absolute;
@@ -118,15 +115,30 @@
       border-color: rgba(212, 175, 55, 0.4);
     }
 
-    .step-number { font-family: 'Cinzel', serif; color: var(--gold); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: block; }
-    .content h2 { font-family: 'Cinzel', serif; color: #fff; font-size: 20px; margin: 0 0 15px 0; }
+    .step-number { font-family: 'Cinzel', serif; color: var(--gold); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; background: rgba(212, 175, 55, 0.1); padding: 5px 10px; border-radius: 4px; border: 1px solid rgba(212, 175, 55, 0.3); }
+    .content h2 { font-family: 'Cinzel', serif; color: #fff; font-size: 20px; margin: 10px 0 15px 0; }
     .content p { font-size: 14px; color: #aaa; line-height: 1.6; margin: 0; }
     .content .highlight { color: var(--gold); font-weight: bold; }
+
+    /* Support Block */
+    .support-block {
+      background: rgba(212, 175, 55, 0.05);
+      border: 1px dashed var(--gold);
+      padding: 35px;
+      text-align: center;
+      border-radius: 8px;
+      margin-top: 60px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .support-block h3 { font-family: 'Cinzel', serif; color: var(--gold); margin-top: 0; letter-spacing: 1px; }
+    .support-block p { color: #ccc; font-size: 14px; line-height: 1.6; margin-bottom: 0; }
 
     /* CTA Section */
     .cta-section {
       text-align: center;
-      margin-top: 80px;
+      margin-top: 60px;
       padding-top: 40px;
       border-top: 1px solid #333;
     }
@@ -144,10 +156,21 @@
       text-decoration: none;
       display: inline-block;
       transition: transform 0.3s, box-shadow 0.3s;
+      margin: 10px;
     }
     .btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+    }
+    .btn-outline:hover {
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold);
+      box-shadow: none;
     }
 
     /* Mobile Responsive */
@@ -159,6 +182,7 @@
       .right { left: 0; }
       .header-section h1 { font-size: 28px; }
       .top-nav { top: 20px; left: 20px; }
+      .btn { width: 100%; box-sizing: border-box; }
     }
   </style>
 </head>
@@ -172,58 +196,64 @@
 
   <div class="container">
     <div class="header-section">
-      <h1>Muziris Trade Assurance</h1>
-      <p>We eliminate the risk of international trade. By securing the buyer's funds in our Canadian Escrow vault before you begin production, we guarantee that your hard work is always compensated.</p>
+      <h1>The Supplier Journey</h1>
+      <p>We built Muziris to be frictionless and secure. From uploading your massive product catalogs to guaranteeing your payment across borders, here is exactly how our platform works for you.</p>
     </div>
 
     <div class="timeline">
       
       <div class="timeline-step left">
         <div class="content">
-          <span class="step-number">Step 01</span>
-          <h2>Buyer Secures Funds</h2>
-          <p>When an order is agreed upon, the international buyer deposits the funds into the secure Muziris Escrow Account. We verify the funds are fully cleared and locked.</p>
+          <span class="step-number">01. Identity & Access</span>
+          <h2>Seamless Registration</h2>
+          <p>Apply to the network with your company details. Once approved by our team, you receive a secure, permanent <strong>Supplier ID</strong> and a unique Login PIN. No complex passwords to forget—just fast, secure verification.</p>
         </div>
       </div>
 
       <div class="timeline-step right">
         <div class="content">
-          <span class="step-number">Step 02</span>
-          <h2>Official Purchase Order</h2>
-          <p>Muziris issues you a legally binding Purchase Order confirming the funds are secured. <br><br><span class="highlight">Need Working Capital?</span> You can present this guaranteed PO to your local bank or financial partners to easily secure short-term manufacturing loans.</p>
+          <span class="step-number">02. The Global Ledger</span>
+          <h2>Frictionless Catalog Uploads</h2>
+          <p>Have 5 products? Use our clean Single-Upload portal. Have 500 products? Use our <strong>Bulk CSV Staging Portal</strong>. Our system automatically catches formatting errors, resizes your heavy images, and organizes your matrix instantly.</p>
         </div>
       </div>
 
       <div class="timeline-step left">
         <div class="content">
-          <span class="step-number">Step 03</span>
-          <h2>Production & Shipping</h2>
-          <p>With guaranteed payment waiting for you, you can confidently purchase raw materials, manufacture the goods, and ship the order to the buyer without fear of cancellation or fraud.</p>
+          <span class="step-number">03. Trade Assurance</span>
+          <h2>Secure Orders & PO Financing</h2>
+          <p>When a buyer agrees to your terms, they deposit the funds into the secure Muziris Canadian Escrow vault. We issue you a legally binding <strong>Purchase Order</strong>, which you can use to secure raw material loans from your local bank.</p>
         </div>
       </div>
 
       <div class="timeline-step right">
         <div class="content">
-          <span class="step-number">Step 04</span>
-          <h2>Delivery & Inspection</h2>
-          <p>The buyer receives the shipment and has a strict <span class="highlight">7-day window</span> to inspect the goods. They must verify that the quality matches the agreed-upon standards.</p>
+          <span class="step-number">04. Logistics & Quality</span>
+          <h2>Production & Inspection</h2>
+          <p>Manufacture and ship the goods with 100% confidence that the money is already locked in our vault. Upon arrival, the buyer has a strict <span class="highlight">7-day window</span> to inspect the goods against your provided specifications.</p>
         </div>
       </div>
 
       <div class="timeline-step left">
         <div class="content">
-          <span class="step-number">Step 05</span>
+          <span class="step-number">05. Completion</span>
           <h2>Guaranteed Payout</h2>
-          <p>Once the buyer approves the goods (or if 7 days pass with no dispute raised), the funds are automatically released from our vault directly to your registered bank account, minus our standard platform fee.</p>
+          <p>Once the buyer approves the shipment (or if the 7 days pass without a dispute), the funds are instantly released from Escrow directly to your registered bank account, minus our standard transparent platform fee.</p>
         </div>
       </div>
 
     </div>
 
+    <div class="support-block">
+      <h3>Enterprise Data Support</h3>
+      <p>We know that structuring large amounts of product data can be difficult. If you are struggling to format your CSV files or map your existing database to the Muziris Ledger, <strong>our dedicated Data Team will do it for you.</strong> Just send us your raw Excel files, and we will prepare them for perfect upload.</p>
+    </div>
+
     <div class="cta-section">
-      <h2 style="font-family: 'Cinzel', serif; color: #fff; margin-bottom: 25px;">Ready to expand your global reach securely?</h2>
+      <h2 style="font-family: 'Cinzel', serif; color: #fff; margin-bottom: 25px;">Ready to expand your global reach?</h2>
       <a href="join.html" class="btn">Apply to Network</a>
-      <p style="margin-top: 20px; font-size: 13px; color: #666;">Have questions about our financial partners? Contact <a href="mailto:support@muziris.ca" style="color: var(--gold); text-decoration: none;">support@muziris.ca</a></p>
+      <a href="suppliers.html" class="btn btn-outline">Supplier Login</a>
+      <p style="margin-top: 20px; font-size: 13px; color: #666;">Need help onboarding? Contact <a href="mailto:support@muziris.ca" style="color: var(--gold); text-decoration: none;">support@muziris.ca</a></p>
     </div>
 
   </div>
