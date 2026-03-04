@@ -25,47 +25,6 @@
       overflow-x: hidden;
     }
 
-    /* --- TOP NAVIGATION --- */
-    .top-navbar {
-      position: absolute;
-      top: 0; left: 0; width: 100%;
-      padding: 25px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 10;
-      box-sizing: border-box;
-    }
-
-    .back-home {
-      color: var(--gold);
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      transition: 0.3s;
-    }
-    .back-home:hover { color: #fff; }
-
-    .login-link {
-      color: #000;
-      background: var(--gold);
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 10px 25px;
-      border-radius: 3px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-    }
-    .login-link:hover {
-      background: #fff;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-    }
-
     /* --- 3D WEALTH CANVAS BACKGROUND --- */
     #wealthCanvas {
       position: fixed;
@@ -88,7 +47,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 100px 20px 40px;
+      padding: 60px 20px;
       box-sizing: border-box;
     }
 
@@ -142,13 +101,13 @@
 
     .cta-button {
       display: inline-block;
-      padding: 18px 35px;
+      padding: 18px 30px;
       text-decoration: none;
       font-family: 'Cinzel', serif;
       font-weight: 700;
       font-size: 0.95rem;
       letter-spacing: 2px;
-      border-radius: 3px;
+      border-radius: 4px;
       text-transform: uppercase;
       transition: all 0.4s ease;
     }
@@ -159,7 +118,19 @@
       border: 1px solid var(--gold);
     }
     .primary-btn:hover {
-      background: rgba(212, 175, 55, 0.1);
+      background: rgba(212, 175, 55, 0.15);
+      transform: translateY(-3px);
+    }
+
+    .solid-gold-btn {
+      background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%);
+      color: #000;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+    .solid-gold-btn:hover {
+      background: #fff;
+      color: #000;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
       transform: translateY(-3px);
     }
 
@@ -197,8 +168,7 @@
     }
 
     @media (max-width: 768px) {
-      .top-navbar { padding: 20px; flex-direction: column; gap: 15px; }
-      .inner-wrap { padding: 40px 20px; margin-top: 40px; }
+      .inner-wrap { padding: 40px 20px; }
       h1.brand-title { font-size: 2.2rem; }
       .features-grid { grid-template-columns: 1fr; }
       .action-buttons { flex-direction: column; width: 100%; }
@@ -210,11 +180,6 @@
 
   <canvas id="wealthCanvas"></canvas>
 
-  <div class="top-navbar">
-    <a href="index.html" class="back-home">← Muziris.ca</a>
-    <a href="suppliers.html" class="login-link">Portal Login</a>
-  </div>
-
   <div class="scrolling-layer">
     <div class="inner-wrap">
       
@@ -225,6 +190,7 @@
       
       <div class="action-buttons">
         <a href="join.html" class="cta-button primary-btn">Apply to Network</a>
+        <a href="suppliers.html" class="cta-button solid-gold-btn">Portal Login</a>
         <a href="payment-system.html" class="cta-button secondary-btn">How You Get Paid</a>
       </div>
 
