@@ -112,7 +112,7 @@
 
     /* Phone Input Group */
     .phone-group { display: flex; gap: 10px; }
-    .phone-code { width: 80px; background: #0f1219; color: #ffffff; font-weight: bold; text-align: center; border-color: #333; cursor: not-allowed; }
+    .phone-code { width: 80px; background: #0f1219; color: #ffffff; font-weight: bold; text-align: center; border: 1px solid #333; cursor: not-allowed; }
     .phone-code::placeholder { color: #666; font-weight: normal; }
     .phone-number { flex: 1; }
 
@@ -258,24 +258,31 @@
 
         <div class="form-step" id="step3">
           <h2>Business Profile</h2>
-          <div class="form-group"><label>Primary Industry/Sector</label><select name="industry" id="industrySelect"></select></div>
-          <div class="form-group"><label>Primary Product Category</label><select name="category" id="categorySelect"></select></div>
-          <div class="form-group"><label>Website URL</label><input type="text" name="website" placeholder="https://..."></div>
-          <div class="form-group">
-            <label>Payment Terms Offered</label>
-            <select name="paymentTerms">
-              <option value="">Select Accepted Terms...</option>
-              <option value="T/T">T/T (Telegraphic Transfer)</option>
-              <option value="L/C">L/C (Letter of Credit)</option>
-              <option value="D/P">D/P (Documents against Payment)</option>
-              <option value="D/A">D/A (Documents against Acceptance)</option>
-              <option value="O/A">O/A (Open Account / Net 30-90)</option>
-              <option value="Escrow">Escrow / Trade Assurance</option>
-              <option value="PayPal">PayPal (Sample Orders Only)</option>
-              <option value="Multiple">Multiple Options Available</option>
-              <option value="Other">Other</option>
-            </select>
+          
+          <div class="input-row">
+            <div class="form-group"><label>Primary Industry</label><select name="industry" id="industrySelect"></select></div>
+            <div class="form-group"><label>Primary Category</label><select name="category" id="categorySelect"></select></div>
           </div>
+
+          <div class="input-row">
+            <div class="form-group">
+              <label>Year Established</label>
+              <input type="number" name="yearEstablished" placeholder="e.g. 2010" min="1900" max="2026">
+            </div>
+            <div class="form-group">
+              <label>Factory Size (Employees)</label>
+              <select name="employeeCount">
+                <option value="">Select Size...</option>
+                <option value="1-50">1 - 50 Employees</option>
+                <option value="51-200">51 - 200 Employees</option>
+                <option value="201-500">201 - 500 Employees</option>
+                <option value="500+">500+ Employees</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group"><label>Website URL</label><input type="text" name="website" placeholder="https://..."></div>
+          
           <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(3)">Back</button><button type="button" class="btn-next" onclick="nextStep(3)">Next Step</button></div>
         </div>
 
@@ -284,7 +291,7 @@
           <div class="form-group"><label>GST / Tax ID Number</label><input type="text" name="taxId"></div>
           <div class="form-group"><label>Certifications</label><input type="text" name="certifications"></div>
           <div class="form-group"><label>Product Catalog Link</label><input type="text" name="catalogLink"></div>
-          <div style="margin-top: 30px; padding: 15px; border: 1px dashed #444; font-size: 11px; color: #888;">By clicking submit, you agree to Muziris Terms of Trade.</div>
+          <div style="margin-top: 30px; padding: 15px; border: 1px dashed #444; font-size: 11px; color: #888;">By clicking submit, you agree to Muziris Terms of Trade. Your default payment term is Muziris Secure Escrow.</div>
           <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(4)">Back</button><button type="button" class="btn-next" id="submitBtn" onclick="submitForm()">Submit Registration</button></div>
         </div>
 
@@ -452,13 +459,11 @@
   }
 
   function nextStep(current) {
-    // Validate Step 1 (Identity)
     if(current === 1) {
       if(!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value || !document.getElementById('countrySelect').value) { 
         showAlert("Missing Information", "Please fill in all required Company Details before proceeding."); return; 
       }
     }
-    // Validate Step 2 (Structured Address)
     if(current === 2) {
       if(!document.getElementById('address1').value || !document.getElementById('city').value || !document.getElementById('state').value || !document.getElementById('zipcode').value) {
         showAlert("Missing Information", "Please fill in all required Address fields to ensure successful registration."); return;
