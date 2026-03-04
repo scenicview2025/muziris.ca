@@ -113,11 +113,13 @@
     // Security Check: Ensure user came from the verified login page
     window.onload = function() {
       const verifiedId = sessionStorage.getItem('verifiedSupplierId');
+      const verifiedCurrency = sessionStorage.getItem('verifiedCurrency'); // Fetch their official currency
       
       if (!verifiedId) {
         window.location.href = 'suppliers.html'; 
       } else {
         document.getElementById('supId').value = verifiedId;
+        window.officialCurrency = verifiedCurrency || "USD"; // Store it globally for the mapper
         document.getElementById('mainUI').style.display = 'block';
         
         // Fetch master categories so we can validate their CSV later
@@ -282,13 +284,11 @@
       let formattedRows = [];
       let variantCounters = {}; 
 
-      // NEW CODE: Generate a unique 4-character Batch ID for this specific upload session
+      // Generate a unique 4-character Batch ID for this specific upload session
       const uploadBatchId = Math.random().toString(36).substring(2, 6).toUpperCase();
 
       for(let row of csvData) {
         let groupNum = String(row["Item Group Number"]).trim();
-        
-        // This injects the unique Batch ID into the Product Hash so it never repeats across uploads
         let pId = `${supId}-${uploadBatchId}-P${groupNum}`;
         
         if(!variantCounters[pId]) variantCounters[pId] = 1;
@@ -298,7 +298,7 @@
         formattedRows.push({
           supplierId: supId,
           company: row["Company"] || "Unknown",
-          currency: row["Currency"] || "USD",
+          currency: window.officialCurrency, // OVERRIDE CSV WITH OFFICIAL CURRENCY
           mainCat: row["Main Category"] || "",
           subCat: row["Sub Category"] || "",
           prodName: row["Product Name"] || "",
