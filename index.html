@@ -1,3 +1,5 @@
+Working
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -290,7 +292,7 @@
 <body>
 
   <div class="fixed-bg">
-    <video autoplay loop muted playsinline id="bg-video">
+    <video autoplay loop muted playsinline>
       <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">
     </video>
   </div>
@@ -361,33 +363,18 @@
 
   </div>
 
-  <script>
-    // --- SMART VIDEO RESUME (Fixes iPhone frozen background video) ---
-    document.addEventListener("visibilitychange", function() {
-      if (document.visibilityState === "visible") {
-        const bgVideo = document.getElementById("bg-video"); 
-        if (bgVideo) {
-          bgVideo.play().catch(e => console.log("Auto-resume prevented", e));
-        }
-      }
-    });
-
-    window.addEventListener("focus", function() {
-      const bgVideo = document.getElementById("bg-video"); 
-      if (bgVideo) bgVideo.play();
-    });
-  </script>
-
-  <script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-  s1.async=true;
-  s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
-  s1.charset='UTF-8';
-  s1.setAttribute('crossorigin','*');
-  s0.parentNode.insertBefore(s1,s0);
-  })();
-  </script>
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
 </body>
 </html>
+
+
