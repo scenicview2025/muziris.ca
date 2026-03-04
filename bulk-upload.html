@@ -120,7 +120,7 @@
         document.getElementById('supId').value = verifiedId;
         document.getElementById('mainUI').style.display = 'block';
         
-        // NEW: Fetch master categories so we can validate their CSV later
+        // Fetch master categories so we can validate their CSV later
         fetch(WEB_APP_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -133,7 +133,6 @@
       }
     };
 
-    // FIXED URL WITH PROPER QUOTATION MARKS
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
     
     let csvData = [];
@@ -206,9 +205,7 @@
           }
         }
 
-        // ============================================================
-        // C. NEW SMART VALIDATION: Check Categories against Master List
-        // ============================================================
+        // C. SMART VALIDATION: Check Categories against Master List
         if (window.masterCategories) {
           let cMain = String(row["Main Category"] || "").trim();
           let cSub = String(row["Sub Category"] || "").trim();
@@ -231,7 +228,6 @@
              }
           }
         }
-        // ============================================================
       }
 
       // Check if uploaded files match the required files
@@ -286,9 +282,14 @@
       let formattedRows = [];
       let variantCounters = {}; 
 
+      // NEW CODE: Generate a unique 4-character Batch ID for this specific upload session
+      const uploadBatchId = Math.random().toString(36).substring(2, 6).toUpperCase();
+
       for(let row of csvData) {
         let groupNum = String(row["Item Group Number"]).trim();
-        let pId = `${supId}-P${groupNum}`;
+        
+        // This injects the unique Batch ID into the Product Hash so it never repeats across uploads
+        let pId = `${supId}-${uploadBatchId}-P${groupNum}`;
         
         if(!variantCounters[pId]) variantCounters[pId] = 1;
         let vId = `${pId}-V${variantCounters[pId]}`;
