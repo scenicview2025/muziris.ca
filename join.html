@@ -62,9 +62,19 @@
     .form-step.active { display: block; }
     h2 { font-family: 'Cinzel', serif; color: white; margin-bottom: 25px; font-size: 24px; }
     .form-group { margin-bottom: 20px; }
+    
+    /* Input Split grid */
+    .input-row { display: flex; gap: 15px; margin-bottom: 20px; }
+    .input-row .form-group { flex: 1; margin-bottom: 0; }
+
     label { display: block; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #888; }
     input, select, textarea { width: 100%; padding: 15px; background: var(--input-bg); border: 1px solid #333; color: white; border-radius: 4px; font-family: 'Lato', sans-serif; box-sizing: border-box; transition: 0.3s; }
     input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
+
+    /* Phone Input Group */
+    .phone-group { display: flex; gap: 10px; }
+    .phone-code { width: 80px; background: rgba(212,175,55,0.1); color: var(--gold); font-weight: bold; text-align: center; border-color: #333; cursor: not-allowed; }
+    .phone-number { flex: 1; }
 
     /* BUTTONS */
     .btn-group { display: flex; justify-content: space-between; margin-top: 30px; }
@@ -94,6 +104,7 @@
       .top-nav { top: 20px; left: 20px; }
       .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; border-left: none; }
       body { overflow-y: auto; }
+      .input-row { flex-direction: column; gap: 20px; }
     }
   </style>
 </head>
@@ -152,15 +163,41 @@
           <div class="form-group"><label>Company Name *</label><input type="text" name="companyName" id="companyName" required></div>
           <div class="form-group"><label>Contact Person *</label><input type="text" name="contactPerson" id="contactPerson" required></div>
           <div class="form-group"><label>Official Email *</label><input type="email" name="email" id="email" required></div>
-          <div class="form-group"><label>Phone / WhatsApp *</label><input type="text" name="phone" id="phone" placeholder="+1 234 567 8900" required></div>
+          
+          <div class="form-group">
+            <label>Country *</label>
+            <select name="country" id="countrySelect" required onchange="updatePhoneCode()">
+              <option value="">Select Country...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>WhatsApp / Mobile Number *</label>
+            <div class="phone-group">
+              <input type="text" id="dialCode" class="phone-code" readonly placeholder="+">
+              <input type="text" id="phone" placeholder="Phone Number" inputmode="numeric" required>
+            </div>
+            <input type="hidden" name="phone" id="fullPhone">
+          </div>
+
           <div class="btn-group" style="justify-content: flex-end;"><button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button></div>
         </div>
 
         <div class="form-step" id="step2">
           <h2>Location & Export</h2>
-          <div class="form-group"><label>Country *</label><select name="country" id="countrySelect" required></select></div>
-          <div class="form-group"><label>Registered Address</label><textarea name="address" rows="3"></textarea></div>
-          <div class="form-group"><label>Do you currently export?</label><select name="exports"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+          
+          <div class="input-row">
+            <div class="form-group"><label>State / Province</label><input type="text" name="state" placeholder="e.g. Ontario, Gujarat"></div>
+            <div class="form-group"><label>City</label><input type="text" name="city" placeholder="e.g. Toronto, Mumbai"></div>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group"><label>Zip / Postal Code</label><input type="text" name="zipcode" placeholder="Postal Code"></div>
+            <div class="form-group"><label>Do you currently export?</label><select name="exports"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+          </div>
+
+          <div class="form-group"><label>Registered Address</label><textarea name="address" rows="2"></textarea></div>
+          
           <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(2)">Back</button><button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button></div>
         </div>
 
@@ -287,9 +324,26 @@
   // WEB APP URL
   const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyifDp3-s1PD4ySElAnW-mA-ytAgFT1xUlqxo6qfYyitvAd8YVg4Nwr8fGJBNXbm3xQrw/exec";
 
-  // HARDCODED LISTS
+  // NEW SMART COUNTRY DATA
   const lists = {
-    countries: ["India", "Canada", "United States", "China", "United Kingdom", "Australia", "Germany", "France", "Italy", "Spain", "Brazil", "Mexico", "Japan", "South Korea", "Vietnam", "Thailand", "Indonesia", "Malaysia", "Singapore", "Philippines", "Bangladesh", "Sri Lanka", "Pakistan", "UAE", "Saudi Arabia", "South Africa", "Nigeria", "Kenya", "Egypt", "Turkey", "Netherlands", "Belgium", "Sweden", "Norway", "Denmark", "Switzerland", "Poland", "Russia", "Argentina", "Chile", "Colombia", "Peru", "New Zealand", "Ireland", "Portugal"],
+    countries: [
+      { name: "Canada", code: "+1" }, { name: "United States", code: "+1" }, { name: "India", code: "+91" }, 
+      { name: "China", code: "+86" }, { name: "United Kingdom", code: "+44" }, { name: "Australia", code: "+61" }, 
+      { name: "Germany", code: "+49" }, { name: "France", code: "+33" }, { name: "Italy", code: "+39" }, 
+      { name: "Spain", code: "+34" }, { name: "Brazil", code: "+55" }, { name: "Mexico", code: "+52" }, 
+      { name: "Japan", code: "+81" }, { name: "South Korea", code: "+82" }, { name: "Vietnam", code: "+84" }, 
+      { name: "Thailand", code: "+66" }, { name: "Indonesia", code: "+62" }, { name: "Malaysia", code: "+60" }, 
+      { name: "Singapore", code: "+65" }, { name: "Philippines", code: "+63" }, { name: "Bangladesh", code: "+880" }, 
+      { name: "Sri Lanka", code: "+94" }, { name: "Pakistan", code: "+92" }, { name: "UAE", code: "+971" }, 
+      { name: "Saudi Arabia", code: "+966" }, { name: "South Africa", code: "+27" }, { name: "Nigeria", code: "+234" }, 
+      { name: "Kenya", code: "+254" }, { name: "Egypt", code: "+20" }, { name: "Turkey", code: "+90" }, 
+      { name: "Netherlands", code: "+31" }, { name: "Belgium", code: "+32" }, { name: "Sweden", code: "+46" }, 
+      { name: "Norway", code: "+47" }, { name: "Denmark", code: "+45" }, { name: "Switzerland", code: "+41" }, 
+      { name: "Poland", code: "+48" }, { name: "Russia", code: "+7" }, { name: "Argentina", code: "+54" }, 
+      { name: "Chile", code: "+56" }, { name: "Colombia", code: "+57" }, { name: "Peru", code: "+51" }, 
+      { name: "New Zealand", code: "+64" }, { name: "Ireland", code: "+353" }, { name: "Portugal", code: "+351" }, 
+      { name: "Other", code: "+" }
+    ],
     industries: ["Agriculture & Food", "Apparel & Textiles", "Automotive & Transport", "Chemicals & Plastics", "Construction & Real Estate", "Consumer Electronics", "Energy & Environment", "Health & Medical", "Home & Garden", "Industrial Machinery", "Jewelry & Luxury", "Minerals & Metals", "Packaging & Printing", "Personal Care & Beauty", "Security & Protection"],
     categories: ["Raw Materials", "Finished Goods", "Components & Parts", "Machinery & Equipment", "Tools & Hardware", "Packaging Materials", "Services & Logistics", "Private Label / OEM"]
   };
@@ -309,24 +363,38 @@
 
   function populateLists(data) {
     var cSelect = document.getElementById("countrySelect");
-    cSelect.innerHTML = "<option value=''>Select Country</option>";
-    data.countries.forEach(c => { var opt = document.createElement("option"); opt.value = c; opt.innerText = c; cSelect.appendChild(opt); });
+    data.countries.forEach(c => { 
+      var opt = document.createElement("option"); 
+      opt.value = c.name; 
+      opt.innerText = c.name; 
+      opt.setAttribute("data-code", c.code);
+      cSelect.appendChild(opt); 
+    });
 
     var iSelect = document.getElementById("industrySelect");
-    iSelect.innerHTML = "<option value=''>Select Industry</option>";
     data.industries.forEach(i => { var opt = document.createElement("option"); opt.value = i; opt.innerText = i; iSelect.appendChild(opt); });
 
     var catSelect = document.getElementById("categorySelect");
-    catSelect.innerHTML = "<option value=''>Select Category</option>";
     data.categories.forEach(c => { var opt = document.createElement("option"); opt.value = c; opt.innerText = c; catSelect.appendChild(opt); });
   }
 
-  function nextStep(current) {
-    if(current === 1 && (!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value)) { 
-      showAlert("Missing Information", "Please fill in all required fields (Company Name, Contact Person, Email, and Phone) to continue."); return; 
+  // Instantly update the dial code box when country changes
+  function updatePhoneCode() {
+    const select = document.getElementById("countrySelect");
+    const selectedOption = select.options[select.selectedIndex];
+    const dialCodeInput = document.getElementById("dialCode");
+    
+    if(selectedOption && selectedOption.value !== "") {
+      dialCodeInput.value = selectedOption.getAttribute("data-code");
+      document.getElementById("phone").focus(); 
+    } else {
+      dialCodeInput.value = "";
     }
-    if(current === 2 && !document.getElementById('countrySelect').value) { 
-      showAlert("Missing Information", "Please select your Country from the list."); return; 
+  }
+
+  function nextStep(current) {
+    if(current === 1 && (!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value || !document.getElementById('countrySelect').value)) { 
+      showAlert("Missing Information", "Please fill in all required fields on this page to continue."); return; 
     }
 
     document.getElementById('step' + current).classList.remove('active');
@@ -349,6 +417,10 @@
     btn.innerText = "Processing...";
     btn.disabled = true;
     
+    // Combine Dial Code and Phone before submitting
+    const finalPhone = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
+    document.getElementById('fullPhone').value = finalPhone;
+
     var form = document.getElementById('regForm');
     var data = {};
     new FormData(form).forEach((value, key) => data[key] = value);
