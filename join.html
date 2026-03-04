@@ -47,7 +47,7 @@
     .brand-content h1:hover { color: #fff; }
     .brand-content p { font-size: 18px; line-height: 1.6; margin-top: 15px; color: #ccc; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
-    /* TRUST LINK STYLING (NEW) */
+    /* TRUST LINK STYLING */
     .trust-link-box {
       margin-top: 40px;
       padding: 20px;
@@ -110,9 +110,10 @@
     input, select, textarea { width: 100%; padding: 15px; background: var(--input-bg); border: 1px solid #333; color: white; border-radius: 4px; font-family: 'Lato', sans-serif; box-sizing: border-box; transition: 0.3s; }
     input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
 
-    /* Phone Input Group */
+    /* Phone Input Group (FIXED: Dark background, white text) */
     .phone-group { display: flex; gap: 10px; }
-    .phone-code { width: 80px; background: rgba(212,175,55,0.1); color: var(--gold); font-weight: bold; text-align: center; border-color: #333; cursor: not-allowed; }
+    .phone-code { width: 80px; background: #0f1219; color: #ffffff; font-weight: bold; text-align: center; border: 1px solid #333; cursor: not-allowed; }
+    .phone-code::placeholder { color: #666; font-weight: normal; }
     .phone-number { flex: 1; }
 
     /* BUTTONS */
@@ -227,7 +228,7 @@
           <div class="form-group">
             <label>WhatsApp / Mobile Number *</label>
             <div class="phone-group">
-              <input type="text" id="dialCode" class="phone-code" readonly placeholder="+">
+              <input type="text" id="dialCode" class="phone-code" readonly placeholder="+00">
               <input type="text" id="phone" placeholder="Phone Number" inputmode="numeric" required>
             </div>
             <input type="hidden" name="phone" id="fullPhone">
