@@ -31,11 +31,22 @@
       top: 0; left: 0; width: 100%;
       padding: 25px 40px;
       display: flex;
-      justify-content: flex-end; /* Centered or Right aligned login button */
+      justify-content: space-between; /* Changed to space-between to hold both buttons */
       align-items: center;
       z-index: 10;
       box-sizing: border-box;
     }
+
+    .back-home {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: 0.3s;
+    }
+    .back-home:hover { color: #fff; }
 
     .login-link {
       color: #000;
@@ -198,7 +209,7 @@
     }
 
     @media (max-width: 768px) {
-      .top-navbar { justify-content: center; } /* Center login button on mobile */
+      .top-navbar { flex-direction: column; gap: 15px; justify-content: center; } /* Keeps them stacked on mobile */
       .inner-wrap { padding: 40px 20px; margin-top: 40px;}
       h1.brand-title { font-size: 2.2rem; }
       .features-grid { grid-template-columns: 1fr; }
@@ -212,6 +223,7 @@
   <canvas id="wealthCanvas"></canvas>
 
   <div class="top-navbar">
+    <a href="join.html" class="back-home">← BACK TO JOIN</a>
     <a href="suppliers.html" class="login-link">Portal Login</a>
   </div>
 
