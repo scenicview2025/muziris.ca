@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Secure Payment Workflow</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --gold-dim: #b89225; 
+      --dark-bg: #0b0e14; 
+      --card-bg: #151922; 
+      --text: #e0e0e0; 
+      --text-muted: #888;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Lato', sans-serif; 
+      background-color: var(--dark-bg); 
+      color: var(--text); 
+      background-image: url('network-bg.png'); 
+      background-size: cover; 
+      background-position: center; 
+      background-attachment: fixed;
+    }
+    
+    .overlay { 
+      position: fixed; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+      background: radial-gradient(circle, rgba(11,14,20,0.85) 0%, rgba(11,14,20,0.98) 100%); 
+      z-index: 1; 
+      pointer-events: none;
+    }
+
+    /* TOP NAVIGATION */
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+    .back-home:hover { color: #fff; }
+
+    /* MAIN CONTAINER */
+    .container { 
+      position: relative; 
+      z-index: 2; 
+      max-width: 900px; 
+      margin: 80px auto 60px; 
+      padding: 0 20px;
+    }
+
+    .header-section { text-align: center; margin-bottom: 60px; }
+    .header-section h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 36px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; }
+    .header-section p { font-size: 16px; color: var(--text-muted); line-height: 1.6; max-width: 650px; margin: 0 auto; }
+
+    /* TIMELINE STYLING */
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* The vertical line */
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      background-color: #333;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -1px;
+    }
+
+    .timeline-step {
+      padding: 10px 40px;
+      position: relative;
+      background-color: inherit;
+      width: 50%;
+      box-sizing: border-box;
+      margin-bottom: 40px;
+    }
+
+    /* Left and Right positioning */
+    .left { left: 0; text-align: right; }
+    .right { left: 50%; text-align: left; }
+
+    /* The gold dots */
+    .timeline-step::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      right: -10px;
+      background-color: var(--dark-bg);
+      border: 3px solid var(--gold);
+      top: 15px;
+      border-radius: 50%;
+      z-index: 1;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+    .right::after { left: -10px; }
+
+    /* Content Cards */
+    .content {
+      padding: 30px;
+      background: var(--card-bg);
+      position: relative;
+      border-radius: 8px;
+      border: 1px solid #222;
+      transition: transform 0.3s, border-color 0.3s;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .content:hover {
+      transform: translateY(-5px);
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+
+    .step-number { font-family: 'Cinzel', serif; color: var(--gold); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .content h2 { font-family: 'Cinzel', serif; color: #fff; font-size: 20px; margin: 0 0 15px 0; }
+    .content p { font-size: 14px; color: #aaa; line-height: 1.6; margin: 0; }
+    .content .highlight { color: var(--gold); font-weight: bold; }
+
+    /* CTA Section */
+    .cta-section {
+      text-align: center;
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid #333;
+    }
+    .btn {
+      background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%);
+      color: #000;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Mobile Responsive */
+    @media screen and (max-width: 768px) {
+      .timeline::after { left: 31px; }
+      .timeline-step { width: 100%; padding-left: 70px; padding-right: 0; text-align: left; }
+      .left::after, .right::after { left: 21px; }
+      .left { left: 0; }
+      .right { left: 0; }
+      .header-section h1 { font-size: 28px; }
+      .top-nav { top: 20px; left: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="top-nav">
+    <a href="sell.html" class="back-home">← Back to Supplier Home</a>
+  </div>
+
+  <div class="container">
+    <div class="header-section">
+      <h1>Muziris Trade Assurance</h1>
+      <p>We eliminate the risk of international trade. By securing the buyer's funds in our Canadian Escrow vault before you begin production, we guarantee that your hard work is always compensated.</p>
+    </div>
+
+    <div class="timeline">
+      
+      <div class="timeline-step left">
+        <div class="content">
+          <span class="step-number">Step 01</span>
+          <h2>Buyer Secures Funds</h2>
+          <p>When an order is agreed upon, the international buyer deposits the funds into the secure Muziris Escrow Account. We verify the funds are fully cleared and locked.</p>
+        </div>
+      </div>
+
+      <div class="timeline-step right">
+        <div class="content">
+          <span class="step-number">Step 02</span>
+          <h2>Official Purchase Order</h2>
+          <p>Muziris issues you a legally binding Purchase Order confirming the funds are secured. <br><br><span class="highlight">Need Working Capital?</span> You can present this guaranteed PO to your local bank or financial partners to easily secure short-term manufacturing loans.</p>
+        </div>
+      </div>
+
+      <div class="timeline-step left">
+        <div class="content">
+          <span class="step-number">Step 03</span>
+          <h2>Production & Shipping</h2>
+          <p>With guaranteed payment waiting for you, you can confidently purchase raw materials, manufacture the goods, and ship the order to the buyer without fear of cancellation or fraud.</p>
+        </div>
+      </div>
+
+      <div class="timeline-step right">
+        <div class="content">
+          <span class="step-number">Step 04</span>
+          <h2>Delivery & Inspection</h2>
+          <p>The buyer receives the shipment and has a strict <span class="highlight">7-day window</span> to inspect the goods. They must verify that the quality matches the agreed-upon standards.</p>
+        </div>
+      </div>
+
+      <div class="timeline-step left">
+        <div class="content">
+          <span class="step-number">Step 05</span>
+          <h2>Guaranteed Payout</h2>
+          <p>Once the buyer approves the goods (or if 7 days pass with no dispute raised), the funds are automatically released from our vault directly to your registered bank account, minus our standard platform fee.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cta-section">
+      <h2 style="font-family: 'Cinzel', serif; color: #fff; margin-bottom: 25px;">Ready to expand your global reach securely?</h2>
+      <a href="join.html" class="btn">Apply to Network</a>
+      <p style="margin-top: 20px; font-size: 13px; color: #666;">Have questions about our financial partners? Contact <a href="mailto:support@muziris.ca" style="color: var(--gold); text-decoration: none;">support@muziris.ca</a></p>
+    </div>
+
+  </div>
+
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
+</body>
+</html>
