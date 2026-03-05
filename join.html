@@ -81,12 +81,12 @@
       text-shadow: none;
     }
 
-    /* ECO PLEDGE STYLING */
+    /* ECO PLEDGE STYLING (UPDATED FOR LARGER CUSTOM ICON) */
     .eco-pledge {
       margin-top: auto; 
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 20px;
       border-top: 1px solid rgba(255,255,255,0.05);
       padding-top: 25px;
       max-width: 450px;
@@ -94,10 +94,9 @@
       z-index: 3;
     }
     .eco-icon svg {
-      fill: #4CAF50;
-      width: 28px;
-      height: 28px;
-      opacity: 0.9;
+      width: 48px; /* Increased size to match the detail of the new design */
+      height: 48px;
+      opacity: 0.95;
     }
     .eco-text strong {
       color: #e0e0e0;
@@ -117,6 +116,7 @@
     .eco-text span {
       color: #4CAF50;
       font-style: italic;
+      font-weight: bold;
     }
 
     /* RIGHT PANEL (Form) */
@@ -221,7 +221,15 @@
 
     <div class="eco-pledge">
       <div class="eco-icon">
-        <svg viewBox="0 0 512 512"><path d="M272 96c-78.6 0-145.1 81.5-164.2 173.1C83.7 298.5 65.7 320 48 320c-17.7 0-32-14.3-32-32s14.3-32 32-32c7.6 0 14.7-2.6 20.3-7.1C48.7 205.1 143.9 80 272 80c106 0 192 86 192 192s-86 192-192 192c-50.6 0-96.6-19.6-130.8-51.5l-63.5 63.5c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l63.5-63.5C64 330.6 44.4 284.6 44.4 234c0-106 86-192 192-192z"/></svg>
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="30" cy="34" r="22" fill="#0b0e14" stroke="#4CAF50" stroke-width="2.5"/>
+          <path d="M8 34h44" stroke="#4CAF50" stroke-width="1.5" stroke-opacity="0.5"/>
+          <path d="M30 12c8 0 14 9.8 14 22s-6 22-14 22-14-9.8-14-22 6-22 14-22z" stroke="#4CAF50" stroke-width="1.5" stroke-opacity="0.5"/>
+          <path d="M62 18 C 64 42, 46 62, 22 62 C 42 56, 52 42, 62 18 Z" fill="#4CAF50"/>
+          <path d="M62 18 C 52 30, 42 46, 22 62" stroke="#0b0e14" stroke-width="2"/>
+          <path d="M12 20 C 12 8, 28 4, 46 8" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
+          <polygon points="44,2 52,8 42,12" fill="#4CAF50"/>
+        </svg>
       </div>
       <div class="eco-text">
         <strong>PROTECT OUR PLANET</strong>
