@@ -74,7 +74,7 @@
     .btn-quote { display: block; width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; text-align: center; padding: 18px; text-decoration: none; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
     .btn-quote:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(212,175,55,0.5); }
 
-    /* RFQ MODAL STYLES (NEW) */
+    /* RFQ MODAL STYLES */
     .rfq-content { background: var(--slate); width: 100%; max-width: 700px; max-height: 90vh; border-radius: 8px; border: 1px solid var(--gold); overflow-y: auto; padding: 40px; position: relative; animation: slideUp 0.4s ease; box-sizing: border-box; }
     .rfq-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
     .rfq-header h2 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0 0 10px 0; letter-spacing: 2px; }
@@ -206,6 +206,24 @@
               <option value="Yes">Yes, I need a physical sample</option>
               <option value="No">No, proceed straight to bulk order</option>
             </select>
+          </div>
+
+          <div class="rfq-full" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 4px; border: 1px solid #333;">
+            <label style="margin-bottom: 12px; color: var(--gold);">Verification & Media Requests</label>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; text-transform: none; color: #ccc; cursor: pointer;">
+                <input type="checkbox" id="req-certs" value="Yes" style="width: 16px; height: 16px; accent-color: var(--gold);"> 
+                Request Factory/Product Certifications (ISO, CE, FDA, etc.)
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; text-transform: none; color: #ccc; cursor: pointer;">
+                <input type="checkbox" id="req-video" value="Yes" style="width: 16px; height: 16px; accent-color: var(--gold);"> 
+                Request Raw Factory/Product Video
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; text-transform: none; color: #ccc; cursor: pointer;">
+                <input type="checkbox" id="req-photos" value="Yes" style="width: 16px; height: 16px; accent-color: var(--gold);"> 
+                Request Additional Unedited Photos
+              </label>
+            </div>
           </div>
 
           <div class="rfq-full">
@@ -395,8 +413,6 @@
       }
     }
 
-    // --- NEW RFQ LOGIC ---
-
     function openRFQ() {
       // 1. Close Product Modal
       document.getElementById('product-modal').style.display = 'none';
@@ -427,7 +443,7 @@
       btn.innerText = "SUBMITTING...";
       btn.disabled = true;
 
-      // Collect data (We will link this to backend later!)
+      // Collect data to send to Google Apps Script
       const rfqData = {
         productId: document.getElementById('rfq-product-id').value,
         productName: document.getElementById('rfq-product-name').value,
@@ -435,6 +451,12 @@
         targetPrice: document.getElementById('rfq-target-price').value,
         customization: document.getElementById('rfq-customization').value,
         sample: document.getElementById('rfq-sample').value,
+        
+        // Asset Requests
+        reqCerts: document.getElementById('req-certs').checked ? "Yes" : "No",
+        reqVideo: document.getElementById('req-video').checked ? "Yes" : "No",
+        reqPhotos: document.getElementById('req-photos').checked ? "Yes" : "No",
+
         logistics: document.getElementById('rfq-logistics').value,
         destination: document.getElementById('rfq-destination').value,
         company: document.getElementById('rfq-company').value,
@@ -443,9 +465,9 @@
         currency: activeCurrency
       };
 
-      console.log("RFQ Data to send:", rfqData);
+      console.log("RFQ Data ready for backend:", rfqData);
 
-      // Simulate a backend delay for now until we build the new code.gs function
+      // Simulate network request (To be replaced with actual fetch API call)
       setTimeout(() => {
         document.getElementById('rfq-modal').style.display = 'none';
         document.body.style.overflow = 'auto';
