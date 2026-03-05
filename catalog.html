@@ -264,6 +264,7 @@
   </div>
 
   <script>
+    // Ensure this URL matches your newly deployed web app URL!
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz0o7RTZI3MENv2PjhWDS8a_JasnPZjIqj6Dn1sARHTFiFbhE29fzMO2iUNUjIOq7XC/exec";
     let allProducts = [];
     let currentActiveId = "";
@@ -451,12 +452,9 @@
         targetPrice: document.getElementById('rfq-target-price').value,
         customization: document.getElementById('rfq-customization').value,
         sample: document.getElementById('rfq-sample').value,
-        
-        // Asset Requests
         reqCerts: document.getElementById('req-certs').checked ? "Yes" : "No",
         reqVideo: document.getElementById('req-video').checked ? "Yes" : "No",
         reqPhotos: document.getElementById('req-photos').checked ? "Yes" : "No",
-
         logistics: document.getElementById('rfq-logistics').value,
         destination: document.getElementById('rfq-destination').value,
         company: document.getElementById('rfq-company').value,
@@ -465,17 +463,30 @@
         currency: activeCurrency
       };
 
-      console.log("RFQ Data ready for backend:", rfqData);
-
-      // Simulate network request (To be replaced with actual fetch API call)
-      setTimeout(() => {
-        document.getElementById('rfq-modal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        alert("Your RFQ has been successfully submitted! A Muziris agent will review this and contact the supplier shortly.");
+      // REAL API CALL to your code.gs
+      fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'submitRFQ', data: rfqData })
+      })
+      .then(res => res.json())
+      .then(resp => {
+        if(resp.success) {
+          document.getElementById('rfq-modal').style.display = 'none';
+          document.body.style.overflow = 'auto';
+          alert("Success! Your RFQ (" + resp.rfqId + ") has been submitted. A Muziris agent will contact the supplier shortly.");
+          document.getElementById('rfqForm').reset();
+        } else {
+          alert("Error: " + resp.error);
+        }
         btn.innerText = "SUBMIT RFQ";
         btn.disabled = false;
-        document.getElementById('rfqForm').reset();
-      }, 1500);
+      })
+      .catch(err => {
+        alert("Network error. Please try again.");
+        btn.innerText = "SUBMIT RFQ";
+        btn.disabled = false;
+      });
     }
   </script>
 
