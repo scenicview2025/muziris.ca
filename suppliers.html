@@ -1,3 +1,5 @@
+Working
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,7 +63,7 @@
 
     .progress-container { margin-bottom: 40px; }
     .progress-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--gold); width: 25%; transition: width 0.4s ease; }
+    .progress-fill { height: 100%; background: var(--gold); width: 33.33%; transition: width 0.4s ease; }
     .step-indicator { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
     .step-active { color: var(--gold); font-weight: bold; }
     
@@ -74,9 +76,6 @@
     input, select, textarea { width: 100%; padding: 14px; background: var(--void); border: 1px solid #333; color: var(--mist); border-radius: 4px; box-sizing: border-box; transition: all 0.3s ease; font-family: 'Lato', sans-serif; }
     input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
     .id-field { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid #444; font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold; }
-    
-    .input-row { display: flex; gap: 20px; }
-    .input-row > div { flex: 1; }
 
     .checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 4px; border: 1px solid #333; }
     .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--mist); cursor: pointer; }
@@ -94,7 +93,7 @@
     td input[type="text"].q-input::-webkit-outer-spin-button,
     td input[type="text"].q-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-    /* TOOLTIP CSS */
+    /* TOOLTIP CSS (FIXED: DROPS DOWNWARDS) */
     .tooltip { position: relative; display: inline-block; cursor: help; color: var(--gold); margin-left: 3px; vertical-align: middle; }
     .tooltip .tooltiptext { visibility: hidden; width: 180px; background-color: #000; color: #fff; text-align: center; border-radius: 4px; padding: 8px; border: 1px solid var(--gold); position: absolute; z-index: 999; top: 150%; left: 50%; margin-left: -90px; opacity: 0; transition: opacity 0.3s; font-size: 11px; text-transform: none; letter-spacing: normal; font-weight: normal; }
     .tooltip .tooltiptext::after { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: transparent transparent var(--gold) transparent; }
@@ -139,7 +138,6 @@
     @media (max-width: 900px) {
       .top-nav { top: 20px; left: 20px; }
       #view-verify { justify-content: center; padding-left: 0; }
-      .input-row { flex-direction: column; gap: 0; }
     }
   </style>
 </head>
@@ -199,73 +197,65 @@
       <div id="form-container">
         <div class="progress-container">
           <div class="progress-bar">
-            <div class="progress-fill" id="progress" style="width: 25%;"></div>
+            <div class="progress-fill" id="progress"></div>
           </div>
           <div class="step-indicator">
-            <span id="step1-ind" class="step-active">1. Details</span>
-            <span id="step2-ind">2. Pricing</span>
-            <span id="step3-ind">3. Shipping</span>
-            <span id="step4-ind">4. Media</span>
+            <span id="step1-ind" class="step-active">1. Basic Info</span>
+            <span id="step2-ind">2. Specifications</span>
+            <span id="step3-ind">3. Media Upload</span>
           </div>
         </div>
 
         <form id="mainForm" onsubmit="event.preventDefault(); submitForm(this)">
           
           <div class="form-step active" id="step1">
-            <h3 class="step-title">Core Information</h3>
-            <div class="input-row">
-              <div>
+            <h3 class="step-title">Basic Information</h3>
+            <div style="display:flex; gap:20px;">
+              <div style="flex:1;">
                 <label>SUPPLIER ID</label>
                 <input type="text" id="sid" name="supplierId" class="id-field" readonly>
               </div>
-              <div>
+              <div style="flex:1;">
                 <label>COMPANY</label>
                 <input type="text" id="cname" name="companyName" class="id-field" readonly>
               </div>
             </div>
 
-            <div class="input-row">
-              <div>
-                <label>MAIN CATEGORY</label>
-                <select id="mainCat" name="category" onchange="loadSubCats()" required>
-                  <option value="">Select Category...</option>
-                </select>
-              </div>
-              <div>
-                <label>SUB-CATEGORY</label>
-                <select id="subCat" name="subCategory" required>
-                  <option value="">Select Sub-Category</option>
-                </select>
-              </div>
-            </div>
-
-            <label>PRODUCT NAME (TITLE)</label>
-            <input type="text" id="pName" name="productName" placeholder="e.g. Premium Grade-A Organic Black Pepper - Whole" required>
+            <label>MAIN CATEGORY</label>
+            <select id="mainCat" name="category" onchange="loadSubCats()" required>
+              <option value="">Select Category...</option>
+            </select>
             
-            <label>SHORT TITLE / TAGLINE</label>
-            <span class="sub-label">A quick title to separate this specific listing (e.g. "2026 Harvest" or "Industrial Grade")</span>
-            <input type="text" id="shortTitle" name="shortTitle" placeholder="Enter short title...">
+            <select id="subCat" name="subCategory" style="margin-top:10px;" required>
+              <option value="">Select Sub-Category</option>
+            </select>
 
-            <label>DETAILED DESCRIPTION</label>
-            <textarea id="desc" name="description" rows="4" placeholder="Describe features, benefits, origin, and intended use..."></textarea>
-
-            <label>PRODUCT SPECIFICATIONS / TAGS</label>
-            <span class="sub-label">Crucial for Enterprise Buyers. Separate details with commas or bars. (e.g. <em>Voltage: 220V | Material: Steel | Grade: Food Safe | Certs: ISO9001</em>)</span>
-            <textarea id="productTags" name="productTags" rows="2" placeholder="e.g. Color: Red, Power: 50W, Certification: CE"></textarea>
-
+            <label>PRODUCT NAME</label>
+            <input type="text" id="pName" name="productName" placeholder="e.g. Premium Ceramic Coffee Mug" required>
+            
             <div class="btn-group" style="justify-content: flex-end;">
               <button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button>
             </div>
           </div>
 
           <div class="form-step" id="step2">
-            <h3 class="step-title">Trade & Pricing</h3>
+            <h3 class="step-title">Product Details & Pricing</h3>
             <label>FACTORY SERVICES</label>
             <div class="checkbox-group">
               <label class="checkbox-item"><input type="checkbox" id="svc1" name="service_privateLabel" value="Yes"> Private Labeling (OEM)</label>
               <label class="checkbox-item"><input type="checkbox" id="svc2" name="service_customPack" value="Yes"> Custom Packaging</label>
               <label class="checkbox-item"><input type="checkbox" id="svc3" name="service_odm" value="Yes"> Custom Design (ODM)</label>
             </div>
+
+            <label>PACKAGING DETAILS</label>
+            <input type="text" id="packDetails" name="packagingDetails" placeholder="e.g. Polybag + Inner Box + Master Carton">
+
+            <label>SHORT TITLE / TAGLINE</label>
+            <span class="sub-label">A quick title to separate this specific listing (e.g. "Men's Summer Collection 2026")</span>
+            <input type="text" id="shortTitle" name="shortTitle" placeholder="Enter short title...">
+
+            <label>DETAILED DESCRIPTION</label>
+            <textarea id="desc" name="description" rows="4" placeholder="Describe materials, certifications, origin..."></textarea>
 
             <label>VOLUME PRICING & VARIANTS</label>
             <span class="sub-label">Your pricing currency is auto-locked to: <strong id="ui-currency-text" style="color:var(--gold); font-size:13px;">...</strong></span>
@@ -279,16 +269,31 @@
                     <th style="width: 9%;">UNIT</th>
                     <th style="width: 9%;">MIN QTY</th>
                     <th style="width: 9%;">MAX QTY</th>
-                    <th style="width: 9%;">LEAD (DAYS)</th>
-                    <th style="width: 10%;">TERMS</th>
+                    <th style="width: 9%;">
+                      LEAD (DAYS)
+                      <div class="tooltip">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        <span class="tooltiptext">Estimated manufacturing/lead time in days (e.g., 30).</span>
+                      </div>
+                    </th>
+                    <th style="width: 10%;">
+                      TERMS
+                      <a href="https://muziris.ca/incoterms" target="_blank" title="Learn about Incoterms" class="terms-icon" style="color:var(--gold); text-decoration:none; vertical-align:middle; margin-left:3px;">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                      </a>
+                    </th>
                     <th style="width: 10%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
-                    <th style="width: 15%;">IMAGE</th>
+                    <th style="width: 15%;">IMAGE (Specific)</th>
                     <th style="width: 5%;"></th>
                   </tr>
                 </thead>
                 <tbody id="priceBody"></tbody>
               </table>
               <button type="button" class="add-btn" onclick="addPriceRow()">+ ADD PRICE TIER</button>
+            </div>
+
+            <div style="font-size: 11px; color: #888; margin-top: 12px; text-align: left; line-height: 1.5;">
+              <em>* <strong>Note for Small/Medium Enterprises:</strong> If you do not have an export license or shipping agent set up, we highly recommend selecting <strong>EXW (Ex Works)</strong>. <a href="https://muziris.ca/incoterms" target="_blank" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold);">Click here to learn more.</a></em>
             </div>
 
             <input type="hidden" name="pricingMatrix" id="pricingString">
@@ -300,49 +305,6 @@
           </div>
 
           <div class="form-step" id="step3">
-            <h3 class="step-title">Shipping & Logistics</h3>
-            
-            <label>PACKAGING DETAILS</label>
-            <span class="sub-label">Describe how the items are packed for safety.</span>
-            <input type="text" id="packDetails" name="packagingDetails" placeholder="e.g. 50 units vacuum-sealed in inner box, 4 boxes per Master Carton">
-
-            <div class="input-row" style="margin-top: 25px;">
-              <div>
-                <label>HS CODE (Tariff Code)</label>
-                <span class="sub-label">Universal customs identifier (6-10 digits).</span>
-                <input type="text" id="hsCode" name="hsCode" placeholder="e.g. 0904.11">
-              </div>
-              <div>
-                <label>SINGLE UNIT WEIGHT</label>
-                <span class="sub-label">Weight of ONE item (in kg).</span>
-                <input type="number" step="0.01" id="unitWeight" name="unitWeight" placeholder="e.g. 0.5">
-              </div>
-            </div>
-
-            <div class="input-row">
-              <div>
-                <label>UNITS PER MASTER CARTON</label>
-                <span class="sub-label">How many items fit in the main shipping box?</span>
-                <input type="number" id="unitsPerCarton" name="unitsPerCarton" placeholder="e.g. 50">
-              </div>
-              <div>
-                <label>CARTON GROSS WEIGHT</label>
-                <span class="sub-label">Total weight of the full box (in kg).</span>
-                <input type="number" step="0.01" id="cartonWeight" name="cartonWeight" placeholder="e.g. 26">
-              </div>
-            </div>
-
-            <label>MASTER CARTON DIMENSIONS</label>
-            <span class="sub-label">Format: Length x Width x Height (in cm). Used for dimensional freight calculation.</span>
-            <input type="text" id="cartonDimensions" name="cartonDimensions" placeholder="e.g. 60 x 40 x 40">
-
-            <div class="btn-group">
-              <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
-              <button type="button" class="btn-next" onclick="nextStep(3)">Next Step</button>
-            </div>
-          </div>
-
-          <div class="form-step" id="step4">
             <h3 class="step-title">Media Upload</h3>
             <label>PRODUCT IMAGERY (Max 25MB)</label>
             <span class="sub-label" style="color:#D4AF37">NOTE: Previous images are saved. Upload new files only if you want to replace them.</span>
@@ -373,7 +335,7 @@
             <input type="file" name="catalog" accept="application/pdf">
 
             <div class="btn-group">
-              <button type="button" class="btn-prev" onclick="prevStep(4)">Back</button>
+              <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
               <button type="submit" class="gold-btn" id="btn" style="width:auto; margin-top:0;">UPLOAD TO GLOBAL LEDGER</button>
             </div>
             <div id="loading">Encrypting & Uploading to Server...<br>Please wait...</div>
@@ -503,20 +465,24 @@
     }
 
     window.onload = function() {
+      // 1. Check if the user is already logged in
       var savedId = sessionStorage.getItem('verifiedSupplierId');
       var savedCompany = sessionStorage.getItem('verifiedCompany');
       var savedCurrency = sessionStorage.getItem('verifiedCurrency');
 
       if (savedId && savedCompany && savedCurrency) {
+        // BYPASS LOGIN: Instantly show the portal
         document.getElementById('view-verify').style.display = 'none';
         document.getElementById('view-portal').style.display = 'block';
         
+        // Restore their data
         document.getElementById('sid').value = savedId;
         document.getElementById('cname').value = savedCompany;
         document.getElementById('ui-currency-label').innerText = "(" + savedCurrency + ")";
         document.getElementById('ui-currency-text').innerText = savedCurrency;
         globeAnimating = false; 
       } else {
+        // SHOW LOGIN: No session found
         document.getElementById('view-verify').style.display = 'flex';
         document.getElementById('view-portal').style.display = 'none';
         initGlobe(); 
@@ -555,12 +521,13 @@
             document.getElementById('ui-currency-label').innerText = "(" + result.currency + ")";
             document.getElementById('ui-currency-text').innerText = result.currency;
             
+            // 👇 SAVE FULL SESSION TO MEMORY 👇
             sessionStorage.setItem('verifiedSupplierId', id);
             sessionStorage.setItem('verifiedCompany', result.company);
             sessionStorage.setItem('verifiedCurrency', result.currency);
 
             setTimeout(() => {
-              globeAnimating = false; 
+              globeAnimating = false; // TURNS OFF GLOBE TO SAVE CPU
               document.getElementById('view-verify').style.display = 'none';
               document.getElementById('view-portal').style.display = 'block';
               document.getElementById('sid').value = id;
@@ -581,6 +548,7 @@
     function launchBulk() {
       var id = document.getElementById('sid').value;
       if(id) {
+        // Save ID to memory and route them to the new Staging Portal
         sessionStorage.setItem('verifiedSupplierId', id);
         window.location.href = 'bulk-upload.html';
       } else {
@@ -599,7 +567,7 @@
       }
       document.getElementById('step' + current).classList.remove('active');
       document.getElementById('step' + (current+1)).classList.add('active');
-      document.getElementById('progress').style.width = (((current + 1) / 4) * 100) + "%";
+      document.getElementById('progress').style.width = (((current + 1) / 3) * 100) + "%";
       document.getElementById('step' + current + '-ind').classList.remove('step-active');
       document.getElementById('step' + (current+1) + '-ind').classList.add('step-active');
       window.scrollTo(0,0);
@@ -608,7 +576,7 @@
     function prevStep(current) {
       document.getElementById('step' + current).classList.remove('active');
       document.getElementById('step' + (current-1)).classList.add('active');
-      document.getElementById('progress').style.width = (((current - 1) / 4) * 100) + "%";
+      document.getElementById('progress').style.width = (((current - 1) / 3) * 100) + "%";
       document.getElementById('step' + current + '-ind').classList.remove('step-active');
       document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
       window.scrollTo(0,0);
@@ -654,17 +622,13 @@
     function fillForm(data) {
       if(!data) { customAlert("Error", "Error loading product data."); closeListings(); return; }
       var g = data.general;
-      
-      // Step 1 mappings
       document.getElementById('pName').value = g.name;
       document.getElementById('shortTitle').value = g.shortTitle || ""; 
+      document.getElementById('packDetails').value = g.packaging;
       document.getElementById('desc').value = g.description;
-      document.getElementById('productTags').value = g.tags || ""; 
       document.getElementById('mainCat').value = g.category;
       loadSubCats(); 
       setTimeout(() => { document.getElementById('subCat').value = g.subCategory; }, 100);
-      
-      // Step 2 mappings
       document.getElementById('svc1').checked = (g.services.indexOf("Private Label") > -1);
       document.getElementById('svc2').checked = (g.services.indexOf("Custom Pkg") > -1);
       document.getElementById('svc3').checked = (g.services.indexOf("ODM") > -1);
@@ -673,28 +637,15 @@
       if(data.pricing && data.pricing.length > 0){ 
         data.pricing.forEach(function(row) { addPriceRowFilled(row); }); 
       } else { addPriceRow(); }
-      
-      // Step 3 mappings (Logistics)
-      document.getElementById('packDetails').value = g.packaging || "";
-      document.getElementById('hsCode').value = g.hsCode || "";
-      document.getElementById('unitWeight').value = g.unitWeight || "";
-      document.getElementById('unitsPerCarton').value = g.unitsPerCarton || "";
-      document.getElementById('cartonWeight').value = g.cartonWeight || "";
-      document.getElementById('cartonDimensions').value = g.cartonDimensions || "";
-
       closeListings();
       
-      // Reset view to Step 1
-      document.getElementById('step4').classList.remove('active');
       document.getElementById('step3').classList.remove('active');
       document.getElementById('step2').classList.remove('active');
       document.getElementById('step1').classList.add('active');
-      document.getElementById('progress').style.width = "25%";
-      document.getElementById('step4-ind').classList.remove('step-active');
+      document.getElementById('progress').style.width = "33.33%";
       document.getElementById('step3-ind').classList.remove('step-active');
       document.getElementById('step2-ind').classList.remove('step-active');
       document.getElementById('step1-ind').classList.add('step-active');
-      
       customAlert("Loaded", "Product Loaded for Editing.");
     }
     
@@ -841,14 +792,8 @@
            subCategory: formElement.subCategory.value,
            productName: formElement.productName.value,
            shortTitle: formElement.shortTitle.value,
-           description: formElement.description.value,
-           productTags: formElement.productTags.value, // NEW
            packagingDetails: formElement.packagingDetails.value,
-           hsCode: formElement.hsCode.value, // NEW
-           unitWeight: formElement.unitWeight.value, // NEW
-           unitsPerCarton: formElement.unitsPerCarton.value, // NEW
-           cartonWeight: formElement.cartonWeight.value, // NEW
-           cartonDimensions: formElement.cartonDimensions.value, // NEW
+           description: formElement.description.value,
            service_privateLabel: document.getElementById('svc1').checked,
            service_customPack: document.getElementById('svc2').checked,
            service_odm: document.getElementById('svc3').checked,
@@ -908,14 +853,10 @@
       document.getElementById("priceBody").innerHTML = "";
       addPriceRow();
       
-      document.getElementById('step4').classList.remove('active');
       document.getElementById('step3').classList.remove('active');
-      document.getElementById('step2').classList.remove('active');
       document.getElementById('step1').classList.add('active');
-      document.getElementById('progress').style.width = "25%";
-      document.getElementById('step4-ind').classList.remove('step-active');
+      document.getElementById('progress').style.width = "33.33%";
       document.getElementById('step3-ind').classList.remove('step-active');
-      document.getElementById('step2-ind').classList.remove('step-active');
       document.getElementById('step1-ind').classList.add('step-active');
 
       document.getElementById('sid').value = savedId;
@@ -936,3 +877,5 @@
   </script>
 </body>
 </html>
+
+
