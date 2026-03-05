@@ -27,7 +27,7 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: flex-start; /* Changed to start so Eco-Pledge can push to bottom */
       padding: 60px;
       overflow: hidden;
     }
@@ -41,7 +41,7 @@
     .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
     .back-home:hover { color: #fff; }
 
-    .brand-content { position: relative; z-index: 3; max-width: 500px; }
+    .brand-content { position: relative; z-index: 3; max-width: 500px; margin-top: 15vh; }
     .brand-content a { text-decoration: none; }
     .brand-content h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 48px; margin: 0; letter-spacing: 2px; transition: 0.3s; }
     .brand-content h1:hover { color: #fff; }
@@ -81,7 +81,45 @@
       text-shadow: none;
     }
 
-    /* RIGHT PANEL (Form) */
+    /* ECO PLEDGE STYLING */
+    .eco-pledge {
+      margin-top: auto; 
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 25px;
+      max-width: 450px;
+      position: relative;
+      z-index: 3;
+    }
+    .eco-icon svg {
+      fill: #4CAF50;
+      width: 28px;
+      height: 28px;
+      opacity: 0.8;
+    }
+    .eco-text strong {
+      color: #e0e0e0;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 2px;
+      font-size: 13px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .eco-text p {
+      color: #888;
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0;
+      text-shadow: none;
+    }
+    .eco-text span {
+      color: #4CAF50;
+      font-style: italic;
+    }
+
+    /* RIGHT PANEL (Form) - WITH FIXED PADDING FOR DROPDOWNS */
     .right-panel { flex: 1; background-color: var(--dark-bg); display: flex; flex-direction: column; justify-content: flex-start; padding: 100px 80px 200px 80px; overflow-y: auto; max-width: 650px; position: relative; border-left: 1px solid #222; z-index: 4; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
 
     /* LOGIN LINK */
@@ -140,11 +178,13 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 900px) {
       .container { flex-direction: column; overflow-y: auto; }
-      .left-panel { min-height: 400px; padding: 30px; flex: none; justify-content: center; }
+      .left-panel { min-height: 500px; padding: 30px; flex: none; justify-content: center; }
+      .brand-content { margin-top: 60px; }
       .top-nav { top: 20px; left: 20px; }
       .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; border-left: none; }
       body { overflow-y: auto; }
       .input-row { flex-direction: column; gap: 20px; }
+      .eco-pledge { margin-top: 40px; }
     }
   </style>
 </head>
@@ -165,6 +205,7 @@
     <div class="top-nav">
       <a href="index.html" class="back-home">← Back to Home</a>
     </div>
+    
     <div class="brand-content">
       <a href="index.html"><h1>Muziris</h1></a>
       <p>Connect with international buyers through our secure Global Trade Network. Register today to expand your reach.</p>
@@ -176,8 +217,18 @@
         </a>
         <p>100% Payment Guarantee • PO Financing • Verified Global Reach</p>
       </div>
-
     </div>
+
+    <div class="eco-pledge">
+      <div class="eco-icon">
+        <svg viewBox="0 0 24 24"><path d="M17.5,2.5c-4.3,0-8.2,2.3-10.4,5.9C4.6,9.6,2.5,12.6,2.5,16c0,0.6,0.1,1.1,0.2,1.7l-1.3,2.4c-0.2,0.4,0.1,0.9,0.5,0.9h3.7c1.7,1.8,4.1,3,6.8,3c6.1,0,11-4.9,11-11C23.5,6.5,21,2.5,17.5,2.5z M12.5,21.5c-1.8,0-3.5-0.6-4.9-1.6l4.6-8c0.2-0.3,0.1-0.8-0.3-1c-0.3-0.2-0.8-0.1-1,0.3l-4.2,7.3c-1.3-1.6-2-3.6-1.7-5.7c2.4-1.7,5.5-2.2,8.4-1.2l-2.6,4.5c-0.2,0.3-0.1,0.8,0.3,1c0.1,0.1,0.3,0.1,0.4,0.1c0.2,0,0.5-0.1,0.6-0.3l2.8-4.9c2.3,1.9,3.5,4.9,2.8,7.9l-2.6-4.5c-0.2-0.3-0.7-0.4-1-0.2c-0.3,0.2-0.4,0.7-0.2,1l3,5.2C15.6,21.1,14.1,21.5,12.5,21.5z"/></svg>
+      </div>
+      <div class="eco-text">
+        <strong>PROTECT OUR PLANET</strong>
+        <p>Muziris is committed to sustainable global trade. We support eco-conscious manufacturing and the universal principles to <span>Reduce, Reuse, and Recycle</span>.</p>
+      </div>
+    </div>
+
   </div>
 
   <div class="right-panel">
