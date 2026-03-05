@@ -88,6 +88,10 @@
     .rfq-content input:focus, .rfq-content select:focus, .rfq-content textarea:focus { border-color: var(--gold); outline: none; }
     .rfq-content .readonly-input { background: rgba(255,255,255,0.05); color: var(--gold); font-weight: bold; border-color: #444; }
 
+    /* Dynamic Variant Rows */
+    .variant-rfq-row { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 15px; }
+    .variant-rfq-row input { padding: 10px; font-size: 13px; }
+
     @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     @media (max-width: 768px) {
@@ -97,6 +101,7 @@
       .modal-right { overflow-y: visible; max-height: none; }
       .rfq-grid { grid-template-columns: 1fr; }
       .rfq-full { grid-column: span 1; }
+      .variant-rfq-row { flex-direction: column; align-items: stretch; gap: 10px; }
     }
   </style>
 </head>
@@ -170,8 +175,8 @@
       <div class="modal-close" onclick="closeModal(event, 'rfq-modal')">&times;</div>
       
       <div class="rfq-header">
-        <h2>Submit RFQ</h2>
-        <p>Your request will be securely routed to the verified supplier.</p>
+        <h2>Submit Multi-Variant RFQ</h2>
+        <p>Select specific variants, quantities, and negotiate your target price.</p>
       </div>
 
       <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();">
@@ -183,13 +188,11 @@
             <input type="hidden" id="rfq-product-id">
           </div>
 
-          <div>
-            <label>Target Quantity *</label>
-            <input type="number" id="rfq-qty" placeholder="e.g. 5000" required>
-          </div>
-          <div>
-            <label>Target Price per Unit (<span class="ui-curr-symbol">CAD</span>)</label>
-            <input type="number" step="0.01" id="rfq-target-price" placeholder="Optional Negotiation">
+          <div class="rfq-full">
+            <label>Select Variants & Target Pricing *</label>
+            <div id="rfq-variants-container" style="background: rgba(0,0,0,0.3); padding: 15px; border: 1px solid #333; border-radius: 4px; max-height: 280px; overflow-y: auto;">
+              </div>
+            <div style="font-size:10px; color:#888; margin-top:8px;">* Enter a quantity for the variants you wish to order. Leave target price blank to accept the current listed price.</div>
           </div>
 
           <div>
@@ -213,7 +216,7 @@
             <div style="display: flex; gap: 20px; flex-wrap: wrap;">
               <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; text-transform: none; color: #ccc; cursor: pointer;">
                 <input type="checkbox" id="req-certs" value="Yes" style="width: 16px; height: 16px; accent-color: var(--gold);"> 
-                Request Factory/Product Certifications (ISO, CE, FDA, etc.)
+                Request Factory Certifications (ISO, CE, FDA)
               </label>
               <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; text-transform: none; color: #ccc; cursor: pointer;">
                 <input type="checkbox" id="req-video" value="Yes" style="width: 16px; height: 16px; accent-color: var(--gold);"> 
@@ -264,7 +267,6 @@
   </div>
 
   <script>
-    // Ensure this URL matches your newly deployed web app URL!
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz0o7RTZI3MENv2PjhWDS8a_JasnPZjIqj6Dn1sARHTFiFbhE29fzMO2iUNUjIOq7XC/exec";
     let allProducts = [];
     let currentActiveId = "";
@@ -406,7 +408,6 @@
     function closeModal(e, modalId) {
       if(e.target.id === modalId || e.target.className === 'modal-close') {
         document.getElementById(modalId).style.display = 'none';
-        // Only restore scroll if both modals are closed
         if(document.getElementById('product-modal').style.display === 'none' && 
            document.getElementById('rfq-modal').style.display === 'none') {
            document.body.style.overflow = 'auto';
@@ -414,16 +415,37 @@
       }
     }
 
+    // --- MULTI-VARIANT RFQ LOGIC ---
     function openRFQ() {
-      // 1. Close Product Modal
       document.getElementById('product-modal').style.display = 'none';
       
-      // 2. Pre-fill RFQ Form
       const p = allProducts.find(x => x.id === currentActiveId);
       document.getElementById('rfq-product-id').value = p.id;
       document.getElementById('rfq-product-name').value = p.name + " (" + p.id + ")";
       
-      // 3. Open RFQ Modal
+      const vContainer = document.getElementById('rfq-variants-container');
+      vContainer.innerHTML = ""; 
+      
+      p.variants.forEach((v, index) => {
+        let varName = v.type === "Standard" ? "Standard" : `${v.type}: ${v.opt}`;
+        let convertedPrice = convertPrice(v.priceCAD);
+        
+        vContainer.innerHTML += `
+          <div class="variant-rfq-row">
+            <div style="flex: 2; font-size: 13px; color: #fff;">
+              <strong style="color:var(--gold);">${varName}</strong><br>
+              <span style="color: #aaa; font-size: 11px;">Current: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
+            </div>
+            <div style="flex: 1;">
+              <input type="number" class="v-qty" data-vid="${v.varId}" data-vname="${varName}" data-cadprice="${v.priceCAD}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty">
+            </div>
+            <div style="flex: 1;">
+              <input type="number" step="0.01" class="v-target" placeholder="Target (${activeCurrency})">
+            </div>
+          </div>
+        `;
+      });
+
       document.getElementById('rfq-modal').style.display = 'flex';
     }
 
@@ -441,15 +463,39 @@
 
     function submitRFQ() {
       const btn = document.getElementById('btn-submit-rfq');
+      
+      let requestedVariants = [];
+      const variantRows = document.querySelectorAll('.variant-rfq-row');
+      
+      variantRows.forEach(row => {
+        let qtyInput = row.querySelector('.v-qty');
+        let targetInput = row.querySelector('.v-target');
+        let qty = parseInt(qtyInput.value);
+        
+        if (qty > 0) {
+           requestedVariants.push({
+             variantId: qtyInput.getAttribute('data-vid'),
+             variantName: qtyInput.getAttribute('data-vname'),
+             currentPriceCAD: qtyInput.getAttribute('data-cadprice'),
+             currentPriceBuyer: qtyInput.getAttribute('data-buyerprice'),
+             quantity: qty,
+             targetPriceBuyer: targetInput.value || "" 
+           });
+        }
+      });
+
+      if(requestedVariants.length === 0) {
+         alert("Please enter a quantity for at least one variant.");
+         return;
+      }
+
       btn.innerText = "SUBMITTING...";
       btn.disabled = true;
 
-      // Collect data to send to Google Apps Script
       const rfqData = {
         productId: document.getElementById('rfq-product-id').value,
         productName: document.getElementById('rfq-product-name').value,
-        quantity: document.getElementById('rfq-qty').value,
-        targetPrice: document.getElementById('rfq-target-price').value,
+        requestedVariants: requestedVariants, 
         customization: document.getElementById('rfq-customization').value,
         sample: document.getElementById('rfq-sample').value,
         reqCerts: document.getElementById('req-certs').checked ? "Yes" : "No",
@@ -460,10 +506,10 @@
         company: document.getElementById('rfq-company').value,
         email: document.getElementById('rfq-email').value,
         notes: document.getElementById('rfq-notes').value,
-        currency: activeCurrency
+        currency: activeCurrency,
+        exchangeRate: exchangeRates[activeCurrency] 
       };
 
-      // REAL API CALL to your code.gs
       fetch(WEB_APP_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -474,7 +520,7 @@
         if(resp.success) {
           document.getElementById('rfq-modal').style.display = 'none';
           document.body.style.overflow = 'auto';
-          alert("Success! Your RFQ (" + resp.rfqId + ") has been submitted. A Muziris agent will contact the supplier shortly.");
+          alert("Success! Your RFQ (" + resp.rfqId + ") has been submitted. A Muziris agent will contact the supplier.");
           document.getElementById('rfqForm').reset();
         } else {
           alert("Error: " + resp.error);
