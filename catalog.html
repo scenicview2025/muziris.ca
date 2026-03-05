@@ -44,8 +44,8 @@
     .loader { text-align: center; color: var(--gold); padding: 100px; font-family: 'Cinzel', serif; font-size: 20px; letter-spacing: 2px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-    /* PRODUCT MODAL (ENTERPRISE DETAILS) */
-    #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+    /* PRODUCT MODAL */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
     .modal-content { background: var(--slate); width: 100%; max-width: 1000px; max-height: 90vh; border-radius: 8px; border: 1px solid var(--gold); display: flex; flex-wrap: wrap; overflow: hidden; position: relative; animation: slideUp 0.4s ease; }
     .modal-close { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 28px; cursor: pointer; z-index: 10; transition: 0.3s; }
     .modal-close:hover { color: var(--gold); }
@@ -66,7 +66,6 @@
     .spec-label { color: #888; text-transform: uppercase; display: block; margin-bottom: 3px; font-size: 10px; letter-spacing: 1px; }
     .spec-val { color: #fff; font-weight: bold; }
 
-    /* PRICING TABLE */
     .pricing-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 13px; }
     .pricing-table th { text-align: left; padding: 10px; border-bottom: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
     .pricing-table td { padding: 12px 10px; border-bottom: 1px solid #333; color: #e0e0e0; }
@@ -75,19 +74,29 @@
     .btn-quote { display: block; width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; text-align: center; padding: 18px; text-decoration: none; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
     .btn-quote:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(212,175,55,0.5); }
 
-    /* TOAST ALERT */
-    #toast { visibility: hidden; min-width: 250px; background-color: var(--gold); color: #000; text-align: center; border-radius: 4px; padding: 16px; position: fixed; z-index: 2000; left: 50%; transform: translateX(-50%); bottom: 30px; font-weight: bold; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 4.5s; }
+    /* RFQ MODAL STYLES (NEW) */
+    .rfq-content { background: var(--slate); width: 100%; max-width: 700px; max-height: 90vh; border-radius: 8px; border: 1px solid var(--gold); overflow-y: auto; padding: 40px; position: relative; animation: slideUp 0.4s ease; box-sizing: border-box; }
+    .rfq-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+    .rfq-header h2 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0 0 10px 0; letter-spacing: 2px; }
+    .rfq-header p { color: #aaa; font-size: 13px; margin: 0; }
     
+    .rfq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .rfq-full { grid-column: span 2; }
+    
+    .rfq-content label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold; }
+    .rfq-content input, .rfq-content select, .rfq-content textarea { width: 100%; padding: 12px 15px; background: var(--void); border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif; transition: 0.3s; }
+    .rfq-content input:focus, .rfq-content select:focus, .rfq-content textarea:focus { border-color: var(--gold); outline: none; }
+    .rfq-content .readonly-input { background: rgba(255,255,255,0.05); color: var(--gold); font-weight: bold; border-color: #444; }
+
     @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
-    @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
 
     @media (max-width: 768px) {
       header { flex-wrap: wrap; gap: 15px; }
       .search-bar { order: 3; max-width: 100%; margin: 0; }
       .modal-content { flex-direction: column; overflow-y: auto; }
       .modal-right { overflow-y: visible; max-height: none; }
+      .rfq-grid { grid-template-columns: 1fr; }
+      .rfq-full { grid-column: span 1; }
     }
   </style>
 </head>
@@ -110,18 +119,16 @@
     </div>
   </header>
 
-  <div class="cat-nav" id="categoryNav">
-    </div>
+  <div class="cat-nav" id="categoryNav"></div>
 
   <div class="catalog-container">
     <div id="loader" class="loader">SYNCING GLOBAL LEDGER...</div>
-    <div class="grid" id="productGrid">
-      </div>
+    <div class="grid" id="productGrid"></div>
   </div>
 
-  <div id="modal-overlay" onclick="closeModal(event)">
+  <div id="product-modal" class="modal-overlay" onclick="closeModal(event, 'product-modal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-close" onclick="closeModal(event)">&times;</div>
+      <div class="modal-close" onclick="closeModal(event, 'product-modal')">&times;</div>
       
       <div class="modal-left">
         <img id="m-main-img" class="main-img" src="" onerror="this.src='MC.png'">
@@ -153,30 +160,97 @@
           <tbody id="m-pricing-body"></tbody>
         </table>
 
-        <button class="btn-quote" onclick="requestQuote()">REQUEST QUOTE</button>
-        <div style="text-align:center; font-size:10px; color:#666; margin-top:15px; font-style:italic;">
-          * Clicking Request Quote will connect you directly with a Muziris Sourcing Agent.
-        </div>
+        <button class="btn-quote" onclick="openRFQ()">REQUEST OFFICIAL QUOTE</button>
       </div>
     </div>
   </div>
 
-  <div id="toast">Product ID Copied! Paste it in the chat to begin.</div>
+  <div id="rfq-modal" class="modal-overlay" onclick="closeModal(event, 'rfq-modal')">
+    <div class="rfq-content" onclick="event.stopPropagation()">
+      <div class="modal-close" onclick="closeModal(event, 'rfq-modal')">&times;</div>
+      
+      <div class="rfq-header">
+        <h2>Submit RFQ</h2>
+        <p>Your request will be securely routed to the verified supplier.</p>
+      </div>
+
+      <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();">
+        
+        <div class="rfq-grid">
+          <div class="rfq-full">
+            <label>Product Selected</label>
+            <input type="text" id="rfq-product-name" class="readonly-input" readonly>
+            <input type="hidden" id="rfq-product-id">
+          </div>
+
+          <div>
+            <label>Target Quantity *</label>
+            <input type="number" id="rfq-qty" placeholder="e.g. 5000" required>
+          </div>
+          <div>
+            <label>Target Price per Unit (<span class="ui-curr-symbol">CAD</span>)</label>
+            <input type="number" step="0.01" id="rfq-target-price" placeholder="Optional Negotiation">
+          </div>
+
+          <div>
+            <label>Customization Required?</label>
+            <select id="rfq-customization">
+              <option value="No">No - Standard Product</option>
+              <option value="OEM">Yes - OEM (My Logo/Branding)</option>
+              <option value="ODM">Yes - ODM (Custom Design)</option>
+            </select>
+          </div>
+          <div>
+            <label>Require Sample First?</label>
+            <select id="rfq-sample">
+              <option value="Yes">Yes, I need a physical sample</option>
+              <option value="No">No, proceed straight to bulk order</option>
+            </select>
+          </div>
+
+          <div class="rfq-full">
+            <label>Logistics & Shipping Requirement *</label>
+            <select id="rfq-logistics" onchange="toggleShippingAddress()" required>
+              <option value="">Select Shipping Preference...</option>
+              <option value="Muziris Freight">Quote me with Shipping (DDP/CIF to my door)</option>
+              <option value="Own Forwarder">I have my own freight forwarder (EXW/FOB)</option>
+            </select>
+          </div>
+
+          <div class="rfq-full" id="destination-box" style="display:none;">
+            <label>Destination Country & City</label>
+            <input type="text" id="rfq-destination" placeholder="e.g. Toronto, Canada (Required for freight quote)">
+          </div>
+
+          <div>
+            <label>Your Company Name *</label>
+            <input type="text" id="rfq-company" placeholder="Company Ltd." required>
+          </div>
+          <div>
+            <label>Official Email *</label>
+            <input type="email" id="rfq-email" placeholder="buyer@company.com" required>
+          </div>
+
+          <div class="rfq-full">
+            <label>Additional Notes / Specifications</label>
+            <textarea id="rfq-notes" rows="3" placeholder="Any specific material requirements, colors, or questions for the supplier?"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-quote" id="btn-submit-rfq">SUBMIT RFQ</button>
+        <div style="text-align:center; font-size:11px; color:#888; margin-top:15px;">
+          Muziris protects your data. Quotes are usually returned within 24-48 hours.
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz0o7RTZI3MENv2PjhWDS8a_JasnPZjIqj6Dn1sARHTFiFbhE29fzMO2iUNUjIOq7XC/exec";
     let allProducts = [];
     let currentActiveId = "";
     
-    // EXCHANGE RATES (Base is CAD). You can update these manually as needed!
-    const exchangeRates = {
-      "CAD": 1.00,
-      "USD": 0.74,
-      "EUR": 0.68,
-      "GBP": 0.58,
-      "AUD": 1.13
-    };
-    
+    const exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
     let activeCurrency = "CAD";
 
     window.onload = function() {
@@ -189,7 +263,7 @@
       .then(data => {
         document.getElementById('loader').style.display = 'none';
         if(data.products) {
-          allProducts = data.products.reverse(); // Show newest first
+          allProducts = data.products.reverse(); 
           renderCategories(data.categories);
           renderGrid(allProducts, 'All');
         } else {
@@ -200,17 +274,11 @@
       });
     };
 
-    // CURRENCY LOGIC
     function updateCurrency() {
       activeCurrency = document.getElementById('currencySelect').value;
-      // Update symbols in modal headers
       document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
-      
-      // Re-render the grid to update prices
       handleSearch(); 
-      
-      // If modal is open, re-render the modal pricing table
-      if(currentActiveId && document.getElementById('modal-overlay').style.display === 'flex') {
+      if(currentActiveId && document.getElementById('product-modal').style.display === 'flex') {
         openModal(currentActiveId);
       }
     }
@@ -231,20 +299,16 @@
     function filterCat(catName, btnElement) {
       document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
-      document.getElementById('searchInput').value = ""; // Clear search
-      
+      document.getElementById('searchInput').value = ""; 
       if(catName === 'All') renderGrid(allProducts, 'All');
       else renderGrid(allProducts.filter(p => p.category === catName), catName);
     }
 
     function handleSearch() {
       const query = document.getElementById('searchInput').value.toLowerCase();
-      
-      // Only clear active pill if we are actually searching
       if(query.length > 0) {
         document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
       }
-      
       const filtered = allProducts.filter(p => 
         p.name.toLowerCase().includes(query) || 
         p.id.toLowerCase().includes(query) || 
@@ -264,7 +328,6 @@
       products.forEach(p => {
         let fallbackImg = p.hero ? p.hero : 'MC.png';
         let displayPrice = convertPrice(p.startingPriceCAD);
-        
         grid.innerHTML += `
           <div class="card" onclick="openModal('${p.id}')">
             <img class="card-img" src="${fallbackImg}" onerror="this.src='MC.png'" loading="lazy">
@@ -292,7 +355,6 @@
       document.getElementById('m-srv').innerText = p.services || "Standard";
       document.getElementById('m-pkg').innerText = p.pkg || "Standard Packaging";
 
-      // Set Images
       const mainImg = document.getElementById('m-main-img');
       const thumbRow = document.getElementById('m-thumbs');
       mainImg.src = p.hero || 'MC.png';
@@ -303,13 +365,11 @@
          thumbRow.innerHTML += `<img class="thumb" src="${url}" onclick="document.getElementById('m-main-img').src='${url}'" onerror="this.style.display='none'">`;
       });
 
-      // Build Pricing Table with Live Currency
       const tBody = document.getElementById('m-pricing-body');
       tBody.innerHTML = "";
       p.variants.forEach(v => {
         let varName = v.type === "Standard" ? "Standard" : `${v.type}: ${v.opt}`;
         let convertedPrice = convertPrice(v.priceCAD);
-        
         tBody.innerHTML += `
           <tr>
             <td><strong>${varName}</strong></td>
@@ -320,29 +380,80 @@
         `;
       });
 
-      document.getElementById('modal-overlay').style.display = 'flex';
+      document.getElementById('product-modal').style.display = 'flex';
       document.body.style.overflow = 'hidden'; 
     }
 
-    function closeModal(e) {
-      if(e.target.id === 'modal-overlay' || e.target.className === 'modal-close') {
-        document.getElementById('modal-overlay').style.display = 'none';
-        document.body.style.overflow = 'auto';
+    function closeModal(e, modalId) {
+      if(e.target.id === modalId || e.target.className === 'modal-close') {
+        document.getElementById(modalId).style.display = 'none';
+        // Only restore scroll if both modals are closed
+        if(document.getElementById('product-modal').style.display === 'none' && 
+           document.getElementById('rfq-modal').style.display === 'none') {
+           document.body.style.overflow = 'auto';
+        }
       }
     }
 
-    // TAWK.TO INTEGRATION - REQUEST QUOTE
-    function requestQuote() {
-      navigator.clipboard.writeText("Inquiry for Product ID: " + currentActiveId);
-      
-      var x = document.getElementById("toast");
-      x.className = "show";
-      setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+    // --- NEW RFQ LOGIC ---
 
-      if (typeof Tawk_API !== 'undefined') {
-        Tawk_API.maximize();
+    function openRFQ() {
+      // 1. Close Product Modal
+      document.getElementById('product-modal').style.display = 'none';
+      
+      // 2. Pre-fill RFQ Form
+      const p = allProducts.find(x => x.id === currentActiveId);
+      document.getElementById('rfq-product-id').value = p.id;
+      document.getElementById('rfq-product-name').value = p.name + " (" + p.id + ")";
+      
+      // 3. Open RFQ Modal
+      document.getElementById('rfq-modal').style.display = 'flex';
+    }
+
+    function toggleShippingAddress() {
+      const logisticsChoice = document.getElementById('rfq-logistics').value;
+      const destBox = document.getElementById('destination-box');
+      if(logisticsChoice === "Muziris Freight") {
+        destBox.style.display = "block";
+        document.getElementById('rfq-destination').required = true;
+      } else {
+        destBox.style.display = "none";
+        document.getElementById('rfq-destination').required = false;
       }
-      closeModal({target: {id: 'modal-overlay'}}); 
+    }
+
+    function submitRFQ() {
+      const btn = document.getElementById('btn-submit-rfq');
+      btn.innerText = "SUBMITTING...";
+      btn.disabled = true;
+
+      // Collect data (We will link this to backend later!)
+      const rfqData = {
+        productId: document.getElementById('rfq-product-id').value,
+        productName: document.getElementById('rfq-product-name').value,
+        quantity: document.getElementById('rfq-qty').value,
+        targetPrice: document.getElementById('rfq-target-price').value,
+        customization: document.getElementById('rfq-customization').value,
+        sample: document.getElementById('rfq-sample').value,
+        logistics: document.getElementById('rfq-logistics').value,
+        destination: document.getElementById('rfq-destination').value,
+        company: document.getElementById('rfq-company').value,
+        email: document.getElementById('rfq-email').value,
+        notes: document.getElementById('rfq-notes').value,
+        currency: activeCurrency
+      };
+
+      console.log("RFQ Data to send:", rfqData);
+
+      // Simulate a backend delay for now until we build the new code.gs function
+      setTimeout(() => {
+        document.getElementById('rfq-modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        alert("Your RFQ has been successfully submitted! A Muziris agent will review this and contact the supplier shortly.");
+        btn.innerText = "SUBMIT RFQ";
+        btn.disabled = false;
+        document.getElementById('rfqForm').reset();
+      }, 1500);
     }
   </script>
 
