@@ -251,13 +251,18 @@
             <label>PACKAGING DETAILS</label>
             <input type="text" id="packDetails" name="packagingDetails" placeholder="e.g. Polybag + Inner Box + Master Carton">
 
-            <label>SHORT TITLE / TAGLINE</label>
-            <span class="sub-label">A quick title to separate this specific listing (e.g. "Men's Summer Collection 2026")</span>
-            <input type="text" id="shortTitle" name="shortTitle" placeholder="Enter short title...">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:25px; margin-bottom:8px;">
+              <label style="margin:0;">SHORT TITLE / TAGLINE</label>
+              <button type="button" class="ai-btn" id="btn-ai-title" onclick="generateAITitle()">
+                ✨ Auto-Tagline
+              </button>
+            </div>
+            <span class="sub-label" style="margin-top:0;">A maximum 10-word punchy title to grab buyer attention.</span>
+            <input type="text" id="shortTitle" name="shortTitle" placeholder="e.g. Premium Eco-Friendly Bamboo Coffee Mug">
 
             <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:25px; margin-bottom:8px;">
               <label style="margin:0;">DETAILED DESCRIPTION</label>
-              <button type="button" class="ai-btn" id="btn-ai" onclick="generateAIDescription()">
+              <button type="button" class="ai-btn" id="btn-ai-desc" onclick="generateAIDescription()">
                 ✨ Auto-Write with AI
               </button>
             </div>
@@ -471,36 +476,58 @@
       }).then(r => r.json());
     }
 
-    // 🟢 🟢 THE MAGIC AI FUNCTION 🟢 🟢
+    // 🟢 AI DESC FUNCTION
     function generateAIDescription() {
       var pName = document.getElementById('pName').value;
       var category = document.getElementById('mainCat').value;
-      var subCat = document.getElementById('subCat').value;
-      var btn = document.getElementById('btn-ai');
+      var btn = document.getElementById('btn-ai-desc');
       
-      // Stop them if they haven't typed a product name yet
       if(!pName || !category) {
-        customAlert("Missing Info", "Please enter a Product Name and select a Category first so the AI knows what to write about!");
+        customAlert("Missing Info", "Please enter a Product Name and select a Category on Step 1 first!");
         return;
       }
       
-      btn.innerText = "⏳ Generating...";
+      btn.innerText = "⏳ Writing...";
       btn.disabled = true;
       
-      // Ping the Google Apps Script backend which will ping Gemini
-      fetchAPI('generateDescription', { productName: pName, category: category, subCategory: subCat })
+      fetchAPI('generateDescription', { productName: pName, category: category })
         .then(res => {
-          if(res.description) {
-            document.getElementById('desc').value = res.description;
-          } else {
-            customAlert("AI Error", res.error || "Could not generate description.");
-          }
+          if(res.description) document.getElementById('desc').value = res.description;
+          else customAlert("AI Error", res.error || "Could not generate.");
           btn.innerText = "✨ Auto-Write with AI";
           btn.disabled = false;
         })
         .catch(err => {
           customAlert("Network Error", "Failed to connect to AI server.");
           btn.innerText = "✨ Auto-Write with AI";
+          btn.disabled = false;
+        });
+    }
+
+    // 🟢 NEW: AI TAGLINE FUNCTION
+    function generateAITitle() {
+      var pName = document.getElementById('pName').value;
+      var category = document.getElementById('mainCat').value;
+      var btn = document.getElementById('btn-ai-title');
+      
+      if(!pName || !category) {
+        customAlert("Missing Info", "Please enter a Product Name and select a Category on Step 1 first!");
+        return;
+      }
+      
+      btn.innerText = "⏳ Thinking...";
+      btn.disabled = true;
+      
+      fetchAPI('generateTitle', { productName: pName, category: category })
+        .then(res => {
+          if(res.title) document.getElementById('shortTitle').value = res.title;
+          else customAlert("AI Error", res.error || "Could not generate title.");
+          btn.innerText = "✨ Auto-Tagline";
+          btn.disabled = false;
+        })
+        .catch(err => {
+          customAlert("Network Error", "Failed to connect to AI server.");
+          btn.innerText = "✨ Auto-Tagline";
           btn.disabled = false;
         });
     }
