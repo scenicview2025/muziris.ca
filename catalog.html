@@ -75,7 +75,7 @@
     .btn-quote:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(212,175,55,0.5); }
 
     /* RFQ MODAL STYLES */
-    .rfq-content { background: var(--slate); width: 100%; max-width: 700px; max-height: 90vh; border-radius: 8px; border: 1px solid var(--gold); overflow-y: auto; padding: 40px; position: relative; animation: slideUp 0.4s ease; box-sizing: border-box; }
+    .rfq-content { background: var(--slate); width: 100%; max-width: 800px; max-height: 90vh; border-radius: 8px; border: 1px solid var(--gold); overflow-y: auto; padding: 40px; position: relative; animation: slideUp 0.4s ease; box-sizing: border-box; }
     .rfq-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
     .rfq-header h2 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0 0 10px 0; letter-spacing: 2px; }
     .rfq-header p { color: #aaa; font-size: 13px; margin: 0; }
@@ -90,7 +90,7 @@
 
     /* Dynamic Variant Rows */
     .variant-rfq-row { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 15px; }
-    .variant-rfq-row input { padding: 10px; font-size: 13px; }
+    .variant-rfq-row input { padding: 10px; font-size: 13px; text-align: center; }
 
     @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
@@ -190,9 +190,21 @@
 
           <div class="rfq-full">
             <label>Select Variants & Target Pricing *</label>
-            <div id="rfq-variants-container" style="background: rgba(0,0,0,0.3); padding: 15px; border: 1px solid #333; border-radius: 4px; max-height: 280px; overflow-y: auto;">
+            
+            <div style="background: rgba(0,0,0,0.3); padding: 15px; border: 1px solid #333; border-radius: 4px; max-height: 350px; overflow-y: auto;">
+              
+              <div style="display:flex; gap:15px; margin-bottom: 10px; font-size: 10px; color: #888; text-transform: uppercase; font-weight: bold;">
+                 <div style="flex:2;">Variant Details</div>
+                 <div style="flex:1; text-align:center;">Req. Qty</div>
+                 <div style="flex:1; text-align:center;">Total Amount</div>
+                 <div style="flex:1.2; text-align:center;">Target Total</div>
               </div>
-            <div style="font-size:10px; color:#888; margin-top:8px;">* Enter a quantity for the variants you wish to order. Leave target price blank to accept the current listed price.</div>
+
+              <div id="rfq-variants-container">
+                </div>
+
+            </div>
+            <div style="font-size:10px; color:#888; margin-top:8px;">* Enter a quantity for the variants you wish to order. Leave "Target Total" blank to accept the current listed total amount.</div>
           </div>
 
           <div>
@@ -267,6 +279,7 @@
   </div>
 
   <script>
+    // Ensure this URL matches your newly deployed web app URL!
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz0o7RTZI3MENv2PjhWDS8a_JasnPZjIqj6Dn1sARHTFiFbhE29fzMO2iUNUjIOq7XC/exec";
     let allProducts = [];
     let currentActiveId = "";
@@ -415,7 +428,8 @@
       }
     }
 
-    // --- MULTI-VARIANT RFQ LOGIC ---
+    // --- MULTI-VARIANT RFQ LOGIC WITH TOTAL PRICE CALCULATION ---
+
     function openRFQ() {
       document.getElementById('product-modal').style.display = 'none';
       
@@ -426,6 +440,7 @@
       const vContainer = document.getElementById('rfq-variants-container');
       vContainer.innerHTML = ""; 
       
+      // Generate a row for every variant
       p.variants.forEach((v, index) => {
         let varName = v.type === "Standard" ? "Standard" : `${v.type}: ${v.opt}`;
         let convertedPrice = convertPrice(v.priceCAD);
@@ -434,19 +449,42 @@
           <div class="variant-rfq-row">
             <div style="flex: 2; font-size: 13px; color: #fff;">
               <strong style="color:var(--gold);">${varName}</strong><br>
-              <span style="color: #aaa; font-size: 11px;">Current: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
+              <span style="color: #aaa; font-size: 11px;">Unit Price: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
             </div>
+            
             <div style="flex: 1;">
-              <input type="number" class="v-qty" data-vid="${v.varId}" data-vname="${varName}" data-cadprice="${v.priceCAD}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty">
+              <input type="number" min="0" class="v-qty" 
+                     data-vid="${v.varId}" 
+                     data-vname="${varName}" 
+                     data-cadprice="${v.priceCAD}" 
+                     data-buyerprice="${convertedPrice}" 
+                     placeholder="Req. Qty" 
+                     oninput="updateCalculatedTotal(this)">
             </div>
-            <div style="flex: 1;">
-              <input type="number" step="0.01" class="v-target" placeholder="Target (${activeCurrency})">
+            
+            <div style="flex: 1; text-align: center; color: var(--gold); font-size: 14px; font-weight: bold; align-self: center;">
+              <span class="v-total-display">0.00</span>
+            </div>
+
+            <div style="flex: 1.2;">
+              <input type="number" step="0.01" class="v-target" placeholder="Target Total">
             </div>
           </div>
         `;
       });
 
       document.getElementById('rfq-modal').style.display = 'flex';
+    }
+
+    // Real-time Total Price Calculator
+    function updateCalculatedTotal(inputElement) {
+      let qty = parseInt(inputElement.value) || 0;
+      let unitPrice = parseFloat(inputElement.getAttribute('data-buyerprice')) || 0;
+      let totalAmount = qty * unitPrice;
+      
+      // Find the specific total display for this row and update it
+      let row = inputElement.closest('.variant-rfq-row');
+      row.querySelector('.v-total-display').innerText = totalAmount.toFixed(2);
     }
 
     function toggleShippingAddress() {
@@ -467,19 +505,30 @@
       let requestedVariants = [];
       const variantRows = document.querySelectorAll('.variant-rfq-row');
       
+      // Loop through the variant rows to scrape the TOTAL prices
       variantRows.forEach(row => {
         let qtyInput = row.querySelector('.v-qty');
         let targetInput = row.querySelector('.v-target');
         let qty = parseInt(qtyInput.value);
         
         if (qty > 0) {
+           // We calculate the TOTAL current price based on the quantity requested
+           let unitPriceCAD = parseFloat(qtyInput.getAttribute('data-cadprice')) || 0;
+           let unitPriceBuyer = parseFloat(qtyInput.getAttribute('data-buyerprice')) || 0;
+           
+           let totalCurrentCAD = (qty * unitPriceCAD).toFixed(2);
+           let totalCurrentBuyer = (qty * unitPriceBuyer).toFixed(2);
+           
+           // If they entered a Target Total, use it. Otherwise, leave blank to use the Current Total
+           let totalTargetBuyer = targetInput.value ? parseFloat(targetInput.value).toFixed(2) : "";
+
            requestedVariants.push({
              variantId: qtyInput.getAttribute('data-vid'),
              variantName: qtyInput.getAttribute('data-vname'),
-             currentPriceCAD: qtyInput.getAttribute('data-cadprice'),
-             currentPriceBuyer: qtyInput.getAttribute('data-buyerprice'),
+             currentPriceCAD: totalCurrentCAD,       // This is now TOTAL price in CAD
+             currentPriceBuyer: totalCurrentBuyer,   // This is now TOTAL price in Buyer Currency
              quantity: qty,
-             targetPriceBuyer: targetInput.value || "" 
+             targetPriceBuyer: totalTargetBuyer      // This is now TOTAL target amount
            });
         }
       });
