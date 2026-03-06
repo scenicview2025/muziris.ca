@@ -3,7 +3,7 @@
 // ==========================================
 
 // MAKE SURE THIS IS YOUR ACTUAL GOOGLE APPS SCRIPT URL!
-const MUZIRIS_API_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
+const MUZIRIS_API_URL = "https://script.google.com/macros/s/AKfycbyGaJlZrB05JP2BFCBHs9yCEV5BFex6sX7dIBte64s-KcF35NMnnnq5ppyMCztXzLOe4g/exec";
 
 // 1. INJECT THE CHAT HTML & CSS INTO THE PAGE
 const botHTML = `
