@@ -1,5 +1,3 @@
-Working
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,6 +68,17 @@ Working
       align-items: center;
       text-align: center;
       box-shadow: 0 0 40px rgba(0,0,0,0.8); 
+    }
+
+    /* ✨ NEW: CINEMATIC FADE-IN ANIMATION ✨ */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+    .fade-in-up.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .video-window-space {
@@ -229,6 +238,13 @@ Working
       margin-top: 30px;
       width: 100%;
       box-sizing: border-box;
+      transition: all 0.4s ease;
+    }
+    
+    .contact-box:hover {
+      background: rgba(20, 24, 34, 0.7);
+      border-color: var(--gold);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .contact-links-grid {
@@ -300,7 +316,7 @@ Working
 
   <div class="scrolling-layer">
 
-    <div class="content-block">
+    <div class="content-block fade-in-up">
       <div class="inner-wrap">
         <h1 class="brand-title">Muziris</h1>
         <h2 class="coming-soon">Coming Soon</h2>
@@ -311,13 +327,12 @@ Working
         <div class="action-buttons">
           <a href="join.html" class="cta-button primary-btn">Supplier Registration</a>
         </div>
-
       </div>
     </div>
 
     <div class="video-window-space"></div>
 
-    <div class="content-block">
+    <div class="content-block fade-in-up">
       <div class="inner-wrap">
         
         <h3 class="section-title">About <span>Us</span></h3>
@@ -334,7 +349,7 @@ Working
           <li>Market entry support for international manufacturers</li>
         </ul>
 
-        <div class="contact-box">
+        <div class="contact-box fade-in-up">
           <h3 class="section-title" style="font-size: 1.4rem; margin-top: 0; margin-bottom: 10px;">For Enquiries & Collaborations</h3>
           <p style="margin-bottom: 0; color: var(--gold); font-style: italic;">Based in Canada, rooted in India</p>
           
@@ -363,6 +378,24 @@ Working
 
   </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 }); // Triggers when 10% of the element is visible
+
+    document.querySelectorAll('.fade-in-up').forEach(element => {
+      observer.observe(element);
+    });
+  });
+</script>
+
+<script src="muziris-bot.js"></script>
+
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
@@ -376,5 +409,3 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 </body>
 </html>
-
-
