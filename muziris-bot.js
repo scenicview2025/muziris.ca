@@ -1,40 +1,50 @@
 // ==========================================
-// MUZIRIS AI CONCIERGE WIDGET
+// ELITE MUZIRIS AI CONCIERGE WIDGET (v2.0)
 // ==========================================
 
-// MAKE SURE THIS IS YOUR ACTUAL GOOGLE APPS SCRIPT URL!
 const MUZIRIS_API_URL = "https://script.google.com/macros/s/AKfycbyGaJlZrB05JP2BFCBHs9yCEV5BFex6sX7dIBte64s-KcF35NMnnnq5ppyMCztXzLOe4g/exec";
 
-// 1. INJECT THE CHAT HTML & CSS INTO THE PAGE
+// 1. INJECT HIGH-END UI & CSS
 const botHTML = `
 <style>
-  #muziris-ai-btn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 9998; transition: 0.3s; border: 2px solid #000; }
+  #muziris-ai-btn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 9998; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 2px solid #000; }
   #muziris-ai-btn:hover { transform: scale(1.1); }
   #muziris-ai-btn svg { fill: #000; width: 30px; height: 30px; }
   
-  #muziris-chat-window { position: fixed; bottom: 90px; right: 20px; width: 350px; height: 500px; background: #151922; border: 1px solid #D4AF37; border-radius: 12px; display: none; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.8); z-index: 9999; overflow: hidden; font-family: 'Lato', sans-serif;}
+  #muziris-chat-window { position: fixed; bottom: 90px; right: 20px; width: 350px; height: 500px; background: #151922; border: 1px solid #D4AF37; border-radius: 12px; display: none; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,0.8); z-index: 9999; overflow: hidden; font-family: 'Lato', sans-serif; opacity: 0; transition: opacity 0.3s ease; }
   
   .m-chat-header { background: #0b0e14; padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; color: #D4AF37; }
   .m-chat-title { font-family: 'Cinzel', serif; font-size: 16px; font-weight: bold; letter-spacing: 2px; }
-  .m-close-btn { color: #888; cursor: pointer; font-size: 20px; font-weight: bold; }
-  .m-close-btn:hover { color: #fff; }
+  .m-close-btn { color: #888; cursor: pointer; font-size: 24px; font-weight: bold; line-height: 1; transition: 0.2s; }
+  .m-close-btn:hover { color: #fff; transform: rotate(90deg); }
   
-  .m-chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0b0e14; }
+  .m-chat-body { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #0b0e14; }
   
-  .m-msg { max-width: 80%; padding: 10px 15px; border-radius: 8px; font-size: 13px; line-height: 1.5; }
-  .m-msg-ai { background: #1e2430; color: #e0e0e0; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #333;}
-  .m-msg-user { background: #D4AF37; color: #000; align-self: flex-end; border-bottom-right-radius: 0; font-weight: bold;}
+  .m-msg { max-width: 85%; padding: 12px 16px; border-radius: 8px; font-size: 13.5px; line-height: 1.5; animation: popIn 0.3s ease forwards; opacity: 0; transform: translateY(10px); }
+  @keyframes popIn { to { opacity: 1; transform: translateY(0); } }
+  
+  .m-msg-ai { background: #1e2430; color: #e0e0e0; align-self: flex-start; border-bottom-left-radius: 0; border: 1px solid #333; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); }
+  .m-msg-user { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; align-self: flex-end; border-bottom-right-radius: 0; font-weight: bold; box-shadow: -2px 2px 10px rgba(212, 175, 55, 0.2); }
+  
+  .m-system-msg { align-self: center; font-size: 11px; color: #888; font-style: italic; letter-spacing: 1px; animation: pulse 1.5s infinite; margin-top: 5px; }
+  @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
   
   .m-chat-footer { padding: 15px; background: #151922; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
   .m-input-row { display: flex; gap: 10px; }
-  #m-chat-input { flex: 1; padding: 10px; background: #0b0e14; border: 1px solid #444; color: #fff; border-radius: 4px; outline: none; }
-  #m-chat-input:focus { border-color: #D4AF37; }
-  #m-send-btn { background: #D4AF37; color: #000; border: none; padding: 10px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+  #m-chat-input { flex: 1; padding: 12px; background: #0b0e14; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none; font-family: 'Lato', sans-serif; transition: 0.3s; }
+  #m-chat-input:focus { border-color: #D4AF37; box-shadow: 0 0 5px rgba(212,175,55,0.3); }
+  #m-send-btn { background: #D4AF37; color: #000; border: none; padding: 0 20px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+  #m-send-btn:hover { background: #b89225; }
   
-  .m-human-btn { background: transparent; border: 1px dashed #D4AF37; color: #D4AF37; padding: 8px; border-radius: 4px; font-size: 11px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; text-align: center; transition: 0.3s;}
+  .m-human-btn { background: transparent; border: 1px dashed #D4AF37; color: #D4AF37; padding: 8px; border-radius: 6px; font-size: 11px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; text-align: center; transition: 0.3s;}
   .m-human-btn:hover { background: #D4AF37; color: #000; }
   
-  .typing-indicator { color: #888; font-size: 11px; font-style: italic; display: none; margin-left: 5px;}
+  /* Bouncing Dots Thinking Indicator */
+  .thinking-indicator { display: none; align-self: flex-start; background: #1e2430; padding: 12px 16px; border-radius: 8px; border-bottom-left-radius: 0; border: 1px solid #333; margin-bottom: 5px; }
+  .thinking-indicator span { display: inline-block; width: 6px; height: 6px; background: #D4AF37; border-radius: 50%; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both; }
+  .thinking-indicator span:nth-child(1) { animation-delay: -0.32s; }
+  .thinking-indicator span:nth-child(2) { animation-delay: -0.16s; }
+  @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 </style>
 
 <div id="muziris-ai-btn" onclick="toggleMuzirisChat()">
@@ -49,100 +59,159 @@ const botHTML = `
   <div class="m-chat-body" id="m-chat-history">
     <div class="m-msg m-msg-ai">Hello! I am the Muziris AI Concierge. How can I help you with your global sourcing today?</div>
   </div>
-  <div class="typing-indicator" id="m-typing">AI is typing...</div>
+  
+  <div class="thinking-indicator" id="m-thinking">
+    <span></span><span></span><span></span>
+  </div>
+  
   <div class="m-chat-footer">
     <div class="m-input-row">
       <input type="text" id="m-chat-input" placeholder="Type your message..." onkeypress="handleEnter(event)">
       <button id="m-send-btn" onclick="sendChatMessage()">Send</button>
     </div>
-    <div class="m-human-btn" onclick="handOffToHuman()">Agent</div>
+    <div class="m-human-btn" onclick="triggerManualHandoff()">Request Live Agent</div>
   </div>
 </div>
 `;
 
-// Inject into the body when the page loads
+// Inject into body and aggressively hide Tawk.to
 document.addEventListener("DOMContentLoaded", function() {
   document.body.insertAdjacentHTML('beforeend', botHTML);
   
-  // Try to hide default Tawk.to widget on load (we only want it to show when requested)
-  setTimeout(() => {
+  // Keep Tawk.to hidden until we explicitly call it
+  const hideTawk = setInterval(() => {
     if (typeof Tawk_API !== 'undefined' && Tawk_API.hideWidget) {
       Tawk_API.hideWidget();
+      clearInterval(hideTawk);
     }
-  }, 2000);
+  }, 500);
 });
 
-// 2. CHAT LOGIC
+// 2. CORE LOGIC & ANIMATIONS
 function toggleMuzirisChat() {
   const chat = document.getElementById('muziris-chat-window');
-  chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
+  if (chat.style.display === 'flex') {
+    chat.style.opacity = '0';
+    setTimeout(() => chat.style.display = 'none', 300);
+  } else {
+    chat.style.display = 'flex';
+    setTimeout(() => chat.style.opacity = '1', 10);
+  }
 }
 
 function handleEnter(e) {
   if (e.key === 'Enter') sendChatMessage();
 }
 
-function sendChatMessage() {
+async function sendChatMessage() {
   const input = document.getElementById('m-chat-input');
   const message = input.value.trim();
   if (!message) return;
 
-  // Add User Message to UI
+  // Add User Message
   addMessageToUI(message, 'user');
   input.value = '';
   
-  // Show Typing
-  document.getElementById('m-typing').style.display = 'block';
+  // Show High-End Thinking Animation
+  const thinkingUI = document.getElementById('m-thinking');
+  const history = document.getElementById('m-chat-history');
+  thinkingUI.style.display = 'block';
+  history.scrollTop = history.scrollHeight;
 
-  // Send to Google Apps Script
-  fetch(MUZIRIS_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'chatBot', message: message })
-  })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('m-typing').style.display = 'none';
+  try {
+    const response = await fetch(MUZIRIS_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'chatBot', message: message })
+    });
+    const data = await response.json();
+    
+    thinkingUI.style.display = 'none';
     
     if (data.reply) {
-      // Check if the AI decided to hand off to a human!
-      if (data.reply.includes("[HANDOFF_TO_TAWK]")) {
-        let cleanReply = data.reply.replace("[HANDOFF_TO_TAWK]", "").trim();
-        addMessageToUI(cleanReply, 'ai');
-        setTimeout(handOffToHuman, 1500); // Wait 1.5 seconds, then pop Tawk.to
-      } else {
-        addMessageToUI(data.reply, 'ai');
+      const isHandoff = data.reply.includes("[HANDOFF_TO_TAWK]");
+      const cleanReply = data.reply.replace("[HANDOFF_TO_TAWK]", "").trim();
+      
+      // Type out the AI's response smoothly
+      await typeWriterEffect(cleanReply);
+      
+      if (isHandoff) {
+        executeCinematicHandoff();
       }
     } else {
-      addMessageToUI("I'm sorry, my servers are currently analyzing market data. Please try again.", 'ai');
+      await typeWriterEffect("I'm sorry, I am currently analyzing market data. Please try again.");
     }
-  })
-  .catch(err => {
-    document.getElementById('m-typing').style.display = 'none';
-    addMessageToUI("Connection lost. Please check your internet.", 'ai');
+  } catch (err) {
+    thinkingUI.style.display = 'none';
+    await typeWriterEffect("Secure connection lost. Please check your internet.");
+  }
+}
+
+// 3. TYPEWRITER EFFECT
+function typeWriterEffect(text) {
+  return new Promise((resolve) => {
+    const history = document.getElementById('m-chat-history');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'm-msg m-msg-ai';
+    history.appendChild(msgDiv);
+    
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        msgDiv.innerHTML += text.charAt(i);
+        i++;
+        history.scrollTop = history.scrollHeight;
+        setTimeout(type, 15); // Adjust typing speed here (lower is faster)
+      } else {
+        resolve();
+      }
+    }
+    type();
   });
 }
 
+// Instant message for user text
 function addMessageToUI(text, sender) {
   const history = document.getElementById('m-chat-history');
   const msgDiv = document.createElement('div');
   msgDiv.className = `m-msg m-msg-${sender}`;
   msgDiv.innerText = text;
   history.appendChild(msgDiv);
-  history.scrollTop = history.scrollHeight; // Auto-scroll to bottom
+  history.scrollTop = history.scrollHeight;
 }
 
-// 3. THE TAWK.TO HANDOFF MAGIC
-function handOffToHuman() {
-  // Hide the AI Window and Button
-  document.getElementById('muziris-chat-window').style.display = 'none';
-  document.getElementById('muziris-ai-btn').style.display = 'none';
+// 4. THE CINEMATIC HANDOFF SEQUENCE
+function triggerManualHandoff() {
+  addMessageToUI("I would like to speak to a live agent, please.", 'user');
+  setTimeout(() => {
+    executeCinematicHandoff();
+  }, 500);
+}
+
+function executeCinematicHandoff() {
+  const history = document.getElementById('m-chat-history');
   
-  // Wake up Tawk.to
-  if (typeof Tawk_API !== 'undefined') {
-    Tawk_API.showWidget();
-    Tawk_API.maximize();
-  } else {
-    alert("Live agents are currently offline. Please leave a message via the contact form.");
-  }
+  // 1. Show the pulsing system message
+  const sysMsg = document.createElement('div');
+  sysMsg.className = 'm-system-msg';
+  sysMsg.innerText = "Establishing secure connection to Live Agent...";
+  history.appendChild(sysMsg);
+  history.scrollTop = history.scrollHeight;
+  
+  // Disable input while transferring
+  document.getElementById('m-chat-input').disabled = true;
+  document.getElementById('m-send-btn').disabled = true;
+  
+  // 2. The 3-second cinematic pause, then execute Tawk.to
+  setTimeout(() => {
+    document.getElementById('muziris-chat-window').style.display = 'none';
+    document.getElementById('muziris-ai-btn').style.display = 'none';
+    
+    if (typeof Tawk_API !== 'undefined') {
+      Tawk_API.showWidget(); // Unhide Tawk
+      Tawk_API.maximize();   // Pop it open
+    } else {
+      alert("Live agents are currently offline. Please leave a message.");
+    }
+  }, 3000); // 3000ms = 3 second pause
 }
