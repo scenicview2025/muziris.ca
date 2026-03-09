@@ -463,17 +463,31 @@
   </script>
 
   <script>
-    // MAKE SURE YOUR GOOGLE APPS SCRIPT URL IS HERE!
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
+    // 🚀 CONNECTED TO RENDER ENTERPRISE SERVER
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
     var catData = {};
 
-    function fetchAPI(action, payload = {}) {
-      payload.action = action;
-      return fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      }).then(r => r.json());
+    async function fetchAPI(action, payload = {}) {
+      let endpoint = '';
+      
+      // Route the action to the correct Server Endpoint
+      if (action === 'verifySupplier') endpoint = '/verify-supplier';
+      else if (action === 'getCategoryStructure') endpoint = '/categories';
+      else if (action === 'generateDescription') { endpoint = '/generate-ai'; payload.type = 'desc'; }
+      else if (action === 'generateTitle') { endpoint = '/generate-ai'; payload.type = 'title'; }
+      else if (action === 'processForm') endpoint = '/submit-staging';
+      else if (action === 'uploadMedia') endpoint = '/upload-media';
+      
+      try {
+        const response = await fetch(API_BASE_URL + endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        return await response.json(); 
+      } catch (error) {
+        return { error: "Server connection failed." };
+      }
     }
 
     // 🟢 AI DESC FUNCTION
