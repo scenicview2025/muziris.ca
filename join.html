@@ -449,8 +449,9 @@
 </script>
 
 <script>
-  // WEB APP URL
+  // NEW RENDER API URL
   const WEB_APP_URL = "https://muziris-api.onrender.com/register-supplier";
+  
   const lists = {
     countries: [
       { name: "Canada", code: "+1" }, { name: "United States", code: "+1" }, { name: "India", code: "+91" }, 
@@ -549,17 +550,21 @@
     btn.innerText = "Processing...";
     btn.disabled = true;
     
+    // Combine phone code and number into the hidden input
     const finalPhone = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
     document.getElementById('fullPhone').value = finalPhone;
 
+    // Gather all form data
     var form = document.getElementById('regForm');
     var data = {};
     new FormData(form).forEach((value, key) => data[key] = value);
 
+    // Send JSON data to Render API
     fetch(WEB_APP_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
     })
@@ -577,6 +582,7 @@
       }
     })
     .catch(error => {
+      console.error(error);
       showAlert("Connection Error", "Could not connect to the server. Please try again.");
       btn.innerText = "Submit Registration";
       btn.disabled = false;
