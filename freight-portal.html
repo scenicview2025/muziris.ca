@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Freight & Logistics Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    
+    header { background: rgba(11, 14, 20, 0.95); padding: 20px; text-align: center; border-bottom: 1px solid var(--gold); }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
+    
+    .container { max-width: 700px; margin: 40px auto; background: var(--slate); padding: 40px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    h2 { color: #fff; font-family: 'Cinzel', serif; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; }
+    
+    .info-box { background: rgba(212,175,55,0.05); padding: 25px; border: 1px solid rgba(212,175,55,0.3); border-radius: 6px; margin-bottom: 30px; font-size: 15px; line-height: 1.8; }
+    .info-box strong { color: var(--gold); display: inline-block; width: 180px;}
+
+    label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold; margin-top: 20px;}
+    input, select { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-size: 16px;}
+    input:focus, select:focus { border-color: var(--gold); outline: none; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .btn-submit { display: block; width: 100%; background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); color: #fff; text-align: center; padding: 20px; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; margin-top: 40px; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(30,136,229,0.4); }
+
+    #loading { text-align: center; padding: 100px; color: var(--gold); font-size: 18px; letter-spacing: 2px; font-family: 'Cinzel', serif; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="brand">Muziris</h1>
+    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Internal Logistics Bidding Portal</div>
+  </header>
+
+  <div id="loading">RETRIEVING ROUTE DATA...</div>
+
+  <div class="container" id="main-content" style="display:none;">
+    <h2>ROUTE: <span id="ui-rfq-id" style="color:#1E88E5;"></span></h2>
+    <p style="color:#aaa; font-size: 13px;">Please review the physical dimensions below and input your final freight cost.</p>
+    
+    <div class="info-box">
+      <strong>Final Destination:</strong> <span id="ui-dest" style="color:#fff; font-weight:bold;"></span><br>
+      <strong>Incoterms Requested:</strong> <span id="ui-logistics"></span><br><br>
+      <strong>Total Gross Weight:</strong> <span id="ui-kg" style="color:#fff; font-size: 18px; font-weight:bold;"></span> kg<br>
+      <strong>Total Cartons:</strong> <span id="ui-qty"></span> Boxes<br>
+      <strong>Master Dimensions:</strong> <span id="ui-dims"></span> cm
+    </div>
+
+    <form id="freightForm" onsubmit="event.preventDefault(); submitFreightQuote();">
+      
+      <div class="grid-2">
+        <div>
+          <label>Quotation Currency</label>
+          <select id="freight-currency">
+            <option value="USD">USD ($)</option>
+            <option value="CAD">CAD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+          </select>
+        </div>
+        <div>
+          <label>Total Freight Cost</label>
+          <input type="number" step="0.01" id="freight-cost" placeholder="0.00" required>
+        </div>
+      </div>
+      
+      <div>
+        <label>Estimated Transit Time (Days)</label>
+        <input type="number" id="transit-time" placeholder="e.g. 14" required>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-submit">SECURE ROUTE & DISPATCH TO BUYER</button>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    const urlParams = new URLSearchParams(window.location.search);
+    const rfqId = urlParams.get('rfq');
+
+    if (!rfqId) {
+      document.getElementById('loading').innerText = "INVALID ROUTE ID.";
+    } else {
+      fetch(API_BASE_URL + '/get-rfq/' + rfqId)
+        .then(res => res.json())
+        .then(data => {
+          if(data.error) {
+            document.getElementById('loading').innerText = "ROUTE EXPIRED OR NOT FOUND.";
+            return;
+          }
+          
+          let quote = {};
+          try { quote = typeof data.supplier_quote === 'string' ? JSON.parse(data.supplier_quote) : data.supplier_quote; } catch(e){}
+          
+          if(!quote || !quote.masterCarton) {
+             document.getElementById('loading').innerText = "WAITING ON SUPPLIER BOX DIMENSIONS.";
+             return;
+          }
+
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('main-content').style.display = 'block';
+
+          document.getElementById('ui-rfq-id').innerText = data.rfq_id;
+          document.getElementById('ui-dest').innerText = data.destination;
+          document.getElementById('ui-logistics').innerText = data.logistics;
+          
+          document.getElementById('ui-kg').innerText = quote.masterCarton.weightKG;
+          document.getElementById('ui-qty').innerText = quote.masterCarton.totalCartons;
+          document.getElementById('ui-dims').innerText = `${quote.masterCarton.length} x ${quote.masterCarton.width} x ${quote.masterCarton.height}`;
+        })
+        .catch(err => { document.getElementById('loading').innerText = "SERVER CONNECTION FAILED."; });
+    }
+
+    function submitFreightQuote() {
+      const btn = document.getElementById('btn-submit');
+      btn.innerText = "CALCULATING FINAL MARGINS...";
+      btn.disabled = true;
+
+      const payload = {
+        rfqId: rfqId,
+        freightCost: document.getElementById('freight-cost').value,
+        freightCurrency: document.getElementById('freight-currency').value,
+        transitTime: document.getElementById('transit-time').value
+      };
+
+      fetch(API_BASE_URL + '/submit-freight-quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          document.getElementById('main-content').innerHTML = `
+            <div style="text-align:center; padding: 50px;">
+              <h2 style="color:#1E88E5;">✓ ROUTE SECURED</h2>
+              <p style="color:#aaa;">The freight quote has been automatically marked up and attached to the Official Sourcing Contract. The invoice has been emailed to the buyer.</p>
+            </div>
+          `;
+        } else {
+          alert("Database Error: " + data.error);
+          btn.innerText = "SECURE ROUTE & DISPATCH TO BUYER";
+          btn.disabled = false;
+        }
+      })
+      .catch(err => {
+        alert("Network Error.");
+        btn.innerText = "SECURE ROUTE & DISPATCH TO BUYER";
+        btn.disabled = false;
+      });
+    }
+  </script>
+</body>
+</html>
