@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Official Supplier RFQ Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    
+    header { background: rgba(11, 14, 20, 0.95); padding: 20px; text-align: center; border-bottom: 1px solid var(--gold); }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
+    
+    .container { max-width: 800px; margin: 40px auto; background: var(--slate); padding: 40px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    h2 { color: #fff; font-family: 'Cinzel', serif; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; }
+    
+    .info-box { background: rgba(0,0,0,0.3); padding: 20px; border-left: 4px solid var(--gold); margin-bottom: 30px; font-size: 14px; line-height: 1.6; }
+    .info-box strong { color: var(--gold); }
+
+    .variant-row { display: flex; flex-wrap: wrap; gap: 15px; background: #0b0e14; padding: 20px; border: 1px solid #333; border-radius: 4px; margin-bottom: 15px; align-items: center; }
+    .v-details { flex: 2; min-width: 200px; }
+    .v-target { flex: 1; min-width: 150px; text-align: center; background: rgba(212,175,55,0.1); padding: 10px; border-radius: 4px; border: 1px dashed var(--gold); }
+    .v-input { flex: 1; min-width: 150px; }
+    
+    label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold; }
+    input, select { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif; }
+    input:focus { border-color: var(--gold); outline: none; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+    .btn-submit { display: block; width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; text-align: center; padding: 18px; font-weight: bold; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; margin-top: 40px; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
+
+    #loading { text-align: center; padding: 100px; color: var(--gold); font-size: 18px; letter-spacing: 2px; font-family: 'Cinzel', serif; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="brand">Muziris</h1>
+    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Supplier Quotation Portal</div>
+  </header>
+
+  <div id="loading">LOCATING SOURCING CONTRACT...</div>
+
+  <div class="container" id="main-content" style="display:none;">
+    <h2>RFQ: <span id="ui-rfq-id" style="color:var(--gold);"></span></h2>
+    
+    <div class="info-box">
+      <strong>Product:</strong> <span id="ui-product"></span><br>
+      <strong>Buyer Destination:</strong> <span id="ui-dest"></span><br>
+      <strong>Customization:</strong> <span id="ui-cust"></span><br>
+      <div style="margin-top:10px; font-size:12px; color:#aaa;" id="ui-notes"></div>
+    </div>
+
+    <form id="quoteForm" onsubmit="event.preventDefault(); submitQuote();">
+      
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">1. Review Volumes & Counter Offer</h3>
+      <p style="font-size:12px; color:#888;">The buyer has requested the following volumes. If they proposed a Target Price, you may accept it or type your counter-offer. (Prices must be in <strong id="ui-currency" style="color:var(--gold);"></strong>)</p>
+      
+      <div id="variants-container"></div>
+
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">2. Master Carton Dimensions (For Freight)</h3>
+      <p style="font-size:12px; color:#888;">Please provide the exact packed dimensions so Muziris can calculate the logistics routing.</p>
+      
+      <div class="grid-3">
+        <div><label>Length (cm)</label><input type="number" id="box-l" required></div>
+        <div><label>Width (cm)</label><input type="number" id="box-w" required></div>
+        <div><label>Height (cm)</label><input type="number" id="box-h" required></div>
+      </div>
+      <div class="grid-2">
+        <div><label>Total Gross Weight (kg)</label><input type="number" step="0.1" id="box-kg" required></div>
+        <div><label>Total Number of Cartons</label><input type="number" id="box-qty" required></div>
+      </div>
+
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">3. Manufacturing Time</h3>
+      <div><label>Estimated Lead Time (Days)</label><input type="number" id="lead-time" placeholder="e.g. 30" required></div>
+
+      <button type="submit" class="btn-submit" id="btn-submit">SECURE CONTRACT & SEND QUOTE</button>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    const urlParams = new URLSearchParams(window.location.search);
+    const rfqId = urlParams.get('rfq');
+
+    if (!rfqId) {
+      document.getElementById('loading').innerText = "INVALID RFQ LINK. ACCESS DENIED.";
+    } else {
+      fetch(API_BASE_URL + '/get-rfq/' + rfqId)
+        .then(res => res.json())
+        .then(data => {
+          if(data.error) {
+            document.getElementById('loading').innerText = "RFQ NOT FOUND OR EXPIRED.";
+            return;
+          }
+          
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('main-content').style.display = 'block';
+
+          document.getElementById('ui-rfq-id').innerText = data.rfq_id;
+          document.getElementById('ui-product').innerText = data.product_name;
+          document.getElementById('ui-dest').innerText = data.destination;
+          document.getElementById('ui-cust').innerText = data.customization;
+          document.getElementById('ui-currency').innerText = data.currency;
+          
+          if(data.notes) document.getElementById('ui-notes').innerText = "Buyer Notes: " + data.notes;
+
+          let variants = [];
+          try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
+
+          const vCont = document.getElementById('variants-container');
+          variants.forEach((v, index) => {
+             let targetText = v.supplierTargetTotal ? `<span style="color:#d9534f; font-weight:bold; font-size:16px;">${v.supplierTargetTotal}</span>` : `<span style="color:#888;">Standard Price</span>`;
+             
+             vCont.innerHTML += `
+                <div class="variant-row">
+                  <div class="v-details">
+                    <div style="color:var(--gold); font-weight:bold; margin-bottom:5px;">${v.variantName}</div>
+                    <div style="color:#aaa; font-size:12px;">Req. Quantity: <strong style="color:#fff;">${v.quantity}</strong></div>
+                  </div>
+                  <div class="v-target">
+                    <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:3px;">Buyer Target (Total)</div>
+                    ${targetText}
+                  </div>
+                  <div class="v-input">
+                    <label>My Final Offer (${data.currency})</label>
+                    <input type="number" step="0.01" class="counter-input" data-vid="${v.variantId}" placeholder="Enter Total Price" required>
+                  </div>
+                </div>
+             `;
+          });
+        })
+        .catch(err => {
+           document.getElementById('loading').innerText = "SERVER CONNECTION FAILED.";
+        });
+    }
+
+    function submitQuote() {
+      const btn = document.getElementById('btn-submit');
+      btn.innerText = "PROCESSING QUOTE...";
+      btn.disabled = true;
+
+      const counterOffers = [];
+      document.querySelectorAll('.counter-input').forEach(input => {
+         counterOffers.push({
+            variantId: input.getAttribute('data-vid'),
+            supplierFinalTotal: input.value
+         });
+      });
+
+      const payload = {
+        rfqId: rfqId,
+        leadTime: document.getElementById('lead-time').value,
+        masterCarton: {
+          length: document.getElementById('box-l').value,
+          width: document.getElementById('box-w').value,
+          height: document.getElementById('box-h').value,
+          weightKG: document.getElementById('box-kg').value,
+          totalCartons: document.getElementById('box-qty').value
+        },
+        counterOffers: counterOffers
+      };
+
+      fetch(API_BASE_URL + '/submit-supplier-quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          document.getElementById('main-content').innerHTML = `
+            <div style="text-align:center; padding: 50px;">
+              <h2 style="color:var(--gold);">✓ QUOTATION SECURED</h2>
+              <p style="color:#aaa;">Your final price and logistics data have been successfully sent to the Muziris system. We will re-apply the buyer conversion and issue the final contract to the client shortly.</p>
+            </div>
+          `;
+        } else {
+          alert("Database Error: " + data.error);
+          btn.innerText = "SECURE CONTRACT & SEND QUOTE";
+          btn.disabled = false;
+        }
+      })
+      .catch(err => {
+        alert("Network Error.");
+        btn.innerText = "SECURE CONTRACT & SEND QUOTE";
+        btn.disabled = false;
+      });
+    }
+  </script>
+</body>
+</html>
