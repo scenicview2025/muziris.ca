@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muziris | Official Logistics & Quotation Portal</title>
+  <title>Muziris | Official Supplier Quotation Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; }
@@ -23,15 +23,20 @@
     .v-target { flex: 1; min-width: 150px; text-align: center; background: rgba(212,175,55,0.1); padding: 10px; border-radius: 4px; border: 1px dashed var(--gold); }
     .v-input { flex: 1; min-width: 150px; }
     
-    label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold; }
-    input, select { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif; }
-    input:focus { border-color: var(--gold); outline: none; }
+    label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold; margin-top: 15px;}
+    input, select, textarea { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif; }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
+    input[type="file"] { padding: 8px; font-size: 12px; border: 1px dashed #666; }
     
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+    .dynamic-section { background: rgba(212, 175, 55, 0.05); padding: 20px; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 4px; margin-top: 20px; }
+    .dynamic-section h4 { margin-top: 0; color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 14px; text-transform: uppercase; }
 
     .btn-submit { display: block; width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; text-align: center; padding: 18px; font-weight: bold; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; margin-top: 40px; }
     .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
+    .btn-submit:disabled { background: #555; cursor: not-allowed; transform: none; box-shadow: none; color: #aaa;}
 
     #loading { text-align: center; padding: 100px; color: var(--gold); font-size: 18px; letter-spacing: 2px; font-family: 'Cinzel', serif; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
@@ -41,19 +46,19 @@
 
   <header>
     <h1 class="brand">Muziris</h1>
-    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Logistics & Quotation Portal</div>
+    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Supplier Quotation & Evidence Portal</div>
   </header>
 
   <div id="loading">LOCATING SOURCING CONTRACT...</div>
 
   <div class="container" id="main-content" style="display:none;">
     <h2>RFQ: <span id="ui-rfq-id" style="color:var(--gold);"></span></h2>
+    <input type="hidden" id="hidden-supplier-id">
     
     <div class="info-box">
       <strong>Product:</strong> <span id="ui-product"></span><br>
       <strong>Buyer Destination:</strong> <span id="ui-dest"></span><br>
       <strong>Logistics Terms:</strong> <span id="ui-logistics"></span><br>
-      <strong>Customization:</strong> <span id="ui-cust"></span><br>
       <div style="margin-top:10px; font-size:12px; color:#aaa;" id="ui-notes"></div>
     </div>
 
@@ -64,9 +69,9 @@
       
       <div id="variants-container"></div>
 
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">2. Master Carton Dimensions</h3>
-      <p style="font-size:12px; color:#888;">Please provide the exact packed dimensions so we have accurate logistics data on file.</p>
-      
+      <div id="dynamic-requests-container"></div>
+
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">3. Master Carton Dimensions</h3>
       <div class="grid-3">
         <div><label>Length (cm)</label><input type="number" id="box-l" required></div>
         <div><label>Width (cm)</label><input type="number" id="box-w" required></div>
@@ -77,12 +82,11 @@
         <div><label>Total Number of Cartons</label><input type="number" id="box-qty" required></div>
       </div>
 
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">3. Freight Cost & Manufacturing Time</h3>
-      <p style="font-size:12px; color:#888;">If the buyer requested DDP/CIF, input the Freight cost below. If they requested EXW/FOB, leave as 0.</p>
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">4. Freight & Production</h3>
       <div class="grid-2">
         <div>
-          <label>Freight/Shipping Cost (<span id="ui-currency-freight"></span>)</label>
-          <input type="number" step="0.01" id="freight-cost" placeholder="0.00" required>
+          <label>Freight/Shipping Cost (<span class="ui-currency-label"></span>)</label>
+          <input type="number" step="0.01" id="freight-cost" placeholder="Enter 0 if EXW/FOB" required>
         </div>
         <div>
           <label>Estimated Lead Time (Days)</label>
@@ -90,7 +94,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn-submit" id="btn-submit">FINALIZE QUOTE & SEND TO BUYER</button>
+      <button type="submit" class="btn-submit" id="btn-submit">UPLOAD EVIDENCE & SEND QUOTE</button>
     </form>
   </div>
 
@@ -98,6 +102,7 @@
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     const urlParams = new URLSearchParams(window.location.search);
     const rfqId = urlParams.get('rfq');
+    let supplierCurrency = "USD";
 
     if (!rfqId) {
       document.getElementById('loading').innerText = "INVALID RFQ LINK. ACCESS DENIED.";
@@ -114,22 +119,22 @@
           document.getElementById('main-content').style.display = 'block';
 
           document.getElementById('ui-rfq-id').innerText = data.rfq_id;
+          document.getElementById('hidden-supplier-id').value = data.supplier_id;
           document.getElementById('ui-product').innerText = data.product_name;
           document.getElementById('ui-dest').innerText = data.destination;
           document.getElementById('ui-logistics').innerText = data.logistics;
-          document.getElementById('ui-cust').innerText = data.customization;
           document.getElementById('ui-currency').innerText = data.currency;
-          document.getElementById('ui-currency-freight').innerText = data.currency;
+          document.querySelectorAll('.ui-currency-label').forEach(el => el.innerText = data.currency);
+          supplierCurrency = data.currency;
           
           if(data.notes) document.getElementById('ui-notes').innerText = "Buyer Notes: " + data.notes;
 
+          // Render Variants
           let variants = [];
           try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
-
           const vCont = document.getElementById('variants-container');
           variants.forEach((v, index) => {
              let targetText = v.supplierTargetTotal ? `<span style="color:#d9534f; font-weight:bold; font-size:16px;">${v.supplierTargetTotal}</span>` : `<span style="color:#888;">Standard Price</span>`;
-             
              vCont.innerHTML += `
                 <div class="variant-row">
                   <div class="v-details">
@@ -141,35 +146,133 @@
                     ${targetText}
                   </div>
                   <div class="v-input">
-                    <label>Final Product Amount (${data.currency})</label>
+                    <label style="margin-top:0;">My Final Total (${data.currency})</label>
                     <input type="number" step="0.01" class="counter-input" data-vid="${v.variantId}" placeholder="Enter Total Price" required>
                   </div>
                 </div>
              `;
           });
+
+          // 🚀 DYNAMIC BUYER REQUESTS ENGINE
+          let dynamicHtml = `<h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">2. Buyer Specific Requests</h3>`;
+          let hasRequests = false;
+
+          if(data.customization !== "No") {
+             hasRequests = true;
+             dynamicHtml += `
+               <div class="dynamic-section">
+                 <h4>Brand Customization Requested: ${data.customization}</h4>
+                 <div class="grid-2">
+                   <div>
+                     <label>Customization Fee / Mold Cost (${data.currency})</label>
+                     <input type="number" step="0.01" id="fee-cust" value="0" required>
+                   </div>
+                   <div>
+                     <label>Supplier Comments on Customization</label>
+                     <input type="text" id="note-cust" placeholder="e.g. Logo print included, setup fee applies">
+                   </div>
+                 </div>
+               </div>
+             `;
+          }
+
+          if(data.sample_req === "Yes") {
+             hasRequests = true;
+             dynamicHtml += `
+               <div class="dynamic-section">
+                 <h4>Physical Sample Requested</h4>
+                 <label>Sample Production + Shipping Fee (${data.currency})</label>
+                 <input type="number" step="0.01" id="fee-sample" value="0" required>
+               </div>
+             `;
+          }
+
+          if(data.req_certs === "Yes" || data.req_photos === "Yes" || data.req_video === "Yes") {
+             hasRequests = true;
+             dynamicHtml += `<div class="dynamic-section"><h4>Compliance & Media Evidence Required</h4><div class="grid-2">`;
+             
+             if(data.req_certs === "Yes") {
+                dynamicHtml += `<div><label>Upload Factory/Product Certs (PDF/Img)</label><input type="file" id="file-certs"></div>`;
+             }
+             if(data.req_photos === "Yes") {
+                dynamicHtml += `<div><label>Upload Unedited Product Photo</label><input type="file" id="file-photos" accept="image/*"></div>`;
+             }
+             if(data.req_video === "Yes") {
+                dynamicHtml += `<div style="grid-column: span 2;"><label>Raw Production Video Link (Google Drive, YouTube, WeTransfer)</label><input type="url" id="link-video" placeholder="Paste secure video URL here..."></div>`;
+             }
+             dynamicHtml += `</div></div>`;
+          }
+
+          if(hasRequests) {
+             document.getElementById('dynamic-requests-container').innerHTML = dynamicHtml;
+          } else {
+             document.getElementById('dynamic-requests-container').innerHTML = `<p style="color:#888; font-style:italic;">No special customizations or evidence requested by buyer.</p>`;
+          }
+
         })
         .catch(err => {
            document.getElementById('loading').innerText = "SERVER CONNECTION FAILED.";
         });
     }
 
-    function submitQuote() {
+    // --- File Upload Helpers ---
+    const readFile = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve({ name: file.name, mimeType: file.type, data: e.target.result.split(',')[1] });
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    async function uploadToCloudinary(fileElementId, supplierId) {
+      const fileInput = document.getElementById(fileElementId);
+      if(!fileInput || !fileInput.files[0]) return null;
+      
+      try {
+        const fileData = await readFile(fileInput.files[0]);
+        const response = await fetch(API_BASE_URL + '/upload-media', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fileData: fileData.data, mimeType: fileData.mimeType, supplierId: supplierId })
+        });
+        const resJson = await response.json();
+        if(resJson.success) return resJson.url;
+        return null;
+      } catch(e) { return null; }
+    }
+
+    // --- Submit Final Quote ---
+    async function submitQuote() {
       const btn = document.getElementById('btn-submit');
-      btn.innerText = "PROCESSING QUOTE...";
+      btn.innerText = "ENCRYPTING & UPLOADING DATA...";
       btn.disabled = true;
 
+      const supplierId = document.getElementById('hidden-supplier-id').value;
+
+      // 1. Upload Requested Files (if they exist in the DOM)
+      let certUrl = null;
+      let photoUrl = null;
+      if(document.getElementById('file-certs')) certUrl = await uploadToCloudinary('file-certs', supplierId);
+      if(document.getElementById('file-photos')) photoUrl = await uploadToCloudinary('file-photos', supplierId);
+
+      // 2. Gather Base Pricing
       const counterOffers = [];
       document.querySelectorAll('.counter-input').forEach(input => {
          counterOffers.push({
             variantId: input.getAttribute('data-vid'),
-            supplierFinalTotal: input.value
+            supplierFinalTotal: input.value || 0
          });
       });
+
+      // 3. Gather Dynamic Fees
+      const custFeeInput = document.getElementById('fee-cust');
+      const custNoteInput = document.getElementById('note-cust');
+      const sampFeeInput = document.getElementById('fee-sample');
+      const videoLinkInput = document.getElementById('link-video');
 
       const payload = {
         rfqId: rfqId,
         leadTime: document.getElementById('lead-time').value,
-        freightCost: document.getElementById('freight-cost').value,
+        freightCost: document.getElementById('freight-cost').value || 0,
         masterCarton: {
           length: document.getElementById('box-l').value,
           width: document.getElementById('box-w').value,
@@ -177,7 +280,19 @@
           weightKG: document.getElementById('box-kg').value,
           totalCartons: document.getElementById('box-qty').value
         },
-        counterOffers: counterOffers
+        counterOffers: counterOffers,
+        
+        // 🚀 NEW DATA BUNDLE
+        extraFees: {
+          customizationFee: custFeeInput ? custFeeInput.value : 0,
+          customizationNotes: custNoteInput ? custNoteInput.value : "",
+          sampleFee: sampFeeInput ? sampFeeInput.value : 0
+        },
+        evidence: {
+          certFile: certUrl,
+          photoFile: photoUrl,
+          videoLink: videoLinkInput ? videoLinkInput.value : ""
+        }
       };
 
       fetch(API_BASE_URL + '/submit-supplier-quote', {
@@ -190,19 +305,19 @@
         if(data.success) {
           document.getElementById('main-content').innerHTML = `
             <div style="text-align:center; padding: 50px;">
-              <h2 style="color:var(--gold);">✓ QUOTATION FINALIZED</h2>
-              <p style="color:#aaa;">The final product and freight costs have been successfully calculated. The official contract has been dispatched to the buyer's email.</p>
+              <h2 style="color:var(--gold);">✓ SECURE TRANSMISSION COMPLETE</h2>
+              <p style="color:#aaa;">Your final pricing, extra fees, and compliance evidence have been successfully processed and forwarded to the buyer.</p>
             </div>
           `;
         } else {
           alert("Database Error: " + data.error);
-          btn.innerText = "FINALIZE QUOTE & SEND TO BUYER";
+          btn.innerText = "UPLOAD EVIDENCE & SEND QUOTE";
           btn.disabled = false;
         }
       })
       .catch(err => {
         alert("Network Error.");
-        btn.innerText = "FINALIZE QUOTE & SEND TO BUYER";
+        btn.innerText = "UPLOAD EVIDENCE & SEND QUOTE";
         btn.disabled = false;
       });
     }
