@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Secure Escrow Checkout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --void: #0b0e14; --slate: #151922; --green: #2e7d32; }
+    body { background-color: var(--void); color: #e0e0e0; font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    header { background: rgba(11, 14, 20, 0.95); padding: 20px; text-align: center; border-bottom: 1px solid var(--gold); }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0; }
+    
+    .container { max-width: 1000px; margin: 40px auto; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 0 20px; }
+    @media(max-width: 800px) { .container { grid-template-columns: 1fr; } }
+    
+    .panel { background: var(--slate); padding: 30px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    h2 { color: #fff; font-family: 'Cinzel', serif; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; font-size: 20px; }
+    
+    /* Product & Evidence Section */
+    .hero-img { width: 100%; height: 250px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; border: 1px solid #444; }
+    .evidence-box { background: rgba(212,175,55,0.05); padding: 15px; border: 1px dashed var(--gold); border-radius: 4px; margin-top: 20px; }
+    .evidence-box a { color: #1E88E5; text-decoration: none; display: block; margin-bottom: 8px; font-weight: bold; }
+    
+    /* Escrow Trust Section */
+    .trust-box { background: rgba(46, 125, 50, 0.1); border-left: 4px solid var(--green); padding: 20px; margin-top: 20px; font-size: 13px; line-height: 1.6; }
+    .trust-box strong { color: var(--green); font-size: 15px; display: block; margin-bottom: 5px; }
+
+    /* Cart Section */
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #000; border: 1px solid #333; border-radius: 4px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
+    .cart-item:hover { border-color: var(--gold); }
+    .cart-item.disabled { opacity: 0.4; pointer-events: none; }
+    .item-check { transform: scale(1.5); margin-right: 15px; cursor: pointer; accent-color: var(--gold); }
+    .item-details { flex: 1; }
+    .item-title { font-weight: bold; color: #fff; font-size: 15px; }
+    .item-desc { font-size: 11px; color: #888; }
+    .item-price { font-weight: bold; color: var(--gold); font-size: 16px; }
+
+    .total-box { text-align: right; padding: 20px 0; border-top: 1px solid #333; margin-top: 20px; }
+    .total-price { font-size: 28px; color: var(--green); font-weight: bold; margin-top: 5px; display: block; }
+
+    .btn-pay { display: block; width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; text-align: center; padding: 20px; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; }
+    .btn-pay:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
+
+    #loading { text-align: center; padding: 100px; color: var(--gold); font-size: 18px; letter-spacing: 2px; font-family: 'Cinzel', serif; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="brand">Muziris</h1>
+    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Secure Escrow & Checkout Portal</div>
+  </header>
+
+  <div id="loading">DECRYPTING CONTRACT...</div>
+
+  <div class="container" id="main-content" style="display:none;">
+    
+    <div class="panel">
+      <h2>Contract: <span id="ui-rfq" style="color:var(--gold);"></span></h2>
+      <img id="ui-hero" class="hero-img" src="" alt="Product">
+      <h3 id="ui-product" style="margin:0 0 10px 0; color:#fff;"></h3>
+      <p id="ui-desc" style="font-size: 13px; color: #aaa; line-height: 1.5;"></p>
+      
+      <div id="evidence-container" class="evidence-box" style="display:none;">
+        <h4 style="margin-top:0; color:var(--gold); border-bottom:1px solid #444; padding-bottom:5px;">Requested Evidence Provided</h4>
+        <div id="ui-evidence-links"></div>
+      </div>
+
+      <div class="trust-box">
+        <strong>🔒 Muziris Safe Money Escrow Vault</strong>
+        The supplier will manufacture and ship your goods with 100% confidence knowing your funds are securely locked in our vault. Upon arrival, you have a strict <b>7-day window</b> to inspect the goods against your specifications before we release the funds to the factory.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Select Modules to Fund</h2>
+      <p style="font-size: 12px; color: #888; margin-bottom: 20px;">You may choose to fund the entire project, or start by funding just the sample or freight.</p>
+
+      <div id="cart-container"></div>
+
+      <div class="total-box">
+        <span style="color:#aaa; font-size:12px; text-transform:uppercase; letter-spacing:1px;">Total Escrow Deposit</span>
+        <span class="total-price"><span id="ui-total">0.00</span> <span class="ui-currency"></span></span>
+      </div>
+
+      <button class="btn-pay" onclick="alert('This will redirect to Stripe / Payment Gateway to lock funds in Escrow.')">LOCK FUNDS IN ESCROW</button>
+    </div>
+
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    const urlParams = new URLSearchParams(window.location.search);
+    const rfqId = urlParams.get('rfq');
+
+    let cartItems = { sample: 0, production: 0, freight: 0 };
+
+    if (!rfqId) {
+      document.getElementById('loading').innerText = "INVALID CONTRACT LINK.";
+    } else {
+      fetch(API_BASE_URL + '/get-rfq/' + rfqId)
+        .then(res => res.json())
+        .then(data => {
+          if(data.error) { document.getElementById('loading').innerText = "CONTRACT EXPIRED."; return; }
+          
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('main-content').style.display = 'grid';
+
+          // Left Panel Data
+          document.getElementById('ui-rfq').innerText = data.rfq_id;
+          document.getElementById('ui-product').innerText = data.product_name;
+          document.getElementById('ui-desc').innerText = data.description || "Official customized production run.";
+          if(data.hero_img) document.getElementById('ui-hero').src = data.hero_img;
+          else document.getElementById('ui-hero').style.display = 'none';
+          
+          document.querySelectorAll('.ui-currency').forEach(el => el.innerText = data.currency);
+
+          let quote = typeof data.supplier_quote === 'string' ? JSON.parse(data.supplier_quote) : data.supplier_quote || {};
+          
+          // Evidence Setup
+          if(quote.evidence && (quote.evidence.certFile || quote.evidence.photoFile || quote.evidence.videoLink)) {
+             document.getElementById('evidence-container').style.display = 'block';
+             let eLinks = '';
+             if(quote.evidence.certFile) eLinks += `<a href="${quote.evidence.certFile}" target="_blank">📄 View Factory Certifications</a>`;
+             if(quote.evidence.photoFile) eLinks += `<a href="${quote.evidence.photoFile}" target="_blank">🖼️ View Unedited Photos</a>`;
+             if(quote.evidence.videoLink) eLinks += `<a href="${quote.evidence.videoLink}" target="_blank">🎥 Watch Production Video</a>`;
+             document.getElementById('ui-evidence-links').innerHTML = eLinks;
+          }
+
+          // Cart Setup
+          let prodTotal = parseFloat(quote.calculatedBuyerTotals?.productTotalBuyer || 0) + parseFloat(quote.calculatedBuyerTotals?.finalCustomizationBuyer || 0);
+          let sampTotal = parseFloat(quote.calculatedBuyerTotals?.finalSampleBuyer || 0);
+          let freightTotal = parseFloat(quote.freightData?.finalFreightBuyer || 0);
+
+          cartItems.sample = sampTotal;
+          cartItems.production = prodTotal;
+          cartItems.freight = freightTotal;
+
+          let cartHtml = '';
+          
+          if(sampTotal > 0) {
+            cartHtml += `
+              <label class="cart-item">
+                <input type="checkbox" class="item-check" value="sample" onchange="calculateTotal()">
+                <div class="item-details">
+                  <div class="item-title">Pre-Production Sample</div>
+                  <div class="item-desc">Manufacture and ship a physical sample for approval.</div>
+                </div>
+                <div class="item-price">${sampTotal.toFixed(2)}</div>
+              </label>`;
+          }
+
+          if(prodTotal > 0) {
+            cartHtml += `
+              <label class="cart-item">
+                <input type="checkbox" class="item-check" value="production" onchange="calculateTotal()" checked>
+                <div class="item-details">
+                  <div class="item-title">Main Production Run</div>
+                  <div class="item-desc">Includes customized units and master carton packaging.</div>
+                </div>
+                <div class="item-price">${prodTotal.toFixed(2)}</div>
+              </label>`;
+          }
+
+          if(freightTotal > 0) {
+            cartHtml += `
+              <label class="cart-item">
+                <input type="checkbox" class="item-check" value="freight" onchange="calculateTotal()" checked>
+                <div class="item-details">
+                  <div class="item-title">Global Logistics (${quote.freightData.shipMode || 'Freight'})</div>
+                  <div class="item-desc">Door-to-Door via ${quote.freightData.shipCarrier || 'Carrier'} (${quote.freightData.transitTime} Days)</div>
+                </div>
+                <div class="item-price">${freightTotal.toFixed(2)}</div>
+              </label>`;
+          }
+
+          document.getElementById('cart-container').innerHTML = cartHtml;
+          calculateTotal();
+        })
+        .catch(err => { document.getElementById('loading').innerText = "SERVER CONNECTION FAILED."; });
+    }
+
+    function calculateTotal() {
+      let total = 0;
+      document.querySelectorAll('.item-check').forEach(box => {
+         if(box.checked) total += cartItems[box.value];
+      });
+      document.getElementById('ui-total').innerText = total.toFixed(2);
+    }
+  </script>
+</body>
+</html>
