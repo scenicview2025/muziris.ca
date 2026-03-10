@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muziris | Official Supplier RFQ Portal</title>
+  <title>Muziris | Official Logistics & Quotation Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; }
@@ -41,7 +41,7 @@
 
   <header>
     <h1 class="brand">Muziris</h1>
-    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Supplier Quotation Portal</div>
+    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Logistics & Quotation Portal</div>
   </header>
 
   <div id="loading">LOCATING SOURCING CONTRACT...</div>
@@ -52,19 +52,20 @@
     <div class="info-box">
       <strong>Product:</strong> <span id="ui-product"></span><br>
       <strong>Buyer Destination:</strong> <span id="ui-dest"></span><br>
+      <strong>Logistics Terms:</strong> <span id="ui-logistics"></span><br>
       <strong>Customization:</strong> <span id="ui-cust"></span><br>
       <div style="margin-top:10px; font-size:12px; color:#aaa;" id="ui-notes"></div>
     </div>
 
     <form id="quoteForm" onsubmit="event.preventDefault(); submitQuote();">
       
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">1. Review Volumes & Counter Offer</h3>
-      <p style="font-size:12px; color:#888;">The buyer has requested the following volumes. If they proposed a Target Price, you may accept it or type your counter-offer. (Prices must be in <strong id="ui-currency" style="color:var(--gold);"></strong>)</p>
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">1. Review Volumes & Product Pricing</h3>
+      <p style="font-size:12px; color:#888;">Input the final accepted base price for the volumes requested. (Prices must be in <strong id="ui-currency" style="color:var(--gold);"></strong>)</p>
       
       <div id="variants-container"></div>
 
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">2. Master Carton Dimensions (For Freight)</h3>
-      <p style="font-size:12px; color:#888;">Please provide the exact packed dimensions so Muziris can calculate the logistics routing.</p>
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">2. Master Carton Dimensions</h3>
+      <p style="font-size:12px; color:#888;">Please provide the exact packed dimensions so we have accurate logistics data on file.</p>
       
       <div class="grid-3">
         <div><label>Length (cm)</label><input type="number" id="box-l" required></div>
@@ -76,10 +77,20 @@
         <div><label>Total Number of Cartons</label><input type="number" id="box-qty" required></div>
       </div>
 
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">3. Manufacturing Time</h3>
-      <div><label>Estimated Lead Time (Days)</label><input type="number" id="lead-time" placeholder="e.g. 30" required></div>
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">3. Freight Cost & Manufacturing Time</h3>
+      <p style="font-size:12px; color:#888;">If the buyer requested DDP/CIF, input the Freight cost below. If they requested EXW/FOB, leave as 0.</p>
+      <div class="grid-2">
+        <div>
+          <label>Freight/Shipping Cost (<span id="ui-currency-freight"></span>)</label>
+          <input type="number" step="0.01" id="freight-cost" placeholder="0.00" required>
+        </div>
+        <div>
+          <label>Estimated Lead Time (Days)</label>
+          <input type="number" id="lead-time" placeholder="e.g. 30" required>
+        </div>
+      </div>
 
-      <button type="submit" class="btn-submit" id="btn-submit">SECURE CONTRACT & SEND QUOTE</button>
+      <button type="submit" class="btn-submit" id="btn-submit">FINALIZE QUOTE & SEND TO BUYER</button>
     </form>
   </div>
 
@@ -105,8 +116,10 @@
           document.getElementById('ui-rfq-id').innerText = data.rfq_id;
           document.getElementById('ui-product').innerText = data.product_name;
           document.getElementById('ui-dest').innerText = data.destination;
+          document.getElementById('ui-logistics').innerText = data.logistics;
           document.getElementById('ui-cust').innerText = data.customization;
           document.getElementById('ui-currency').innerText = data.currency;
+          document.getElementById('ui-currency-freight').innerText = data.currency;
           
           if(data.notes) document.getElementById('ui-notes').innerText = "Buyer Notes: " + data.notes;
 
@@ -128,7 +141,7 @@
                     ${targetText}
                   </div>
                   <div class="v-input">
-                    <label>My Final Offer (${data.currency})</label>
+                    <label>Final Product Amount (${data.currency})</label>
                     <input type="number" step="0.01" class="counter-input" data-vid="${v.variantId}" placeholder="Enter Total Price" required>
                   </div>
                 </div>
@@ -156,6 +169,7 @@
       const payload = {
         rfqId: rfqId,
         leadTime: document.getElementById('lead-time').value,
+        freightCost: document.getElementById('freight-cost').value,
         masterCarton: {
           length: document.getElementById('box-l').value,
           width: document.getElementById('box-w').value,
@@ -176,19 +190,19 @@
         if(data.success) {
           document.getElementById('main-content').innerHTML = `
             <div style="text-align:center; padding: 50px;">
-              <h2 style="color:var(--gold);">✓ QUOTATION SECURED</h2>
-              <p style="color:#aaa;">Your final price and logistics data have been successfully sent to the Muziris system. We will re-apply the buyer conversion and issue the final contract to the client shortly.</p>
+              <h2 style="color:var(--gold);">✓ QUOTATION FINALIZED</h2>
+              <p style="color:#aaa;">The final product and freight costs have been successfully calculated. The official contract has been dispatched to the buyer's email.</p>
             </div>
           `;
         } else {
           alert("Database Error: " + data.error);
-          btn.innerText = "SECURE CONTRACT & SEND QUOTE";
+          btn.innerText = "FINALIZE QUOTE & SEND TO BUYER";
           btn.disabled = false;
         }
       })
       .catch(err => {
         alert("Network Error.");
-        btn.innerText = "SECURE CONTRACT & SEND QUOTE";
+        btn.innerText = "FINALIZE QUOTE & SEND TO BUYER";
         btn.disabled = false;
       });
     }
