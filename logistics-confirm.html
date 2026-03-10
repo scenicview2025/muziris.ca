@@ -20,7 +20,7 @@
 
     .variant-row { display: flex; flex-wrap: wrap; gap: 15px; background: #0b0e14; padding: 20px; border: 1px solid #333; border-radius: 4px; margin-bottom: 15px; align-items: center; }
     .v-details { flex: 2; min-width: 200px; }
-    .v-target { flex: 1; min-width: 150px; text-align: center; background: rgba(212,175,55,0.1); padding: 10px; border-radius: 4px; border: 1px dashed var(--gold); }
+    .v-target { flex: 1.5; min-width: 150px; text-align: center; background: rgba(212,175,55,0.1); padding: 10px; border-radius: 4px; border: 1px dashed var(--gold); }
     .v-input { flex: 1; min-width: 150px; }
     
     label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold; margin-top: 15px;}
@@ -102,7 +102,6 @@
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     const urlParams = new URLSearchParams(window.location.search);
     const rfqId = urlParams.get('rfq');
-    let supplierCurrency = "USD";
 
     if (!rfqId) {
       document.getElementById('loading').innerText = "INVALID RFQ LINK. ACCESS DENIED.";
@@ -123,18 +122,25 @@
           document.getElementById('ui-product').innerText = data.product_name;
           document.getElementById('ui-dest').innerText = data.destination;
           document.getElementById('ui-logistics').innerText = data.logistics;
-          document.getElementById('ui-currency').innerText = data.currency;
-          document.querySelectorAll('.ui-currency-label').forEach(el => el.innerText = data.currency);
-          supplierCurrency = data.currency;
           
           if(data.notes) document.getElementById('ui-notes').innerText = "Buyer Notes: " + data.notes;
 
-          // Render Variants
           let variants = [];
           try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
+
+          // 🚀 FIX: Use Supplier Currency for the Supplier UI!
+          let supCurr = (variants.length > 0 && variants[0].supplierCurrency) ? variants[0].supplierCurrency : data.currency;
+          
+          document.getElementById('ui-currency').innerText = supCurr;
+          document.querySelectorAll('.ui-currency-label').forEach(el => el.innerText = supCurr);
+
           const vCont = document.getElementById('variants-container');
           variants.forEach((v, index) => {
-             let targetText = v.supplierTargetTotal ? `<span style="color:#d9534f; font-weight:bold; font-size:16px;">${v.supplierTargetTotal}</span>` : `<span style="color:#888;">Standard Price</span>`;
+             // 🚀 FIX: Show Standard Price Total if no Target was requested
+             let targetText = v.supplierTargetTotal 
+                ? `<span style="color:#d9534f; font-weight:bold; font-size:16px;">${v.supplierTargetTotal}</span>` 
+                : `<span style="color:#888;">Standard Total:<br></span><span style="color:#fff; font-weight:bold; font-size:16px;">${v.supplierStandardTotal}</span>`;
+             
              vCont.innerHTML += `
                 <div class="variant-row">
                   <div class="v-details">
@@ -142,11 +148,11 @@
                     <div style="color:#aaa; font-size:12px;">Req. Quantity: <strong style="color:#fff;">${v.quantity}</strong></div>
                   </div>
                   <div class="v-target">
-                    <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:3px;">Buyer Target (Total)</div>
+                    <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:3px;">Target (${supCurr})</div>
                     ${targetText}
                   </div>
                   <div class="v-input">
-                    <label style="margin-top:0;">My Final Total (${data.currency})</label>
+                    <label style="margin-top:0;">My Final Total (${supCurr})</label>
                     <input type="number" step="0.01" class="counter-input" data-vid="${v.variantId}" placeholder="Enter Total Price" required>
                   </div>
                 </div>
@@ -164,7 +170,7 @@
                  <h4>Brand Customization Requested: ${data.customization}</h4>
                  <div class="grid-2">
                    <div>
-                     <label>Customization Fee / Mold Cost (${data.currency})</label>
+                     <label>Customization Fee / Mold Cost (${supCurr})</label>
                      <input type="number" step="0.01" id="fee-cust" value="0" required>
                    </div>
                    <div>
@@ -181,7 +187,7 @@
              dynamicHtml += `
                <div class="dynamic-section">
                  <h4>Physical Sample Requested</h4>
-                 <label>Sample Production + Shipping Fee (${data.currency})</label>
+                 <label>Sample Production + Shipping Fee (${supCurr})</label>
                  <input type="number" step="0.01" id="fee-sample" value="0" required>
                </div>
              `;
@@ -215,7 +221,6 @@
         });
     }
 
-    // --- File Upload Helpers ---
     const readFile = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => resolve({ name: file.name, mimeType: file.type, data: e.target.result.split(',')[1] });
@@ -240,7 +245,6 @@
       } catch(e) { return null; }
     }
 
-    // --- Submit Final Quote ---
     async function submitQuote() {
       const btn = document.getElementById('btn-submit');
       btn.innerText = "ENCRYPTING & UPLOADING DATA...";
@@ -248,13 +252,11 @@
 
       const supplierId = document.getElementById('hidden-supplier-id').value;
 
-      // 1. Upload Requested Files (if they exist in the DOM)
       let certUrl = null;
       let photoUrl = null;
       if(document.getElementById('file-certs')) certUrl = await uploadToCloudinary('file-certs', supplierId);
       if(document.getElementById('file-photos')) photoUrl = await uploadToCloudinary('file-photos', supplierId);
 
-      // 2. Gather Base Pricing
       const counterOffers = [];
       document.querySelectorAll('.counter-input').forEach(input => {
          counterOffers.push({
@@ -263,7 +265,6 @@
          });
       });
 
-      // 3. Gather Dynamic Fees
       const custFeeInput = document.getElementById('fee-cust');
       const custNoteInput = document.getElementById('note-cust');
       const sampFeeInput = document.getElementById('fee-sample');
@@ -281,8 +282,6 @@
           totalCartons: document.getElementById('box-qty').value
         },
         counterOffers: counterOffers,
-        
-        // 🚀 NEW DATA BUNDLE
         extraFees: {
           customizationFee: custFeeInput ? custFeeInput.value : 0,
           customizationNotes: custNoteInput ? custNoteInput.value : "",
