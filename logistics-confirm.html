@@ -68,10 +68,11 @@
       <p style="font-size:12px; color:#888;">Input the final accepted base price for the volumes requested. (Prices must be in <strong id="ui-currency" style="color:var(--gold);"></strong>)</p>
       
       <div id="variants-container"></div>
-
       <div id="dynamic-requests-container"></div>
 
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">3. Master Carton Dimensions</h3>
+      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">3. Master Carton Dimensions & Timing</h3>
+      <p style="font-size:12px; color:#888;">Provide exact packed dimensions so Muziris Logistics can route the shipment.</p>
+      
       <div class="grid-3">
         <div><label>Length (cm)</label><input type="number" id="box-l" required></div>
         <div><label>Width (cm)</label><input type="number" id="box-w" required></div>
@@ -81,20 +82,12 @@
         <div><label>Total Gross Weight (kg)</label><input type="number" step="0.1" id="box-kg" required></div>
         <div><label>Total Number of Cartons</label><input type="number" id="box-qty" required></div>
       </div>
-
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">4. Freight & Production</h3>
-      <div class="grid-2">
-        <div>
-          <label>Freight/Shipping Cost (<span class="ui-currency-label"></span>)</label>
-          <input type="number" step="0.01" id="freight-cost" placeholder="Enter 0 if EXW/FOB" required>
-        </div>
-        <div>
-          <label>Estimated Lead Time (Days)</label>
-          <input type="number" id="lead-time" placeholder="e.g. 30" required>
-        </div>
+      <div style="margin-top: 20px;">
+        <label>Estimated Lead Time (Days)</label>
+        <input type="number" id="lead-time" placeholder="e.g. 30" required>
       </div>
 
-      <button type="submit" class="btn-submit" id="btn-submit">UPLOAD EVIDENCE & SEND QUOTE</button>
+      <button type="submit" class="btn-submit" id="btn-submit">SUBMIT TO LOGISTICS BROKER</button>
     </form>
   </div>
 
@@ -128,15 +121,11 @@
           let variants = [];
           try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
 
-          // 🚀 FIX: Use Supplier Currency for the Supplier UI!
           let supCurr = (variants.length > 0 && variants[0].supplierCurrency) ? variants[0].supplierCurrency : data.currency;
-          
           document.getElementById('ui-currency').innerText = supCurr;
-          document.querySelectorAll('.ui-currency-label').forEach(el => el.innerText = supCurr);
 
           const vCont = document.getElementById('variants-container');
-          variants.forEach((v, index) => {
-             // 🚀 FIX: Show Standard Price Total if no Target was requested
+          variants.forEach((v) => {
              let targetText = v.supplierTargetTotal 
                 ? `<span style="color:#d9534f; font-weight:bold; font-size:16px;">${v.supplierTargetTotal}</span>` 
                 : `<span style="color:#888;">Standard Total:<br></span><span style="color:#fff; font-weight:bold; font-size:16px;">${v.supplierStandardTotal}</span>`;
@@ -159,7 +148,7 @@
              `;
           });
 
-          // 🚀 DYNAMIC BUYER REQUESTS ENGINE
+          // Dynamic Requests Engine
           let dynamicHtml = `<h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">2. Buyer Specific Requests</h3>`;
           let hasRequests = false;
 
@@ -175,7 +164,7 @@
                    </div>
                    <div>
                      <label>Supplier Comments on Customization</label>
-                     <input type="text" id="note-cust" placeholder="e.g. Logo print included, setup fee applies">
+                     <input type="text" id="note-cust" placeholder="e.g. Logo print included">
                    </div>
                  </div>
                </div>
@@ -196,29 +185,16 @@
           if(data.req_certs === "Yes" || data.req_photos === "Yes" || data.req_video === "Yes") {
              hasRequests = true;
              dynamicHtml += `<div class="dynamic-section"><h4>Compliance & Media Evidence Required</h4><div class="grid-2">`;
-             
-             if(data.req_certs === "Yes") {
-                dynamicHtml += `<div><label>Upload Factory/Product Certs (PDF/Img)</label><input type="file" id="file-certs"></div>`;
-             }
-             if(data.req_photos === "Yes") {
-                dynamicHtml += `<div><label>Upload Unedited Product Photo</label><input type="file" id="file-photos" accept="image/*"></div>`;
-             }
-             if(data.req_video === "Yes") {
-                dynamicHtml += `<div style="grid-column: span 2;"><label>Raw Production Video Link (Google Drive, YouTube, WeTransfer)</label><input type="url" id="link-video" placeholder="Paste secure video URL here..."></div>`;
-             }
+             if(data.req_certs === "Yes") dynamicHtml += `<div><label>Upload Factory/Product Certs</label><input type="file" id="file-certs"></div>`;
+             if(data.req_photos === "Yes") dynamicHtml += `<div><label>Upload Unedited Product Photo</label><input type="file" id="file-photos" accept="image/*"></div>`;
+             if(data.req_video === "Yes") dynamicHtml += `<div style="grid-column: span 2;"><label>Raw Production Video Link</label><input type="url" id="link-video" placeholder="Paste secure video URL here..."></div>`;
              dynamicHtml += `</div></div>`;
           }
 
-          if(hasRequests) {
-             document.getElementById('dynamic-requests-container').innerHTML = dynamicHtml;
-          } else {
-             document.getElementById('dynamic-requests-container').innerHTML = `<p style="color:#888; font-style:italic;">No special customizations or evidence requested by buyer.</p>`;
-          }
-
+          if(hasRequests) document.getElementById('dynamic-requests-container').innerHTML = dynamicHtml;
+          else document.getElementById('dynamic-requests-container').innerHTML = `<p style="color:#888; font-style:italic;">No special customizations or evidence requested by buyer.</p>`;
         })
-        .catch(err => {
-           document.getElementById('loading').innerText = "SERVER CONNECTION FAILED.";
-        });
+        .catch(err => { document.getElementById('loading').innerText = "SERVER CONNECTION FAILED."; });
     }
 
     const readFile = (file) => new Promise((resolve, reject) => {
@@ -231,14 +207,9 @@
     async function uploadToCloudinary(fileElementId, supplierId) {
       const fileInput = document.getElementById(fileElementId);
       if(!fileInput || !fileInput.files[0]) return null;
-      
       try {
         const fileData = await readFile(fileInput.files[0]);
-        const response = await fetch(API_BASE_URL + '/upload-media', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileData: fileData.data, mimeType: fileData.mimeType, supplierId: supplierId })
-        });
+        const response = await fetch(API_BASE_URL + '/upload-media', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileData: fileData.data, mimeType: fileData.mimeType, supplierId: supplierId }) });
         const resJson = await response.json();
         if(resJson.success) return resJson.url;
         return null;
@@ -252,17 +223,13 @@
 
       const supplierId = document.getElementById('hidden-supplier-id').value;
 
-      let certUrl = null;
-      let photoUrl = null;
+      let certUrl = null; let photoUrl = null;
       if(document.getElementById('file-certs')) certUrl = await uploadToCloudinary('file-certs', supplierId);
       if(document.getElementById('file-photos')) photoUrl = await uploadToCloudinary('file-photos', supplierId);
 
       const counterOffers = [];
       document.querySelectorAll('.counter-input').forEach(input => {
-         counterOffers.push({
-            variantId: input.getAttribute('data-vid'),
-            supplierFinalTotal: input.value || 0
-         });
+         counterOffers.push({ variantId: input.getAttribute('data-vid'), supplierFinalTotal: input.value || 0 });
       });
 
       const custFeeInput = document.getElementById('fee-cust');
@@ -273,7 +240,6 @@
       const payload = {
         rfqId: rfqId,
         leadTime: document.getElementById('lead-time').value,
-        freightCost: document.getElementById('freight-cost').value || 0,
         masterCarton: {
           length: document.getElementById('box-l').value,
           width: document.getElementById('box-w').value,
@@ -287,11 +253,7 @@
           customizationNotes: custNoteInput ? custNoteInput.value : "",
           sampleFee: sampFeeInput ? sampFeeInput.value : 0
         },
-        evidence: {
-          certFile: certUrl,
-          photoFile: photoUrl,
-          videoLink: videoLinkInput ? videoLinkInput.value : ""
-        }
+        evidence: { certFile: certUrl, photoFile: photoUrl, videoLink: videoLinkInput ? videoLinkInput.value : "" }
       };
 
       fetch(API_BASE_URL + '/submit-supplier-quote', {
@@ -304,19 +266,19 @@
         if(data.success) {
           document.getElementById('main-content').innerHTML = `
             <div style="text-align:center; padding: 50px;">
-              <h2 style="color:var(--gold);">✓ SECURE TRANSMISSION COMPLETE</h2>
-              <p style="color:#aaa;">Your final pricing, extra fees, and compliance evidence have been successfully processed and forwarded to the buyer.</p>
+              <h2 style="color:var(--gold);">✓ DATA TRANSMITTED TO BROKER</h2>
+              <p style="color:#aaa;">Your pricing and box dimensions have been sent to Muziris Logistics. They will calculate the final freight and send the official contract to the buyer.</p>
             </div>
           `;
         } else {
           alert("Database Error: " + data.error);
-          btn.innerText = "UPLOAD EVIDENCE & SEND QUOTE";
+          btn.innerText = "SUBMIT TO LOGISTICS BROKER";
           btn.disabled = false;
         }
       })
       .catch(err => {
         alert("Network Error.");
-        btn.innerText = "UPLOAD EVIDENCE & SEND QUOTE";
+        btn.innerText = "SUBMIT TO LOGISTICS BROKER";
         btn.disabled = false;
       });
     }
