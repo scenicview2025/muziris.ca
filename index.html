@@ -15,40 +15,47 @@
       --text-muted: #a0a0a0;
     }
 
-    /* ✨ NEW: Global reset to prevent width issues ✨ */
-    *, *::before, *::after {
+    /* ✨ 1. The Ultimate Reset ✨ */
+    html {
       box-sizing: border-box;
+      overflow-y: scroll; /* Force the scrollbar to ALWAYS exist, stopping the JS layout jump */
+      overflow-x: hidden;
     }
     
-    /* ✨ UPDATED: Forced vertical scrollbar to prevent layout jumping ✨ */
-    body, html {
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+
+    body {
       margin: 0;
       padding: 0;
       font-family: 'Lato', sans-serif;
       background-color: #000;
       color: var(--text-light);
-      overflow-x: hidden;
-      overflow-y: scroll; 
       scroll-behavior: smooth;
+      /* Removed overflow declarations from body, they belong on HTML to prevent desktop bugs */
     }
 
     /* --- 1. THE STABLE BACKGROUND VIDEO --- */
-    .fixed-bg {
+    .fixed-bg, .fixed-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;  /* ✨ Changed from 100% to 100vw */
-      height: 100vh; /* ✨ Changed from 100% to 100vh */
+      right: 0;   /* ✨ Replaced width: 100% with absolute edge snapping */
+      bottom: 0;  /* ✨ Replaced height: 100% with absolute edge snapping */
       z-index: 0; 
       overflow: hidden;
+      pointer-events: none; /* Stops the background from ever interacting with the mouse/scroll */
+    }
+    
+    .fixed-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.9;
     }
 
     .fixed-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;  /* ✨ Changed to 100vw */
-      height: 100vh; /* ✨ Changed to 100vh */
       z-index: 1;
       background: rgba(0, 0, 0, 0.3);
     }
@@ -57,7 +64,7 @@
     .scrolling-layer {
       position: relative;
       z-index: 2; 
-      width: 100vw;  /* ✨ Changed to 100vw */
+      /* ✨ Removed width: 100%. Block elements naturally fill their container perfectly without math errors. */
     }
 
     .content-block {
@@ -68,7 +75,7 @@
       align-items: center;
       text-align: center;
       box-shadow: 0 0 40px rgba(0,0,0,0.8); 
-      width: 100vw;  /* ✨ Changed to 100vw */
+      /* ✨ Removed width: 100% here as well. Let the browser's native rendering engine handle the bounds. */
     }
     /* --- CINEMATIC FADE-IN ANIMATION --- */
     .fade-in-up {
