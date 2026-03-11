@@ -27,64 +27,82 @@
       font-family: 'Lato', sans-serif;
       background-color: #000;
       color: var(--text-light);
-      overflow-x: hidden; /* ABSOLUTE block on horizontal scrolling */
+      /* STRICT overflow control to prevent side gaps */
+      overflow-x: hidden !important; 
     }
 
-    /* --- 1. THE STABLE BACKGROUND VIDEO (LAPTOP FIX) --- */
-    .fixed-bg {
+    /* --- 1. THE STABLE BACKGROUND VIDEO --- */
+    .video-container {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;  /* Pins perfectly to the right edge, fixing the scrollbar gap */
-      bottom: 0; /* Pins perfectly to the bottom */
-      z-index: 0; 
-      overflow: hidden;
-      pointer-events: none; 
+      width: 100vw;
+      height: 100vh;
+      z-index: -2; /* Force it to the absolute bottom layer */
+      pointer-events: none;
     }
-    
-    .fixed-bg video {
+
+    .video-container video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       opacity: 0.9;
     }
 
-    .fixed-overlay {
+    .video-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1;
-      background: rgba(0, 0, 0, 0.3);
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4); /* Slightly darkened for better text contrast */
+      z-index: -1;
       pointer-events: none;
     }
 
     /* --- 2. THE SCROLLING CONTENT LAYER --- */
-    .scrolling-layer {
+    .scrolling-wrapper {
       position: relative;
-      z-index: 2; 
       width: 100%;
-      display: flex;
-      flex-direction: column;
+      min-height: 100vh; /* Ensures the page is at least full height */
+      z-index: 1;
     }
 
-    .content-block {
+    /* --- THE TRANSPARENT WINDOW --- */
+    .hero-window {
+      width: 100%;
+      height: 70vh; /* Exposes the video background */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* --- THE SOLID CONTENT BLOCK --- */
+    .solid-content-block {
       background: var(--bg-dark);
+      width: 100%;
       padding: 80px 20px;
-      width: 100%; 
       display: flex;
       flex-direction: column;
       align-items: center;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.8); /* Shadow pointing up towards the video */
+    }
+
+    .inner-wrap {
+      max-width: 850px;
+      margin: 0 auto;
+      width: 100%;
       text-align: center;
-      box-shadow: 0 0 40px rgba(0,0,0,0.8); 
     }
 
     /* ✨ CINEMATIC FADE-IN ANIMATION ✨ */
     .fade-in-up {
       opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 1s ease-out, transform 1s ease-out;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
       will-change: opacity, transform; 
     }
     .fade-in-up.visible {
@@ -92,52 +110,38 @@
       transform: translateY(0);
     }
 
-    .video-window-space {
-      width: 100%;
-      height: 65vh; 
-      background: transparent;
-      pointer-events: none; 
-    }
-
-    .inner-wrap {
-      max-width: 850px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
     /* --- TYPOGRAPHY & ELEMENTS --- */
     h1.brand-title {
       font-family: 'Cinzel', serif;
       color: var(--gold);
-      font-size: clamp(2.5rem, 8vw, 3.8rem); 
+      font-size: clamp(2.5rem, 8vw, 4rem); 
       font-weight: 600;
-      letter-spacing: 4px;
+      letter-spacing: 5px;
       text-transform: uppercase;
-      margin-bottom: 5px;
-      text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+      margin-bottom: 10px;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
     }
 
     h2.coming-soon {
       font-family: 'Cinzel', serif;
-      font-size: clamp(1rem, 4vw, 1.4rem);
+      font-size: clamp(1rem, 4vw, 1.5rem);
       letter-spacing: 4px;
       font-weight: 400;
-      margin-top: 0;
       color: #fff;
       text-transform: uppercase;
     }
 
     .tagline {
-      font-size: clamp(1rem, 3vw, 1.3rem);
+      font-size: clamp(1rem, 3vw, 1.2rem);
       font-weight: 300;
       color: var(--gold);
       font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 45px;
+      margin-top: 15px;
+      margin-bottom: 40px;
       letter-spacing: 1px;
     }
 
-    p {
+    .solid-content-block p {
       line-height: 1.8;
       font-size: clamp(1rem, 3vw, 1.1rem);
       margin-bottom: 25px;
@@ -168,29 +172,26 @@
       font-size: 12px;
     }
 
-    /* --- ACTION BUTTON --- */
+    /* --- ACTION BUTTONS --- */
     .action-buttons {
       display: flex;
       justify-content: center;
-      margin-top: 25px;
-      margin-bottom: 10px;
+      margin-top: 20px;
       width: 100%;
     }
 
     .cta-button {
       display: inline-block;
-      padding: 16px 30px;
+      padding: 16px 35px;
       text-decoration: none;
       font-family: 'Cinzel', serif;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.1rem;
       letter-spacing: 2px;
-      border-radius: 3px;
+      border-radius: 4px;
       text-transform: uppercase;
-      transition: all 0.4s ease;
+      transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      width: auto;
-      max-width: 100%;
     }
 
     .primary-btn {
@@ -198,15 +199,15 @@
       color: #000;
     }
     .primary-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
       background: linear-gradient(135deg, #eadd8c 0%, #D4AF37 100%);
     }
 
     .section-title {
       font-family: 'Cinzel', serif;
       color: var(--text-light);
-      font-size: clamp(1.4rem, 5vw, 1.8rem);
+      font-size: clamp(1.4rem, 5vw, 2rem);
       margin-bottom: 25px;
       letter-spacing: 3px;
       text-transform: uppercase;
@@ -227,7 +228,7 @@
 
     ul.services-list li {
       margin-bottom: 18px;
-      font-size: 1rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
       position: relative;
       padding-left: 30px;
@@ -243,15 +244,20 @@
       font-size: 0.9rem;
     }
 
-    /* 🚀 REPAIRED CONTACT BOX */
+    /* --- CONTACT BOX --- */
     .contact-box {
-      background: rgba(20, 24, 34, 0.4);
+      background: rgba(20, 24, 34, 0.5);
       border: 1px solid rgba(212, 175, 55, 0.2);
-      padding: 35px 20px;
+      padding: 40px 20px;
       border-radius: 12px;
-      margin-top: 30px;
+      margin-top: 40px;
       width: 100%;
-      transition: all 0.4s ease;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-box:hover {
+      background: rgba(20, 24, 34, 0.8);
+      border-color: var(--gold);
     }
 
     .contact-links-grid {
@@ -260,14 +266,16 @@
       gap: 15px;
       margin-top: 25px;
       align-items: center;
-      width: 100%;
     }
 
-    /* Desktop View Override */
     @media (min-width: 768px) {
       .contact-links-grid {
         flex-direction: row;
         justify-content: center;
+        gap: 20px;
+      }
+      .contact-link {
+        width: auto;
       }
     }
 
@@ -281,76 +289,71 @@
       font-weight: 400;
       font-size: 1rem;
       transition: all 0.3s ease;
-      padding: 12px 15px;
+      padding: 12px 20px;
       border-radius: 6px;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.05);
       width: 100%; 
-      max-width: 300px;
     }
 
     .contact-link svg {
       width: 18px;
       height: 18px;
       fill: var(--gold);
-      flex-shrink: 0;
     }
 
     .contact-link:hover {
       color: var(--gold);
       border-color: rgba(212, 175, 55, 0.3);
-      background: rgba(212, 175, 55, 0.05);
+      background: rgba(212, 175, 55, 0.08);
       transform: translateY(-2px);
     }
 
     footer {
       margin-top: 60px;
-      font-size: 0.75rem;
-      color: #555;
+      font-size: 0.8rem;
+      color: #666;
       letter-spacing: 2px;
       text-transform: uppercase;
-      text-align: center;
       width: 100%;
     }
   </style>
 </head>
 <body>
 
-  <div class="fixed-bg">
+  <div class="video-container">
     <video autoplay loop muted playsinline>
       <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">
     </video>
   </div>
-  <div class="fixed-overlay"></div>
+  <div class="video-overlay"></div>
 
-  <div class="scrolling-layer">
+  <div class="scrolling-wrapper">
 
-    <div class="content-block fade-in-up">
-      <div class="inner-wrap">
-        <h1 class="brand-title">Muziris</h1>
-        <h2 class="coming-soon">Coming Soon</h2>
-        <div class="tagline">Where ancient trade meets modern global business.</div>
-        <p>Inspired by the legendary port of Muziris, we connect global markets through trust-based sourcing and international trade.</p>
-        <p>Our full website is currently under development. We are building a platform that reflects our heritage, our partners, and our commitment to clear, human, long-term relationships.</p>
-        
-        <div class="action-buttons">
-          <a href="join.html" class="cta-button primary-btn">Supplier Registration</a>
-        </div>
+    <div class="hero-window fade-in-up">
+      <h1 class="brand-title">Muziris</h1>
+      <h2 class="coming-soon">Coming Soon</h2>
+      <div class="tagline">Where ancient trade meets modern global business.</div>
+      <div class="action-buttons">
+        <a href="join.html" class="cta-button primary-btn">Supplier Registration</a>
       </div>
     </div>
 
-    <div class="video-window-space"></div>
-
-    <div class="content-block fade-in-up">
+    <div class="solid-content-block">
       <div class="inner-wrap">
         
-        <h3 class="section-title">About <span>Us</span></h3>
-        <p>Muziris connects the world through trust-based sourcing, heritage-rooted trade, and long-term partnerships. Inspired by the ancient port of Muziris, we bring clarity, professionalism, and human connection to global commerce.</p>
+        <p class="fade-in-up">Inspired by the legendary port of Muziris, we connect global markets through trust-based sourcing and international trade.</p>
+        <p class="fade-in-up">Our full website is currently under development. We are building a platform that reflects our heritage, our partners, and our commitment to clear, human, long-term relationships.</p>
+
+        <div class="divider"><span class="diamond">♦</span></div>
+        
+        <h3 class="section-title fade-in-up">About <span>Us</span></h3>
+        <p class="fade-in-up">Muziris connects the world through trust-based sourcing, heritage-rooted trade, and long-term partnerships. We bring clarity, professionalism, and human connection to global commerce.</p>
 
         <div class="divider"><span class="diamond">♦</span></div>
 
-        <h3 class="section-title">Our <span>Services</span></h3>
-        <ul class="services-list">
+        <h3 class="section-title fade-in-up">Our <span>Services</span></h3>
+        <ul class="services-list fade-in-up">
           <li>Multi-category global sourcing</li>
           <li>Supplier verification and onboarding</li>
           <li>Trade facilitation and documentation</li>
@@ -359,8 +362,8 @@
         </ul>
 
         <div class="contact-box fade-in-up">
-          <h3 class="section-title" style="font-size: 1.4rem; margin-top: 0; margin-bottom: 10px;">For Enquiries & Collaborations</h3>
-          <p style="margin-bottom: 0; color: var(--gold); font-style: italic;">Based in Canada, rooted in India</p>
+          <h3 class="section-title" style="font-size: 1.4rem; margin-top: 0; margin-bottom: 5px;">For Enquiries & Collaborations</h3>
+          <p style="margin-bottom: 0; color: var(--gold); font-style: italic; font-size: 0.95rem;">Based in Canada, rooted in India</p>
           
           <div class="contact-links-grid">
             <a href="mailto:info@muziris.ca" class="contact-link">
