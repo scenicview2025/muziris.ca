@@ -15,28 +15,31 @@
       --text-muted: #a0a0a0;
     }
     
-    body, html {
+    * {
+      box-sizing: border-box; 
       margin: 0;
       padding: 0;
+    }
+
+    body, html {
       width: 100%;
       height: 100%;
       font-family: 'Lato', sans-serif;
       background-color: #000;
       color: var(--text-light);
-      overflow-x: hidden; /* Fixes horizontal scroll issue */
-      scroll-behavior: smooth;
+      overflow-x: hidden; /* ABSOLUTE block on horizontal scrolling */
     }
 
-    /* --- 1. THE STABLE BACKGROUND VIDEO --- */
+    /* --- 1. THE STABLE BACKGROUND VIDEO (LAPTOP FIX) --- */
     .fixed-bg {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      right: 0;  /* Pins perfectly to the right edge, fixing the scrollbar gap */
+      bottom: 0; /* Pins perfectly to the bottom */
       z-index: 0; 
       overflow: hidden;
-      pointer-events: none; /* Prevents video from catching clicks/touches */
+      pointer-events: none; 
     }
     
     .fixed-bg video {
@@ -50,8 +53,8 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      right: 0;
+      bottom: 0;
       z-index: 1;
       background: rgba(0, 0, 0, 0.3);
       pointer-events: none;
@@ -62,17 +65,19 @@
       position: relative;
       z-index: 2; 
       width: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
     .content-block {
       background: var(--bg-dark);
       padding: 80px 20px;
+      width: 100%; 
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       box-shadow: 0 0 40px rgba(0,0,0,0.8); 
-      box-sizing: border-box; /* Ensures padding doesn't widen the screen */
     }
 
     /* ✨ CINEMATIC FADE-IN ANIMATION ✨ */
@@ -80,7 +85,7 @@
       opacity: 0;
       transform: translateY(40px);
       transition: opacity 1s ease-out, transform 1s ease-out;
-      will-change: opacity, transform; /* Hardware acceleration for smoother scrolling */
+      will-change: opacity, transform; 
     }
     .fade-in-up.visible {
       opacity: 1;
@@ -91,6 +96,7 @@
       width: 100%;
       height: 65vh; 
       background: transparent;
+      pointer-events: none; 
     }
 
     .inner-wrap {
@@ -103,9 +109,9 @@
     h1.brand-title {
       font-family: 'Cinzel', serif;
       color: var(--gold);
-      font-size: 3.8rem;
+      font-size: clamp(2.5rem, 8vw, 3.8rem); 
       font-weight: 600;
-      letter-spacing: 6px;
+      letter-spacing: 4px;
       text-transform: uppercase;
       margin-bottom: 5px;
       text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
@@ -113,7 +119,7 @@
 
     h2.coming-soon {
       font-family: 'Cinzel', serif;
-      font-size: 1.4rem;
+      font-size: clamp(1rem, 4vw, 1.4rem);
       letter-spacing: 4px;
       font-weight: 400;
       margin-top: 0;
@@ -122,7 +128,7 @@
     }
 
     .tagline {
-      font-size: 1.3rem;
+      font-size: clamp(1rem, 3vw, 1.3rem);
       font-weight: 300;
       color: var(--gold);
       font-style: italic;
@@ -132,8 +138,8 @@
     }
 
     p {
-      line-height: 1.9;
-      font-size: 1.1rem;
+      line-height: 1.8;
+      font-size: clamp(1rem, 3vw, 1.1rem);
       margin-bottom: 25px;
       color: var(--text-muted);
       font-weight: 300;
@@ -162,31 +168,31 @@
       font-size: 12px;
     }
 
-    /* --- UPDATED SINGLE BUTTON --- */
+    /* --- ACTION BUTTON --- */
     .action-buttons {
       display: flex;
-      gap: 20px;
       justify-content: center;
       margin-top: 25px;
       margin-bottom: 10px;
-      flex-wrap: wrap;
+      width: 100%;
     }
 
     .cta-button {
       display: inline-block;
-      padding: 16px 35px;
+      padding: 16px 30px;
       text-decoration: none;
       font-family: 'Cinzel', serif;
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1rem;
       letter-spacing: 2px;
       border-radius: 3px;
       text-transform: uppercase;
       transition: all 0.4s ease;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      width: auto;
+      max-width: 100%;
     }
 
-    /* Solid Gold for Primary Action (Supplier Reg) */
     .primary-btn {
       background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%);
       color: #000;
@@ -200,7 +206,7 @@
     .section-title {
       font-family: 'Cinzel', serif;
       color: var(--text-light);
-      font-size: 1.8rem;
+      font-size: clamp(1.4rem, 5vw, 1.8rem);
       margin-bottom: 25px;
       letter-spacing: 3px;
       text-transform: uppercase;
@@ -216,11 +222,12 @@
       padding: 0;
       text-align: left;
       display: inline-block;
+      max-width: 100%;
     }
 
     ul.services-list li {
       margin-bottom: 18px;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text-muted);
       position: relative;
       padding-left: 30px;
@@ -236,52 +243,58 @@
       font-size: 0.9rem;
     }
 
+    /* 🚀 REPAIRED CONTACT BOX */
     .contact-box {
       background: rgba(20, 24, 34, 0.4);
       border: 1px solid rgba(212, 175, 55, 0.2);
-      padding: 45px 30px;
+      padding: 35px 20px;
       border-radius: 12px;
       margin-top: 30px;
       width: 100%;
-      box-sizing: border-box;
       transition: all 0.4s ease;
-    }
-    
-    .contact-box:hover {
-      background: rgba(20, 24, 34, 0.7);
-      border-color: var(--gold);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .contact-links-grid {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 25px;
-      margin-top: 30px;
+      flex-direction: column; 
+      gap: 15px;
+      margin-top: 25px;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Desktop View Override */
+    @media (min-width: 768px) {
+      .contact-links-grid {
+        flex-direction: row;
+        justify-content: center;
+      }
     }
 
     .contact-link {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
       color: var(--text-light);
       text-decoration: none;
       font-weight: 400;
-      font-size: 1.05rem;
+      font-size: 1rem;
       transition: all 0.3s ease;
-      padding: 8px 15px;
+      padding: 12px 15px;
       border-radius: 6px;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.05);
+      width: 100%; 
+      max-width: 300px;
     }
 
     .contact-link svg {
       width: 18px;
       height: 18px;
       fill: var(--gold);
-      transition: fill 0.3s ease;
-  }
+      flex-shrink: 0;
+    }
 
     .contact-link:hover {
       color: var(--gold);
@@ -291,23 +304,13 @@
     }
 
     footer {
-      margin-top: 80px;
-      font-size: 0.85rem;
+      margin-top: 60px;
+      font-size: 0.75rem;
       color: #555;
       letter-spacing: 2px;
       text-transform: uppercase;
-    }
-
-    @media (max-width: 600px) {
-      .content-block { padding: 50px 20px; }
-      h1.brand-title { font-size: 2.4rem; letter-spacing: 3px; }
-      h2.coming-soon { font-size: 1.1rem; }
-      .tagline { font-size: 1.05rem; margin-bottom: 30px; }
-      .video-window-space { height: 50vh; }
-      .contact-links-grid { flex-direction: column; gap: 15px; }
-      .contact-link { justify-content: center; }
-      .action-buttons { flex-direction: column; }
-      .cta-button { width: 100%; box-sizing: border-box; }
+      text-align: center;
+      width: 100%;
     }
   </style>
 </head>
