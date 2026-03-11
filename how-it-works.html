@@ -6,6 +6,10 @@
   <title>Muziris | How It Works for Suppliers</title>
   <link rel="icon" type="image/png" href="MC.png">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/GSAP.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
   <style>
     :root { 
       --gold: #D4AF37; 
@@ -26,6 +30,7 @@
       background-size: cover; 
       background-position: center; 
       background-attachment: fixed;
+      overflow-x: hidden;
     }
     
     .overlay { 
@@ -38,7 +43,7 @@
     }
 
     /* TOP NAVIGATION */
-    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 10; }
     .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
     .back-home:hover { color: #fff; }
 
@@ -51,9 +56,30 @@
       padding: 0 20px;
     }
 
-    .header-section { text-align: center; margin-bottom: 60px; }
+    .header-section { text-align: center; margin-bottom: 80px; }
     .header-section h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 36px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; }
     .header-section p { font-size: 16px; color: var(--text-muted); line-height: 1.6; max-width: 650px; margin: 0 auto; }
+
+    /* 3D ROPE SVG */
+    #connection-rope {
+      position: absolute;
+      top: 250px; /* Starts after header */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 75%; /* Adjust based on content length */
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .rope-path {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 2;
+      stroke-dasharray: 2000;
+      stroke-dashoffset: 2000;
+      filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4));
+    }
 
     /* TIMELINE STYLING */
     .timeline {
@@ -62,43 +88,18 @@
       margin: 0 auto;
     }
 
-    .timeline::after {
-      content: '';
-      position: absolute;
-      width: 2px;
-      background-color: #333;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      margin-left: -1px;
-    }
-
     .timeline-step {
       padding: 10px 40px;
       position: relative;
       background-color: inherit;
       width: 50%;
       box-sizing: border-box;
-      margin-bottom: 40px;
+      margin-bottom: 80px;
+      z-index: 3;
     }
 
     .left { left: 0; text-align: right; }
     .right { left: 50%; text-align: left; }
-
-    .timeline-step::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      right: -10px;
-      background-color: var(--dark-bg);
-      border: 3px solid var(--gold);
-      top: 15px;
-      border-radius: 50%;
-      z-index: 1;
-      box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-    }
-    .right::after { left: -10px; }
 
     /* Content Cards */
     .content {
@@ -107,18 +108,63 @@
       position: relative;
       border-radius: 8px;
       border: 1px solid #222;
-      transition: transform 0.3s, border-color 0.3s;
+      transition: all 0.4s ease;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     .content:hover {
-      transform: translateY(-5px);
-      border-color: rgba(212, 175, 55, 0.4);
+      transform: translateY(-5px) scale(1.02);
+      border-color: var(--gold);
+      box-shadow: 0 15px 40px rgba(212, 175, 55, 0.1);
     }
 
     .step-number { font-family: 'Cinzel', serif; color: var(--gold); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; background: rgba(212, 175, 55, 0.1); padding: 5px 10px; border-radius: 4px; border: 1px solid rgba(212, 175, 55, 0.3); }
     .content h2 { font-family: 'Cinzel', serif; color: #fff; font-size: 20px; margin: 10px 0 15px 0; }
     .content p { font-size: 14px; color: #aaa; line-height: 1.6; margin: 0; }
     .content .highlight { color: var(--gold); font-weight: bold; }
+
+    /* 3D GLOBE SECTION */
+    .globe-container {
+      text-align: center;
+      margin: 80px 0;
+    }
+
+    .globe-wrapper {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      margin: 0 auto;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .globe-3d {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #2a2f3a 0%, #0b0e14 100%);
+      box-shadow: inset -20px -20px 50px #000, 0 0 30px rgba(212, 175, 55, 0.2);
+      position: relative;
+      animation: rotateGlobe 15s linear infinite;
+      transform-style: preserve-3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .globe-3d::after {
+      content: 'JOIN NETWORK';
+      font-family: 'Cinzel';
+      color: var(--gold);
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-shadow: 0 0 10px var(--gold);
+    }
+
+    @keyframes rotateGlobe {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
 
     /* Support Block */
     .support-block {
@@ -128,12 +174,9 @@
       text-align: center;
       border-radius: 8px;
       margin-top: 60px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
+      position: relative;
+      z-index: 3;
     }
-    .support-block h3 { font-family: 'Cinzel', serif; color: var(--gold); margin-top: 0; letter-spacing: 1px; }
-    .support-block p { color: #ccc; font-size: 14px; line-height: 1.6; margin-bottom: 0; }
 
     /* CTA Section */
     .cta-section {
@@ -158,31 +201,21 @@
       transition: transform 0.3s, box-shadow 0.3s;
       margin: 10px;
     }
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
-    }
-    .btn-outline {
-      background: transparent;
-      color: var(--gold);
-      border: 1px solid var(--gold);
-    }
-    .btn-outline:hover {
-      background: rgba(212, 175, 55, 0.1);
-      color: var(--gold);
-      box-shadow: none;
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+
+    .particle {
+        position: fixed;
+        background: var(--gold);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.2;
+        z-index: 0;
     }
 
-    /* Mobile Responsive */
     @media screen and (max-width: 768px) {
-      .timeline::after { left: 31px; }
-      .timeline-step { width: 100%; padding-left: 70px; padding-right: 0; text-align: left; }
-      .left::after, .right::after { left: 21px; }
-      .left { left: 0; }
-      .right { left: 0; }
-      .header-section h1 { font-size: 28px; }
-      .top-nav { top: 20px; left: 20px; }
-      .btn { width: 100%; box-sizing: border-box; }
+      #connection-rope { display: none; } /* Hide rope on mobile for clarity */
+      .timeline-step { width: 100%; padding-left: 20px; padding-right: 20px; text-align: center; }
+      .left, .right { left: 0; }
     }
   </style>
 </head>
@@ -197,68 +230,111 @@
   <div class="container">
     <div class="header-section">
       <h1>The Supplier Journey</h1>
-      <p>We built Muziris to be frictionless and secure. From uploading your massive product catalogs to guaranteeing your payment across borders, here is exactly how our platform works for you.</p>
+      <p>From local production to global fulfillment. Follow the golden thread of the Muziris network.</p>
     </div>
+
+    <svg id="connection-rope" viewBox="0 0 800 1600" preserveAspectRatio="none">
+        <path class="rope-path" d="M400,0 C400,200 600,200 600,400 C600,600 200,600 200,800 C200,1000 600,1000 600,1200 C600,1400 400,1400 400,1600" />
+    </svg>
 
     <div class="timeline">
       
       <div class="timeline-step left">
         <div class="content">
-          <span class="step-number">01. Identity & Access</span>
+          <span class="step-number">01. Identity</span>
           <h2>Seamless Registration</h2>
-          <p>Apply to the network with your company details. Once approved by our team, you receive a secure, permanent <strong>Supplier ID</strong> and a unique Login PIN. No complex passwords to forget—just fast, secure verification.</p>
+          <p>Once approved, you receive a secure, permanent <strong>Supplier ID</strong>. No complex passwords—just fast, secure verification.</p>
         </div>
       </div>
 
       <div class="timeline-step right">
         <div class="content">
-          <span class="step-number">02. The Global Ledger</span>
-          <h2>Frictionless Catalog Uploads</h2>
-          <p>Have 5 products? Use our clean Single-Upload portal. Have 500 products? Use our <strong>Bulk CSV Staging Portal</strong>. Our system automatically catches formatting errors, resizes your heavy images, and organizes your matrix instantly.</p>
+          <span class="step-number">02. Ledger</span>
+          <h2>Frictionless Uploads</h2>
+          <p>Use our <strong>Bulk CSV Staging Portal</strong>. Our system organizes your product matrix instantly and optimizes images.</p>
         </div>
       </div>
 
       <div class="timeline-step left">
         <div class="content">
-          <span class="step-number">03. Trade Assurance</span>
-          <h2>Secure Orders & PO Financing</h2>
-          <p>When a buyer agrees to your terms, they deposit the funds into the secure Muziris Canadian Escrow vault. We issue you a legally binding <strong>Purchase Order</strong>, which you can use to secure raw material loans from your local bank.</p>
+          <span class="step-number">03. Assurance</span>
+          <h2>Secure Escrow</h2>
+          <p>Funds are deposited into the Muziris Canadian Escrow vault. We issue a <strong>Purchase Order</strong> you can use for bank financing.</p>
         </div>
       </div>
 
       <div class="timeline-step right">
         <div class="content">
-          <span class="step-number">04. Logistics & Quality</span>
-          <h2>Production & Inspection</h2>
-          <p>Manufacture and ship the goods with 100% confidence that the money is already locked in our vault. Upon arrival, the buyer has a strict <span class="highlight">7-day window</span> to inspect the goods against your provided specifications.</p>
+          <span class="step-number">04. Logistics</span>
+          <h2>Global Inspection</h2>
+          <p>Ship with confidence. Upon arrival, the buyer has a <span class="highlight">7-day window</span> to inspect goods against specs.</p>
         </div>
       </div>
 
       <div class="timeline-step left">
         <div class="content">
-          <span class="step-number">05. Completion</span>
-          <h2>Guaranteed Payout</h2>
-          <p>Once the buyer approves the shipment (or if the 7 days pass without a dispute), the funds are instantly released from Escrow directly to your registered bank account, minus our standard transparent platform fee.</p>
+          <span class="step-number">05. Payout</span>
+          <h2>Instant Settlement</h2>
+          <p>Once approved, funds are released from Escrow directly to your bank account, minus transparent fees.</p>
         </div>
       </div>
 
+    </div>
+
+    <div class="globe-container">
+        <div class="globe-wrapper" onclick="window.location.href='join.html'">
+            <div class="globe-3d"></div>
+        </div>
     </div>
 
     <div class="support-block">
       <h3>Enterprise Data Support</h3>
-      <p>We know that structuring large amounts of product data can be difficult. If you are struggling to format your CSV files or map your existing database to the Muziris Ledger, <strong>our dedicated Data Team will do it for you.</strong> Just send us your raw Excel files, and we will prepare them for perfect upload.</p>
+      <p>Need help with database mapping? <strong>Our Data Team will do it for you.</strong> Send us your raw Excel files today.</p>
     </div>
 
     <div class="cta-section">
-      <h2 style="font-family: 'Cinzel', serif; color: #fff; margin-bottom: 25px;">Ready to expand your global reach?</h2>
       <a href="join.html" class="btn">Apply to Network</a>
-      <a href="suppliers.html" class="btn btn-outline">Supplier Login</a>
-      <p style="margin-top: 20px; font-size: 13px; color: #666;">Need help onboarding? Contact <a href="mailto:support@muziris.ca" style="color: var(--gold); text-decoration: none;">support@muziris.ca</a></p>
+      <p style="margin-top: 20px; font-size: 13px; color: #666;">Contact <a href="mailto:support@muziris.ca" style="color: var(--gold); text-decoration: none;">support@muziris.ca</a></p>
     </div>
-
   </div>
 
-  <script type="text/javascript">
+  <script>
+    // Register GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1. Animate the Rope on Scroll
+    gsap.to(".rope-path", {
+      strokeDashoffset: 0,
+      scrollTrigger: {
+        trigger: ".timeline",
+        start: "top 40%",
+        end: "bottom 60%",
+        scrub: 1.5
+      }
+    });
+
+    // 2. Ambient Particles
+    for (let i = 0; i < 25; i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        let size = Math.random() * 3 + 'px';
+        p.style.width = size;
+        p.style.height = size;
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.top = Math.random() * 100 + 'vh';
+        document.body.appendChild(p);
+        
+        gsap.to(p, {
+            y: "-100vh",
+            x: (Math.random() - 0.5) * 100,
+            duration: Math.random() * 15 + 10,
+            repeat: -1,
+            ease: "none",
+            delay: Math.random() * 10
+        });
+    }
+
+    // Tawk.to Script
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
