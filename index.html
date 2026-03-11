@@ -14,7 +14,13 @@
       --text-light: #e8e8e8;
       --text-muted: #a0a0a0;
     }
+
+    /* ✨ NEW: Global reset to prevent width issues ✨ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
     
+    /* ✨ UPDATED: Forced vertical scrollbar to prevent layout jumping ✨ */
     body, html {
       margin: 0;
       padding: 0;
@@ -22,6 +28,7 @@
       background-color: #000;
       color: var(--text-light);
       overflow-x: hidden;
+      overflow-y: scroll; 
       scroll-behavior: smooth;
     }
 
@@ -60,6 +67,7 @@
       width: 100%;
     }
 
+    /* ✨ UPDATED: Added width: 100% ✨ */
     .content-block {
       background: var(--bg-dark);
       padding: 80px 20px;
@@ -68,9 +76,10 @@
       align-items: center;
       text-align: center;
       box-shadow: 0 0 40px rgba(0,0,0,0.8); 
+      width: 100%;
     }
 
-    /* ✨ NEW: CINEMATIC FADE-IN ANIMATION ✨ */
+    /* --- CINEMATIC FADE-IN ANIMATION --- */
     .fade-in-up {
       opacity: 0;
       transform: translateY(40px);
@@ -156,7 +165,7 @@
       font-size: 12px;
     }
 
-    /* --- UPDATED SINGLE BUTTON --- */
+    /* --- ACTION BUTTONS --- */
     .action-buttons {
       display: flex;
       gap: 20px;
@@ -180,11 +189,11 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
 
-    /* Solid Gold for Primary Action (Supplier Reg) */
     .primary-btn {
       background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%);
       color: #000;
     }
+    
     .primary-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
@@ -316,8 +325,8 @@
 
   <div class="scrolling-layer">
 
-    <div class="content-block fade-in-up">
-      <div class="inner-wrap">
+    <div class="content-block">
+      <div class="inner-wrap fade-in-up">
         <h1 class="brand-title">Muziris</h1>
         <h2 class="coming-soon">Coming Soon</h2>
         <div class="tagline">Where ancient trade meets modern global business.</div>
@@ -332,8 +341,8 @@
 
     <div class="video-window-space"></div>
 
-    <div class="content-block fade-in-up">
-      <div class="inner-wrap">
+    <div class="content-block">
+      <div class="inner-wrap fade-in-up">
         
         <h3 class="section-title">About <span>Us</span></h3>
         <p>Muziris connects the world through trust-based sourcing, heritage-rooted trade, and long-term partnerships. Inspired by the ancient port of Muziris, we bring clarity, professionalism, and human connection to global commerce.</p>
