@@ -2,318 +2,197 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Muziris | The Supplier Journey</title>
-  <link rel="icon" type="image/png" href="MC.png">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | The Global Connection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
   <style>
     :root { 
       --gold: #D4AF37; 
-      --gold-bright: #fcf6ba;
-      --dark-bg: #050608; 
-      --card-bg: rgba(15, 18, 26, 0.7); 
-      --text: #e0e0e0; 
-      --text-muted: #888;
+      --dark: #050608;
     }
     
-    body, html { 
-      margin: 0; padding: 0; 
-      background-color: var(--dark-bg); 
-      color: var(--text); 
-      font-family: 'Lato', sans-serif;
-      overflow-x: hidden;
-      min-height: 100vh;
+    body { 
+      margin: 0; padding: 0; background: var(--dark); color: white; 
+      font-family: 'Lato', sans-serif; overflow-x: hidden;
     }
 
-    /* --- BACKGROUND ENGINE --- */
+    /* --- THE MASSIVE GLOBE BACKGROUND --- */
     #canvas-container {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      bottom: -40vh; /* Sinks the globe into the floor for scale */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120vw;
+      height: 120vw;
       z-index: 0;
-      background: radial-gradient(circle at center, #0f1219 0%, #050608 100%);
-    }
-
-    #flow-canvas { width: 100%; height: 100%; display: block; }
-
-    .grain-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 1;
-      opacity: 0.04;
+      opacity: 0.4;
       pointer-events: none;
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Resolution_White_Noise.png');
     }
 
+    /* --- LUXURY OVERLAYS --- */
     .vignette {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 2;
-      background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
-      pointer-events: none;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, var(--dark) 85%);
+      z-index: 1;
     }
-
-    /* --- NAVIGATION --- */
-    .top-nav { position: absolute; top: 40px; left: 50px; z-index: 10; }
-    .back-link { 
-      color: var(--gold); text-decoration: none; font-size: 11px; 
-      text-transform: uppercase; letter-spacing: 4px; font-weight: 700; 
-      transition: 0.4s; display: flex; align-items: center; gap: 10px;
-    }
-    .back-link:hover { color: #fff; transform: translateX(-5px); }
 
     /* --- CONTENT --- */
-    .container { 
-      position: relative; 
-      z-index: 5; 
-      max-width: 1100px; 
-      margin: 140px auto 100px; 
-      padding: 0 40px;
+    .section {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
     }
 
-    .header-section { text-align: center; margin-bottom: 120px; }
-    .header-section h1 { 
-      font-family: 'Cinzel', serif; color: var(--gold); 
-      font-size: clamp(32px, 5vw, 48px); letter-spacing: 8px; 
-      text-transform: uppercase; margin-bottom: 25px;
-      filter: drop-shadow(0 0 15px rgba(212,175,55,0.3));
-    }
-    .header-section p { font-size: 18px; color: #aaa; line-height: 1.8; max-width: 750px; margin: 0 auto; font-weight: 300; }
-
-    /* --- TIMELINE --- */
-    .timeline { position: relative; }
-    .timeline::before {
-      content: ''; position: absolute; left: 50%; width: 1px;
-      height: 100%; background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-      opacity: 0.2; transform: translateX(-50%);
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 3rem;
+      letter-spacing: 12px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
 
-    .step-wrapper { 
-      display: flex; justify-content: space-between; align-items: center; 
-      margin-bottom: 120px; width: 100%; position: relative;
-      opacity: 0; transform: translateY(50px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    .tagline {
+      font-size: 1rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 40px;
     }
-    .step-wrapper.visible { opacity: 1; transform: translateY(0); }
 
-    .step-content { width: 45%; }
-    .step-visual { width: 45%; display: flex; justify-content: center; }
-
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(15px);
-      padding: 50px;
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      border-radius: 2px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-      transition: border 0.4s;
+    .info-card {
+      max-width: 600px;
+      line-height: 2;
+      font-weight: 300;
+      color: #ccc;
+      padding: 40px;
+      border-left: 1px solid var(--gold);
+      background: rgba(255,255,255,0.02);
     }
-    .card:hover { border-color: var(--gold); }
 
-    .step-tag { 
-      font-family: 'Cinzel', serif; color: var(--gold); font-size: 11px; 
-      letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; display: block; 
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      animation: pulse 2s infinite;
     }
-    .card h2 { font-family: 'Cinzel', serif; color: #fff; font-size: 24px; margin-bottom: 20px; letter-spacing: 2px; }
-    .card p { color: #bbb; line-height: 1.8; font-size: 15px; font-weight: 300; }
 
-    /* Alternate Layout */
-    .reverse { flex-direction: row-reverse; }
-
-    /* --- FOOTER BLOCK --- */
-    .cta-block {
-      text-align: center; margin-top: 150px; padding: 80px 0;
-      border-top: 1px solid rgba(212,175,55,0.1);
-    }
-    .btn-gold {
-      display: inline-block; padding: 20px 50px; background: var(--gold);
-      color: #000; text-decoration: none; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 4px; font-size: 12px;
-      transition: 0.4s; margin-top: 40px;
-    }
-    .btn-gold:hover { background: #fff; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(212,175,55,0.2); }
-
-    @media (max-width: 850px) {
-      .timeline::before { left: 20px; }
-      .step-wrapper { flex-direction: column !important; align-items: flex-start; margin-bottom: 60px; }
-      .step-content, .step-visual { width: 100%; padding-left: 50px; box-sizing: border-box; }
-      .top-nav { left: 20px; }
-    }
+    @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
   </style>
 </head>
 <body>
 
-  <div id="canvas-container">
-    <canvas id="flow-canvas"></canvas>
-  </div>
-  <div class="grain-overlay"></div>
   <div class="vignette"></div>
-
-  <nav class="top-nav">
-    <a href="sell.html" class="back-link">← The Merchant Gateway</a>
-  </nav>
-
-  <div class="container">
-    <header class="header-section">
-      <h1>The Supplier Journey</h1>
-      <p>A sophisticated orchestration of global trade. We’ve refined the complexity of cross-border commerce into a seamless, high-trust digital experience.</p>
-    </header>
-
-    <div class="timeline">
-      <div class="step-wrapper">
-        <div class="step-content">
-          <div class="card">
-            <span class="step-tag">Phase I</span>
-            <h2>Merchant Sovereignty</h2>
-            <p>Your application undergoes an elite vetting process. Once authenticated, your identity is encrypted into our network as a <strong>Verified Global Merchant</strong>, granting you a permanent, unforgeable Supplier ID.</p>
-          </div>
-        </div>
-        <div class="step-visual"></div>
-      </div>
-
-      <div class="step-wrapper reverse">
-        <div class="step-content">
-          <div class="card">
-            <span class="step-tag">Phase II</span>
-            <h2>Digital Asset Ingestion</h2>
-            <p>Utilize our high-speed <strong>Staging Portal</strong> to upload expansive product catalogs. Our system harmonizes your data, optimizing logistics parameters and technical specifications for global trade standards.</p>
-          </div>
-        </div>
-        <div class="step-visual"></div>
-      </div>
-
-      <div class="step-wrapper">
-        <div class="step-content">
-          <div class="card">
-            <span class="step-tag">Phase III</span>
-            <h2>The Escrow Vault</h2>
-            <p>Every transaction is backed by the <strong>Muziris Canadian Vault</strong>. Funds are secured in escrow before production begins, providing the liquidity assurance required for large-scale industrial commitments.</p>
-          </div>
-        </div>
-        <div class="step-visual"></div>
-      </div>
-    </div>
-
-    <section class="cta-block">
-      <h2 style="font-family: 'Cinzel', serif; font-size: 28px; letter-spacing: 3px;">Join the Network</h2>
-      <a href="join.html" class="btn-gold">Begin Application</a>
-    </section>
+  
+  <div id="canvas-container">
+    <canvas id="globe-canvas"></canvas>
   </div>
+
+  <section class="section">
+    <h1>Muziris</h1>
+    <div class="tagline">Global Merchant Network</div>
+    <div class="info-card">
+      The world of trade is no longer about distance; it is about the strength of the connection. 
+      We provide the bridge between high-capacity manufacturers and the global elite market.
+    </div>
+    <div class="scroll-indicator">Explore the Journey</div>
+  </section>
+
+  <section class="section">
+    <div class="info-card">
+      <span style="color:var(--gold); font-family:'Cinzel'; display:block; margin-bottom:15px; font-size:1.2rem;">Seamless Escrow</span>
+      Secure Canadian-based financial routing ensures that every shipment is backed by verified capital before the first container leaves the port.
+    </div>
+  </section>
 
 <script>
-/**
- * MUZIRIS SILK-FLOW ENGINE 
- * Deep, luxury background animation
- */
-const canvas = document.getElementById('flow-canvas');
+const canvas = document.getElementById('globe-canvas');
 const ctx = canvas.getContext('2d');
-let width, height, routes = [];
-
-// B2B Shape Point Cloud Maps
-const b2bShapes = {
-    ship: [[-30,0], [30,0], [25,12], [-25,12], [-15,-10], [15,-10], [0,-20]],
-    flight: [[0,-25], [0,25], [-20,8], [20,8], [-8,-15], [8,-15]],
-    user: [[0,-15], [8, -5], [8, 15], [-8, 15], [-8, -5], [0,-25]] 
-};
+let width, height;
 
 function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
+    width = canvas.width = canvas.parentElement.clientWidth;
+    height = canvas.height = canvas.parentElement.clientHeight;
 }
-
-class TradeRoute {
-    constructor() {
-        this.init();
-    }
-    init() {
-        // Curve start/end
-        this.p0 = { x: Math.random() * width, y: height + 100 };
-        this.p1 = { x: Math.random() * width, y: -100 };
-        // Control points for elegant curves
-        this.cp1 = { x: Math.random() * width, y: height * 0.6 };
-        this.cp2 = { x: Math.random() * width, y: height * 0.3 };
-        
-        this.particles = [];
-        const count = 15 + Math.floor(Math.random() * 20);
-        for(let i=0; i<count; i++) {
-            this.particles.push({
-                t: Math.random(),
-                speed: 0.0003 + Math.random() * 0.0008,
-                size: 0.5 + Math.random() * 1.5,
-                // Some particles are "Shape Carriers"
-                isShape: Math.random() > 0.96,
-                shapeType: Object.keys(b2bShapes)[Math.floor(Math.random()*3)]
-            });
-        }
-    }
-
-    getPos(t) {
-        const x = (1-t)**3 * this.p0.x + 3*(1-t)**2 * t * this.cp1.x + 3*(1-t)*t**2 * this.cp2.x + t**3 * this.p1.x;
-        const y = (1-t)**3 * this.p0.y + 3*(1-t)**2 * t * this.cp1.y + 3*(1-t)*t**2 * this.cp2.y + t**3 * this.p1.y;
-        return {x, y};
-    }
-
-    update() {
-        this.particles.forEach(p => {
-            p.t -= p.speed;
-            if (p.t < 0) p.t = 1;
-            
-            const pos = this.getPos(p.t);
-            const alpha = Math.sin(p.t * Math.PI) * 0.5;
-
-            // Draw Trade Particle
-            ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
-            ctx.beginPath();
-            ctx.arc(pos.x, pos.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Draw Constellation Shape if it's a carrier
-            if(p.isShape && alpha > 0.3) {
-                this.drawShape(pos.x, pos.y, p.shapeType, alpha * 0.4);
-            }
-        });
-    }
-
-    drawShape(x, y, type, alpha) {
-        const points = b2bShapes[type];
-        ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
-        points.forEach(pt => {
-            ctx.beginPath();
-            ctx.arc(x + pt[0], y + pt[1], 1, 0, Math.PI*2);
-            ctx.fill();
-        });
-    }
-}
-
-function initEngine() {
-    resize();
-    routes = [];
-    for(let i=0; i<20; i++) routes.push(new TradeRoute());
-    render();
-}
-
-function render() {
-    // Persistent trails for silk effect
-    ctx.fillStyle = 'rgba(5, 6, 8, 0.15)';
-    ctx.fillRect(0, 0, width, height);
-
-    routes.forEach(r => r.update());
-    requestAnimationFrame(render);
-}
-
-// Intersection Observer for Animations
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-    });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.step-wrapper').forEach(el => observer.observe(el));
 
 window.addEventListener('resize', resize);
-initEngine();
-</script>
+resize();
 
+let rotation = 0;
+
+function drawGlobe() {
+    ctx.clearRect(0, 0, width, height);
+    
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = width * 0.4;
+    
+    ctx.strokeStyle = 'rgba(212, 175, 55, 0.15)';
+    ctx.lineWidth = 1;
+
+    rotation += 0.001;
+
+    // Draw Longitude lines
+    for (let i = 0; i < 24; i++) {
+        let r = (i / 12) * Math.PI + rotation;
+        ctx.beginPath();
+        for (let j = 0; j <= 50; j++) {
+            let lat = (j / 50) * Math.PI - Math.PI / 2;
+            let x = centerX + radius * Math.cos(lat) * Math.sin(r);
+            let y = centerY + radius * Math.sin(lat);
+            if (j === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    // Draw Latitude lines
+    for (let i = 1; i < 9; i++) {
+        let lat = (i / 9) * Math.PI - Math.PI / 2;
+        let r = radius * Math.cos(lat);
+        let y = centerY + radius * Math.sin(lat);
+        
+        ctx.beginPath();
+        ctx.ellipse(centerX, y, r, r * 0.2, 0, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Draw "Merchant Hubs" (Gold Glowing Dots)
+    const hubs = [
+        { lat: 0.2, lon: 0.5 }, { lat: -0.3, lon: 2.1 }, { lat: 0.5, lon: 3.8 }
+    ];
+
+    hubs.forEach(hub => {
+        let r = hub.lon + rotation;
+        let x = centerX + radius * Math.cos(hub.lat) * Math.sin(r);
+        let y = centerY + radius * Math.sin(hub.lat);
+        
+        // Only draw if on the "front" of the globe
+        if (Math.cos(r) > 0) {
+            ctx.fillStyle = 'var(--gold)';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = 'var(--gold)';
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+    });
+
+    requestAnimationFrame(drawGlobe);
+}
+
+drawGlobe();
+</script>
 </body>
 </html>
