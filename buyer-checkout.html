@@ -133,39 +133,56 @@
         const rfqId = urlParams.get('rfq');
 
         async function loadContract() {
-            if (!rfqId) return alert("No RFQ ID found in URL");
+            if (!rfqId) {
+                alert("Missing RFQ ID in URL. Example: ?rfq=RFQ-1234");
+                return;
+            }
             
             try {
-                const res = await fetch(`/api/get-rfq/${rfqId}`);
+                const res = await fetch(`https://muziris-api.onrender.com/api/get-rfq/${rfqId}`);
                 const data = await res.json();
 
-                if (data.error) throw new Error(data.error);
+                if (data.error) {
+                    document.body.innerHTML = `<div class="p-20 text-center"><h1 class="text-2xl text-red-500">⚠️ ${data.error}</h1><p class="mt-4">Please ensure the supplier has submitted a quote for ${rfqId}</p></div>`;
+                    return;
+                }
 
                 const quote = data.supplier_quote;
+                
+                if (!quote || !quote.calculatedBuyerTotals || !quote.freightData) {
+                    throw new Error("Quote data is incomplete. Contact Muziris Support.");
+                }
+
                 const freight = quote.freightData;
                 const totals = quote.calculatedBuyerTotals;
 
-                // Set UI
                 document.getElementById('display-rfq-id').innerText = data.rfq_id;
                 document.getElementById('ref-code').innerText = `ESC-${data.rfq_id}`;
-                document.getElementById('prod-name').innerText = data.product_name;
-                document.getElementById('dest').innerText = data.destination;
-                document.getElementById('currency-label').innerText = data.currency;
+                document.getElementById('prod-name').innerText = data.product_name || "Custom Manufacturing Order";
+                document.getElementById('dest').innerText = data.destination || "Global Port";
+                document.getElementById('currency-label').innerText = data.currency || "CAD";
 
-                document.getElementById('ship-mode').innerText = freight.shipMode;
-                document.getElementById('transit').innerText = `${freight.transitTime} Days`;
+                document.getElementById('ship-mode').innerText = freight.shipMode || "Standard";
+                document.getElementById('transit').innerText = `${freight.transitTime || '15-20'} Days`;
 
-                document.getElementById('price-prod').innerText = `${totals.productTotalBuyer.toFixed(2)} ${data.currency}`;
-                document.getElementById('price-cust').innerText = `${totals.finalCustomizationBuyer.toFixed(2)} ${data.currency}`;
-                document.getElementById('price-freight').innerText = `${parseFloat(freight.finalFreightBuyer).toFixed(2)} ${data.currency}`;
+                const formatPrice = (val) => parseFloat(val || 0).toLocaleString(undefined, {minimumFractionDigits: 2});
+
+                document.getElementById('price-prod').innerText = `${formatPrice(totals.productTotalBuyer)} ${data.currency}`;
+                document.getElementById('price-cust').innerText = `${formatPrice(totals.finalCustomizationBuyer)} ${data.currency}`;
+                document.getElementById('price-freight').innerText = `${formatPrice(freight.finalFreightBuyer)} ${data.currency}`;
                 
-                // Grand Total Math
-                const grand = (totals.productTotalBuyer + totals.finalCustomizationBuyer + totals.finalSampleBuyer + parseFloat(freight.finalFreightBuyer)).toFixed(2);
-                document.getElementById('price-grand').innerText = grand;
+                const grandTotal = (
+                    (totals.productTotalBuyer || 0) + 
+                    (totals.finalCustomizationBuyer || 0) + 
+                    (totals.finalSampleBuyer || 0) + 
+                    (parseFloat(freight.finalFreightBuyer) || 0)
+                ).toFixed(2);
+                
+                document.getElementById('price-grand').innerText = formatPrice(grandTotal);
 
             } catch (err) {
-                console.error(err);
-                alert("Error loading contract details.");
+                console.error("Checkout Page Error:", err);
+                alert("Critical Error: " + err.message);
             }
         }
 
