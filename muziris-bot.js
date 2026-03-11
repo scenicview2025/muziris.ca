@@ -119,10 +119,17 @@ async function sendChatMessage() {
   history.scrollTop = history.scrollHeight;
 
   try {
+    // Grab the current page URL path (e.g., "/join.html" or "/")
+    const currentPath = window.location.pathname;
+
     const response = await fetch(MUZIRIS_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'chatBot', message: message })
+      body: JSON.stringify({ 
+        action: 'chatBot', 
+        message: message,
+        currentPage: currentPath // ✨ NEW: Send the page context to the AI
+      })
     });
     const data = await response.json();
     
