@@ -119,18 +119,40 @@ async function sendChatMessage() {
   history.scrollTop = history.scrollHeight;
 
   try {
-    // Grab the current page URL path (e.g., "/join.html" or "/")
+    // Grab the current page URL path (e.g., "/join.html" or "/suppliers.html")
     const currentPath = window.location.pathname;
+
+    // ==========================================
+    // PAGE-SPECIFIC AI TRAINING / CONTEXT
+    // ==========================================
+    let hiddenContext = "";
+    
+    if (currentPath.includes("suppliers.html")) {
+      hiddenContext = `[SYSTEM NOTE: The user is currently on the Muziris Supplier Portal. Keep your answers brief, professional, and directly related to this portal. 
+      PORTAL RULES TO REMEMBER:
+      - Login: Users need their Supplier ID and last 4 digits of their phone. If they aren't registered, tell them to apply at muziris.ca/join.
+      - Editing Products: Tell them to click "View Active Listings" at the top of the page, then click a product to load it into the form for editing.
+      - Bulk Upload: Tell them to click "Launch Bulk Upload Portal" at the top.
+      - Pricing Matrix (Step 2): Explain they can add variants (Color, Size) using the "Type" dropdown. 
+      - Incoterms (Step 2): Recommend EXW (Ex Works) for Small/Medium businesses without export licenses. Otherwise, FOB or CIF are common.
+      - Images (Step 3): The "Hero" image must have a white background. Max image size is 25MB.
+      - AI Tools: The form has "Auto-Tagline" and "Auto-Write" buttons to help them write descriptions based on the Product Name and Category.]\n\nUser says: `;
+    } else if (currentPath.includes("join.html")) {
+      hiddenContext = `[SYSTEM NOTE: The user is on the main Join page deciding whether to register.]\n\nUser says: `;
+    }
+
+    const finalMessageForAI = hiddenContext ? (hiddenContext + message) : message;
 
     const response = await fetch(MUZIRIS_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ 
         action: 'chatBot', 
-        message: message,
-        currentPage: currentPath // ✨ NEW: Send the page context to the AI
+        message: finalMessageForAI,
+        currentPage: currentPath 
       })
     });
+    
     const data = await response.json();
     
     thinkingUI.style.display = 'none';
