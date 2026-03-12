@@ -321,30 +321,47 @@
             <label>PRODUCT IMAGERY (Max 25MB)</label>
             <span class="sub-label" style="color:#D4AF37">NOTE: Previous images are saved. Upload new files only if you want to replace them.</span>
             <div class="image-grid">
+              
               <div class="image-box">
                 <span class="image-label">1. Hero (White BG) *</span>
-                <input type="file" name="img_hero" accept="image/*" >
+                <div class="img-preview" id="preview_img_hero" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+                <div id="status_img_hero" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+                <input type="file" name="img_hero" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_hero', 'status_img_hero')">
               </div>
+              
               <div class="image-box">
                 <span class="image-label">2. Lifestyle</span>
-                <input type="file" name="img_life" accept="image/*">
+                <div class="img-preview" id="preview_img_life" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+                <div id="status_img_life" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+                <input type="file" name="img_life" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_life', 'status_img_life')">
               </div>
+              
               <div class="image-box">
                 <span class="image-label">3. Close-Up</span>
-                <input type="file" name="img_detail" accept="image/*">
+                <div class="img-preview" id="preview_img_detail" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+                <div id="status_img_detail" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+                <input type="file" name="img_detail" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_detail', 'status_img_detail')">
               </div>
+              
               <div class="image-box">
                 <span class="image-label">4. Packaging</span>
-                <input type="file" name="img_pack" accept="image/*">
+                <div class="img-preview" id="preview_img_pack" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+                <div id="status_img_pack" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+                <input type="file" name="img_pack" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_pack', 'status_img_pack')">
               </div>
+              
               <div class="image-box">
                 <span class="image-label">5. Extra</span>
-                <input type="file" name="img_extra" accept="image/*">
+                <div class="img-preview" id="preview_img_extra" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+                <div id="status_img_extra" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+                <input type="file" name="img_extra" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_extra', 'status_img_extra')">
               </div>
+              
             </div>
             
             <label>CATALOG (PDF)</label>
-            <input type="file" name="catalog" accept="application/pdf">
+            <div id="status_catalog" style="font-size: 11px; color: #666; margin-bottom: 5px; font-weight: bold;">New Upload</div>
+            <input type="file" name="catalog" accept="application/pdf" onchange="document.getElementById('status_catalog').innerHTML='<span style=\'color:#D4AF37\'>✎ Will be replaced</span>'">
 
             <div class="btn-group">
               <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
@@ -663,6 +680,33 @@
       window.scrollTo(0,0);
     }
 
+    // HELPER FUNCTIONS FOR VISUAL IMAGE PREVIEWS
+    function updateLocalPreview(input, previewId, statusId) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById(previewId).style.backgroundImage = "url('" + e.target.result + "')";
+          document.getElementById(previewId).style.display = "block";
+          document.getElementById(statusId).innerHTML = "<span style='color:#D4AF37; font-weight:bold;'>✎ Will be replaced</span>";
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function setServerPreview(url, previewId, statusId) {
+      var preview = document.getElementById(previewId);
+      var status = document.getElementById(statusId);
+      if (url && url.trim() !== '') {
+        preview.style.backgroundImage = "url('" + url + "')";
+        preview.style.display = "block";
+        status.innerHTML = "<span style='color:#4CAF50; font-weight:bold;'>✓ Saved securely</span>";
+      } else {
+        preview.style.backgroundImage = "";
+        preview.style.display = "none";
+        status.innerHTML = "No image saved";
+      }
+    }
+
     function viewListings() {
       var id = document.getElementById('sid').value;
       document.getElementById('listings-modal').style.display = 'flex';
@@ -742,6 +786,19 @@
       if(matrix && matrix.length > 0){ 
         matrix.forEach(function(row) { addPriceRowFilled(row); }); 
       } else { addPriceRow(); }
+
+      // Inject Visual Previews for Step 3
+      setServerPreview(dbRow.hero_img, 'preview_img_hero', 'status_img_hero');
+      setServerPreview(dbRow.life_img, 'preview_img_life', 'status_img_life');
+      setServerPreview(dbRow.detail_img, 'preview_img_detail', 'status_img_detail');
+      setServerPreview(dbRow.pack_img, 'preview_img_pack', 'status_img_pack');
+      setServerPreview(dbRow.extra_img, 'preview_img_extra', 'status_img_extra');
+      
+      if(dbRow.catalog_pdf) {
+         document.getElementById('status_catalog').innerHTML = "<span style='color:#4CAF50; font-weight:bold;'>✓ PDF Saved securely</span>";
+      } else {
+         document.getElementById('status_catalog').innerHTML = "No PDF saved";
+      }
       
       closeListings();
       
@@ -1067,6 +1124,14 @@
 
       document.getElementById('sid').value = savedId;
       document.getElementById('cname').value = savedCo;
+
+      // Clear Visual Previews
+      ['hero', 'life', 'detail', 'pack', 'extra'].forEach(function(type) {
+         document.getElementById('preview_img_' + type).style.display = 'none';
+         document.getElementById('preview_img_' + type).style.backgroundImage = '';
+         document.getElementById('status_img_' + type).innerHTML = 'New Upload';
+      });
+      document.getElementById('status_catalog').innerHTML = 'New Upload';
     }
   </script>
   <script src="muziris-bot.js"></script>
