@@ -1,132 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muziris | Bulk Staging Portal</title>
-  <link rel="icon" type="image/png" href="MC.png">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <style>
-    :root { --gold: #D4AF37; --bg-dark: #0b0e14; --card-bg: #151922; --text: #e0e0e0; }
-    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--bg-dark); color: var(--text); background-image: url('network-bg.png'); background-size: cover; background-position: center; background-attachment: fixed;}
-    .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle, rgba(11,14,20,0.7) 0%, rgba(11,14,20,0.98) 100%); z-index: 1; pointer-events: none;}
+<script>
+    // 🚀 POINTING TO THE NEW NODE.JS RENDER SERVER
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
     
-    /* TOP NAVIGATION */
-    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
-    .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
-    .back-home:hover { color: #fff; }
-
-    .container { position: relative; z-index: 2; max-width: 800px; margin: 40px auto; padding: 40px; background: rgba(21, 25, 34, 0.95); border: 1px solid var(--gold); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
-    h1 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-top: 0; }
-    p.subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 40px; }
-
-    .step-box { border: 1px solid #333; padding: 25px; border-radius: 6px; margin-bottom: 25px; background: rgba(0,0,0,0.4); }
-    .step-title { color: var(--gold); font-weight: bold; margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;}
-    
-    input[type="text"] { width: 100%; padding: 15px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: white; border-radius: 4px; box-sizing: border-box; margin-bottom: 15px; font-family: 'Lato', sans-serif; outline: none; font-size: 16px; letter-spacing: 1px; }
-    input[type="text"]:focus { border-color: var(--gold); }
-    
-    /* Locked Input Styling */
-    input[type="text"].locked-field { background: rgba(212,175,55,0.05); color: var(--gold); border-color: #333; cursor: not-allowed; font-weight: bold; }
-
-    .drop-zone { border: 2px dashed #555; border-radius: 6px; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; background: rgba(255,255,255,0.02); }
-    .drop-zone:hover { border-color: var(--gold); background: rgba(212,175,55,0.05); }
-    .drop-zone p { margin: 0; color: #ccc; font-weight: bold; }
-    .drop-zone span { font-size: 12px; color: #666; display: block; margin-top: 5px; }
-    input[type="file"] { display: none; }
-
-    .btn { background: var(--gold); color: #000; padding: 18px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; width: 100%; font-size: 15px; transition: 0.3s; margin-top: 10px;}
-    .btn:hover { background: #b89225; }
-    .btn:disabled { background: #333; color: #666; cursor: not-allowed; border: 1px solid #444; }
-
-    .alert { padding: 15px; border-radius: 4px; margin-top: 20px; display: none; font-size: 14px; line-height: 1.5; }
-    .alert.error { background: rgba(255, 0, 0, 0.1); border-left: 4px solid #f44336; color: #ffcccc; }
-    .alert.success { background: rgba(76, 175, 80, 0.1); border-left: 4px solid #4caf50; color: #ccffcc; text-align: center; font-size: 16px; padding: 30px;}
-    
-    .template-link { display: inline-block; background: #222; color: var(--gold); padding: 10px 20px; text-decoration: none; border: 1px solid var(--gold); border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-    .template-link:hover { background: var(--gold); color: #000; }
-    .guide-link { color: var(--gold); font-size: 12px; text-decoration: underline; margin-right: 15px; text-transform: uppercase; letter-spacing: 1px;}
-
-    #log { margin-top: 20px; font-size: 12px; color: #aaa; max-height: 150px; overflow-y: auto; text-align: left; }
-    
-    @media (max-width: 900px) { .top-nav { top: 20px; left: 20px; } }
-  </style>
-</head>
-<body>
-  <div class="overlay"></div>
-
-  <div class="top-nav">
-    <a href="suppliers.html" class="back-home">← Back to Portal</a>
-  </div>
-
-  <div class="container" id="mainUI" style="display: none;">
-    <h1>Catalog Staging Portal</h1>
-    <p class="subtitle">Securely upload your data and media to the Muziris Ledger</p>
-
-    <div class="step-box">
-      <div class="step-title">Step 1: Supplier Identity</div>
-      <input type="text" id="supId" class="locked-field" readonly placeholder="Authenticating...">
-      <div style="text-align: right; margin-top: 10px;">
-        <a href="https://muziris.ca/csv-guide.html" target="_blank" class="guide-link">Read CSV Guide</a>
-        <a href="Muziris_Template.csv" download class="template-link">Download Blank CSV Template</a>
-      </div>
-    </div>
-
-    <div class="step-box">
-      <div class="step-title">Step 2: Upload CSV Data</div>
-      <div class="drop-zone" onclick="document.getElementById('csvInput').click()">
-        <p id="csvLabel">Click to select your filled CSV file</p>
-      </div>
-      <input type="file" id="csvInput" accept=".csv">
-    </div>
-
-    <div class="step-box">
-      <div class="step-title">Step 3: Upload Media (Images & PDFs)</div>
-      <div class="drop-zone" onclick="document.getElementById('mediaInput').click()">
-        <p id="mediaLabel">Click to select all your high-res images</p>
-        <span>Supports JPG, PNG, PDF</span>
-      </div>
-      <input type="file" id="mediaInput" multiple accept=".jpg,.jpeg,.png,.pdf">
-    </div>
-
-    <button class="btn" id="submitBtn" onclick="processUpload()">Validate & Submit Catalog</button>
-
-    <div id="alertBox" class="alert error"></div>
-    <div id="log"></div>
-
-    <div style="text-align: center; margin-top: 35px; border-top: 1px solid #333; padding-top: 20px; font-size: 12px; color: #666;">
-      Need assistance? Contact our Data Team at <a href="mailto:support@muziris.ca" style="color: var(--gold); text-decoration: none;">support@muziris.ca</a>
-    </div>
-  </div>
-
-  <div class="container" id="successUI" style="display: none; text-align: center;">
-    <h1 style="color: #4caf50;">Upload Complete!</h1>
-    <p style="color: #ccc; font-size: 16px; line-height: 1.6;">Your catalog has been successfully mapped, secured, and submitted to the Muziris Staging Ledger.</p>
-    <p style="color: #888; font-size: 14px;">Our Data Team will review your items shortly. You may now safely return to the main portal.</p>
-    <button class="btn" style="margin-top: 30px; margin-bottom: 20px;" onclick="window.location.reload()">Submit Another CSV</button>
-    <br>
-    <a href="suppliers.html" style="color: var(--gold); text-decoration: underline; font-size: 14px;">← Return to Main Portal</a>
-  </div>
-
-  <script>
-    // Security Check: Ensure user came from the verified login page
     window.onload = function() {
       const verifiedId = sessionStorage.getItem('verifiedSupplierId');
-      const verifiedCurrency = sessionStorage.getItem('verifiedCurrency'); // Fetch their official currency
+      const verifiedCurrency = sessionStorage.getItem('verifiedCurrency'); 
       
       if (!verifiedId) {
         window.location.href = 'suppliers.html'; 
       } else {
         document.getElementById('supId').value = verifiedId;
-        window.officialCurrency = verifiedCurrency || "USD"; // Store it globally for the mapper
+        window.officialCurrency = verifiedCurrency || "USD"; 
         document.getElementById('mainUI').style.display = 'block';
         
-        // Fetch master categories so we can validate their CSV later
-        fetch(WEB_APP_URL, {
+        // Fetch master categories from Node.js
+        fetch(API_BASE_URL + '/categories', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'getCategoryStructure' })
+          headers: { 'Content-Type': 'application/json' }
         })
         .then(r => r.json())
         .then(data => {
@@ -135,11 +25,9 @@
       }
     };
 
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
-    
     let csvData = [];
     let mediaFiles = [];
-    window.masterCategories = null; // Stores allowed categories
+    window.masterCategories = null; 
     
     // Listeners for UI updates
     document.getElementById('csvInput').addEventListener('change', function(e) {
@@ -192,47 +80,29 @@
       let requiredImages = new Set();
       let imageColumns = ["Hero Img", "Life Img", "CloseUp Img", "Pack Img", "Extra Img", "Variant Img", "Catalog PDF"];
       
-      let rowNum = 1; // Track row number for error messages
+      let rowNum = 1; 
       
       for(let row of csvData) {
-        rowNum++; // CSV header is row 1, data starts at row 2
-
-        // A. Check for Item Group Number
+        rowNum++; 
         if(!row["Item Group Number"]) return showError(`Missing 'Item Group Number' on CSV row ${rowNum}. Please group your variants using 1, 2, 3 etc.`);
         
-        // B. Check Images
         for(let col of imageColumns) {
-          if(row[col] && row[col].trim() !== "") {
-            requiredImages.add(row[col].trim());
-          }
+          if(row[col] && row[col].trim() !== "") requiredImages.add(row[col].trim());
         }
 
-        // C. SMART VALIDATION: Check Categories against Master List
         if (window.masterCategories) {
           let cMain = String(row["Main Category"] || "").trim();
           let cSub = String(row["Sub Category"] || "").trim();
 
-          // Check if Main Category is blank
-          if(!cMain) {
-            return showError(`Missing 'Main Category' on CSV row ${rowNum}.<br><br><a href='csv-guide.html' target='_blank' style='color:#D4AF37; text-decoration: underline;'>Click here to view accepted categories</a>`);
-          }
-
-          // Check if Main Category exists in Master Database
-          if(!window.masterCategories[cMain]) {
-            return showError(`Invalid Main Category "<b>${cMain}</b>" on CSV row ${rowNum}.<br><br>The system does not recognize this spelling. <br><br><a href='csv-guide.html' target='_blank' style='color:#D4AF37; font-weight: bold; text-decoration: underline; letter-spacing: 1px;'>CLICK HERE TO USE THE COPY/PASTE TOOL</a>`);
-          }
-
-          // Check if Sub Category is valid for that Main Category
+          if(!cMain) return showError(`Missing 'Main Category' on CSV row ${rowNum}.`);
+          if(!window.masterCategories[cMain]) return showError(`Invalid Main Category "<b>${cMain}</b>" on CSV row ${rowNum}.`);
           if(cSub) {
              let validSubs = window.masterCategories[cMain] || [];
-             if(validSubs.indexOf(cSub) === -1) {
-               return showError(`Invalid Sub Category "<b>${cSub}</b>" on CSV row ${rowNum}.<br><br>This sub-category does not exist under "${cMain}". <br><br><a href='csv-guide.html' target='_blank' style='color:#D4AF37; font-weight: bold; text-decoration: underline; letter-spacing: 1px;'>CLICK HERE TO USE THE COPY/PASTE TOOL</a>`);
-             }
+             if(validSubs.indexOf(cSub) === -1) return showError(`Invalid Sub Category "<b>${cSub}</b>" on CSV row ${rowNum}.`);
           }
         }
       }
 
-      // Check if uploaded files match the required files
       let uploadedFileNames = mediaFiles.map(f => f.name);
       let missingFiles = [];
       requiredImages.forEach(img => {
@@ -243,9 +113,9 @@
         return showError("The CSV mentions files you didn't upload:<br>• " + missingFiles.join("<br>• ") + "<br><br>Please add them to the media drop zone.");
       }
 
-      document.getElementById('submitBtn').innerText = "Uploading Media (Do Not Close)...";
+      document.getElementById('submitBtn').innerText = "Uploading Media to Cloudinary...";
 
-      // 3. SECURE MEDIA UPLOAD
+      // 3. SECURE MEDIA UPLOAD TO NODE/CLOUDINARY
       let mediaUrls = {}; 
       for(let i=0; i<mediaFiles.length; i++) {
         let file = mediaFiles[i];
@@ -255,86 +125,85 @@
         
         try {
           const base64Data = await readFileAsBase64(file);
-          const response = await fetch(WEB_APP_URL, {
+          const response = await fetch(API_BASE_URL + '/upload-media', {
             method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              action: "uploadMedia",
               supplierId: supId,
               fileName: file.name,
               mimeType: file.type,
-              fileData: base64Data.split(',')[1]
+              fileData: base64Data.split(',')[1] // Strip the data uri prefix
             })
           });
           const result = await response.json();
           if(result.success) {
             mediaUrls[file.name] = result.url;
           } else {
-            return showError("Failed to upload " + file.name);
+            return showError("Failed to upload " + file.name + ": " + result.error);
           }
         } catch(e) {
           return showError("Network error while uploading " + file.name);
         }
       }
 
-      // 4. AUTO ID GENERATION & DATA MAPPING
+      // 4. GROUPING DATA FOR POSTGRESQL JSONB
       document.getElementById('submitBtn').innerText = "Mapping Database...";
-      logProgress("Generating Database IDs...");
+      logProgress("Grouping Variants...");
 
-      let formattedRows = [];
-      let variantCounters = {}; 
-
-      // Generate a unique 4-character Batch ID for this specific upload session
-      const uploadBatchId = Math.random().toString(36).substring(2, 6).toUpperCase();
+      let productsMap = {};
 
       for(let row of csvData) {
         let groupNum = String(row["Item Group Number"]).trim();
-        let pId = `${supId}-${uploadBatchId}-P${groupNum}`;
         
-        if(!variantCounters[pId]) variantCounters[pId] = 1;
-        let vId = `${pId}-V${variantCounters[pId]}`;
-        variantCounters[pId]++;
+        // If this is the first time seeing this product, create the master record
+        if (!productsMap[groupNum]) {
+            productsMap[groupNum] = {
+              supplierId: supId,
+              companyName: row["Company"] || "Unknown",
+              currency: window.officialCurrency,
+              category: row["Main Category"] || "",
+              subCategory: row["Sub Category"] || "",
+              productName: row["Product Name"] || "",
+              shortTitle: row["Title"] || "",
+              servicesString: row["Services"] || "Standard",
+              packagingDetails: row["Pkg Details"] || "",
+              description: row["Description"] || "",
+              heroUrl: mediaUrls[row["Hero Img"]] || "",
+              lifeUrl: mediaUrls[row["Life Img"]] || "",
+              detailUrl: mediaUrls[row["CloseUp Img"]] || "",
+              packUrl: mediaUrls[row["Pack Img"]] || "",
+              extraUrl: mediaUrls[row["Extra Img"]] || "",
+              catalogUrl: mediaUrls[row["Catalog PDF"]] || "",
+              pricingMatrix: []
+            };
+        }
 
-        formattedRows.push({
-          supplierId: supId,
-          company: row["Company"] || "Unknown",
-          currency: window.officialCurrency, // OVERRIDE CSV WITH OFFICIAL CURRENCY
-          mainCat: row["Main Category"] || "",
-          subCat: row["Sub Category"] || "",
-          prodName: row["Product Name"] || "",
-          services: row["Services"] || "Standard",
-          pkg: row["Pkg Details"] || "",
-          desc: row["Description"] || "",
-          varType: row["Var Type"] || "Standard",
-          varOpt: row["Var Option"] || "-",
+        // Push the variant data into the pricingMatrix array
+        productsMap[groupNum].pricingMatrix.push({
+          type: row["Var Type"] || "Standard",
+          opt: row["Var Option"] || "-",
           unit: row["Unit"] || "Pcs",
           min: row["Min Qty"] || "1",
           max: row["Max Qty"] || "Up",
           price: row["Price"] || "0",
           incoterms: row["Incoterms"] || "FOB",
-          title: row["Title"] || "",
           lead: row["Lead Time"] || "30",
-          prodId: pId,
-          varId: vId,
-          hero: mediaUrls[row["Hero Img"]] || "",
-          life: mediaUrls[row["Life Img"]] || "",
-          close: mediaUrls[row["CloseUp Img"]] || "",
-          pack: mediaUrls[row["Pack Img"]] || "",
-          extra: mediaUrls[row["Extra Img"]] || "",
-          pdf: mediaUrls[row["Catalog PDF"]] || "",
           varImg: mediaUrls[row["Variant Img"]] || ""
         });
       }
 
-      // 5. PUSH TO STAGING SPREADSHEET
+      // Convert the map object back to an array
+      let finalGroupedProducts = Object.values(productsMap);
+
+      // 5. PUSH TO NODE.JS DATABASE
       document.getElementById('submitBtn').innerText = "Finalizing Submission...";
       logProgress("Pushing to Muziris Ledger...");
 
       try {
-        const response = await fetch(WEB_APP_URL, {
+        const response = await fetch(API_BASE_URL + '/submit-bulk-staging', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: "submitStaging", rows: formattedRows })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ products: finalGroupedProducts })
         });
         const result = await response.json();
         
@@ -358,5 +227,3 @@
       });
     }
   </script>
-</body>
-</html>
