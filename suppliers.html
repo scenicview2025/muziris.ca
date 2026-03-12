@@ -998,15 +998,14 @@ async function submitForm(formElement) {
       } catch (err) {
         console.error("Upload Error:", err);
         customAlert("System Error Revealed", "Exact error: " + err.message);
-        resetBtn();
-      }
-
-      function resetBtn() {
+        
+        // Inline the reset logic to avoid scoping issues
         document.getElementById("btn").disabled = false;
         document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
         document.getElementById("loading").style.display = "none";
       }
     }
+
     function resetForm() {
       var savedId = document.getElementById('sid').value;
       var savedCo = document.getElementById('cname').value;
