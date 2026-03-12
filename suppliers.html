@@ -980,7 +980,7 @@ async function submitForm(formElement) {
 
       } catch (err) {
         console.error("Upload Error:", err);
-        customAlert("Connection Error", "Upload failed. Please check your internet connection and try again.");
+        customAlert("System Error Revealed", "Exact error: " + err.message);
         resetBtn();
       }
 
