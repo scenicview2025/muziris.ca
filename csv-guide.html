@@ -142,14 +142,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td><strong>Item Group Number</strong></td><td>A simple number (1, 2, 3) to group product variants together. All variants of the same product must share the same number.</td></tr>
-            <tr><td><strong>Date</strong></td><td>Today's date in <code>YYYY-MM-DD</code> format.</td></tr>
-            <tr><td><strong>Supplier ID</strong></td><td>Your official Muziris ID (e.g., <code>CA1234SU</code>). This MUST be on every row.</td></tr>
+            <tr><td><strong>Item Group Number</strong></td><td><span style="color: var(--gold); font-weight: bold;">CRITICAL:</span> A simple number (1, 2, 3) used to group product variants together into a single master listing. If a mug comes in 3 colors, type "1" in this column for all three rows. For your next completely different product, type "2".</td></tr>
             <tr><td><strong>Company</strong></td><td>Your registered company name.</td></tr>
-            <tr><td><strong>Currency</strong></td><td>Your 3-letter currency code (e.g., <code>USD</code>, <code>EUR</code>).</td></tr>
             <tr><td><strong>Main Category</strong></td><td>Must exactly match a main category from the Explorer tool above.</td></tr>
             <tr><td><strong>Sub Category</strong></td><td>Must exactly match a sub-category from the Explorer tool above.</td></tr>
             <tr><td><strong>Product Name</strong></td><td>The full name of the item (e.g., <code>Premium Ceramic Mug</code>).</td></tr>
+            <tr><td><strong>Title</strong></td><td>A short tagline for the listing (e.g., <code>Summer Collection 2026</code>).</td></tr>
             <tr><td><strong>Services</strong></td><td>Factory services offered. Choose from: <code>Standard</code>, <code>Private Label</code>, <code>Custom Pkg</code>, <code>ODM Design</code>. Separate multiple with commas.</td></tr>
             <tr><td><strong>Pkg Details</strong></td><td>A brief description of how it ships (e.g., <code>Polybag + Master Carton</code>).</td></tr>
             <tr><td><strong>Description</strong></td><td>Detailed product description, materials, and certifications. Avoid using internal commas if possible.</td></tr>
@@ -158,16 +156,13 @@
             <tr><td><strong>Unit</strong></td><td>How the item is sold: <code>Pcs</code>, <code>Kg</code>, <code>Tons</code>, <code>Sets</code>, or <code>Meters</code>.</td></tr>
             <tr><td><strong>Min Qty</strong></td><td>The minimum order quantity for this price tier (e.g., <code>100</code>).</td></tr>
             <tr><td><strong>Max Qty</strong></td><td>The maximum order quantity for this price tier (e.g., <code>500</code>). Write <code>Up</code> for your highest volume tier.</td></tr>
-            <tr><td><strong>Price</strong></td><td>Numerical price only. No currency symbols.</td></tr>
+            <tr><td><strong>Price</strong></td><td>Numerical price only. No currency symbols. Your currency is locked to your Supplier Profile automatically.</td></tr>
+            <tr><td><strong>Incoterms</strong></td><td>Shipping terms: <code>EXW</code>, <code>FOB</code>, <code>CIF</code>, or <code>DDP</code>.</td></tr>
+            <tr><td><strong>Lead Time</strong></td><td>Estimated production/lead time in days (e.g., <code>30</code>). Numbers only.</td></tr>
             <tr><td><strong>Hero Img</strong></td><td>The exact file name of the primary product image with a white background (e.g., <code>hero1.jpg</code>). <em>Required.</em></td></tr>
             <tr><td><strong>Life Img, CloseUp Img, Pack Img, Extra Img</strong></td><td>Exact file names of supporting lifestyle, detail, packaging, and extra images. <em>Optional but recommended.</em></td></tr>
-            <tr><td><strong>Catalog PDF</strong></td><td>Exact file name of a digital brochure/PDF if applicable.</td></tr>
             <tr><td><strong>Variant Img</strong></td><td>If this specific row represents a "Red" variant, put the exact file name of the red product image here.</td></tr>
-            <tr><td><strong>Folder Link</strong></td><td><strong>Leave Blank.</strong> Used internally by the system.</td></tr>
-            <tr><td><strong>Product ID & Variant ID</strong></td><td><strong>Leave Blank.</strong> The staging portal automatically generates unique, collision-proof database hashes for you.</td></tr>
-            <tr><td><strong>Incoterms</strong></td><td>Shipping terms: <code>EXW</code>, <code>FOB</code>, <code>CIF</code>, or <code>DDP</code>.</td></tr>
-            <tr><td><strong>Title</strong></td><td>A short tagline for the listing (e.g., <code>Summer Collection 2026</code>).</td></tr>
-            <tr><td><strong>Lead Time</strong></td><td>Estimated production/lead time in days (e.g., <code>30</code>). Numbers only.</td></tr>
+            <tr><td><strong>Catalog PDF</strong></td><td>Exact file name of a digital brochure/PDF if applicable.</td></tr>
           </tbody>
         </table>
       </div>
