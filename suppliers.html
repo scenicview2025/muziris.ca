@@ -211,6 +211,7 @@
           
           <div class="form-step active" id="step1">
             <h3 class="step-title">Basic Information</h3>
+            <input type="hidden" id="pid" name="productId" value="">
             <div style="display:flex; gap:20px;">
               <div style="flex:1;">
                 <label>SUPPLIER ID</label>
@@ -477,6 +478,9 @@
       else if (action === 'generateTitle') { endpoint = '/generate-ai'; payload.type = 'title'; }
       else if (action === 'processForm') endpoint = '/submit-staging';
       else if (action === 'uploadMedia') endpoint = '/upload-media';
+      else if (action === 'getSupplierInventory') endpoint = '/get-inventory';
+      else if (action === 'getProductDetails') endpoint = '/get-product-details';
+      else if (action === 'deleteProduct') endpoint = '/delete-product';
       
       try {
         const response = await fetch(API_BASE_URL + endpoint, {
@@ -662,56 +666,83 @@
     function viewListings() {
       var id = document.getElementById('sid').value;
       document.getElementById('listings-modal').style.display = 'flex';
-      document.getElementById('listings-content').innerHTML = "Fetching data from server...";
+      document.getElementById('listings-content').innerHTML = "Fetching secure ledger...";
       fetchAPI('getSupplierInventory', { id: id }).then(renderListings);
     }
 
     function renderListings(items) {
       var container = document.getElementById('listings-content');
-      if(!items || items.length === 0) { container.innerHTML = "No products found for this ID."; return; }
+      if(!items || items.length === 0) { container.innerHTML = "No products found in your catalog."; return; }
+      
       var html = "";
-      var seen = new Set();
       items.forEach(function(item) {
-         if(!seen.has(item.name)) {
-           seen.add(item.name);
-           var safeImgUrl = item.image || "";
-           var idMatch = safeImgUrl.match(/[-\w]{25,}/);
-           if(safeImgUrl.indexOf("drive.google.com") > -1 && idMatch) {
-               safeImgUrl = "https://drive.google.com/thumbnail?id=" + idMatch[0] + "&sz=w500";
-           }
-           var img = safeImgUrl ? '<img src="' + safeImgUrl + '" class="listing-img" onerror="this.onerror=null; this.src=\'MC.png\'; this.style.objectFit=\'contain\';">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
-           html += '<div class="listing-item" onclick="startEdit(\'' + item.name.replace(/'/g, "\\'") + '\')">' + img + '<div class="listing-info"><div class="listing-name">' + item.name + '</div><div class="listing-cat">' + item.category + '</div><div class="edit-hint">Click to Load & Edit</div></div></div>';
-         }
+         var img = item.hero_img ? '<img src="' + item.hero_img + '" class="listing-img">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
+         html += `
+         <div class="listing-item" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:15px; flex:1;" onclick="startEdit('${item.product_id}')">
+                ${img}
+                <div class="listing-info">
+                    <div class="listing-name">${item.product_name}</div>
+                    <div class="listing-cat">${item.main_category}</div>
+                    <div style="color:${item.color}; font-size:10px; font-weight:bold; margin-top:3px;">${item.status}</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="startEdit('${item.product_id}')" style="background:transparent; border:1px solid var(--gold); color:var(--gold); padding:5px 10px; border-radius:4px; cursor:pointer; font-size:10px;">EDIT</button>
+                <button onclick="deleteProduct('${item.product_id}')" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:10px;">DELETE</button>
+            </div>
+         </div>`;
       });
       container.innerHTML = html;
     }
     
     function closeListings() { document.getElementById('listings-modal').style.display = 'none'; }
 
-    function startEdit(productName) {
-      var id = document.getElementById('sid').value;
-      document.getElementById('listings-content').innerHTML = "Loading product data...";
-      fetchAPI('getProductDetails', { supplierId: id, productName: productName }).then(fillForm);
+    function deleteProduct(productId) {
+      if(confirm("🚨 WARNING: This will permanently delete this product from the Global Ledger. Proceed?")) {
+          var id = document.getElementById('sid').value;
+          document.getElementById('listings-content').innerHTML = "Deleting...";
+          fetchAPI('deleteProduct', { supplierId: id, productId: productId }).then(res => {
+              if(res.success) viewListings(); // Refresh the list
+              else customAlert("Error", "Could not delete product.");
+          });
+      }
     }
 
-    function fillForm(data) {
-      if(!data) { customAlert("Error", "Error loading product data."); closeListings(); return; }
-      var g = data.general;
-      document.getElementById('pName').value = g.name;
-      document.getElementById('shortTitle').value = g.shortTitle || ""; 
-      document.getElementById('packDetails').value = g.packaging;
-      document.getElementById('desc').value = g.description;
-      document.getElementById('mainCat').value = g.category;
+    function startEdit(productId) {
+      var id = document.getElementById('sid').value;
+      document.getElementById('listings-content').innerHTML = "Decrypting ledger data...";
+      fetchAPI('getProductDetails', { supplierId: id, productId: productId }).then(fillForm);
+    }
+
+    function fillForm(dbRow) {
+      if(!dbRow || dbRow.error) { customAlert("Error", "Error loading product data."); closeListings(); return; }
+      
+      document.getElementById('pid').value = dbRow.product_id;
+      document.getElementById('pName').value = dbRow.product_name || "";
+      document.getElementById('shortTitle').value = dbRow.short_title || ""; 
+      document.getElementById('packDetails').value = dbRow.packaging || "";
+      document.getElementById('desc').value = dbRow.description || "";
+      document.getElementById('mainCat').value = dbRow.main_category;
+      
       loadSubCats(); 
-      setTimeout(() => { document.getElementById('subCat').value = g.subCategory; }, 100);
-      document.getElementById('svc1').checked = (g.services.indexOf("Private Label") > -1);
-      document.getElementById('svc2').checked = (g.services.indexOf("Custom Pkg") > -1);
-      document.getElementById('svc3').checked = (g.services.indexOf("ODM") > -1);
+      setTimeout(() => { document.getElementById('subCat').value = dbRow.sub_category; }, 200);
+
+      var svcs = dbRow.services || "";
+      document.getElementById('svc1').checked = (svcs.indexOf("Private Label") > -1);
+      document.getElementById('svc2').checked = (svcs.indexOf("Custom Pkg") > -1);
+      document.getElementById('svc3').checked = (svcs.indexOf("ODM") > -1);
+
       var tbody = document.getElementById("priceBody");
       tbody.innerHTML = ""; 
-      if(data.pricing && data.pricing.length > 0){ 
-        data.pricing.forEach(function(row) { addPriceRowFilled(row); }); 
+      
+      let matrix = [];
+      try { matrix = typeof dbRow.pricing_matrix === 'string' ? JSON.parse(dbRow.pricing_matrix) : dbRow.pricing_matrix; } catch(e){}
+
+      if(matrix && matrix.length > 0){ 
+        matrix.forEach(function(row) { addPriceRowFilled(row); }); 
       } else { addPriceRow(); }
+      
       closeListings();
       
       document.getElementById('step3').classList.remove('active');
@@ -721,7 +752,8 @@
       document.getElementById('step3-ind').classList.remove('step-active');
       document.getElementById('step2-ind').classList.remove('step-active');
       document.getElementById('step1-ind').classList.add('step-active');
-      customAlert("Loaded", "Product Loaded for Editing.");
+      
+      customAlert("Edit Mode Active", "Product loaded. If this was a LIVE product, saving changes will revert it to PENDING status for re-approval.");
     }
     
     function addPriceRow() {
@@ -758,7 +790,10 @@
       var iCIF = data.incoterms === "CIF" ? "selected" : "";
       var iDDP = data.incoterms === "DDP" ? "selected" : "";
 
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option><option value="Color & Size" ' + tColSiz + '>Color & Size</option><option value="Material & Size" ' + tMatSiz + '>Material & Size</option><option value="Color & Capacity" ' + tColCap + '>Color & Capacity</option><option value="Custom Combo" ' + tCust + '>Custom Combo</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="text" class="p-min q-input" value="' + data.min + '"></td><td><input type="text" class="p-max q-input" value="' + data.max + '"></td><td><input type="text" class="p-lead q-input" value="' + data.lead + '" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="text" class="p-price q-input" value="' + data.price + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      // Ensure we display the raw supplier price so they see what they originally entered
+      var displayPrice = data.supplierPriceRaw || data.price || "";
+
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option><option value="Color & Size" ' + tColSiz + '>Color & Size</option><option value="Material & Size" ' + tMatSiz + '>Material & Size</option><option value="Color & Capacity" ' + tColCap + '>Color & Capacity</option><option value="Custom Combo" ' + tCust + '>Custom Combo</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="text" class="p-min q-input" value="' + data.min + '"></td><td><input type="text" class="p-max q-input" value="' + data.max + '"></td><td><input type="text" class="p-lead q-input" value="' + data.lead + '" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="text" class="p-price q-input" value="' + displayPrice + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
@@ -835,7 +870,7 @@
       reader.onerror = reject;
     });
 
-async function submitForm(formElement) {
+    async function submitForm(formElement) {
       var dataList = [];
       var rows = document.querySelectorAll("#priceBody tr");
       for(var i=0; i<rows.length; i++) {
@@ -952,6 +987,7 @@ async function submitForm(formElement) {
         if (document.getElementById('svc3').checked) servicesArr.push("ODM Design");
 
         var formData = {
+           productId: document.getElementById('pid').value,
            supplierId: supplierId,
            companyName: formElement.companyName.value,
            currency: document.getElementById('ui-currency-text').innerText,
@@ -992,7 +1028,9 @@ async function submitForm(formElement) {
            document.getElementById("loading").style.display = "none";
         } else {
            customAlert("Database Error", finalResult.error || "Failed to save to ledger.");
-           resetBtn();
+           document.getElementById("btn").disabled = false;
+           document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+           document.getElementById("loading").style.display = "none";
         }
 
       } catch (err) {
@@ -1013,15 +1051,18 @@ async function submitForm(formElement) {
       document.getElementById("success-msg").style.display = "none";
       document.getElementById("form-container").style.display = "block";
       document.getElementById("mainForm").reset();
+      document.getElementById("pid").value = ""; // Clear the editing ID!
       document.getElementById("btn").disabled = false;
       document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
       document.getElementById("priceBody").innerHTML = "";
       addPriceRow();
       
       document.getElementById('step3').classList.remove('active');
+      document.getElementById('step2').classList.remove('active');
       document.getElementById('step1').classList.add('active');
       document.getElementById('progress').style.width = "33.33%";
       document.getElementById('step3-ind').classList.remove('step-active');
+      document.getElementById('step2-ind').classList.remove('step-active');
       document.getElementById('step1-ind').classList.add('step-active');
 
       document.getElementById('sid').value = savedId;
@@ -1030,16 +1071,16 @@ async function submitForm(formElement) {
   </script>
   <script src="muziris-bot.js"></script>
 
-    <script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-  s1.async=true;
-  s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
-  s1.charset='UTF-8';
-  s1.setAttribute('crossorigin','*');
-  s0.parentNode.insertBefore(s1,s0);
-  })();
-  </script>
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
 </body>
 </html>
