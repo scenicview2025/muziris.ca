@@ -861,9 +861,9 @@ async function submitForm(formElement) {
 
       try {
         var supplierId = formElement.supplierId.value;
-        const API_BASE_URL = "https://muziris-api.onrender.com/api"; // Point to Node Engine
+        const API_BASE_URL = "https://muziris-api.onrender.com/api"; 
 
-        // Secure helper to upload images one-by-one to Cloudinary
+        // Secure helper with HTML detection!
         async function uploadFile(fileInput) {
           if (!fileInput.files || !fileInput.files[0]) return "";
           let fileObj = await compressImage(fileInput.files[0]);
@@ -879,19 +879,24 @@ async function submitForm(formElement) {
             })
           });
           
+          // 🕵️ THE DETECTOR: If server sends HTML, catch it and read it!
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+             const htmlError = await response.text();
+             throw new Error(`IMAGE UPLOAD FAILED (Status ${response.status}):\n` + htmlError.substring(0, 150));
+          }
+          
           let result = await response.json();
           if(result.success) return result.url;
           throw new Error("Failed to upload " + fileObj.name);
         }
 
-        // Upload all media files sequentially
         let heroUrl = await uploadFile(formElement.img_hero);
         let lifeUrl = await uploadFile(formElement.img_life);
         let detailUrl = await uploadFile(formElement.img_detail);
         let packUrl = await uploadFile(formElement.img_pack);
         let extraUrl = await uploadFile(formElement.img_extra);
         
-        // Upload PDF if it exists
         let catalogUrl = "";
         if (formElement.catalog.files[0]) {
            let pdfObj = await readFile(formElement.catalog.files[0]);
@@ -905,11 +910,17 @@ async function submitForm(formElement) {
                fileData: pdfObj.data
              })
            });
+           
+           const pdfContentType = response.headers.get("content-type");
+           if (!pdfContentType || !pdfContentType.includes("application/json")) {
+               const pdfHtmlError = await response.text();
+               throw new Error(`PDF UPLOAD FAILED (Status ${response.status}):\n` + pdfHtmlError.substring(0, 150));
+           }
+
            let pdfRes = await response.json();
            if(pdfRes.success) catalogUrl = pdfRes.url;
         }
 
-        // Upload specific variant images directly into the dataList array
         var variantInputs = document.getElementsByName("variantImages");
         for(var j=0; j<dataList.length; j++) {
            if(variantInputs[j] && variantInputs[j].files[0]) {
@@ -917,13 +928,15 @@ async function submitForm(formElement) {
                let vResp = await fetch(API_BASE_URL + '/upload-media', {
                  method: 'POST',
                  headers: { 'Content-Type': 'application/json' },
-                 body: JSON.stringify({
-                   supplierId: supplierId,
-                   fileName: vFileObj.name,
-                   mimeType: vFileObj.mimeType,
-                   fileData: vFileObj.data
-                 })
+                 body: JSON.stringify({ supplierId: supplierId, fileName: vFileObj.name, mimeType: vFileObj.mimeType, fileData: vFileObj.data })
                });
+               
+               const vContentType = vResp.headers.get("content-type");
+               if (!vContentType || !vContentType.includes("application/json")) {
+                   const vHtmlError = await vResp.text();
+                   throw new Error(`VARIANT UPLOAD FAILED (Status ${vResp.status}):\n` + vHtmlError.substring(0, 150));
+               }
+
                let vData = await vResp.json();
                if(vData.success) dataList[j].varImg = vData.url;
            } else {
@@ -933,13 +946,11 @@ async function submitForm(formElement) {
 
         document.getElementById("btn").innerHTML = "SAVING TO MUZIRIS LEDGER...";
 
-        // Convert checkboxes to standard string format
         let servicesArr = [];
         if (document.getElementById('svc1').checked) servicesArr.push("Private Label");
         if (document.getElementById('svc2').checked) servicesArr.push("Custom Pkg");
         if (document.getElementById('svc3').checked) servicesArr.push("ODM Design");
 
-        // The final lightweight database payload
         var formData = {
            supplierId: supplierId,
            companyName: formElement.companyName.value,
@@ -951,7 +962,7 @@ async function submitForm(formElement) {
            packagingDetails: formElement.packagingDetails.value,
            description: formElement.description.value,
            servicesString: servicesArr.join(", ") || "Standard",
-           pricingMatrix: dataList, // The server handles the JSON mapping automatically
+           pricingMatrix: dataList, 
            heroUrl: heroUrl,
            lifeUrl: lifeUrl,
            detailUrl: detailUrl,
@@ -960,13 +971,19 @@ async function submitForm(formElement) {
            catalogUrl: catalogUrl
         };
 
-        // Push to Node.js /api/submit-staging route
         let finalResponse = await fetch(API_BASE_URL + '/submit-staging', {
            method: 'POST',
            headers: { 'Content-Type': 'application/json' },
            body: JSON.stringify({ data: formData })
         });
         
+        // Final Detector
+        const finalContentType = finalResponse.headers.get("content-type");
+        if (!finalContentType || !finalContentType.includes("application/json")) {
+             const finalHtmlError = await finalResponse.text();
+             throw new Error(`FINAL SUBMISSION FAILED (Status ${finalResponse.status}):\n` + finalHtmlError.substring(0, 150));
+        }
+
         let finalResult = await finalResponse.json();
 
         if(finalResult.result === "SUCCESS" || finalResult.success) {
@@ -990,7 +1007,6 @@ async function submitForm(formElement) {
         document.getElementById("loading").style.display = "none";
       }
     }
-
     function resetForm() {
       var savedId = document.getElementById('sid').value;
       var savedCo = document.getElementById('cname').value;
