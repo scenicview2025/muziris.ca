@@ -835,7 +835,7 @@
       reader.onerror = reject;
     });
 
-    async function submitForm(formElement) {
+async function submitForm(formElement) {
       var dataList = [];
       var rows = document.querySelectorAll("#priceBody tr");
       for(var i=0; i<rows.length; i++) {
@@ -856,61 +856,135 @@
       if(dataList.length === 0) { customAlert("Missing Data", "Please add at least one price tier."); return; }
       
       document.getElementById("btn").disabled = true;
-      document.getElementById("btn").innerHTML = "UPLOADING... (Compressing Images)";
+      document.getElementById("btn").innerHTML = "UPLOADING MEDIA... PLEASE WAIT";
       document.getElementById("loading").style.display = "block";
 
       try {
+        var supplierId = formElement.supplierId.value;
+        const API_BASE_URL = "https://muziris-api.onrender.com/api"; // Point to Node Engine
+
+        // Secure helper to upload images one-by-one to Cloudinary
+        async function uploadFile(fileInput) {
+          if (!fileInput.files || !fileInput.files[0]) return "";
+          let fileObj = await compressImage(fileInput.files[0]);
+          
+          let response = await fetch(API_BASE_URL + '/upload-media', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              supplierId: supplierId,
+              fileName: fileObj.name,
+              mimeType: fileObj.mimeType,
+              fileData: fileObj.data
+            })
+          });
+          
+          let result = await response.json();
+          if(result.success) return result.url;
+          throw new Error("Failed to upload " + fileObj.name);
+        }
+
+        // Upload all media files sequentially
+        let heroUrl = await uploadFile(formElement.img_hero);
+        let lifeUrl = await uploadFile(formElement.img_life);
+        let detailUrl = await uploadFile(formElement.img_detail);
+        let packUrl = await uploadFile(formElement.img_pack);
+        let extraUrl = await uploadFile(formElement.img_extra);
+        
+        // Upload PDF if it exists
+        let catalogUrl = "";
+        if (formElement.catalog.files[0]) {
+           let pdfObj = await readFile(formElement.catalog.files[0]);
+           let response = await fetch(API_BASE_URL + '/upload-media', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({
+               supplierId: supplierId,
+               fileName: pdfObj.name,
+               mimeType: pdfObj.mimeType,
+               fileData: pdfObj.data
+             })
+           });
+           let pdfRes = await response.json();
+           if(pdfRes.success) catalogUrl = pdfRes.url;
+        }
+
+        // Upload specific variant images directly into the dataList array
+        var variantInputs = document.getElementsByName("variantImages");
+        for(var j=0; j<dataList.length; j++) {
+           if(variantInputs[j] && variantInputs[j].files[0]) {
+               let vFileObj = await compressImage(variantInputs[j].files[0]);
+               let vResp = await fetch(API_BASE_URL + '/upload-media', {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({
+                   supplierId: supplierId,
+                   fileName: vFileObj.name,
+                   mimeType: vFileObj.mimeType,
+                   fileData: vFileObj.data
+                 })
+               });
+               let vData = await vResp.json();
+               if(vData.success) dataList[j].varImg = vData.url;
+           } else {
+               dataList[j].varImg = "";
+           }
+        }
+
+        document.getElementById("btn").innerHTML = "SAVING TO MUZIRIS LEDGER...";
+
+        // Convert checkboxes to standard string format
+        let servicesArr = [];
+        if (document.getElementById('svc1').checked) servicesArr.push("Private Label");
+        if (document.getElementById('svc2').checked) servicesArr.push("Custom Pkg");
+        if (document.getElementById('svc3').checked) servicesArr.push("ODM Design");
+
+        // The final lightweight database payload
         var formData = {
-           supplierId: formElement.supplierId.value,
+           supplierId: supplierId,
            companyName: formElement.companyName.value,
-           currency: document.getElementById('ui-currency-text').innerText, // 🚀 WE PACK THE CURRENCY HERE
+           currency: document.getElementById('ui-currency-text').innerText,
            category: formElement.category.value,
            subCategory: formElement.subCategory.value,
            productName: formElement.productName.value,
            shortTitle: formElement.shortTitle.value,
            packagingDetails: formElement.packagingDetails.value,
            description: formElement.description.value,
-           service_privateLabel: document.getElementById('svc1').checked,
-           service_customPack: document.getElementById('svc2').checked,
-           service_odm: document.getElementById('svc3').checked,
-           pricingMatrix: JSON.stringify(dataList),
-           variantImages: []
+           servicesString: servicesArr.join(", ") || "Standard",
+           pricingMatrix: dataList, // The server handles the JSON mapping automatically
+           heroUrl: heroUrl,
+           lifeUrl: lifeUrl,
+           detailUrl: detailUrl,
+           packUrl: packUrl,
+           extraUrl: extraUrl,
+           catalogUrl: catalogUrl
         };
 
-        if(formElement.img_hero.files[0]) formData.img_hero = await compressImage(formElement.img_hero.files[0]);
-        if(formElement.img_life.files[0]) formData.img_life = await compressImage(formElement.img_life.files[0]);
-        if(formElement.img_detail.files[0]) formData.img_detail = await compressImage(formElement.img_detail.files[0]);
-        if(formElement.img_pack.files[0]) formData.img_pack = await compressImage(formElement.img_pack.files[0]);
-        if(formElement.img_extra.files[0]) formData.img_extra = await compressImage(formElement.img_extra.files[0]);
-        if(formElement.catalog.files[0]) formData.catalog = await readFile(formElement.catalog.files[0]);
+        // Push to Node.js /api/submit-staging route
+        let finalResponse = await fetch(API_BASE_URL + '/submit-staging', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ data: formData })
+        });
+        
+        let finalResult = await finalResponse.json();
 
-        var variantInputs = document.getElementsByName("variantImages");
-        for(var j=0; j<variantInputs.length; j++) {
-           if(variantInputs[j].files[0]) {
-              var vFile = await compressImage(variantInputs[j].files[0]);
-              formData.variantImages.push(vFile);
-           } else { formData.variantImages.push(null); }
+        if(finalResult.result === "SUCCESS" || finalResult.success) {
+           document.getElementById("form-container").style.display = "none";
+           document.getElementById("success-msg").style.display = "block";
+           document.getElementById("loading").style.display = "none";
+        } else {
+           customAlert("Database Error", finalResult.error || "Failed to save to ledger.");
+           resetBtn();
         }
 
-        document.getElementById("btn").innerHTML = "UPLOADING TO SERVER...";
-        
-        fetchAPI('processForm', { data: formData })
-          .then(resp => {
-            if(resp.result === "SUCCESS") {
-              document.getElementById("form-container").style.display = "none";
-              document.getElementById("success-msg").style.display = "block";
-              document.getElementById("loading").style.display = "none";
-            } else {
-              customAlert("Upload Error", resp.result || resp.error);
-              document.getElementById("btn").disabled = false;
-              document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
-              document.getElementById("loading").style.display = "none";
-            }
-          })
-          .catch(err => { throw err; });
-
       } catch (err) {
-        customAlert("Connection Error", "Upload failed. Please check your internet.");
+        console.error("Upload Error:", err);
+        customAlert("Connection Error", "Upload failed. Please check your internet connection and try again.");
+        resetBtn();
+      }
+
+      function resetBtn() {
         document.getElementById("btn").disabled = false;
         document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
         document.getElementById("loading").style.display = "none";
@@ -939,8 +1013,7 @@
       document.getElementById('cname').value = savedCo;
     }
   </script>
-
-        <script src="muziris-bot.js"></script>
+  <script src="muziris-bot.js"></script>
 
     <script type="text/javascript">
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
