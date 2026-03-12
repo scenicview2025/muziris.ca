@@ -723,7 +723,7 @@
          var img = item.hero_img ? '<img src="' + item.hero_img + '" class="listing-img">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
          html += `
          <div class="listing-item" style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center; gap:15px; flex:1;" onclick="startEdit('${item.product_id}')">
+            <div style="display:flex; align-items:center; gap:15px; flex:1;" onclick="previewProduct('${item.product_id}')">
                 ${img}
                 <div class="listing-info">
                     <div class="listing-name">${item.product_name}</div>
@@ -732,8 +732,7 @@
                 </div>
             </div>
             <div style="display:flex; gap:10px;">
-                <button onclick="startEdit('${item.product_id}')" style="background:transparent; border:1px solid var(--gold); color:var(--gold); padding:5px 10px; border-radius:4px; cursor:pointer; font-size:10px;">EDIT</button>
-                <button onclick="deleteProduct('${item.product_id}')" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:10px;">DELETE</button>
+                <button onclick="previewProduct('${item.product_id}')" style="background:transparent; border:1px solid var(--gold); color:var(--gold); padding:5px 10px; border-radius:4px; cursor:pointer; font-size:10px; font-weight:bold;">VIEW</button>
             </div>
          </div>`;
       });
@@ -753,10 +752,82 @@
       }
     }
 
-    function startEdit(productId) {
+    // --- NEW: THE PREVIEW SHOWROOM ---
+    window.currentPreviewData = null; // Store data temporarily
+
+    function previewProduct(productId) {
       var id = document.getElementById('sid').value;
-      document.getElementById('listings-content').innerHTML = "Decrypting ledger data...";
-      fetchAPI('getProductDetails', { supplierId: id, productId: productId }).then(fillForm);
+      document.getElementById('listings-content').innerHTML = "Loading product preview...";
+      fetchAPI('getProductDetails', { supplierId: id, productId: productId }).then(showPreviewCard);
+    }
+
+    function showPreviewCard(dbRow) {
+      if(!dbRow || dbRow.error) { customAlert("Error", "Error loading product data."); return; }
+      window.currentPreviewData = dbRow; // Save for editing later
+
+      let imgUrl = dbRow.hero_img || 'MC.png';
+      let matrix = [];
+      try { matrix = typeof dbRow.pricing_matrix === 'string' ? JSON.parse(dbRow.pricing_matrix) : dbRow.pricing_matrix; } catch(e){}
+
+      // Build a clean pricing table for the preview
+      let priceHtml = `<table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:12px; text-align:left;">
+          <tr style="color:var(--gold); border-bottom:1px solid #333;">
+            <th style="padding-bottom:5px;">Variant / Option</th>
+            <th style="padding-bottom:5px;">Volume</th>
+            <th style="padding-bottom:5px;">Unit Price</th>
+          </tr>`;
+      
+      if(matrix && matrix.length > 0) {
+          matrix.slice(0,3).forEach(m => {
+              priceHtml += `<tr style="border-bottom:1px solid #222;">
+                  <td style="padding:8px 0; color:#ccc;">${m.type === 'Standard' ? 'Standard' : (m.opt || 'N/A')}</td>
+                  <td style="padding:8px 0; color:#ccc;">${m.min} - ${m.max} ${m.unit}</td>
+                  <td style="padding:8px 0; color:#ccc; font-weight:bold;">$${m.supplierPriceRaw || m.price}</td>
+              </tr>`;
+          });
+          if(matrix.length > 3) {
+             priceHtml += `<tr><td colspan="3" style="text-align:center; padding-top:10px; color:#666; font-style:italic;">+ ${matrix.length - 3} additional pricing tiers</td></tr>`;
+          }
+      } else {
+          priceHtml += `<tr><td colspan="3" style="text-align:center; padding:10px; color:#666;">No pricing data found</td></tr>`;
+      }
+      priceHtml += `</table>`;
+
+      let statusBadge = (dbRow.status === 'PENDING') 
+        ? `<span style="background:rgba(184, 146, 37, 0.2); color:#b89225; padding:4px 8px; border-radius:3px; font-size:9px; border:1px solid #b89225; font-weight:bold;">⏳ PENDING REVIEW</span>`
+        : `<span style="background:rgba(76, 175, 80, 0.2); color:#4CAF50; padding:4px 8px; border-radius:3px; font-size:9px; border:1px solid #4CAF50; font-weight:bold;">🟢 LIVE IN CATALOG</span>`;
+
+      // The beautiful UI Card
+      let html = `
+        <div style="text-align:left; animation: fadeIn 0.3s ease;">
+          <button onclick="viewListings()" style="background:transparent; border:none; color:var(--gold); cursor:pointer; font-size:11px; margin-bottom:15px; padding:0; font-weight:bold; letter-spacing:1px;">← BACK TO LISTINGS</button>
+          
+          <div style="display:flex; gap:20px; background:#0f1219; padding:20px; border-radius:8px; border:1px solid #333; align-items:center;">
+            <div style="width:110px; height:110px; border-radius:8px; background:url('${imgUrl}') center/cover no-repeat; border:1px solid #444; flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="margin-bottom:10px;">${statusBadge}</div>
+              <h2 style="margin:0 0 5px 0; color:#fff; font-size:18px; text-transform:none; letter-spacing:0; text-align:left; font-family:'Lato', sans-serif;">${dbRow.product_name}</h2>
+              <div style="color:var(--gold); font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">${dbRow.main_category} &rsaquo; ${dbRow.sub_category}</div>
+              <div style="font-size:11px; color:#888;">ID: ${dbRow.product_id}</div>
+            </div>
+          </div>
+          
+          <div style="margin-top:15px; background:#0f1219; padding:20px; border-radius:8px; border:1px solid #333;">
+             <h4 style="color:#fff; margin:0 0 5px 0; font-size:12px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #333; padding-bottom:10px;">Pricing & Variants Summary</h4>
+             ${priceHtml}
+          </div>
+
+          <div style="margin-top:20px; display:flex; gap:10px;">
+            <button class="gold-btn" onclick="executeEdit()" style="margin-top:0; flex:1; padding:15px; font-size:13px;">✎ MODIFY PRODUCT DATA</button>
+            <button onclick="deleteProduct('${dbRow.product_id}')" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:15px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold; text-transform:uppercase; transition:0.3s;">DELETE</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('listings-content').innerHTML = html;
+    }
+
+    function executeEdit() {
+      fillForm(window.currentPreviewData); // Triggers the actual form loading
     }
 
     function fillForm(dbRow) {
