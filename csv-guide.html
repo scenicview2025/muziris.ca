@@ -180,15 +180,14 @@
   </div>
 
   <script>
-    // Fetch categories from your active Google App Script database
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdpRnXQTNpMmiaABMkg2bm0qlOzzLor0EPBGYOlSCnAOwNjhWZzXNyPwYoYkGVH1xCZA/exec";
+    // 🚀 POINTING TO THE NEW NODE.JS RENDER SERVER
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
     let catData = {};
 
     window.onload = function() {
-      fetch(WEB_APP_URL, {
+      fetch(API_BASE_URL + '/categories', {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'getCategoryStructure' })
+        headers: { 'Content-Type': 'application/json' }
       })
       .then(r => r.json())
       .then(data => {
@@ -214,7 +213,6 @@
       let sub = document.getElementById("subCat"); 
       sub.innerHTML = '<option value="">Select Sub-Category...</option>';
       
-      // Reset the Copy button for subCat just in case
       let subBtn = sub.nextElementSibling;
       subBtn.innerText = "Copy";
       subBtn.style.background = "#222";
@@ -230,7 +228,6 @@
       }
     }
 
-    // New Copy to Clipboard Function
     function copyToClipboard(elementId, btnElement) {
       const selectElement = document.getElementById(elementId);
       const textToCopy = selectElement.value;
@@ -241,7 +238,6 @@
       }
 
       navigator.clipboard.writeText(textToCopy).then(() => {
-        // Visual Feedback
         const originalText = btnElement.innerText;
         btnElement.innerText = "Copied!";
         btnElement.style.background = "var(--gold)";
@@ -257,5 +253,3 @@
       });
     }
   </script>
-</body>
-</html>
