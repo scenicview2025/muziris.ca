@@ -8,7 +8,7 @@
   
   <script>
     // 🔒 SECURITY CHECK: Ensure user is a verified logged-in supplier
-    if (!sessionStorage.getItem('verifiedSupplierId')) {
+    if (!localStorage.getItem('verifiedSupplierId')) {
       // If no secure session exists, kick them back to the login portal immediately
       window.location.href = 'suppliers.html'; // Change this to your actual login page URL!
     }
