@@ -184,8 +184,10 @@
       <div style="text-align:center;"><span class="badge">✓ VERIFIED SUPPLIER ACCESS</span></div>
 
       <div class="bulk-bar">
+        <span class="bulk-link" onclick="window.location.href='supplier-dashboard.html'" style="text-transform: uppercase; color: var(--gold);">← Back to Dashboard</span>
+        <span style="color:#444; margin: 0 15px;">|</span>
         Options: 
-        <span class="bulk-link" onclick="launchBulk()" style="text-transform: uppercase;">Launch Bulk Upload Portal</span>
+        <span class="bulk-link" onclick="launchBulk()">Launch Bulk Upload Portal</span>
         <span style="color:#444; margin: 0 10px;">|</span>
         <span class="bulk-link" onclick="viewListings()">View Active Listings</span>
         <span style="color:#444; margin: 0 10px;">|</span>
@@ -641,12 +643,9 @@
             localStorage.setItem('verifiedCurrency', result.currency);
 
             setTimeout(() => {
-              globeAnimating = false; 
-              document.getElementById('view-verify').style.display = 'none';
-              document.getElementById('view-portal').style.display = 'block';
-              document.getElementById('sid').value = id;
-              document.getElementById('cname').value = result.company;
-            }, 800); 
+              // Redirect to the new Command Center after a successful login!
+              window.location.href = 'supplier-dashboard.html'; 
+            }, 800);
           } else {
             resultBox.innerHTML = "";
             customAlert("Access Denied", result.error || "Authentication failed.");
