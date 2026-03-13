@@ -88,7 +88,7 @@
     .matrix-box { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 4px; border: 1px solid #333; overflow-x: auto; }
     table { width: 100%; min-width: 900px; text-align: left; border-collapse: separate; border-spacing: 0 10px; }
     th { color: #666; font-size: 10px; text-transform: uppercase; padding: 0 10px; letter-spacing: 1px; }
-    td { vertical-align: top; padding: 0 5px; }
+    td { vertical-align: middle; padding: 0 5px; } /* Changed to middle for image previews */
     td input, td select { font-size: 13px; background: #0f1219; border: 1px solid #2a2a2a; margin-bottom: 0; }
     td input[type="file"] { font-size: 10px; padding: 8px; border: 1px dashed #444; width: 100%; }
 
@@ -293,24 +293,24 @@
                   <tr>
                     <th style="width: 12%;">TYPE</th>
                     <th style="width: 12%;">OPTION</th>
-                    <th style="width: 9%;">UNIT</th>
-                    <th style="width: 9%;">MIN QTY</th>
-                    <th style="width: 9%;">MAX QTY</th>
-                    <th style="width: 9%;">
+                    <th style="width: 8%;">UNIT</th>
+                    <th style="width: 8%;">MIN QTY</th>
+                    <th style="width: 8%;">MAX QTY</th>
+                    <th style="width: 8%;">
                       LEAD (DAYS)
                       <div class="tooltip">
                         <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                         <span class="tooltiptext">Estimated manufacturing/lead time in days (e.g., 30).</span>
                       </div>
                     </th>
-                    <th style="width: 10%;">
+                    <th style="width: 9%;">
                       TERMS
                       <a href="https://muziris.ca/incoterms" target="_blank" title="Learn about Incoterms" class="terms-icon" style="color:var(--gold); text-decoration:none; vertical-align:middle; margin-left:3px;">
                         <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                       </a>
                     </th>
                     <th style="width: 10%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
-                    <th style="width: 15%;">IMAGE (Specific)</th>
+                    <th style="width: 20%;">IMAGE (Specific)</th>
                     <th style="width: 5%;"></th>
                   </tr>
                 </thead>
@@ -722,6 +722,23 @@
       }
     }
 
+    // HELPER FOR VARIANT MATRIX PREVIEWS
+    function updateVariantPreview(input) {
+      if (input.files && input.files[0]) {
+        var td = input.parentElement;
+        var preview = td.querySelector('.var-img-preview');
+        var status = td.querySelector('.var-img-status');
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          preview.style.backgroundImage = "url('" + e.target.result + "')";
+          preview.style.display = "block";
+          status.innerHTML = "<span style='color:#D4AF37; font-weight:bold;'>✎ Local</span>";
+          status.style.display = "block";
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
     function viewListings() {
       var id = document.getElementById('sid').value;
       document.getElementById('listings-modal').style.display = 'flex';
@@ -903,7 +920,7 @@
     function addPriceRow() {
       var tbody = document.getElementById("priceBody");
       var row = document.createElement("tr");
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="text" class="p-min q-input" placeholder="10"></td><td><input type="text" class="p-max q-input" placeholder="100"></td><td><input type="text" class="p-lead q-input" placeholder="30" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="text" class="p-price q-input" placeholder="0.00"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="text" class="p-min q-input" placeholder="10"></td><td><input type="text" class="p-max q-input" placeholder="100"></td><td><input type="text" class="p-lead q-input" placeholder="30" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="text" class="p-price q-input" placeholder="0.00"></td><td style="text-align:center;"><div class="var-img-preview" style="display:none; margin: 0 auto 5px; width: 40px; height: 40px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div><div class="var-img-status" style="font-size: 9px; margin-bottom: 5px; display:none;"></div><input type="file" name="variantImages" accept="image/*" style="width: 85px; padding: 4px; font-size: 9px;" onchange="updateVariantPreview(this)"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
@@ -937,7 +954,12 @@
       // Ensure we display the raw supplier price so they see what they originally entered
       var displayPrice = data.supplierPriceRaw || data.price || "";
 
-      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option><option value="Color & Size" ' + tColSiz + '>Color & Size</option><option value="Material & Size" ' + tMatSiz + '>Material & Size</option><option value="Color & Capacity" ' + tColCap + '>Color & Capacity</option><option value="Custom Combo" ' + tCust + '>Custom Combo</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="text" class="p-min q-input" value="' + data.min + '"></td><td><input type="text" class="p-max q-input" value="' + data.max + '"></td><td><input type="text" class="p-lead q-input" value="' + data.lead + '" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="text" class="p-price q-input" value="' + displayPrice + '"></td><td><input type="file" name="variantImages" accept="image/*"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      // Dynamic Image Preview for the Matrix!
+      var imgBg = data.varImg ? "url('" + data.varImg + "')" : "transparent";
+      var imgDisp = data.varImg ? "block" : "none";
+      var statHtml = data.varImg ? "<span style='color:#4CAF50; font-weight:bold;'>✓ Saved</span>" : "";
+
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option><option value="Color & Size" ' + tColSiz + '>Color & Size</option><option value="Material & Size" ' + tMatSiz + '>Material & Size</option><option value="Color & Capacity" ' + tColCap + '>Color & Capacity</option><option value="Custom Combo" ' + tCust + '>Custom Combo</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="text" class="p-min q-input" value="' + data.min + '"></td><td><input type="text" class="p-max q-input" value="' + data.max + '"></td><td><input type="text" class="p-lead q-input" value="' + data.lead + '" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="text" class="p-price q-input" value="' + displayPrice + '"></td><td style="text-align:center;"><div class="var-img-preview" style="display:' + imgDisp + '; margin: 0 auto 5px; width: 40px; height: 40px; border-radius: 4px; border: 1px solid #444; background: ' + imgBg + ' center/cover no-repeat;"></div><div class="var-img-status" style="font-size: 9px; margin-bottom: 5px; display:' + imgDisp + ';">' + statHtml + '</div><input type="file" name="variantImages" accept="image/*" style="width: 85px; padding: 4px; font-size: 9px;" onchange="updateVariantPreview(this)"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
       tbody.appendChild(row);
     }
 
