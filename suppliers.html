@@ -584,9 +584,9 @@
 
     window.onload = function() {
       // 1. Check if the user is already logged in
-      var savedId = sessionStorage.getItem('verifiedSupplierId');
-      var savedCompany = sessionStorage.getItem('verifiedCompany');
-      var savedCurrency = sessionStorage.getItem('verifiedCurrency');
+      var savedId = localStorage.getItem('verifiedSupplierId');
+      var savedCompany = localStorage.getItem('verifiedCompany');
+      var savedCurrency = localStorage.getItem('verifiedCurrency');
 
       if (savedId && savedCompany && savedCurrency) {
         document.getElementById('view-verify').style.display = 'none';
@@ -636,9 +636,9 @@
             document.getElementById('ui-currency-label').innerText = "(" + result.currency + ")";
             document.getElementById('ui-currency-text').innerText = result.currency;
             
-            sessionStorage.setItem('verifiedSupplierId', id);
-            sessionStorage.setItem('verifiedCompany', result.company);
-            sessionStorage.setItem('verifiedCurrency', result.currency);
+            localStorage.setItem('verifiedSupplierId', id);
+            localStorage.setItem('verifiedCompany', result.company);
+            localStorage.setItem('verifiedCurrency', result.currency);
 
             setTimeout(() => {
               globeAnimating = false; 
@@ -662,7 +662,7 @@
     function launchBulk() {
       var id = document.getElementById('sid').value;
       if(id) {
-        sessionStorage.setItem('verifiedSupplierId', id);
+        localStorage.setItem('verifiedSupplierId', id);
         window.location.href = 'bulk-upload.html';
       } else {
         customAlert("Error", "Please verify your identity first.");
@@ -670,7 +670,7 @@
     }
 
     function logoutSupplier() {
-      sessionStorage.clear();
+      localStorage.clear();
       window.location.reload();
     }
 
