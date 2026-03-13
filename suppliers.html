@@ -69,6 +69,12 @@
     .form-step.active { display: block; }
     h3.step-title { color: white; font-family: 'Cinzel', serif; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 25px; }
 
+    /* SINGLE PAGE EDIT MODE STYLES */
+    .edit-mode-active .progress-container { display: none !important; }
+    .edit-mode-active .form-step { display: block !important; background: rgba(0,0,0,0.2); padding: 30px; border-radius: 8px; border: 1px solid #333; margin-bottom: 30px; animation: none; }
+    .edit-mode-active .btn-next, .edit-mode-active .btn-prev { display: none !important; }
+    .edit-mode-active h3.step-title { color: var(--gold); border-bottom: 1px dashed #444; padding-bottom: 15px; }
+
     label { display: block; margin-top: 25px; margin-bottom: 8px; font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
     .sub-label { display: block; font-size: 11px; color: #666; margin-bottom: 10px; margin-top: -5px; text-transform: none; font-style: italic; }
     input, select, textarea { width: 100%; padding: 14px; background: var(--void); border: 1px solid #333; color: var(--mist); border-radius: 4px; box-sizing: border-box; transition: all 0.3s ease; font-family: 'Lato', sans-serif; }
@@ -196,6 +202,15 @@
       </div>
 
       <div id="form-container">
+        
+        <div id="edit-header" style="display:none; justify-content:space-between; align-items:center; margin-bottom: 25px; background: rgba(212, 175, 55, 0.05); padding: 20px; border-radius: 8px; border: 1px solid var(--gold);">
+          <div>
+            <h3 style="margin:0; color:var(--gold); font-family:'Cinzel', serif; letter-spacing: 2px;">✎ QUICK EDIT MODE</h3>
+            <div style="font-size:12px; color:#aaa; margin-top:5px;">All steps have been unrolled into a single page. Edit your data and save at the bottom.</div>
+          </div>
+          <button type="button" onclick="cancelEdit()" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:10px 20px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold; text-transform:uppercase; transition:0.3s;">Cancel Edit</button>
+        </div>
+
         <div class="progress-container">
           <div class="progress-bar">
             <div class="progress-fill" id="progress"></div>
@@ -752,7 +767,7 @@
       }
     }
 
-    // --- NEW: THE PREVIEW SHOWROOM ---
+    // --- THE PREVIEW SHOWROOM ---
     window.currentPreviewData = null; // Store data temporarily
 
     function previewProduct(productId) {
@@ -827,7 +842,7 @@
     }
 
     function executeEdit() {
-      fillForm(window.currentPreviewData); // Triggers the actual form loading
+      fillForm(window.currentPreviewData); 
     }
 
     function fillForm(dbRow) {
@@ -873,15 +888,16 @@
       
       closeListings();
       
-      document.getElementById('step3').classList.remove('active');
-      document.getElementById('step2').classList.remove('active');
-      document.getElementById('step1').classList.add('active');
-      document.getElementById('progress').style.width = "33.33%";
-      document.getElementById('step3-ind').classList.remove('step-active');
-      document.getElementById('step2-ind').classList.remove('step-active');
-      document.getElementById('step1-ind').classList.add('step-active');
-      
-      customAlert("Edit Mode Active", "Product loaded. If this was a LIVE product, saving changes will revert it to PENDING status for re-approval.");
+      // Switch to Single Page Edit Mode!
+      document.getElementById('form-container').classList.add('edit-mode-active');
+      document.getElementById('edit-header').style.display = 'flex';
+      document.getElementById('btn').innerHTML = "SAVE CHANGES (RE-SUBMIT)";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+       resetForm();
+       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
     function addPriceRow() {
@@ -1154,6 +1170,11 @@
            document.getElementById("form-container").style.display = "none";
            document.getElementById("success-msg").style.display = "block";
            document.getElementById("loading").style.display = "none";
+           
+           // Ensure edit mode is cleared after success!
+           document.getElementById('form-container').classList.remove('edit-mode-active');
+           document.getElementById('edit-header').style.display = 'none';
+
         } else {
            customAlert("Database Error", finalResult.error || "Failed to save to ledger.");
            document.getElementById("btn").disabled = false;
@@ -1178,6 +1199,11 @@
 
       document.getElementById("success-msg").style.display = "none";
       document.getElementById("form-container").style.display = "block";
+      
+      // Remove Single Page Edit Mode if active
+      document.getElementById('form-container').classList.remove('edit-mode-active');
+      document.getElementById('edit-header').style.display = 'none';
+      
       document.getElementById("mainForm").reset();
       document.getElementById("pid").value = ""; // Clear the editing ID!
       document.getElementById("btn").disabled = false;
