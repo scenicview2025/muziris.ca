@@ -906,6 +906,9 @@
       closeListings();
       
       // Switch to Single Page Edit Mode!
+      document.getElementById("success-msg").style.display = "none"; // <-- NEW: Hide success screen
+      document.getElementById("form-container").style.display = "block"; // <-- NEW: Un-hide the form
+      
       document.getElementById('form-container').classList.add('edit-mode-active');
       document.getElementById('edit-header').style.display = 'flex';
       document.getElementById('btn').innerHTML = "SAVE CHANGES (RE-SUBMIT)";
