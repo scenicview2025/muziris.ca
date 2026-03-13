@@ -114,8 +114,8 @@
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     
     window.onload = function() {
-      const verifiedId = sessionStorage.getItem('verifiedSupplierId');
-      const verifiedCurrency = sessionStorage.getItem('verifiedCurrency'); 
+      const verifiedId = localStorage.getItem('verifiedSupplierId');
+      const verifiedCurrency = localStorage.getItem('verifiedCurrency'); 
       
       if (!verifiedId) {
         window.location.href = 'suppliers.html'; 
