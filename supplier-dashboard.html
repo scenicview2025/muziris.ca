@@ -68,8 +68,8 @@
     
     .card-success { color: var(--success); }
 
-    /* ACTION BUTTONS */
-    .action-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    /* ACTION BUTTONS (Perfect 2x2 Grid) */
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .action-btn { background: linear-gradient(135deg, #151922 0%, #0b0e14 100%); border: 1px solid #444; border-radius: 12px; padding: 30px; text-align: left; cursor: pointer; transition: 0.3s; display: block; text-decoration: none; color: inherit; }
     .action-btn:hover { border-color: var(--gold); background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, #0b0e14 100%); }
     .action-icon { font-size: 32px; margin-bottom: 15px; }
@@ -136,11 +136,12 @@
     </div>
 
     <h3 style="color: var(--gold); font-family: 'Cinzel', serif; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">Launchpad</h3>
+    
     <div class="action-grid">
       
       <a href="suppliers.html" class="action-btn">
         <div class="action-icon">📦</div>
-        <h3 class="action-title">Single Product</h3>
+        <h3 class="action-title">Single Product Upload</h3>
         <p class="action-desc">Upload a new item to the staging ledger, or utilize the visual editor to modify existing catalog items.</p>
       </a>
 
@@ -148,6 +149,12 @@
         <div class="action-icon">⚡</div>
         <h3 class="action-title">Mass CSV Engine</h3>
         <p class="action-desc">Upload hundreds of items instantly using the Muziris Master formatting template.</p>
+      </a>
+
+      <a href="rfq-hub.html" class="action-btn">
+        <div class="action-icon">📊</div>
+        <h3 class="action-title">Trade & Analytics Hub</h3>
+        <p class="action-desc">Manage active contracts, track buyer leads, review closed deals, and monitor catalog views.</p>
       </a>
 
       <a href="csv-guide.html" target="_blank" class="action-btn">
@@ -178,7 +185,7 @@
 
       fetchDashboardStats(savedId);
       fetchProfileBranding(savedId); 
-      fetchRfqData(savedId); // 🟢 NEW: Fetch RFQs instantly
+      fetchRfqData(savedId);
     };
 
     function fetchProfileBranding(supplierId) {
@@ -240,7 +247,6 @@
       .catch(console.error);
     }
 
-    // 🟢 NEW: Fetch RFQs and populate the Dashboard Widget!
     function fetchRfqData(supplierId) {
       fetch(API_BASE_URL + '/get-supplier-rfqs', {
         method: 'POST',
@@ -259,10 +265,8 @@
           if (rfq.status === 'Pending Supplier') pendingRfqs.push(rfq);
         });
 
-        // Update the big number
         document.getElementById('metric-rfq').innerText = activeRfqCount;
 
-        // If there are RFQs waiting for them to quote, show the widget!
         if (pendingRfqs.length > 0) {
           document.getElementById('rfqWidget').style.display = 'block';
           let rfqHtml = '';
@@ -284,7 +288,6 @@
     }
 
     function openLogistics(rfqId) {
-      // Silently save the exact RFQ ID to memory, then redirect
       localStorage.setItem('currentActionRfq', rfqId);
       window.location.href = 'logistics-confirm.html';
     }
