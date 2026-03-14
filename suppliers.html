@@ -36,7 +36,7 @@
     /* 3D CANVAS STYLING */
     #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
 
-    #view-portal { height: auto; padding: 40px 20px; box-sizing: border-box; }
+    #view-portal { height: auto; padding: 0; box-sizing: border-box; }
 
     .card { position: relative; z-index: 2; background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); width: 100%; max-width: 380px; padding: 40px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; }
     h1.brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
@@ -50,30 +50,21 @@
     #verify-result { margin-top: 20px; min-height: 20px; font-size: 12px; }
     .success-text { color: var(--gold); font-weight: bold; }
 
-    .container { max-width: 1000px; margin: 0 auto; background: var(--slate); padding: 50px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative; }
-    .container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--gold), var(--bronze)); border-radius: 8px 8px 0 0; }
-    h2 { color: var(--gold); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; font-weight: 300; font-family: 'Cinzel', serif; }
-    .badge { background: rgba(212, 175, 55, 0.15); color: var(--gold); padding: 6px 12px; border-radius: 4px; font-size: 11px; letter-spacing: 1px; display: inline-block; margin-bottom: 30px; border: 1px solid rgba(212, 175, 55, 0.3); }
+    /* SINGLE SHEET SPECIFIC CSS */
+    .portal-header { background:#151922; padding:20px 40px; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    .nav-btn { background: transparent; border: 1px solid #444; color: #aaa; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+    .nav-btn:hover, .nav-btn.active { border-color: var(--gold); color: var(--gold); }
     
-    .bulk-bar { background: rgba(255, 255, 255, 0.05); border: 1px dashed #444; padding: 10px; margin-bottom: 25px; text-align: center; font-size: 12px; color: #aaa; border-radius: 4px; }
-    .bulk-link { color: var(--gold); text-decoration: underline; cursor: pointer; font-weight: bold; margin: 0 10px; transition: 0.3s; }
-    .bulk-link:hover { color: #fff; }
+    .portal-content { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+    .portal-tab { display: none; animation: fadeIn 0.4s ease; }
 
-    .progress-container { margin-bottom: 40px; }
-    .progress-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--gold); width: 33.33%; transition: width 0.4s ease; }
-    .step-indicator { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
-    .step-active { color: var(--gold); font-weight: bold; }
+    .sheet-container { background: var(--slate); padding: 40px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative; }
+    .sheet-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--gold), var(--bronze)); border-radius: 8px 8px 0 0; }
     
-    .form-step { display: none; animation: fadeIn 0.5s ease; }
-    .form-step.active { display: block; }
-    h3.step-title { color: white; font-family: 'Cinzel', serif; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 25px; }
+    .section-title { color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px; margin-bottom: 25px; font-family: 'Cinzel', serif; letter-spacing: 1px; }
+    .section-title:first-of-type { margin-top: 0; }
 
-    /* SINGLE PAGE EDIT MODE STYLES */
-    .edit-mode-active .progress-container { display: none !important; }
-    .edit-mode-active .form-step { display: block !important; background: rgba(0,0,0,0.2); padding: 30px; border-radius: 8px; border: 1px solid #333; margin-bottom: 30px; animation: none; }
-    .edit-mode-active .btn-next, .edit-mode-active .btn-prev { display: none !important; }
-    .edit-mode-active h3.step-title { color: var(--gold); border-bottom: 1px dashed #444; padding-bottom: 15px; }
+    .badge { background: rgba(212, 175, 55, 0.15); color: var(--gold); padding: 6px 12px; border-radius: 4px; font-size: 11px; letter-spacing: 1px; display: inline-block; margin-bottom: 30px; border: 1px solid rgba(212, 175, 55, 0.3); text-transform: uppercase; font-weight: bold;}
 
     label { display: block; margin-top: 25px; margin-bottom: 8px; font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
     .sub-label { display: block; font-size: 11px; color: #666; margin-bottom: 10px; margin-top: -5px; text-transform: none; font-style: italic; }
@@ -88,7 +79,7 @@
     .matrix-box { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 4px; border: 1px solid #333; overflow-x: auto; }
     table { width: 100%; min-width: 900px; text-align: left; border-collapse: separate; border-spacing: 0 10px; }
     th { color: #666; font-size: 10px; text-transform: uppercase; padding: 0 10px; letter-spacing: 1px; }
-    td { vertical-align: middle; padding: 0 5px; } /* Changed to middle for image previews */
+    td { vertical-align: middle; padding: 0 5px; } 
     td input, td select { font-size: 13px; background: #0f1219; border: 1px solid #2a2a2a; margin-bottom: 0; }
     td input[type="file"] { font-size: 10px; padding: 8px; border: 1px dashed #444; width: 100%; }
 
@@ -101,13 +92,7 @@
     .tooltip .tooltiptext::after { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: transparent transparent var(--gold) transparent; }
     .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
     
-    .btn-group { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid #333; padding-top: 25px; }
-    .btn-prev { background: transparent; color: #888; border: 1px solid #444; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-    .btn-prev:hover { border-color: var(--gold); color: var(--gold); }
-    .btn-next { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-    .btn-next:hover { background: var(--bronze); }
-    
-    .add-btn { width: auto; background: transparent; border: 1px solid #444; color: #888; padding: 8px 15px; font-size: 11px; margin-top: 15px; box-shadow: none; cursor: pointer; transition: 0.3s; border-radius: 4px; }
+    .add-btn { width: auto; background: transparent; border: 1px solid #444; color: #888; padding: 8px 15px; font-size: 11px; margin-top: 15px; box-shadow: none; cursor: pointer; transition: 0.3s; border-radius: 4px; text-transform: uppercase; font-weight: bold;}
     .add-btn:hover { border-color: var(--gold); color: var(--gold); transform: none; }
 
     .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 10px; }
@@ -116,7 +101,6 @@
     .image-box input { padding: 5px; font-size: 11px; }
 
     #loading { display: none; text-align: center; color: var(--gold); margin-top: 20px; letter-spacing: 1px; font-size: 12px; }
-    #success-msg { display: none; text-align: center; color: var(--gold); margin-top: 50px; animation: fadeIn 0.5s; }
     
     #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
     .alert-box { background: var(--slate); border: 1px solid var(--alert); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
@@ -125,16 +109,7 @@
     .alert-btn { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
     .alert-btn:hover { background: var(--alert); color: #000; }
 
-    #listings-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; }
-    .modal-box { background: var(--slate); width: 90%; max-width: 600px; max-height: 80vh; padding: 25px; border-radius: 8px; border: 1px solid var(--gold); overflow-y: auto; position: relative; }
-    .modal-close { position: absolute; top: 15px; right: 20px; color: var(--gold); font-size: 24px; cursor: pointer; font-weight: bold; }
-    .listing-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #333; transition: background 0.2s; cursor: pointer; }
-    .listing-item:hover { background: #252a33; border-left: 3px solid var(--gold); }
-    .listing-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #444; background: #000; }
-    .listing-info { flex: 1; text-align: left; }
-    .listing-name { font-size: 14px; font-weight: bold; color: #fff; }
-    .listing-cat { font-size: 11px; color: var(--gold); text-transform: uppercase; }
-    .edit-hint { font-size: 10px; color: #666; font-style: italic; }
+    .listing-img { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #444; background: #000; }
 
     /* AI BUTTON CSS */
     .ai-btn { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(212,175,55,0.3); }
@@ -145,6 +120,7 @@
     @media (max-width: 900px) {
       .top-nav { top: 20px; left: 20px; }
       #view-verify { justify-content: center; padding-left: 0; }
+      .portal-header { padding: 15px 20px; flex-direction: column; gap: 15px; }
     }
   </style>
 </head>
@@ -179,56 +155,63 @@
   </div>
 
   <div id="view-portal" class="view-section">
-    <div class="container">
-      <h2>Global Trade Portal</h2>
-      <div style="text-align:center;"><span class="badge">✓ VERIFIED SUPPLIER ACCESS</span></div>
+    <div class="portal-header">
+        <div style="display:flex; align-items:center; gap:20px;">
+            <h1 style="font-family:'Cinzel', serif; color:#D4AF37; margin:0; font-size:24px; letter-spacing:2px;">MUZIRIS</h1>
+            <span style="color:#666; font-size:11px; border-left:1px solid #333; padding-left:20px; text-transform:uppercase; letter-spacing:1px;">Trade Portal</span>
+        </div>
+        <div style="display:flex; gap:15px; align-items:center;">
+            <a href="bulk-upload.html" target="_blank" style="color:#888; font-size:11px; text-decoration:underline; margin-right:10px;">Bulk Upload</a>
+            <button onclick="showTab('inventory')" id="tab-btn-inventory" class="nav-btn active">📋 My Inventory</button>
+            <button onclick="showTab('upload')" id="tab-btn-upload" class="gold-btn" style="width:auto; margin-top:0; padding:8px 15px; font-size:11px;">➕ Add Product</button>
+            <button onclick="logoutSupplier()" style="background:none; border:none; color:#ff5252; cursor:pointer; font-size:11px; text-transform:uppercase; font-weight:bold; margin-left:10px;">Logout</button>
+        </div>
+    </div>
 
-      <div class="bulk-bar">
-        <span class="bulk-link" onclick="window.location.href='supplier-dashboard.html'" style="text-transform: uppercase; color: var(--gold);">← Back to Dashboard</span>
-        <span style="color:#444; margin: 0 15px;">|</span>
-        Options: 
-        <span class="bulk-link" onclick="launchBulk()">Launch Bulk Upload Portal</span>
-        <span style="color:#444; margin: 0 10px;">|</span>
-        <span class="bulk-link" onclick="viewListings()">View Active Listings</span>
-        <span style="color:#444; margin: 0 10px;">|</span>
-        <span class="bulk-link" onclick="logoutSupplier()" style="color: #ff5252;">Logout</span>
+    <div class="portal-content">
+
+      <div id="tab-inventory" class="portal-tab">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <h2 style="margin:0; color:var(--gold); text-align:left; font-family:'Cinzel', serif;">Global Ledger Inventory</h2>
+          <button onclick="fetchInventory()" style="background:transparent; border:none; color:var(--gold); cursor:pointer; font-size:12px;">🔄 Refresh List</button>
+        </div>
+        <div id="listings-content" style="color:#aaa; font-size:14px; text-align:center; padding:40px; background:#151922; border-radius:8px; border:1px solid #333;">
+          Loading secure ledger...
+        </div>
       </div>
 
-      <div id="success-msg">
-        <h1 style="font-family:'Cinzel', serif;">✓ SUCCESS</h1>
-        <p>Product successfully uploaded to the Global Ledger.</p>
-        <br>
-        <button class="gold-btn" onclick="resetForm()" style="width:auto; padding:10px 30px;">
-          + Add Another Product
-        </button>
+      <div id="tab-preview" class="portal-tab">
+        <div class="sheet-container">
+          <button onclick="showTab('inventory')" style="background:transparent; border:none; color:var(--gold); cursor:pointer; font-size:11px; margin-bottom:15px; padding:0; font-weight:bold; letter-spacing:1px;">← BACK TO INVENTORY</button>
+          <div id="preview-content-area"></div>
+        </div>
       </div>
 
-      <div id="form-container">
-        
-        <div id="edit-header" style="display:none; justify-content:space-between; align-items:center; margin-bottom: 25px; background: rgba(212, 175, 55, 0.05); padding: 20px; border-radius: 8px; border: 1px solid var(--gold);">
-          <div>
-            <h3 style="margin:0; color:var(--gold); font-family:'Cinzel', serif; letter-spacing: 2px;">✎ QUICK EDIT MODE</h3>
-            <div style="font-size:12px; color:#aaa; margin-top:5px;">All steps have been unrolled into a single page. Edit your data and save at the bottom.</div>
-          </div>
-          <button type="button" onclick="cancelEdit()" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:10px 20px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold; text-transform:uppercase; transition:0.3s;">Cancel Edit</button>
+      <div id="tab-success" class="portal-tab">
+        <div class="sheet-container" style="text-align:center; padding:60px 20px;">
+          <h1 style="font-family:'Cinzel', serif; color:#4CAF50; font-size:48px; margin:0;">✓ SUCCESS</h1>
+          <p style="font-size:16px; color:#ccc; margin-top:10px;">Product saved to the Muziris Ledger.</p>
+          <br>
+          <button class="gold-btn" onclick="showTab('inventory')" style="width:auto; padding:12px 30px; margin-right:15px;">View Inventory</button>
+          <button class="add-btn" onclick="resetForm(); showTab('upload');" style="padding:11px 25px;">+ Add Another</button>
         </div>
+      </div>
 
-        <div class="progress-container">
-          <div class="progress-bar">
-            <div class="progress-fill" id="progress"></div>
-          </div>
-          <div class="step-indicator">
-            <span id="step1-ind" class="step-active">1. Basic Info</span>
-            <span id="step2-ind">2. Specifications</span>
-            <span id="step3-ind">3. Media Upload</span>
-          </div>
-        </div>
-
-        <form id="mainForm" onsubmit="event.preventDefault(); submitForm(this)">
+      <div id="tab-upload" class="portal-tab">
+        <div class="sheet-container">
           
-          <div class="form-step active" id="step1">
-            <h3 class="step-title">Basic Information</h3>
+          <div id="edit-header" style="display:none; justify-content:space-between; align-items:center; margin-bottom: 25px; background: rgba(212, 175, 55, 0.05); padding: 20px; border-radius: 8px; border: 1px solid var(--gold);">
+            <div>
+              <h3 style="margin:0; color:var(--gold); font-family:'Cinzel', serif; letter-spacing: 2px;">✎ PRODUCT EDIT MODE</h3>
+              <div style="font-size:12px; color:#aaa; margin-top:5px;">Update your data and save at the bottom.</div>
+            </div>
+            <button type="button" onclick="cancelEdit()" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:10px 20px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold; text-transform:uppercase; transition:0.3s;">Cancel Edit</button>
+          </div>
+
+          <form id="mainForm" onsubmit="event.preventDefault(); submitForm(this)">
             <input type="hidden" id="pid" name="productId" value="">
+            
+            <h3 class="section-title">1. Basic Information</h3>
             <div style="display:flex; gap:20px;">
               <div style="flex:1;">
                 <label>SUPPLIER ID</label>
@@ -251,14 +234,22 @@
 
             <label>PRODUCT NAME</label>
             <input type="text" id="pName" name="productName" placeholder="e.g. Premium Ceramic Coffee Mug" required>
-            
-            <div class="btn-group" style="justify-content: flex-end;">
-              <button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button>
-            </div>
-          </div>
 
-          <div class="form-step" id="step2">
-            <h3 class="step-title">Product Details & Pricing</h3>
+            <h3 class="section-title">2. Details & Specifications</h3>
+            
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:8px;">
+              <label style="margin:0;">SHORT TITLE / TAGLINE</label>
+              <button type="button" class="ai-btn" id="btn-ai-title" onclick="generateAITitle()">✨ Auto-Tagline</button>
+            </div>
+            <span class="sub-label" style="margin-top:0;">A maximum 10-word punchy title to grab buyer attention.</span>
+            <input type="text" id="shortTitle" name="shortTitle" placeholder="e.g. Premium Eco-Friendly Bamboo Coffee Mug">
+
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:25px; margin-bottom:8px;">
+              <label style="margin:0;">DETAILED DESCRIPTION</label>
+              <button type="button" class="ai-btn" id="btn-ai-desc" onclick="generateAIDescription()">✨ Auto-Write with AI</button>
+            </div>
+            <textarea id="desc" name="description" rows="4" placeholder="Describe materials, certifications, origin..."></textarea>
+
             <label>FACTORY SERVICES</label>
             <div class="checkbox-group">
               <label class="checkbox-item"><input type="checkbox" id="svc1" name="service_privateLabel" value="Yes"> Private Labeling (OEM)</label>
@@ -269,25 +260,9 @@
             <label>PACKAGING DETAILS</label>
             <input type="text" id="packDetails" name="packagingDetails" placeholder="e.g. Polybag + Inner Box + Master Carton">
 
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:25px; margin-bottom:8px;">
-              <label style="margin:0;">SHORT TITLE / TAGLINE</label>
-              <button type="button" class="ai-btn" id="btn-ai-title" onclick="generateAITitle()">
-                ✨ Auto-Tagline
-              </button>
-            </div>
-            <span class="sub-label" style="margin-top:0;">A maximum 10-word punchy title to grab buyer attention.</span>
-            <input type="text" id="shortTitle" name="shortTitle" placeholder="e.g. Premium Eco-Friendly Bamboo Coffee Mug">
-
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:25px; margin-bottom:8px;">
-              <label style="margin:0;">DETAILED DESCRIPTION</label>
-              <button type="button" class="ai-btn" id="btn-ai-desc" onclick="generateAIDescription()">
-                ✨ Auto-Write with AI
-              </button>
-            </div>
-            <textarea id="desc" name="description" rows="4" placeholder="Describe materials, certifications, origin..."></textarea>
-
+            <h3 class="section-title">3. Pricing Matrix</h3>
             <label>VOLUME PRICING & VARIANTS</label>
-            <span class="sub-label">Your pricing currency is auto-locked to: <strong id="ui-currency-text" style="color:var(--gold); font-size:13px;">...</strong></span>
+            <span class="sub-label">Your pricing currency is locked to: <strong id="ui-currency-text" style="color:var(--gold); font-size:13px;">...</strong></span>
             
             <div class="matrix-box">
               <table id="priceTable">
@@ -325,16 +300,7 @@
               <em>* <strong>Note for Small/Medium Enterprises:</strong> If you do not have an export license or shipping agent set up, we highly recommend selecting <strong>EXW (Ex Works)</strong>. <a href="https://muziris.ca/incoterms" target="_blank" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold);">Click here to learn more.</a></em>
             </div>
 
-            <input type="hidden" name="pricingMatrix" id="pricingString">
-
-            <div class="btn-group">
-              <button type="button" class="btn-prev" onclick="prevStep(2)">Back</button>
-              <button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button>
-            </div>
-          </div>
-
-          <div class="form-step" id="step3">
-            <h3 class="step-title">Media Upload</h3>
+            <h3 class="section-title">4. Media Assets</h3>
             <label>PRODUCT IMAGERY (Max 25MB)</label>
             <span class="sub-label" style="color:#D4AF37">NOTE: Previous images are saved. Upload new files only if you want to replace them.</span>
             <div class="image-grid">
@@ -380,28 +346,12 @@
             <div id="status_catalog" style="font-size: 11px; color: #666; margin-bottom: 5px; font-weight: bold;">New Upload</div>
             <input type="file" name="catalog" accept="application/pdf" onchange="document.getElementById('status_catalog').innerHTML='<span style=\'color:#D4AF37\'>✎ Will be replaced</span>'">
 
-            <div class="btn-group">
-              <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
-              <button type="submit" class="gold-btn" id="btn" style="width:auto; margin-top:0;">UPLOAD TO GLOBAL LEDGER</button>
-            </div>
+            <button type="submit" class="gold-btn" id="btn" style="width:100%; padding:20px; font-size:16px; margin-top:40px; box-shadow: 0 10px 30px rgba(212,175,55,0.2);">🚀 UPLOAD TO GLOBAL LEDGER</button>
             <div id="loading">Encrypting & Uploading to Server...<br>Please wait...</div>
-          </div>
+          </form>
+        </div>
+      </div>
 
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <div id="listings-modal">
-    <div class="modal-box">
-      <div class="modal-close" onclick="closeListings()">×</div>
-      <h3 style="color:var(--gold); text-align:center; margin-top:0;">MY ACTIVE LISTINGS</h3>
-      <div style="text-align:center; margin-bottom:15px; color:#666; font-size:11px;">
-        Click any product to load its data into the form for editing.
-      </div>
-      <div id="listings-content" style="margin-top:10px; color:#aaa; font-size:13px; text-align:center;">
-        Loading...
-      </div>
     </div>
   </div>
 
@@ -450,10 +400,8 @@
         
         for (let i = 0; i < numNodes; i++) {
           let node = nodes[i];
-          
           let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
           let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
-          
           let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
           let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
           
@@ -504,8 +452,6 @@
 
     async function fetchAPI(action, payload = {}) {
       let endpoint = '';
-      
-      // Route the action to the correct Server Endpoint
       if (action === 'verifySupplier') endpoint = '/verify-supplier';
       else if (action === 'getCategoryStructure') endpoint = '/categories';
       else if (action === 'generateDescription') { endpoint = '/generate-ai'; payload.type = 'desc'; }
@@ -528,64 +474,60 @@
       }
     }
 
+    // 🟢 UI TAB TOGGLE LOGIC
+    function showTab(tabId) {
+      document.querySelectorAll('.portal-tab').forEach(el => el.style.display = 'none');
+      document.getElementById('tab-' + tabId).style.display = 'block';
+      
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      let activeBtn = document.getElementById('tab-btn-' + tabId);
+      if(activeBtn) activeBtn.classList.add('active');
+
+      if(tabId === 'inventory') fetchInventory();
+      window.scrollTo(0,0);
+    }
+
     // 🟢 AI DESC FUNCTION
     function generateAIDescription() {
       var pName = document.getElementById('pName').value;
       var category = document.getElementById('mainCat').value;
       var btn = document.getElementById('btn-ai-desc');
       
-      if(!pName || !category) {
-        customAlert("Missing Info", "Please enter a Product Name and select a Category on Step 1 first!");
-        return;
-      }
+      if(!pName || !category) { customAlert("Missing Info", "Please enter a Product Name and select a Category first."); return; }
       
-      btn.innerText = "⏳ Writing...";
-      btn.disabled = true;
+      btn.innerText = "⏳ Writing..."; btn.disabled = true;
       
-      fetchAPI('generateDescription', { productName: pName, category: category })
-        .then(res => {
+      fetchAPI('generateDescription', { productName: pName, category: category }).then(res => {
           if(res.description) document.getElementById('desc').value = res.description;
           else customAlert("AI Error", res.error || "Could not generate.");
-          btn.innerText = "✨ Auto-Write with AI";
-          btn.disabled = false;
-        })
-        .catch(err => {
+          btn.innerText = "✨ Auto-Write with AI"; btn.disabled = false;
+      }).catch(err => {
           customAlert("Network Error", "Failed to connect to AI server.");
-          btn.innerText = "✨ Auto-Write with AI";
-          btn.disabled = false;
-        });
+          btn.innerText = "✨ Auto-Write with AI"; btn.disabled = false;
+      });
     }
 
-    // 🟢 NEW: AI TAGLINE FUNCTION
+    // 🟢 AI TAGLINE FUNCTION
     function generateAITitle() {
       var pName = document.getElementById('pName').value;
       var category = document.getElementById('mainCat').value;
       var btn = document.getElementById('btn-ai-title');
       
-      if(!pName || !category) {
-        customAlert("Missing Info", "Please enter a Product Name and select a Category on Step 1 first!");
-        return;
-      }
+      if(!pName || !category) { customAlert("Missing Info", "Please enter a Product Name and select a Category first."); return; }
       
-      btn.innerText = "⏳ Thinking...";
-      btn.disabled = true;
+      btn.innerText = "⏳ Thinking..."; btn.disabled = true;
       
-      fetchAPI('generateTitle', { productName: pName, category: category })
-        .then(res => {
+      fetchAPI('generateTitle', { productName: pName, category: category }).then(res => {
           if(res.title) document.getElementById('shortTitle').value = res.title;
           else customAlert("AI Error", res.error || "Could not generate title.");
-          btn.innerText = "✨ Auto-Tagline";
-          btn.disabled = false;
-        })
-        .catch(err => {
+          btn.innerText = "✨ Auto-Tagline"; btn.disabled = false;
+      }).catch(err => {
           customAlert("Network Error", "Failed to connect to AI server.");
-          btn.innerText = "✨ Auto-Tagline";
-          btn.disabled = false;
-        });
+          btn.innerText = "✨ Auto-Tagline"; btn.disabled = false;
+      });
     }
 
     window.onload = function() {
-      // 1. Check if the user is already logged in
       var savedId = localStorage.getItem('verifiedSupplierId');
       var savedCompany = localStorage.getItem('verifiedCompany');
       var savedCurrency = localStorage.getItem('verifiedCurrency');
@@ -599,6 +541,9 @@
         document.getElementById('ui-currency-label').innerText = "(" + savedCurrency + ")";
         document.getElementById('ui-currency-text').innerText = savedCurrency;
         globeAnimating = false; 
+        
+        // Start by showing the inventory tab automatically!
+        showTab('inventory');
       } else {
         document.getElementById('view-verify').style.display = 'flex';
         document.getElementById('view-portal').style.display = 'none';
@@ -614,24 +559,19 @@
       document.getElementById('alert-message').innerText = message;
       document.getElementById('custom-alert').style.display = 'flex';
     }
-
-    function closeAlert() {
-      document.getElementById('custom-alert').style.display = 'none';
-    }
+    function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
 
     function runVerification() {
       var id = document.getElementById('verify-id').value.trim();
       var phone = document.getElementById('verify-phone').value.trim();
       var resultBox = document.getElementById('verify-result');
       
-      if(!id) { customAlert("Missing Info", "Please enter your ID."); return; }
-      if(!phone) { customAlert("Missing Info", "Please enter the last 4 digits of your phone number."); return; }
+      if(!id || !phone) { customAlert("Missing Info", "Please enter ID and Phone."); return; }
       
       resultBox.innerHTML = "<span style='color:#666'>Authenticating...</span>";
       document.getElementById('btn-verify').disabled = true;
 
-      fetchAPI('verifySupplier', { id: id, phoneSuffix: phone })
-        .then(result => {
+      fetchAPI('verifySupplier', { id: id, phoneSuffix: phone }).then(result => {
           document.getElementById('btn-verify').disabled = false;
           if(result && result.valid) {
             resultBox.innerHTML = "<span class='success-text'>✓ Verified. Loading Portal...</span>";
@@ -643,15 +583,16 @@
             localStorage.setItem('verifiedCurrency', result.currency);
 
             setTimeout(() => {
-              // Redirect to the new Command Center after a successful login!
-              window.location.href = 'supplier-dashboard.html'; 
+               document.getElementById('view-verify').style.display = 'none';
+               document.getElementById('view-portal').style.display = 'block';
+               globeAnimating = false; 
+               showTab('inventory');
             }, 800);
           } else {
             resultBox.innerHTML = "";
             customAlert("Access Denied", result.error || "Authentication failed.");
           }
-        })
-        .catch(err => {
+        }).catch(err => {
           document.getElementById('btn-verify').disabled = false;
           resultBox.innerHTML = "";
           customAlert("Server Error", "Could not connect to the database.");
@@ -671,27 +612,6 @@
     function logoutSupplier() {
       localStorage.clear();
       window.location.reload();
-    }
-
-    function nextStep(current) {
-      if(current === 1 && (!document.getElementById('mainCat').value || !document.getElementById('pName').value)) {
-        customAlert("Required Fields", "Please select a Category and enter a Product Name."); return;
-      }
-      document.getElementById('step' + current).classList.remove('active');
-      document.getElementById('step' + (current+1)).classList.add('active');
-      document.getElementById('progress').style.width = (((current + 1) / 3) * 100) + "%";
-      document.getElementById('step' + current + '-ind').classList.remove('step-active');
-      document.getElementById('step' + (current+1) + '-ind').classList.add('step-active');
-      window.scrollTo(0,0);
-    }
-
-    function prevStep(current) {
-      document.getElementById('step' + current).classList.remove('active');
-      document.getElementById('step' + (current-1)).classList.add('active');
-      document.getElementById('progress').style.width = (((current - 1) / 3) * 100) + "%";
-      document.getElementById('step' + current + '-ind').classList.remove('step-active');
-      document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
-      window.scrollTo(0,0);
     }
 
     // HELPER FUNCTIONS FOR VISUAL IMAGE PREVIEWS
@@ -721,7 +641,6 @@
       }
     }
 
-    // HELPER FOR VARIANT MATRIX PREVIEWS
     function updateVariantPreview(input) {
       if (input.files && input.files[0]) {
         var td = input.parentElement;
@@ -738,53 +657,66 @@
       }
     }
 
-    function viewListings() {
+    // 🟢 INVENTORY DASHBOARD RENDERER
+    function fetchInventory() {
       var id = document.getElementById('sid').value;
-      document.getElementById('listings-modal').style.display = 'flex';
       document.getElementById('listings-content').innerHTML = "Fetching secure ledger...";
       fetchAPI('getSupplierInventory', { id: id }).then(renderListings);
     }
 
     function renderListings(items) {
       var container = document.getElementById('listings-content');
-      if(!items || items.length === 0) { container.innerHTML = "No products found in your catalog."; return; }
+      if(!items || items.length === 0) { container.innerHTML = "<div style='color:#666;'>No products found in your inventory. Click Add Product to begin.</div>"; return; }
       
       var html = "";
       items.forEach(function(item) {
-         var img = item.hero_img ? '<img src="' + item.hero_img + '" class="listing-img">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
+         var img = item.hero_img ? `<img src="${item.hero_img}" class="listing-img">` : `<div class="listing-img" style="background:url('MC.png') center/contain no-repeat;"></div>`;
+         
+         var statusLabel = item.status;
+         var badgeColor = "#b89225"; 
+         var commentBox = "";
+
+         if (item.status === 'ACTIVE') {
+             badgeColor = "#4CAF50"; 
+             statusLabel = "🟢 LIVE IN CATALOG";
+         } else if (item.status === 'NEEDS FIX') {
+             badgeColor = "#ff5252"; 
+             statusLabel = "🛑 ACTION REQUIRED: REJECTED";
+             commentBox = `
+                 <div style="margin-top:10px; padding:10px; background:rgba(255,82,82,0.1); border:1px dashed #ff5252; border-radius:4px; color:#ff5252; font-size:12px;">
+                     <strong>Admin Feedback:</strong> ${item.admin_comments || "Please review and update."}
+                 </div>
+             `;
+         } else if (item.status === 'PENDING_FINANCE') {
+             badgeColor = "#1E88E5";
+             statusLabel = "⏳ QC PASSED (AWAITING FINANCE)";
+         } else {
+             statusLabel = "⏳ PENDING QC";
+         }
+
          html += `
-         <div class="listing-item" style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center; gap:15px; flex:1;" onclick="previewProduct('${item.product_id}')">
+         <div class="listing-item" style="background:#1a1e29; border:1px solid #333; padding:20px; border-radius:8px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; text-align:left;">
+            <div style="display:flex; align-items:center; gap:20px; flex:1; min-width:300px;">
                 ${img}
-                <div class="listing-info">
-                    <div class="listing-name">${item.product_name}</div>
-                    <div class="listing-cat">${item.main_category}</div>
-                    <div style="color:${item.color}; font-size:10px; font-weight:bold; margin-top:3px;">${item.status}</div>
+                <div>
+                    <div style="font-weight:bold; font-size:16px; color:#fff;">${item.product_name}</div>
+                    <div style="font-size:12px; color:#888; margin-bottom:8px;">${item.main_category} > ${item.sub_category}</div>
+                    <span style="padding:4px 8px; background:transparent; border:1px solid ${badgeColor}; color:${badgeColor}; border-radius:3px; font-size:10px; font-weight:bold; text-transform:uppercase;">
+                        ${statusLabel}
+                    </span>
+                    ${commentBox}
                 </div>
             </div>
             <div style="display:flex; gap:10px;">
-                <button onclick="previewProduct('${item.product_id}')" style="background:transparent; border:1px solid var(--gold); color:var(--gold); padding:5px 10px; border-radius:4px; cursor:pointer; font-size:10px; font-weight:bold;">VIEW</button>
+                <button onclick="previewProduct('${item.product_id}')" class="add-btn">VIEW / EDIT</button>
             </div>
          </div>`;
       });
       container.innerHTML = html;
     }
-    
-    function closeListings() { document.getElementById('listings-modal').style.display = 'none'; }
 
-    function deleteProduct(productId) {
-      if(confirm("🚨 WARNING: This will permanently delete this product from the Global Ledger. Proceed?")) {
-          var id = document.getElementById('sid').value;
-          document.getElementById('listings-content').innerHTML = "Deleting...";
-          fetchAPI('deleteProduct', { supplierId: id, productId: productId }).then(res => {
-              if(res.success) viewListings(); // Refresh the list
-              else customAlert("Error", "Could not delete product.");
-          });
-      }
-    }
-
-    // --- THE PREVIEW SHOWROOM ---
-    window.currentPreviewData = null; // Store data temporarily
+    // --- THE INLINE PREVIEW SHOWROOM ---
+    window.currentPreviewData = null;
 
     function previewProduct(productId) {
       var id = document.getElementById('sid').value;
@@ -793,14 +725,13 @@
     }
 
     function showPreviewCard(dbRow) {
-      if(!dbRow || dbRow.error) { customAlert("Error", "Error loading product data."); return; }
-      window.currentPreviewData = dbRow; // Save for editing later
+      if(!dbRow || dbRow.error) { customAlert("Error", "Error loading product data."); showTab('inventory'); return; }
+      window.currentPreviewData = dbRow; 
 
       let imgUrl = dbRow.hero_img || 'MC.png';
       let matrix = [];
       try { matrix = typeof dbRow.pricing_matrix === 'string' ? JSON.parse(dbRow.pricing_matrix) : dbRow.pricing_matrix; } catch(e){}
 
-      // Build a clean pricing table for the preview
       let priceHtml = `<table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:12px; text-align:left;">
           <tr style="color:var(--gold); border-bottom:1px solid #333;">
             <th style="padding-bottom:5px;">Variant / Option</th>
@@ -816,45 +747,42 @@
                   <td style="padding:8px 0; color:#ccc; font-weight:bold;">$${m.supplierPriceRaw || m.price}</td>
               </tr>`;
           });
-          if(matrix.length > 3) {
-             priceHtml += `<tr><td colspan="3" style="text-align:center; padding-top:10px; color:#666; font-style:italic;">+ ${matrix.length - 3} additional pricing tiers</td></tr>`;
-          }
+          if(matrix.length > 3) priceHtml += `<tr><td colspan="3" style="text-align:center; padding-top:10px; color:#666; font-style:italic;">+ ${matrix.length - 3} additional pricing tiers</td></tr>`;
       } else {
           priceHtml += `<tr><td colspan="3" style="text-align:center; padding:10px; color:#666;">No pricing data found</td></tr>`;
       }
       priceHtml += `</table>`;
 
-      let statusBadge = (dbRow.status === 'PENDING') 
-        ? `<span style="background:rgba(184, 146, 37, 0.2); color:#b89225; padding:4px 8px; border-radius:3px; font-size:9px; border:1px solid #b89225; font-weight:bold;">⏳ PENDING REVIEW</span>`
-        : `<span style="background:rgba(76, 175, 80, 0.2); color:#4CAF50; padding:4px 8px; border-radius:3px; font-size:9px; border:1px solid #4CAF50; font-weight:bold;">🟢 LIVE IN CATALOG</span>`;
+      let statusBadge = (dbRow.status === 'ACTIVE') 
+          ? `<span style="background:rgba(76, 175, 80, 0.2); color:#4CAF50; padding:4px 8px; border-radius:3px; font-size:9px; border:1px solid #4CAF50; font-weight:bold;">🟢 LIVE IN CATALOG</span>`
+          : `<span style="background:rgba(184, 146, 37, 0.2); color:#b89225; padding:4px 8px; border-radius:3px; font-size:9px; border:1px solid #b89225; font-weight:bold;">⏳ PENDING / IN REVIEW</span>`;
 
-      // The beautiful UI Card
       let html = `
         <div style="text-align:left; animation: fadeIn 0.3s ease;">
-          <button onclick="viewListings()" style="background:transparent; border:none; color:var(--gold); cursor:pointer; font-size:11px; margin-bottom:15px; padding:0; font-weight:bold; letter-spacing:1px;">← BACK TO LISTINGS</button>
-          
-          <div style="display:flex; gap:20px; background:#0f1219; padding:20px; border-radius:8px; border:1px solid #333; align-items:center;">
-            <div style="width:110px; height:110px; border-radius:8px; background:url('${imgUrl}') center/cover no-repeat; border:1px solid #444; flex-shrink:0;"></div>
+          <div style="display:flex; gap:20px; background:#0f1219; padding:30px; border-radius:8px; border:1px solid #333; align-items:center;">
+            <div style="width:130px; height:130px; border-radius:8px; background:url('${imgUrl}') center/cover no-repeat; border:1px solid #444; flex-shrink:0;"></div>
             <div style="flex:1;">
               <div style="margin-bottom:10px;">${statusBadge}</div>
-              <h2 style="margin:0 0 5px 0; color:#fff; font-size:18px; text-transform:none; letter-spacing:0; text-align:left; font-family:'Lato', sans-serif;">${dbRow.product_name}</h2>
-              <div style="color:var(--gold); font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">${dbRow.main_category} &rsaquo; ${dbRow.sub_category}</div>
-              <div style="font-size:11px; color:#888;">ID: ${dbRow.product_id}</div>
+              <h2 style="margin:0 0 5px 0; color:#fff; font-size:22px; text-transform:none; letter-spacing:0; text-align:left; font-family:'Lato', sans-serif;">${dbRow.product_name}</h2>
+              <div style="color:var(--gold); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">${dbRow.main_category} &rsaquo; ${dbRow.sub_category}</div>
+              <div style="font-size:12px; color:#888;">ID: ${dbRow.product_id}</div>
             </div>
           </div>
           
           <div style="margin-top:15px; background:#0f1219; padding:20px; border-radius:8px; border:1px solid #333;">
-             <h4 style="color:#fff; margin:0 0 5px 0; font-size:12px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #333; padding-bottom:10px;">Pricing & Variants Summary</h4>
-             ${priceHtml}
+              <h4 style="color:#fff; margin:0 0 5px 0; font-size:12px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #333; padding-bottom:10px;">Pricing & Variants Summary</h4>
+              ${priceHtml}
           </div>
 
           <div style="margin-top:20px; display:flex; gap:10px;">
-            <button class="gold-btn" onclick="executeEdit()" style="margin-top:0; flex:1; padding:15px; font-size:13px;">✎ MODIFY PRODUCT DATA</button>
-            <button onclick="deleteProduct('${dbRow.product_id}')" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:15px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold; text-transform:uppercase; transition:0.3s;">DELETE</button>
+            <button class="gold-btn" onclick="executeEdit()" style="margin-top:0; flex:1; padding:15px; font-size:13px;">✎ MODIFY THIS PRODUCT</button>
+            <button onclick="deleteProduct('${dbRow.product_id}')" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:15px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold; text-transform:uppercase; transition:0.3s;">DELETE COMPLETELY</button>
           </div>
         </div>
       `;
-      document.getElementById('listings-content').innerHTML = html;
+      
+      document.getElementById('preview-content-area').innerHTML = html;
+      showTab('preview');
     }
 
     function executeEdit() {
@@ -862,7 +790,7 @@
     }
 
     function fillForm(dbRow) {
-      if(!dbRow || dbRow.error) { customAlert("Error", "Error loading product data."); closeListings(); return; }
+      if(!dbRow || dbRow.error) { customAlert("Error", "Error loading product data."); return; }
       
       document.getElementById('pid').value = dbRow.product_id;
       document.getElementById('pName').value = dbRow.product_name || "";
@@ -889,7 +817,6 @@
         matrix.forEach(function(row) { addPriceRowFilled(row); }); 
       } else { addPriceRow(); }
 
-      // Inject Visual Previews for Step 3
       setServerPreview(dbRow.hero_img, 'preview_img_hero', 'status_img_hero');
       setServerPreview(dbRow.life_img, 'preview_img_life', 'status_img_life');
       setServerPreview(dbRow.detail_img, 'preview_img_detail', 'status_img_detail');
@@ -902,21 +829,14 @@
          document.getElementById('status_catalog').innerHTML = "No PDF saved";
       }
       
-      closeListings();
-      
-      // Switch to Single Page Edit Mode!
-      document.getElementById("success-msg").style.display = "none"; // <-- NEW: Hide success screen
-      document.getElementById("form-container").style.display = "block"; // <-- NEW: Un-hide the form
-      
-      document.getElementById('form-container').classList.add('edit-mode-active');
       document.getElementById('edit-header').style.display = 'flex';
-      document.getElementById('btn').innerHTML = "SAVE CHANGES (RE-SUBMIT)";
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('btn').innerHTML = "SAVE CHANGES (RE-SUBMIT FOR QC)";
+      showTab('upload');
     }
 
     function cancelEdit() {
        resetForm();
-       window.scrollTo({ top: 0, behavior: 'smooth' });
+       showTab('inventory');
     }
     
     function addPriceRow() {
@@ -953,10 +873,7 @@
       var iCIF = data.incoterms === "CIF" ? "selected" : "";
       var iDDP = data.incoterms === "DDP" ? "selected" : "";
 
-      // Ensure we display the raw supplier price so they see what they originally entered
       var displayPrice = data.supplierPriceRaw || data.price || "";
-
-      // Dynamic Image Preview for the Matrix!
       var imgBg = data.varImg ? "url('" + data.varImg + "')" : "transparent";
       var imgDisp = data.varImg ? "block" : "none";
       var statHtml = data.varImg ? "<span style='color:#4CAF50; font-weight:bold;'>✓ Saved</span>" : "";
@@ -1039,6 +956,10 @@
     });
 
     async function submitForm(formElement) {
+      if(!document.getElementById('mainCat').value || !document.getElementById('pName').value) {
+        customAlert("Required Fields", "Please select a Category and enter a Product Name."); return;
+      }
+
       var dataList = [];
       var rows = document.querySelectorAll("#priceBody tr");
       for(var i=0; i<rows.length; i++) {
@@ -1056,7 +977,7 @@
           if(!item.opt) { customAlert("Missing Data", "Row " + (i+1) + ": Option missing."); return; }
           if(item.min && item.price) { dataList.push(item); }
       }
-      if(dataList.length === 0) { customAlert("Missing Data", "Please add at least one price tier."); return; }
+      if(dataList.length === 0) { customAlert("Missing Data", "Please add at least one valid price tier with Min Qty and Price."); return; }
       
       document.getElementById("btn").disabled = true;
       document.getElementById("btn").innerHTML = "UPLOADING MEDIA... PLEASE WAIT";
@@ -1064,31 +985,20 @@
 
       try {
         var supplierId = formElement.supplierId.value;
-        const API_BASE_URL = "https://muziris-api.onrender.com/api"; 
 
-        // Secure helper with HTML detection!
         async function uploadFile(fileInput) {
           if (!fileInput.files || !fileInput.files[0]) return "";
           let fileObj = await compressImage(fileInput.files[0]);
-          
           let response = await fetch(API_BASE_URL + '/upload-media', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              supplierId: supplierId,
-              fileName: fileObj.name,
-              mimeType: fileObj.mimeType,
-              fileData: fileObj.data
-            })
+            body: JSON.stringify({ supplierId: supplierId, fileName: fileObj.name, mimeType: fileObj.mimeType, fileData: fileObj.data })
           });
-          
-          // 🕵️ THE DETECTOR: If server sends HTML, catch it and read it!
           const contentType = response.headers.get("content-type");
           if (!contentType || !contentType.includes("application/json")) {
              const htmlError = await response.text();
              throw new Error(`IMAGE UPLOAD FAILED (Status ${response.status}):\n` + htmlError.substring(0, 150));
           }
-          
           let result = await response.json();
           if(result.success) return result.url;
           throw new Error("Failed to upload " + fileObj.name);
@@ -1106,20 +1016,13 @@
            let response = await fetch(API_BASE_URL + '/upload-media', {
              method: 'POST',
              headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({
-               supplierId: supplierId,
-               fileName: pdfObj.name,
-               mimeType: pdfObj.mimeType,
-               fileData: pdfObj.data
-             })
+             body: JSON.stringify({ supplierId: supplierId, fileName: pdfObj.name, mimeType: pdfObj.mimeType, fileData: pdfObj.data })
            });
-           
            const pdfContentType = response.headers.get("content-type");
            if (!pdfContentType || !pdfContentType.includes("application/json")) {
                const pdfHtmlError = await response.text();
-               throw new Error(`PDF UPLOAD FAILED (Status ${response.status}):\n` + pdfHtmlError.substring(0, 150));
+               throw new Error(`PDF UPLOAD FAILED:\n` + pdfHtmlError.substring(0, 150));
            }
-
            let pdfRes = await response.json();
            if(pdfRes.success) catalogUrl = pdfRes.url;
         }
@@ -1133,13 +1036,11 @@
                  headers: { 'Content-Type': 'application/json' },
                  body: JSON.stringify({ supplierId: supplierId, fileName: vFileObj.name, mimeType: vFileObj.mimeType, fileData: vFileObj.data })
                });
-               
                const vContentType = vResp.headers.get("content-type");
                if (!vContentType || !vContentType.includes("application/json")) {
                    const vHtmlError = await vResp.text();
-                   throw new Error(`VARIANT UPLOAD FAILED (Status ${vResp.status}):\n` + vHtmlError.substring(0, 150));
+                   throw new Error(`VARIANT UPLOAD FAILED:\n` + vHtmlError.substring(0, 150));
                }
-
                let vData = await vResp.json();
                if(vData.success) dataList[j].varImg = vData.url;
            } else {
@@ -1181,38 +1082,30 @@
            body: JSON.stringify({ data: formData })
         });
         
-        // Final Detector
         const finalContentType = finalResponse.headers.get("content-type");
         if (!finalContentType || !finalContentType.includes("application/json")) {
              const finalHtmlError = await finalResponse.text();
-             throw new Error(`FINAL SUBMISSION FAILED (Status ${finalResponse.status}):\n` + finalHtmlError.substring(0, 150));
+             throw new Error(`FINAL SUBMISSION FAILED:\n` + finalHtmlError.substring(0, 150));
         }
 
         let finalResult = await finalResponse.json();
 
         if(finalResult.result === "SUCCESS" || finalResult.success) {
-           document.getElementById("form-container").style.display = "none";
-           document.getElementById("success-msg").style.display = "block";
-           document.getElementById("loading").style.display = "none";
-           
-           // Ensure edit mode is cleared after success!
-           document.getElementById('form-container').classList.remove('edit-mode-active');
            document.getElementById('edit-header').style.display = 'none';
-
+           document.getElementById("loading").style.display = "none";
+           showTab('success'); 
         } else {
            customAlert("Database Error", finalResult.error || "Failed to save to ledger.");
            document.getElementById("btn").disabled = false;
-           document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+           document.getElementById("btn").innerHTML = "🚀 UPLOAD TO GLOBAL LEDGER";
            document.getElementById("loading").style.display = "none";
         }
 
       } catch (err) {
         console.error("Upload Error:", err);
         customAlert("System Error Revealed", "Exact error: " + err.message);
-        
-        // Inline the reset logic to avoid scoping issues
         document.getElementById("btn").disabled = false;
-        document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+        document.getElementById("btn").innerHTML = "🚀 UPLOAD TO GLOBAL LEDGER";
         document.getElementById("loading").style.display = "none";
       }
     }
@@ -1221,32 +1114,17 @@
       var savedId = document.getElementById('sid').value;
       var savedCo = document.getElementById('cname').value;
 
-      document.getElementById("success-msg").style.display = "none";
-      document.getElementById("form-container").style.display = "block";
-      
-      // Remove Single Page Edit Mode if active
-      document.getElementById('form-container').classList.remove('edit-mode-active');
       document.getElementById('edit-header').style.display = 'none';
-      
       document.getElementById("mainForm").reset();
-      document.getElementById("pid").value = ""; // Clear the editing ID!
+      document.getElementById("pid").value = ""; 
       document.getElementById("btn").disabled = false;
-      document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+      document.getElementById("btn").innerHTML = "🚀 UPLOAD TO GLOBAL LEDGER";
       document.getElementById("priceBody").innerHTML = "";
       addPriceRow();
       
-      document.getElementById('step3').classList.remove('active');
-      document.getElementById('step2').classList.remove('active');
-      document.getElementById('step1').classList.add('active');
-      document.getElementById('progress').style.width = "33.33%";
-      document.getElementById('step3-ind').classList.remove('step-active');
-      document.getElementById('step2-ind').classList.remove('step-active');
-      document.getElementById('step1-ind').classList.add('step-active');
-
       document.getElementById('sid').value = savedId;
       document.getElementById('cname').value = savedCo;
 
-      // Clear Visual Previews
       ['hero', 'life', 'detail', 'pack', 'extra'].forEach(function(type) {
          document.getElementById('preview_img_' + type).style.display = 'none';
          document.getElementById('preview_img_' + type).style.backgroundImage = '';
