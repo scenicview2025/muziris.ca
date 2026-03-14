@@ -119,8 +119,14 @@
 
   <script>
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    
+    // 🟢 THE FIX: Check the URL first (for emails), then check memory (for the dashboard)
     const urlParams = new URLSearchParams(window.location.search);
-    const rfqId = urlParams.get('rfq');
+    let rfqId = urlParams.get('rfq'); 
+
+    if (!rfqId) {
+      rfqId = localStorage.getItem('currentActionRfq'); 
+    }
 
     if (!rfqId) {
       document.getElementById('loading').innerText = "INVALID RFQ LINK. ACCESS DENIED.";
@@ -281,7 +287,6 @@
         },
         evidence: { certFile: certUrl, photoFile: photoUrl, videoLink: videoLinkInput ? videoLinkInput.value : "" },
         
-        // 🟢 NEW: Capture the legal agreement to stamp in the database
         agreedToTerms: document.getElementById('legal-agree').checked
       };
 
@@ -297,8 +302,14 @@
             <div style="text-align:center; padding: 50px;">
               <h2 style="color:var(--gold);">✓ DATA TRANSMITTED TO BROKER</h2>
               <p style="color:#aaa;">Your pricing and box dimensions have been sent to Muziris Logistics. They will calculate the final freight and send the official contract to the buyer.</p>
+              <br><br>
+              <a href="supplier-dashboard.html" style="color:var(--gold); text-decoration:none; font-weight:bold; border: 1px solid var(--gold); padding: 10px 20px; border-radius: 4px;">Return to Dashboard</a>
             </div>
           `;
+          
+          // 🟢 NEW: Clear the local memory so it doesn't stay stuck on this RFQ!
+          localStorage.removeItem('currentActionRfq');
+
         } else {
           alert("Database Error: " + data.error);
           btn.innerText = "SUBMIT TO LOGISTICS BROKER";
