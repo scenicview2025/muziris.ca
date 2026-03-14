@@ -174,12 +174,46 @@
       document.getElementById('ui-supplier-id').innerText = savedId;
       document.getElementById('ui-company-name').innerText = savedCompany;
       
-      // Auto-generate a slick text logo based on their company name
+      // Auto-generate a slick text logo based on their company name (Temporary placeholder)
       document.getElementById('ui-logo-placeholder').innerText = savedCompany.substring(0,1).toUpperCase();
 
       // Fetch Dashboard Data
       fetchDashboardStats(savedId);
+
+      // 🟢 NEW: Fetch custom branding!
+      fetchProfileBranding(savedId); 
     };
+
+    // 🟢 NEW: Function to load Logo, Banner, and Bio
+    function fetchProfileBranding(supplierId) {
+      fetch(API_BASE_URL + '/get-supplier-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ supplierId: supplierId })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.error) return;
+
+        // 1. Update Banner if it exists
+        if (data.banner_url) {
+          document.getElementById('ui-banner').style.backgroundImage = `url('${data.banner_url}')`;
+        }
+
+        // 2. Update Logo if it exists
+        if (data.logo_url) {
+          const logoZone = document.getElementById('ui-logo-placeholder');
+          // Replace the default letter with the actual uploaded image
+          logoZone.innerHTML = `<img src="${data.logo_url}" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 6px;">`;
+        }
+
+        // 3. Update Bio if they wrote one!
+        if (data.company_bio) {
+           document.getElementById('ui-company-desc').innerText = data.company_bio;
+        }
+      })
+      .catch(console.error);
+    }
 
     function fetchDashboardStats(supplierId) {
       // We will re-use the get-inventory endpoint to count their products!
