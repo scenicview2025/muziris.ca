@@ -87,7 +87,10 @@
 
   <header>
     <h1 class="brand">Muziris</h1>
-    <button class="logout-btn" onclick="logoutSupplier()">Secure Logout</button> <a href="escrow-wallet.html" style="color:var(--gold); text-decoration:none; font-size:12px; font-weight:bold; border:1px solid var(--gold); padding:8px 15px; border-radius:4px; margin-right: 15px;">🏦 Escrow Wallet</a>
+    <div style="display:flex; gap:15px; align-items:center;">
+      <a href="escrow-wallet.html" style="color:var(--gold); text-decoration:none; font-size:12px; font-weight:bold; border:1px solid var(--gold); padding:8px 15px; border-radius:4px;">🏦 Escrow Wallet</a>
+      <button class="logout-btn" onclick="logoutSupplier()">Secure Logout</button>
+    </div>
   </header>
 
   <div class="container">
@@ -111,7 +114,7 @@
     </div>
 
     <div class="rfq-widget" id="rfqWidget">
-      <h3 class="rfq-title">🤝 Action Required: New Sourcing Requests</h3>
+      <h3 class="rfq-title">🤝 Action Required: Sourcing Requests & Messages</h3>
       <div id="rfqContainer"></div>
     </div>
 
@@ -262,7 +265,10 @@
 
         data.forEach(rfq => {
           if (rfq.status !== 'Completed' && rfq.status !== 'Cancelled') activeRfqCount++;
-          if (rfq.status === 'Pending Supplier') pendingRfqs.push(rfq);
+          // 🟢 THE FIX: Check for BOTH 'Pending Supplier' and 'Supplier Clarification'
+          if (rfq.status === 'Pending Supplier' || rfq.status === 'Supplier Clarification') {
+              pendingRfqs.push(rfq);
+          }
         });
 
         document.getElementById('metric-rfq').innerText = activeRfqCount;
@@ -271,13 +277,18 @@
           document.getElementById('rfqWidget').style.display = 'block';
           let rfqHtml = '';
           pendingRfqs.forEach(rfq => {
+            
+            // Customize the button and message based on whether it's a new quote or a clarification
+            let btnText = rfq.status === 'Supplier Clarification' ? "Respond to Buyer" : "Submit Quote & Dimensions";
+            let msgText = rfq.status === 'Supplier Clarification' ? `<strong style="color:var(--gold);">Buyer Message Waiting</strong>` : `<strong>Buyer:</strong> ${rfq.buyer_company} | <strong>Destination:</strong> ${rfq.destination}`;
+
             rfqHtml += `
               <div class="alert-item">
                 <div>
                   <div class="alert-item-name">${rfq.product_name} (ID: ${rfq.rfq_id})</div>
-                  <div class="alert-item-msg"><strong>Buyer:</strong> ${rfq.buyer_company} | <strong>Destination:</strong> ${rfq.destination}</div>
+                  <div class="alert-item-msg">${msgText}</div>
                 </div>
-                <button onclick="openLogistics('${rfq.rfq_id}')" class="rfq-btn">Submit Quote & Dimensions</button>
+                <button onclick="openLogistics('${rfq.rfq_id}')" class="rfq-btn">${btnText}</button>
               </div>
             `;
           });
