@@ -17,6 +17,7 @@
       --mist: #e0e0e0; 
       --success: #4CAF50;
       --blue: #1E88E5;
+      --alert: #ff5252;
     }
     body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); }
     
@@ -36,7 +37,7 @@
     .kpi-sub { font-size: 12px; color: var(--success); margin-top: 8px; font-weight: bold; }
 
     /* CHART SECTION */
-    .chart-container { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 25px; margin-bottom: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .chart-container { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
     .section-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: 18px; margin-top: 0; margin-bottom: 20px; }
 
     /* TABLE SECTION */
@@ -101,9 +102,15 @@
         </div>
       </div>
 
-      <div class="chart-container">
-        <h3 class="section-title">RFQ Volume (Last 6 Months)</h3>
-        <canvas id="rfqChart" height="80"></canvas>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 40px;">
+        <div class="chart-container" style="margin-bottom: 0;">
+          <h3 class="section-title">RFQ Volume (Last 6 Months)</h3>
+          <canvas id="rfqChart" height="100"></canvas>
+        </div>
+        <div class="chart-container" style="margin-bottom: 0;">
+          <h3 class="section-title">Catalog Views (Last 30 Days)</h3>
+          <canvas id="viewsChart" height="100"></canvas>
+        </div>
       </div>
 
       <div class="table-container">
@@ -168,6 +175,7 @@
     function renderEmptyState() {
       document.getElementById('ledger-body').innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 40px; color:#666;">No historical data found.</td></tr>`;
       renderChart({}); // Empty chart
+      renderViewsChart();
     }
 
     function processData(rfqs) {
@@ -235,8 +243,9 @@
 
       document.getElementById('ledger-body').innerHTML = tableHtml;
 
-      // Render the Graph
+      // Render the Graphs
       renderChart(chartData);
+      renderViewsChart();
     }
 
     function renderChart(chartData) {
@@ -278,6 +287,35 @@
               ticks: { color: '#888' },
               grid: { display: false }
             }
+          }
+        }
+      });
+    }
+
+    function renderViewsChart() {
+      const ctx = document.getElementById('viewsChart').getContext('2d');
+      
+      // Simulating 30 days of view data for the visual prototype
+      const labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+      const dataPoints = [24, 45, 38, 75]; 
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Profile & Product Views',
+            data: dataPoints,
+            backgroundColor: 'rgba(30, 136, 229, 0.8)',
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { color: '#888' }, grid: { color: '#222' } },
+            x: { ticks: { color: '#888' }, grid: { display: false } }
           }
         }
       });
