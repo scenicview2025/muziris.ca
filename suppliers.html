@@ -324,19 +324,98 @@
       
       window.location.href = 'supplier-dashboard.html';
     }
-  </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
-  <script src="muziris-bot.js"></script>
-  <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-      var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-    })();
-  </script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+    authDomain: "muziris-ac9dd.firebaseapp.com",
+    projectId: "muziris-ac9dd",
+    storageBucket: "muziris-ac9dd.firebasestorage.app",
+    messagingSenderId: "929662963272",
+    appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  // 1. NATIVE EMAIL & PIN LOGIC (Bypasses Firebase, checks DB directly)
+  window.triggerEmailLogin = function() {
+    const email = document.getElementById('login-email').value;
+    const pin = document.getElementById('login-password').value;
+    const btn = document.getElementById('btn-login');
+    
+    btn.innerText = "AUTHENTICATING...";
+    btn.disabled = true;
+
+    fetch("https://muziris-api.onrender.com/api/login-supplier-pin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email, pin: pin })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        localStorage.setItem('verifiedSupplierId', data.supplierId);
+        localStorage.setItem('verifiedCompany', data.companyName);
+        localStorage.setItem('verifiedCurrency', data.currency);
+        window.location.href = 'supplier-dashboard.html';
+      } else {
+        showAlert("Authentication Failed", data.error);
+        btn.innerText = "SIGN IN";
+        btn.disabled = false;
+      }
+    })
+    .catch(err => {
+      showAlert("Network Error", "Failed to connect to verification server.");
+      btn.innerText = "SIGN IN";
+      btn.disabled = false;
+    });
+  };
+
+  // 2. GOOGLE SSO LOGIC (Uses Firebase, then checks DB Bouncer)
+  window.triggerOAuth = function(provider) {
+    if (provider !== 'Google') {
+      showAlert("Coming Soon", provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.");
+      return;
+    }
+
+    // Trigger Google Popup
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const userEmail = result.user.email;
+        
+        // Google says they are real. Now ask the Database: Are they a supplier?
+        fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: userEmail })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // They are a real supplier! Let them in.
+            localStorage.setItem('verifiedSupplierId', data.supplierId);
+            localStorage.setItem('verifiedCompany', data.companyName);
+            localStorage.setItem('verifiedCurrency', data.currency);
+            window.location.href = 'supplier-dashboard.html';
+          } else {
+            // Kick them out of Firebase so they don't get stuck logged in
+            signOut(auth);
+            showAlert("Access Denied", data.error);
+          }
+        })
+        .catch(err => {
+          signOut(auth);
+          showAlert("Network Error", "Failed to verify account with Muziris Ledger.");
+        });
+
+      }).catch((error) => {
+        showAlert("Google Authentication Failed", error.message);
+      });
+  };
+</script>
 </body>
 </html>
