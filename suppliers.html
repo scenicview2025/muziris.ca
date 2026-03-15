@@ -15,29 +15,32 @@
       --mist: #e0e0e0; 
       --alert: #ff5252; 
     }
-    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; overflow: hidden; height: 100vh; }
+    
+    /* 🟢 FIX: Allowed scrolling and dynamic height for mobile */
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; min-height: 100vh; overflow-y: auto; overflow-x: hidden; }
     
     /* TOP NAVIGATION */
-    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 10; }
     .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
     .back-home:hover { color: #fff; }
 
-    /* ORIGINAL FULL-SCREEN 3D LAYOUT */
+    /* 🟢 FIX: 100dvh prevents mobile browser bar overlap */
     #view-verify {
       display: flex; align-items: center; justify-content: flex-start; padding-left: 12%;
       background: url('https://images.unsplash.com/photo-1605337030588-468f3a39e80e?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
       position: relative;
-      overflow: hidden;
-      height: 100vh;
-      width: 100vw;
+      min-height: 100vh;
+      min-height: 100dvh; 
+      width: 100%;
+      box-sizing: border-box;
     }
     #view-verify::before { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(135deg, rgba(11, 14, 20, 0.95) 0%, rgba(11, 14, 20, 0.75) 100%); z-index: 0; }
     
-    /* 3D CANVAS STYLING */
-    #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
+    /* 🟢 FIX: Globe fixed to background so it doesn't break if user scrolls */
+    #networkGlobe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
 
     /* COMPACT FLOATING GLASSMORPHISM CARD */
-    .card { position: relative; z-index: 2; background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); width: 100%; max-width: 360px; padding: 35px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; }
+    .card { position: relative; z-index: 2; background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); width: 100%; max-width: 360px; padding: 35px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; margin: auto 0; }
     h1.brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
     .subtitle { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #aaa; margin-bottom: 25px; }
 
@@ -77,10 +80,18 @@
     .alert-btn:hover { background: var(--bronze); }
 
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+    /* 🟢 FIX: Specialized Mobile Media Query for Login Flow */
     @media (max-width: 900px) {
       .top-nav { top: 20px; left: 20px; }
-      #view-verify { justify-content: center; padding-left: 0; padding: 20px; }
-      .card { padding: 30px 20px; }
+      #view-verify { 
+        justify-content: center; 
+        padding-left: 0; 
+        padding-top: 80px; /* Room for back button */
+        padding-bottom: 80px; /* Room for Tawk.to chat widget */
+        flex-direction: column;
+      }
+      .card { padding: 30px 20px; margin: auto; }
     }
   </style>
 </head>
@@ -231,7 +242,6 @@
     }
 
     window.onload = function() { 
-      // If they are already logged in, redirect them straight to the dashboard
       if (localStorage.getItem('verifiedSupplierId')) {
         window.location.href = 'supplier-dashboard.html';
         return;
@@ -265,7 +275,6 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // Function for the standard Email/Password form
     window.triggerEmailLogin = function() {
       const email = document.getElementById('login-email').value;
       const pass = document.getElementById('login-password').value;
@@ -291,7 +300,6 @@
         });
     };
 
-    // Function for SSO Buttons
     window.triggerOAuth = function(provider) {
       if (provider !== 'Google') {
         showAlert("Coming Soon", provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.");
@@ -306,7 +314,6 @@
         });
     };
 
-    // Securely load the dashboard after any successful login method
     function finalizeLogin(userEmail) {
       let storedId = localStorage.getItem('verifiedSupplierId') || 'SUP-77291';
       let storedCompany = localStorage.getItem('verifiedCompany') || 'Global Trading Co.';
