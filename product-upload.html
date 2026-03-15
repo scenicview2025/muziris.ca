@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Single Product Upload</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --bronze: #b89225; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+      --alert: #ff5252; 
+    }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    
+    header { background: rgba(11, 14, 20, 0.95); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
+    .back-btn { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; }
+    .back-btn:hover { color: #fff; }
+
+    .container { max-width: 1000px; margin: 40px auto; background: var(--slate); padding: 50px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative; }
+    .container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--gold), var(--bronze)); border-radius: 8px 8px 0 0; }
+    
+    h2 { color: var(--gold); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; font-weight: 300; font-family: 'Cinzel', serif; }
+    
+    .bulk-bar { background: rgba(255, 255, 255, 0.05); border: 1px dashed #444; padding: 15px; margin-bottom: 25px; text-align: center; font-size: 12px; color: #aaa; border-radius: 4px; }
+    .bulk-link { color: var(--gold); text-decoration: underline; cursor: pointer; font-weight: bold; margin: 0 10px; transition: 0.3s; }
+    .bulk-link:hover { color: #fff; }
+
+    .progress-container { margin-bottom: 40px; }
+    .progress-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); width: 33.33%; transition: width 0.4s ease; }
+    .step-indicator { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    .step-active { color: var(--gold); font-weight: bold; }
+    
+    .form-step { display: none; animation: fadeIn 0.5s ease; }
+    .form-step.active { display: block; }
+    h3.step-title { color: white; font-family: 'Cinzel', serif; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 25px; }
+
+    /* SINGLE PAGE EDIT MODE STYLES */
+    .edit-mode-active .progress-container { display: none !important; }
+    .edit-mode-active .form-step { display: block !important; background: rgba(0,0,0,0.2); padding: 30px; border-radius: 8px; border: 1px solid #333; margin-bottom: 30px; animation: none; }
+    .edit-mode-active .btn-next, .edit-mode-active .btn-prev { display: none !important; }
+    .edit-mode-active h3.step-title { color: var(--gold); border-bottom: 1px dashed #444; padding-bottom: 15px; }
+
+    label { display: block; margin-top: 25px; margin-bottom: 8px; font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+    .sub-label { display: block; font-size: 11px; color: #666; margin-bottom: 10px; margin-top: -5px; text-transform: none; font-style: italic; }
+    input, select, textarea { width: 100%; padding: 14px; background: var(--void); border: 1px solid #333; color: var(--mist); border-radius: 4px; box-sizing: border-box; transition: all 0.3s ease; font-family: 'Lato', sans-serif; }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
+    .id-field { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid #444; font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold; }
+
+    .checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 4px; border: 1px solid #333; }
+    .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--mist); cursor: pointer; }
+    .checkbox-item input { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; }
+
+    .matrix-box { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 4px; border: 1px solid #333; overflow-x: auto; }
+    table { width: 100%; min-width: 900px; text-align: left; border-collapse: separate; border-spacing: 0 10px; }
+    th { color: #666; font-size: 10px; text-transform: uppercase; padding: 0 10px; letter-spacing: 1px; }
+    td { vertical-align: middle; padding: 0 5px; } 
+    td input, td select { font-size: 13px; background: #0f1219; border: 1px solid #2a2a2a; margin-bottom: 0; }
+    td input[type="file"] { font-size: 10px; padding: 8px; border: 1px dashed #444; width: 100%; }
+
+    td input[type="text"].q-input { -moz-appearance: textfield; }
+    td input[type="text"].q-input::-webkit-outer-spin-button,
+    td input[type="text"].q-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .tooltip { position: relative; display: inline-block; cursor: help; color: var(--gold); margin-left: 3px; vertical-align: middle; }
+    .tooltip .tooltiptext { visibility: hidden; width: 180px; background-color: #000; color: #fff; text-align: center; border-radius: 4px; padding: 8px; border: 1px solid var(--gold); position: absolute; z-index: 999; top: 150%; left: 50%; margin-left: -90px; opacity: 0; transition: opacity 0.3s; font-size: 11px; text-transform: none; letter-spacing: normal; font-weight: normal; }
+    .tooltip .tooltiptext::after { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: transparent transparent var(--gold) transparent; }
+    .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+    
+    .btn-group { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid #333; padding-top: 25px; }
+    .btn-prev { background: transparent; color: #888; border: 1px solid #444; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .btn-prev:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-next, .gold-btn { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .btn-next:hover, .gold-btn:hover { background: var(--bronze); }
+    
+    .add-btn { width: auto; background: transparent; border: 1px solid #444; color: #888; padding: 8px 15px; font-size: 11px; margin-top: 15px; box-shadow: none; cursor: pointer; transition: 0.3s; border-radius: 4px; }
+    .add-btn:hover { border-color: var(--gold); color: var(--gold); transform: none; }
+
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 10px; }
+    .image-box { background: #0f1219; padding: 15px; border: 1px solid #333; border-radius: 4px; text-align: center; }
+    .image-label { font-size: 10px; color: var(--gold); margin-bottom: 5px; display: block; text-transform: uppercase; }
+    .image-box input { padding: 5px; font-size: 11px; }
+
+    #loading { display: none; text-align: center; color: var(--gold); margin-top: 20px; letter-spacing: 1px; font-size: 12px; }
+    #success-msg { display: none; text-align: center; color: var(--gold); margin-top: 50px; animation: fadeIn 0.5s; }
+    
+    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+    .alert-box { background: var(--slate); border: 1px solid var(--alert); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .alert-box h3 { color: var(--alert); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
+    .alert-box p { font-size: 14px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
+    .alert-btn { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .alert-btn:hover { background: var(--alert); color: #000; }
+
+    #listings-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; }
+    .modal-box { background: var(--slate); width: 90%; max-width: 600px; max-height: 80vh; padding: 25px; border-radius: 8px; border: 1px solid var(--gold); overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 15px; right: 20px; color: var(--gold); font-size: 24px; cursor: pointer; font-weight: bold; }
+    .listing-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #333; transition: background 0.2s; cursor: pointer; }
+    .listing-item:hover { background: #252a33; border-left: 3px solid var(--gold); }
+    .listing-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #444; background: #000; }
+    .listing-info { flex: 1; text-align: left; }
+    .listing-name { font-size: 14px; font-weight: bold; color: #fff; }
+    .listing-cat { font-size: 11px; color: var(--gold); text-transform: uppercase; }
+
+    /* AI BUTTON CSS */
+    .ai-btn { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(212,175,55,0.3); }
+    .ai-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(212,175,55,0.5); }
+    .ai-btn:disabled { background: #555; color: #888; cursor: not-allowed; box-shadow: none; transform: none; }
+
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="brand">Muziris</h1>
+    <a href="supplier-dashboard.html" class="back-home">← Back to Dashboard</a>
+  </header>
+
+  <div id="custom-alert">
+    <div class="alert-box">
+      <h3 id="alert-title">Notice</h3>
+      <p id="alert-message">Message</p>
+      <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Global Trade Portal</h2>
+
+    <div class="bulk-bar">
+      Options: 
+      <span class="bulk-link" onclick="window.location.href='bulk-upload.html'">Launch Mass CSV Engine</span>
+      <span style="color:#444; margin: 0 10px;">|</span>
+      <span class="bulk-link" onclick="viewListings()">Edit Existing Listings</span>
+    </div>
+
+    <div id="success-msg">
+      <h1 style="font-family:'Cinzel', serif;">✓ SUCCESS</h1>
+      <p>Product successfully uploaded to the Global Ledger.</p>
+      <br>
+      <button class="gold-btn" onclick="resetForm()" style="width:auto; padding:10px 30px;">
+        + Add Another Product
+      </button>
+    </div>
+
+    <div id="form-container">
+      
+      <div id="edit-header" style="display:none; justify-content:space-between; align-items:center; margin-bottom: 25px; background: rgba(212, 175, 55, 0.05); padding: 20px; border-radius: 8px; border: 1px solid var(--gold);">
+        <div>
+          <h3 style="margin:0; color:var(--gold); font-family:'Cinzel', serif; letter-spacing: 2px;">✎ QUICK EDIT MODE</h3>
+          <div style="font-size:12px; color:#aaa; margin-top:5px;">All steps have been unrolled into a single page. Edit your data and save at the bottom.</div>
+        </div>
+        <button type="button" onclick="cancelEdit()" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:10px 20px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold; text-transform:uppercase; transition:0.3s;">Cancel Edit</button>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress"></div>
+        </div>
+        <div class="step-indicator">
+          <span id="step1-ind" class="step-active">1. Basic Info</span>
+          <span id="step2-ind">2. Specifications</span>
+          <span id="step3-ind">3. Media Upload</span>
+        </div>
+      </div>
+
+      <form id="mainForm" onsubmit="event.preventDefault(); submitForm(this)">
+        
+        <div class="form-step active" id="step1">
+          <h3 class="step-title">Basic Information</h3>
+          <input type="hidden" id="pid" name="productId" value="">
+          <div style="display:flex; gap:20px;">
+            <div style="flex:1;">
+              <label>SUPPLIER ID</label>
+              <input type="text" id="sid" name="supplierId" class="id-field" readonly>
+            </div>
+            <div style="flex:1;">
+              <label>COMPANY</label>
+              <input type="text" id="cname" name="companyName" class="id-field" readonly>
+            </div>
+          </div>
+
+          <label>MAIN CATEGORY</label>
+          <select id="mainCat" name="category" onchange="loadSubCats()" required>
+            <option value="">Select Category...</option>
+          </select>
+          
+          <select id="subCat" name="subCategory" style="margin-top:10px;" required>
+            <option value="">Select Sub-Category</option>
+          </select>
+
+          <label>PRODUCT NAME</label>
+          <input type="text" id="pName" name="productName" placeholder="e.g. Premium Ceramic Coffee Mug" required>
+          
+          <div class="btn-group" style="justify-content: flex-end;">
+            <button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button>
+          </div>
+        </div>
+
+        <div class="form-step" id="step2">
+          <h3 class="step-title">Product Details & Pricing</h3>
+          <label>FACTORY SERVICES</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" id="svc1" name="service_privateLabel" value="Yes"> Private Labeling (OEM)</label>
+            <label class="checkbox-item"><input type="checkbox" id="svc2" name="service_customPack" value="Yes"> Custom Packaging</label>
+            <label class="checkbox-item"><input type="checkbox" id="svc3" name="service_odm" value="Yes"> Custom Design (ODM)</label>
+          </div>
+
+          <label>PACKAGING DETAILS</label>
+          <input type="text" id="packDetails" name="packagingDetails" placeholder="e.g. Polybag + Inner Box + Master Carton">
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:25px; margin-bottom:8px;">
+            <label style="margin:0;">SHORT TITLE / TAGLINE</label>
+            <button type="button" class="ai-btn" id="btn-ai-title" onclick="generateAITitle()">
+              ✨ Auto-Tagline
+            </button>
+          </div>
+          <span class="sub-label" style="margin-top:0;">A maximum 10-word punchy title to grab buyer attention.</span>
+          <input type="text" id="shortTitle" name="shortTitle" placeholder="e.g. Premium Eco-Friendly Bamboo Coffee Mug">
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:25px; margin-bottom:8px;">
+            <label style="margin:0;">DETAILED DESCRIPTION</label>
+            <button type="button" class="ai-btn" id="btn-ai-desc" onclick="generateAIDescription()">
+              ✨ Auto-Write with AI
+            </button>
+          </div>
+          <textarea id="desc" name="description" rows="4" placeholder="Describe materials, certifications, origin..."></textarea>
+
+          <label>VOLUME PRICING & VARIANTS</label>
+          <span class="sub-label">Your pricing currency is auto-locked to: <strong id="ui-currency-text" style="color:var(--gold); font-size:13px;">...</strong></span>
+          
+          <div class="matrix-box">
+            <table id="priceTable">
+              <thead>
+                <tr>
+                  <th style="width: 12%;">TYPE</th>
+                  <th style="width: 12%;">OPTION</th>
+                  <th style="width: 8%;">UNIT</th>
+                  <th style="width: 8%;">MIN QTY</th>
+                  <th style="width: 8%;">MAX QTY</th>
+                  <th style="width: 8%;">
+                    LEAD (DAYS)
+                    <div class="tooltip">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                      <span class="tooltiptext">Estimated manufacturing/lead time in days (e.g., 30).</span>
+                    </div>
+                  </th>
+                  <th style="width: 9%;">
+                    TERMS
+                    <a href="https://muziris.ca/incoterms" target="_blank" title="Learn about Incoterms" class="terms-icon" style="color:var(--gold); text-decoration:none; vertical-align:middle; margin-left:3px;">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </a>
+                  </th>
+                  <th style="width: 10%;">PRICE <span id="ui-currency-label" style="color:var(--gold);"></span></th>
+                  <th style="width: 20%;">IMAGE (Specific)</th>
+                  <th style="width: 5%;"></th>
+                </tr>
+              </thead>
+              <tbody id="priceBody"></tbody>
+            </table>
+            <button type="button" class="add-btn" onclick="addPriceRow()">+ ADD PRICE TIER</button>
+          </div>
+
+          <div style="font-size: 11px; color: #888; margin-top: 12px; text-align: left; line-height: 1.5;">
+            <em>* <strong>Note for Small/Medium Enterprises:</strong> If you do not have an export license or shipping agent set up, we highly recommend selecting <strong>EXW (Ex Works)</strong>. <a href="https://muziris.ca/incoterms" target="_blank" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold);">Click here to learn more.</a></em>
+          </div>
+
+          <input type="hidden" name="pricingMatrix" id="pricingString">
+
+          <div class="btn-group">
+            <button type="button" class="btn-prev" onclick="prevStep(2)">Back</button>
+            <button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button>
+          </div>
+        </div>
+
+        <div class="form-step" id="step3">
+          <h3 class="step-title">Media Upload</h3>
+          <label>PRODUCT IMAGERY (Max 25MB)</label>
+          <span class="sub-label" style="color:#D4AF37">NOTE: Previous images are saved. Upload new files only if you want to replace them.</span>
+          <div class="image-grid">
+            
+            <div class="image-box">
+              <span class="image-label">1. Hero (White BG) *</span>
+              <div class="img-preview" id="preview_img_hero" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+              <div id="status_img_hero" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+              <input type="file" name="img_hero" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_hero', 'status_img_hero')">
+            </div>
+            
+            <div class="image-box">
+              <span class="image-label">2. Lifestyle</span>
+              <div class="img-preview" id="preview_img_life" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+              <div id="status_img_life" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+              <input type="file" name="img_life" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_life', 'status_img_life')">
+            </div>
+            
+            <div class="image-box">
+              <span class="image-label">3. Close-Up</span>
+              <div class="img-preview" id="preview_img_detail" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+              <div id="status_img_detail" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+              <input type="file" name="img_detail" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_detail', 'status_img_detail')">
+            </div>
+            
+            <div class="image-box">
+              <span class="image-label">4. Packaging</span>
+              <div class="img-preview" id="preview_img_pack" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+              <div id="status_img_pack" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+              <input type="file" name="img_pack" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_pack', 'status_img_pack')">
+            </div>
+            
+            <div class="image-box">
+              <span class="image-label">5. Extra</span>
+              <div class="img-preview" id="preview_img_extra" style="display:none; margin: 10px auto; width: 60px; height: 60px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div>
+              <div id="status_img_extra" style="font-size: 9px; color: #666; margin-bottom: 5px; text-transform: uppercase;">New Upload</div>
+              <input type="file" name="img_extra" accept="image/*" onchange="updateLocalPreview(this, 'preview_img_extra', 'status_img_extra')">
+            </div>
+            
+          </div>
+          
+          <label>CATALOG (PDF)</label>
+          <div id="status_catalog" style="font-size: 11px; color: #666; margin-bottom: 5px; font-weight: bold;">New Upload</div>
+          <input type="file" name="catalog" accept="application/pdf" onchange="document.getElementById('status_catalog').innerHTML='<span style=\'color:#D4AF37\'>✎ Will be replaced</span>'">
+
+          <div class="btn-group">
+            <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
+            <button type="submit" class="gold-btn" id="btn" style="width:auto; margin-top:0;">UPLOAD TO GLOBAL LEDGER</button>
+          </div>
+          <div id="loading">Encrypting & Uploading to Server...<br>Please wait...</div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div id="listings-modal">
+    <div class="modal-box">
+      <div class="modal-close" onclick="closeListings()">×</div>
+      <h3 style="color:var(--gold); text-align:center; margin-top:0;">MY ACTIVE LISTINGS</h3>
+      <div style="text-align:center; margin-bottom:15px; color:#666; font-size:11px;">
+        Click any product to load its data into the form for editing.
+      </div>
+      <div id="listings-content" style="margin-top:10px; color:#aaa; font-size:13px; text-align:center;">
+        Loading...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 🚀 CONNECTED TO RENDER ENTERPRISE SERVER
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    var catData = {};
+
+    window.onload = function() {
+      // 1. Verify user is actually logged in!
+      var savedId = localStorage.getItem('verifiedSupplierId');
+      var savedCompany = localStorage.getItem('verifiedCompany');
+      var savedCurrency = localStorage.getItem('verifiedCurrency') || 'USD';
+
+      if (!savedId) {
+        window.location.href = 'index.html'; 
+        return;
+      }
+
+      document.getElementById('sid').value = savedId;
+      document.getElementById('cname').value = savedCompany;
+      document.getElementById('ui-currency-label').innerText = "(" + savedCurrency + ")";
+      document.getElementById('ui-currency-text').innerText = savedCurrency;
+
+      fetchAPI('getCategoryStructure').then(populateCats);
+      addPriceRow(); 
+
+      // 2. Check if we were sent here to EDIT a specific product
+      const urlParams = new URLSearchParams(window.location.search);
+      const editProductId = urlParams.get('edit');
+      
+      if(editProductId) {
+         previewProduct(editProductId, true); // True flag = auto-load into edit mode
+      }
+    };
+
+    async function fetchAPI(action, payload = {}) {
+      let endpoint = '';
+      
+      if (action === 'getCategoryStructure') endpoint = '/categories';
+      else if (action === 'generateDescription') { endpoint = '/generate-ai'; payload.type = 'desc'; }
+      else if (action === 'generateTitle') { endpoint = '/generate-ai'; payload.type = 'title'; }
+      else if (action === 'processForm') endpoint = '/submit-staging';
+      else if (action === 'uploadMedia') endpoint = '/upload-media';
+      else if (action === 'getSupplierInventory') endpoint = '/get-inventory';
+      else if (action === 'getProductDetails') endpoint = '/get-product-details';
+      else if (action === 'deleteProduct') endpoint = '/delete-product';
+      
+      try {
+        const response = await fetch(API_BASE_URL + endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        return await response.json(); 
+      } catch (error) {
+        return { error: "Server connection failed." };
+      }
+    }
+
+    // 🟢 AI DESC FUNCTION
+    function generateAIDescription() {
+      var pName = document.getElementById('pName').value;
+      var category = document.getElementById('mainCat').value;
+      var btn = document.getElementById('btn-ai-desc');
+      
+      if(!pName || !category) {
+        customAlert("Missing Info", "Please enter a Product Name and select a Category on Step 1 first!");
+        return;
+      }
+      
+      btn.innerText = "⏳ Writing...";
+      btn.disabled = true;
+      
+      fetchAPI('generateDescription', { productName: pName, category: category })
+        .then(res => {
+          if(res.description) document.getElementById('desc').value = res.description;
+          else customAlert("AI Error", res.error || "Could not generate.");
+          btn.innerText = "✨ Auto-Write with AI";
+          btn.disabled = false;
+        })
+        .catch(err => {
+          customAlert("Network Error", "Failed to connect to AI server.");
+          btn.innerText = "✨ Auto-Write with AI";
+          btn.disabled = false;
+        });
+    }
+
+    // 🟢 AI TAGLINE FUNCTION
+    function generateAITitle() {
+      var pName = document.getElementById('pName').value;
+      var category = document.getElementById('mainCat').value;
+      var btn = document.getElementById('btn-ai-title');
+      
+      if(!pName || !category) {
+        customAlert("Missing Info", "Please enter a Product Name and select a Category on Step 1 first!");
+        return;
+      }
+      
+      btn.innerText = "⏳ Thinking...";
+      btn.disabled = true;
+      
+      fetchAPI('generateTitle', { productName: pName, category: category })
+        .then(res => {
+          if(res.title) document.getElementById('shortTitle').value = res.title;
+          else customAlert("AI Error", res.error || "Could not generate title.");
+          btn.innerText = "✨ Auto-Tagline";
+          btn.disabled = false;
+        })
+        .catch(err => {
+          customAlert("Network Error", "Failed to connect to AI server.");
+          btn.innerText = "✨ Auto-Tagline";
+          btn.disabled = false;
+        });
+    }
+
+    function customAlert(title, message) {
+      document.getElementById('alert-title').innerText = title;
+      document.getElementById('alert-message').innerText = message;
+      document.getElementById('custom-alert').style.display = 'flex';
+    }
+
+    function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+    function nextStep(current) {
+      if(current === 1 && (!document.getElementById('mainCat').value || !document.getElementById('pName').value)) {
+        customAlert("Required Fields", "Please select a Category and enter a Product Name."); return;
+      }
+      document.getElementById('step' + current).classList.remove('active');
+      document.getElementById('step' + (current+1)).classList.add('active');
+      document.getElementById('progress').style.width = (((current + 1) / 3) * 100) + "%";
+      document.getElementById('step' + current + '-ind').classList.remove('step-active');
+      document.getElementById('step' + (current+1) + '-ind').classList.add('step-active');
+      window.scrollTo(0,0);
+    }
+
+    function prevStep(current) {
+      document.getElementById('step' + current).classList.remove('active');
+      document.getElementById('step' + (current-1)).classList.add('active');
+      document.getElementById('progress').style.width = (((current - 1) / 3) * 100) + "%";
+      document.getElementById('step' + current + '-ind').classList.remove('step-active');
+      document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
+      window.scrollTo(0,0);
+    }
+
+    function updateLocalPreview(input, previewId, statusId) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById(previewId).style.backgroundImage = "url('" + e.target.result + "')";
+          document.getElementById(previewId).style.display = "block";
+          document.getElementById(statusId).innerHTML = "<span style='color:#D4AF37; font-weight:bold;'>✎ Will be replaced</span>";
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function setServerPreview(url, previewId, statusId) {
+      var preview = document.getElementById(previewId);
+      var status = document.getElementById(statusId);
+      if (url && url.trim() !== '') {
+        preview.style.backgroundImage = "url('" + url + "')";
+        preview.style.display = "block";
+        status.innerHTML = "<span style='color:#4CAF50; font-weight:bold;'>✓ Saved securely</span>";
+      } else {
+        preview.style.backgroundImage = "";
+        preview.style.display = "none";
+        status.innerHTML = "No image saved";
+      }
+    }
+
+    function updateVariantPreview(input) {
+      if (input.files && input.files[0]) {
+        var td = input.parentElement;
+        var preview = td.querySelector('.var-img-preview');
+        var status = td.querySelector('.var-img-status');
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          preview.style.backgroundImage = "url('" + e.target.result + "')";
+          preview.style.display = "block";
+          status.innerHTML = "<span style='color:#D4AF37; font-weight:bold;'>✎ Local</span>";
+          status.style.display = "block";
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function viewListings() {
+      var id = document.getElementById('sid').value;
+      document.getElementById('listings-modal').style.display = 'flex';
+      document.getElementById('listings-content').innerHTML = "Fetching secure ledger...";
+      fetchAPI('getSupplierInventory', { id: id }).then(renderListings);
+    }
+
+    function renderListings(items) {
+      var container = document.getElementById('listings-content');
+      if(!items || items.length === 0) { container.innerHTML = "No products found in your catalog."; return; }
+      
+      var html = "";
+      items.forEach(function(item) {
+         var img = item.hero_img ? '<img src="' + item.hero_img + '" class="listing-img">' : '<div class="listing-img" style="background:url(\'MC.png\') center/contain no-repeat;"></div>';
+         html += `
+         <div class="listing-item" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:15px; flex:1;" onclick="previewProduct('${item.product_id}')">
+                ${img}
+                <div class="listing-info">
+                    <div class="listing-name">${item.product_name}</div>
+                    <div class="listing-cat">${item.main_category}</div>
+                    <div style="color:${item.color}; font-size:10px; font-weight:bold; margin-top:3px;">${item.status}</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="previewProduct('${item.product_id}')" style="background:transparent; border:1px solid var(--gold); color:var(--gold); padding:5px 10px; border-radius:4px; cursor:pointer; font-size:10px; font-weight:bold;">VIEW</button>
+            </div>
+         </div>`;
+      });
+      container.innerHTML = html;
+    }
+    
+    function closeListings() { document.getElementById('listings-modal').style.display = 'none'; }
+
+    function deleteProduct(productId) {
+      if(confirm("🚨 WARNING: This will permanently delete this product from the Global Ledger. Proceed?")) {
+          var id = document.getElementById('sid').value;
+          document.getElementById('listings-content').innerHTML = "Deleting...";
+          fetchAPI('deleteProduct', { supplierId: id, productId: productId }).then(res => {
+              if(res.success) viewListings(); // Refresh the list
+              else customAlert("Error", "Could not delete product.");
+          });
+      }
+    }
+
+    window.currentPreviewData = null;
+
+    function previewProduct(productId, autoEdit = false) {
+      var id = document.getElementById('sid').value;
+      if(!autoEdit) document.getElementById('listings-content').innerHTML = "Loading product preview...";
+      
+      fetchAPI('getProductDetails', { supplierId: id, productId: productId }).then(dbRow => {
+         if(autoEdit) {
+            window.currentPreviewData = dbRow;
+            executeEdit();
+         } else {
+            showPreviewCard(dbRow);
+         }
+      });
+    }
+
+    function showPreviewCard(dbRow) {
+      if(!dbRow || dbRow.error) { customAlert("Error", "Error loading product data."); return; }
+      window.currentPreviewData = dbRow;
+
+      let imgUrl = dbRow.hero_img || 'MC.png';
+      let matrix = [];
+      try { matrix = typeof dbRow.pricing_matrix === 'string' ? JSON.parse(dbRow.pricing_matrix) : dbRow.pricing_matrix; } catch(e){}
+
+      let priceHtml = `<table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:12px; text-align:left;">
+          <tr style="color:var(--gold); border-bottom:1px solid #333;">
+            <th style="padding-bottom:5px;">Variant / Option</th>
+            <th style="padding-bottom:5px;">Volume</th>
+            <th style="padding-bottom:5px;">Unit Price</th>
+          </tr>`;
+      
+      if(matrix && matrix.length > 0) {
+          matrix.slice(0,3).forEach(m => {
+              priceHtml += `<tr style="border-bottom:1px solid #222;">
+                  <td style="padding:8px 0; color:#ccc;">${m.type === 'Standard' ? 'Standard' : (m.opt || 'N/A')}</td>
+                  <td style="padding:8px 0; color:#ccc;">${m.min} - ${m.max} ${m.unit}</td>
+                  <td style="padding:8px 0; color:#ccc; font-weight:bold;">$${m.supplierPriceRaw || m.price}</td>
+              </tr>`;
+          });
+          if(matrix.length > 3) {
+             priceHtml += `<tr><td colspan="3" style="text-align:center; padding-top:10px; color:#666; font-style:italic;">+ ${matrix.length - 3} additional pricing tiers</td></tr>`;
+          }
+      } else {
+          priceHtml += `<tr><td colspan="3" style="text-align:center; padding:10px; color:#666;">No pricing data found</td></tr>`;
+      }
+      priceHtml += `</table>`;
+
+      let statusBadge = (dbRow.status === 'PENDING') 
+        ? `<span style="background:rgba(184, 146, 37, 0.2); color:#b89225; padding:4px 8px; border-radius:3px; font-size:9px; border:1px solid #b89225; font-weight:bold;">⏳ PENDING REVIEW</span>`
+        : `<span style="background:rgba(76, 175, 80, 0.2); color:#4CAF50; padding:4px 8px; border-radius:3px; font-size:9px; border:1px solid #4CAF50; font-weight:bold;">🟢 LIVE IN CATALOG</span>`;
+
+      let html = `
+        <div style="text-align:left; animation: fadeIn 0.3s ease;">
+          <button onclick="viewListings()" style="background:transparent; border:none; color:var(--gold); cursor:pointer; font-size:11px; margin-bottom:15px; padding:0; font-weight:bold; letter-spacing:1px;">← BACK TO LISTINGS</button>
+          
+          <div style="display:flex; gap:20px; background:#0f1219; padding:20px; border-radius:8px; border:1px solid #333; align-items:center;">
+            <div style="width:110px; height:110px; border-radius:8px; background:url('${imgUrl}') center/cover no-repeat; border:1px solid #444; flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="margin-bottom:10px;">${statusBadge}</div>
+              <h2 style="margin:0 0 5px 0; color:#fff; font-size:18px; text-transform:none; letter-spacing:0; text-align:left; font-family:'Lato', sans-serif;">${dbRow.product_name}</h2>
+              <div style="color:var(--gold); font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">${dbRow.main_category} &rsaquo; ${dbRow.sub_category}</div>
+              <div style="font-size:11px; color:#888;">ID: ${dbRow.product_id}</div>
+            </div>
+          </div>
+          
+          <div style="margin-top:15px; background:#0f1219; padding:20px; border-radius:8px; border:1px solid #333;">
+             <h4 style="color:#fff; margin:0 0 5px 0; font-size:12px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #333; padding-bottom:10px;">Pricing & Variants Summary</h4>
+             ${priceHtml}
+          </div>
+
+          <div style="margin-top:20px; display:flex; gap:10px;">
+            <button class="gold-btn" onclick="executeEdit()" style="margin-top:0; flex:1; padding:15px; font-size:13px;">✎ MODIFY PRODUCT DATA</button>
+            <button onclick="deleteProduct('${dbRow.product_id}')" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:15px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold; text-transform:uppercase; transition:0.3s;">DELETE</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('listings-content').innerHTML = html;
+    }
+
+    function executeEdit() { fillForm(window.currentPreviewData); }
+
+    function fillForm(dbRow) {
+      if(!dbRow || dbRow.error) { customAlert("Error", "Error loading product data."); closeListings(); return; }
+      
+      document.getElementById('pid').value = dbRow.product_id;
+      document.getElementById('pName').value = dbRow.product_name || "";
+      document.getElementById('shortTitle').value = dbRow.short_title || ""; 
+      document.getElementById('packDetails').value = dbRow.packaging || "";
+      document.getElementById('desc').value = dbRow.description || "";
+      document.getElementById('mainCat').value = dbRow.main_category;
+      
+      loadSubCats(); 
+      setTimeout(() => { document.getElementById('subCat').value = dbRow.sub_category; }, 200);
+
+      var svcs = dbRow.services || "";
+      document.getElementById('svc1').checked = (svcs.indexOf("Private Label") > -1);
+      document.getElementById('svc2').checked = (svcs.indexOf("Custom Pkg") > -1);
+      document.getElementById('svc3').checked = (svcs.indexOf("ODM") > -1);
+
+      var tbody = document.getElementById("priceBody");
+      tbody.innerHTML = ""; 
+      
+      let matrix = [];
+      try { matrix = typeof dbRow.pricing_matrix === 'string' ? JSON.parse(dbRow.pricing_matrix) : dbRow.pricing_matrix; } catch(e){}
+
+      if(matrix && matrix.length > 0){ 
+        matrix.forEach(function(row) { addPriceRowFilled(row); }); 
+      } else { addPriceRow(); }
+
+      setServerPreview(dbRow.hero_img, 'preview_img_hero', 'status_img_hero');
+      setServerPreview(dbRow.life_img, 'preview_img_life', 'status_img_life');
+      setServerPreview(dbRow.detail_img, 'preview_img_detail', 'status_img_detail');
+      setServerPreview(dbRow.pack_img, 'preview_img_pack', 'status_img_pack');
+      setServerPreview(dbRow.extra_img, 'preview_img_extra', 'status_img_extra');
+      
+      if(dbRow.catalog_pdf) {
+         document.getElementById('status_catalog').innerHTML = "<span style='color:#4CAF50; font-weight:bold;'>✓ PDF Saved securely</span>";
+      } else {
+         document.getElementById('status_catalog').innerHTML = "No PDF saved";
+      }
+      
+      closeListings();
+      
+      document.getElementById("success-msg").style.display = "none";
+      document.getElementById("form-container").style.display = "block";
+      
+      document.getElementById('form-container').classList.add('edit-mode-active');
+      document.getElementById('edit-header').style.display = 'flex';
+      document.getElementById('btn').innerHTML = "SAVE CHANGES (RE-SUBMIT)";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+       resetForm();
+       window.scrollTo({ top: 0, behavior: 'smooth' });
+       // Remove URL param
+       const url = new URL(window.location);
+       url.searchParams.delete('edit');
+       window.history.pushState({}, '', url);
+    }
+    
+    function addPriceRow() {
+      var tbody = document.getElementById("priceBody");
+      var row = document.createElement("tr");
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard">Standard</option><option value="Color">Color</option><option value="Size">Size</option><option value="Style">Style</option><option value="Color & Size">Color & Size</option><option value="Material & Size">Material & Size</option><option value="Color & Capacity">Color & Capacity</option><option value="Custom Combo">Custom Combo</option></select></td><td><input type="text" class="p-opt" value="Standard" readonly style="color:#666;"></td><td><select class="p-unit"><option value="Pcs">Pcs</option><option value="Kg">Kg</option><option value="Tons">Tons</option><option value="Sets">Sets</option><option value="Meters">Meters</option></select></td><td><input type="text" class="p-min q-input" placeholder="10"></td><td><input type="text" class="p-max q-input" placeholder="100"></td><td><input type="text" class="p-lead q-input" placeholder="30" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW">EXW</option><option value="FOB" selected>FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option></select></td><td><input type="text" class="p-price q-input" placeholder="0.00"></td><td style="text-align:center;"><div class="var-img-preview" style="display:none; margin: 0 auto 5px; width: 40px; height: 40px; border-radius: 4px; border: 1px solid #444; background: transparent center/cover no-repeat;"></div><div class="var-img-status" style="font-size: 9px; margin-bottom: 5px; display:none;"></div><input type="file" name="variantImages" accept="image/*" style="width: 85px; padding: 4px; font-size: 9px;" onchange="updateVariantPreview(this)"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      tbody.appendChild(row);
+    }
+
+    function addPriceRowFilled(data) {
+      var tbody = document.getElementById("priceBody");
+      var row = document.createElement("tr");
+      var isStd = (data.type === "Standard");
+      var optVal = isStd ? "Standard" : data.opt;
+      var optRead = isStd ? "readonly style='color:#666;'" : "";
+      
+      var tStd = data.type == "Standard" ? "selected" : "";
+      var tCol = data.type == "Color" ? "selected" : "";
+      var tSiz = data.type == "Size" ? "selected" : "";
+      var tSty = data.type == "Style" ? "selected" : "";
+      var tColSiz = data.type == "Color & Size" ? "selected" : "";
+      var tMatSiz = data.type == "Material & Size" ? "selected" : "";
+      var tColCap = data.type == "Color & Capacity" ? "selected" : "";
+      var tCust = data.type == "Custom Combo" ? "selected" : "";
+      
+      var uPcs = data.unit == "Pcs" ? "selected" : "";
+      var uKg = data.unit == "Kg" ? "selected" : "";
+      var uTon = data.unit == "Tons" ? "selected" : "";
+      var uSet = data.unit == "Sets" ? "selected" : "";
+      var uMet = data.unit == "Meters" ? "selected" : "";
+
+      var iEXW = data.incoterms === "EXW" ? "selected" : "";
+      var iFOB = (!data.incoterms || data.incoterms === "FOB") ? "selected" : "";
+      var iCIF = data.incoterms === "CIF" ? "selected" : "";
+      var iDDP = data.incoterms === "DDP" ? "selected" : "";
+
+      var displayPrice = data.supplierPriceRaw || data.price || "";
+
+      var imgBg = data.varImg ? "url('" + data.varImg + "')" : "transparent";
+      var imgDisp = data.varImg ? "block" : "none";
+      var statHtml = data.varImg ? "<span style='color:#4CAF50; font-weight:bold;'>✓ Saved</span>" : "";
+
+      row.innerHTML = '<td><select class="p-type" onchange="checkVariant(this)"><option value="Standard" ' + tStd + '>Standard</option><option value="Color" ' + tCol + '>Color</option><option value="Size" ' + tSiz + '>Size</option><option value="Style" ' + tSty + '>Style</option><option value="Color & Size" ' + tColSiz + '>Color & Size</option><option value="Material & Size" ' + tMatSiz + '>Material & Size</option><option value="Color & Capacity" ' + tColCap + '>Color & Capacity</option><option value="Custom Combo" ' + tCust + '>Custom Combo</option></select></td><td><input type="text" class="p-opt" value="' + optVal + '" ' + optRead + '></td><td><select class="p-unit"><option value="Pcs" ' + uPcs + '>Pcs</option><option value="Kg" ' + uKg + '>Kg</option><option value="Tons" ' + uTon + '>Tons</option><option value="Sets" ' + uSet + '>Sets</option><option value="Meters" ' + uMet + '>Meters</option></select></td><td><input type="text" class="p-min q-input" value="' + data.min + '"></td><td><input type="text" class="p-max q-input" value="' + data.max + '"></td><td><input type="text" class="p-lead q-input" value="' + data.lead + '" maxlength="3"></td><td><select class="p-incoterms"><option value="EXW" ' + iEXW + '>EXW</option><option value="FOB" ' + iFOB + '>FOB</option><option value="CIF" ' + iCIF + '>CIF</option><option value="DDP" ' + iDDP + '>DDP</option></select></td><td><input type="text" class="p-price q-input" value="' + displayPrice + '"></td><td style="text-align:center;"><div class="var-img-preview" style="display:' + imgDisp + '; margin: 0 auto 5px; width: 40px; height: 40px; border-radius: 4px; border: 1px solid #444; background: ' + imgBg + ' center/cover no-repeat;"></div><div class="var-img-status" style="font-size: 9px; margin-bottom: 5px; display:' + imgDisp + ';">' + statHtml + '</div><input type="file" name="variantImages" accept="image/*" style="width: 85px; padding: 4px; font-size: 9px;" onchange="updateVariantPreview(this)"></td><td style="text-align:center; color:#ff5252; cursor:pointer; font-weight:bold; padding-top:15px;" onclick="this.parentElement.remove()">×</td>';
+      tbody.appendChild(row);
+    }
+
+    function checkVariant(select) {
+      var row = select.parentElement.parentElement;
+      var optInput = row.querySelector(".p-opt");
+      if(select.value === "Standard") { 
+        optInput.value = "Standard"; optInput.readOnly = true; optInput.style.color = "#666"; 
+      } else if (select.value === "Color & Size") {
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Red - XL"; optInput.focus(); 
+      } else if (select.value === "Material & Size") {
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Cotton - XL"; optInput.focus(); 
+      } else if (select.value === "Color & Capacity") {
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Black - 500ml"; optInput.focus(); 
+      } else if (select.value === "Custom Combo") {
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. 110V - US Plug"; optInput.focus(); 
+      } else { 
+        optInput.value = ""; optInput.readOnly = false; optInput.style.color = "#fff"; optInput.placeholder = "e.g. Red"; optInput.focus(); 
+      }
+    }
+
+    function populateCats(data) {
+      var select = document.getElementById("mainCat");
+      select.innerHTML = '<option value="">Select Category...</option>'; 
+      if (!data || data.Error) { select.innerHTML = '<option>Error loading categories</option>'; return; }
+      catData = data;
+      for (var key in data) {
+        var opt = document.createElement("option"); opt.value = key; opt.innerHTML = key;
+        select.appendChild(opt);
+      }
+    }
+
+    function loadSubCats() {
+      var main = document.getElementById("mainCat").value;
+      var sub = document.getElementById("subCat"); 
+      sub.innerHTML = '<option value="">Select Sub-Category</option>';
+      if (catData[main]) {
+        catData[main].forEach(item => {
+          var opt = document.createElement("option"); opt.value = item; opt.innerHTML = item;
+          sub.appendChild(opt);
+        });
+      }
+    }
+
+    const readFile = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve({ name: file.name, mimeType: file.type, data: e.target.result.split(',')[1] });
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const compressImage = (file, maxDim = 1200, quality = 0.8) => new Promise((resolve, reject) => {
+      if (!file.type.match(/image.*/)) return readFile(file).then(resolve).catch(reject); 
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(event) {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = function() {
+          let width = img.width; let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) { height = Math.round((height * maxDim) / width); width = maxDim; } 
+            else { width = Math.round((width * maxDim) / height); height = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL(file.type, quality);
+          resolve({ name: file.name, mimeType: file.type, data: dataUrl.split(',')[1] });
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+    });
+
+    async function submitForm(formElement) {
+      var dataList = [];
+      var rows = document.querySelectorAll("#priceBody tr");
+      for(var i=0; i<rows.length; i++) {
+          var tr = rows[i];
+          var item = {
+             type: tr.querySelector(".p-type").value,
+             opt: tr.querySelector(".p-opt").value,
+             unit: tr.querySelector(".p-unit").value,
+             min: tr.querySelector(".p-min").value,
+             max: tr.querySelector(".p-max").value || "Up",
+             incoterms: tr.querySelector(".p-incoterms").value,
+             price: tr.querySelector(".p-price").value,
+             lead: tr.querySelector(".p-lead").value 
+          };
+          if(!item.opt) { customAlert("Missing Data", "Row " + (i+1) + ": Option missing."); return; }
+          if(item.min && item.price) { dataList.push(item); }
+      }
+      if(dataList.length === 0) { customAlert("Missing Data", "Please add at least one price tier."); return; }
+      
+      document.getElementById("btn").disabled = true;
+      document.getElementById("btn").innerHTML = "UPLOADING MEDIA... PLEASE WAIT";
+      document.getElementById("loading").style.display = "block";
+
+      try {
+        var supplierId = formElement.supplierId.value;
+
+        async function uploadFile(fileInput) {
+          if (!fileInput.files || !fileInput.files[0]) return "";
+          let fileObj = await compressImage(fileInput.files[0]);
+          
+          let response = await fetch(API_BASE_URL + '/upload-media', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              supplierId: supplierId,
+              fileName: fileObj.name,
+              mimeType: fileObj.mimeType,
+              fileData: fileObj.data
+            })
+          });
+          
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+             const htmlError = await response.text();
+             throw new Error(`IMAGE UPLOAD FAILED:\n` + htmlError.substring(0, 150));
+          }
+          
+          let result = await response.json();
+          if(result.success) return result.url;
+          throw new Error("Failed to upload " + fileObj.name);
+        }
+
+        let heroUrl = await uploadFile(formElement.img_hero);
+        let lifeUrl = await uploadFile(formElement.img_life);
+        let detailUrl = await uploadFile(formElement.img_detail);
+        let packUrl = await uploadFile(formElement.img_pack);
+        let extraUrl = await uploadFile(formElement.img_extra);
+        
+        let catalogUrl = "";
+        if (formElement.catalog.files[0]) {
+           let pdfObj = await readFile(formElement.catalog.files[0]);
+           let response = await fetch(API_BASE_URL + '/upload-media', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({
+               supplierId: supplierId,
+               fileName: pdfObj.name,
+               mimeType: pdfObj.mimeType,
+               fileData: pdfObj.data
+             })
+           });
+           
+           const pdfContentType = response.headers.get("content-type");
+           if (!pdfContentType || !pdfContentType.includes("application/json")) {
+               const pdfHtmlError = await response.text();
+               throw new Error(`PDF UPLOAD FAILED:\n` + pdfHtmlError.substring(0, 150));
+           }
+
+           let pdfRes = await response.json();
+           if(pdfRes.success) catalogUrl = pdfRes.url;
+        }
+
+        var variantInputs = document.getElementsByName("variantImages");
+        for(var j=0; j<dataList.length; j++) {
+           if(variantInputs[j] && variantInputs[j].files[0]) {
+               let vFileObj = await compressImage(variantInputs[j].files[0]);
+               let vResp = await fetch(API_BASE_URL + '/upload-media', {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({ supplierId: supplierId, fileName: vFileObj.name, mimeType: vFileObj.mimeType, fileData: vFileObj.data })
+               });
+               
+               const vContentType = vResp.headers.get("content-type");
+               if (!vContentType || !vContentType.includes("application/json")) {
+                   const vHtmlError = await vResp.text();
+                   throw new Error(`VARIANT UPLOAD FAILED:\n` + vHtmlError.substring(0, 150));
+               }
+
+               let vData = await vResp.json();
+               if(vData.success) dataList[j].varImg = vData.url;
+           } else {
+               dataList[j].varImg = "";
+           }
+        }
+
+        document.getElementById("btn").innerHTML = "SAVING TO MUZIRIS LEDGER...";
+
+        let servicesArr = [];
+        if (document.getElementById('svc1').checked) servicesArr.push("Private Label");
+        if (document.getElementById('svc2').checked) servicesArr.push("Custom Pkg");
+        if (document.getElementById('svc3').checked) servicesArr.push("ODM Design");
+
+        var formData = {
+           productId: document.getElementById('pid').value,
+           supplierId: supplierId,
+           companyName: formElement.companyName.value,
+           currency: document.getElementById('ui-currency-text').innerText,
+           category: formElement.category.value,
+           subCategory: formElement.subCategory.value,
+           productName: formElement.productName.value,
+           shortTitle: formElement.shortTitle.value,
+           packagingDetails: formElement.packagingDetails.value,
+           description: formElement.description.value,
+           servicesString: servicesArr.join(", ") || "Standard",
+           pricingMatrix: dataList, 
+           heroUrl: heroUrl,
+           lifeUrl: lifeUrl,
+           detailUrl: detailUrl,
+           packUrl: packUrl,
+           extraUrl: extraUrl,
+           catalogUrl: catalogUrl
+        };
+
+        let finalResponse = await fetch(API_BASE_URL + '/submit-staging', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ data: formData })
+        });
+        
+        const finalContentType = finalResponse.headers.get("content-type");
+        if (!finalContentType || !finalContentType.includes("application/json")) {
+             const finalHtmlError = await finalResponse.text();
+             throw new Error(`FINAL SUBMISSION FAILED:\n` + finalHtmlError.substring(0, 150));
+        }
+
+        let finalResult = await finalResponse.json();
+
+        if(finalResult.result === "SUCCESS" || finalResult.success) {
+           document.getElementById("form-container").style.display = "none";
+           document.getElementById("success-msg").style.display = "block";
+           document.getElementById("loading").style.display = "none";
+           
+           document.getElementById('form-container').classList.remove('edit-mode-active');
+           document.getElementById('edit-header').style.display = 'none';
+        } else {
+           customAlert("Database Error", finalResult.error || "Failed to save to ledger.");
+           document.getElementById("btn").disabled = false;
+           document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+           document.getElementById("loading").style.display = "none";
+        }
+      } catch (err) {
+        console.error("Upload Error:", err);
+        customAlert("System Error Revealed", "Exact error: " + err.message);
+        document.getElementById("btn").disabled = false;
+        document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+        document.getElementById("loading").style.display = "none";
+      }
+    }
+
+    function resetForm() {
+      var savedId = document.getElementById('sid').value;
+      var savedCo = document.getElementById('cname').value;
+
+      document.getElementById("success-msg").style.display = "none";
+      document.getElementById("form-container").style.display = "block";
+      
+      document.getElementById('form-container').classList.remove('edit-mode-active');
+      document.getElementById('edit-header').style.display = 'none';
+      
+      document.getElementById("mainForm").reset();
+      document.getElementById("pid").value = ""; 
+      document.getElementById("btn").disabled = false;
+      document.getElementById("btn").innerHTML = "UPLOAD TO GLOBAL LEDGER";
+      document.getElementById("priceBody").innerHTML = "";
+      addPriceRow();
+      
+      document.getElementById('step3').classList.remove('active');
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step1').classList.add('active');
+      document.getElementById('progress').style.width = "33.33%";
+      document.getElementById('step3-ind').classList.remove('step-active');
+      document.getElementById('step2-ind').classList.remove('step-active');
+      document.getElementById('step1-ind').classList.add('step-active');
+
+      document.getElementById('sid').value = savedId;
+      document.getElementById('cname').value = savedCo;
+
+      ['hero', 'life', 'detail', 'pack', 'extra'].forEach(function(type) {
+         document.getElementById('preview_img_' + type).style.display = 'none';
+         document.getElementById('preview_img_' + type).style.backgroundImage = '';
+         document.getElementById('status_img_' + type).innerHTML = 'New Upload';
+      });
+      document.getElementById('status_catalog').innerHTML = 'New Upload';
+      
+      // Remove URL param
+      const url = new URL(window.location);
+      url.searchParams.delete('edit');
+      window.history.pushState({}, '', url);
+    }
+  </script>
+</body>
+</html>
