@@ -247,7 +247,15 @@
     animate();
   }
 
-  window.onload = function() { initGlobe(); };
+  window.onload = function() { 
+    // If they are already logged in, redirect them straight to the dashboard
+    if (localStorage.getItem('verifiedSupplierId')) {
+      window.location.href = 'supplier-dashboard.html';
+      return;
+    }
+    initGlobe(); 
+  };
+  
   function showAlert(title, message) {
     document.getElementById('alert-title').innerText = title;
     document.getElementById('alert-message').innerText = message;
