@@ -9,59 +9,49 @@
   <style>
     :root { 
       --gold: #D4AF37; 
-      --gold-dim: #b89225; 
-      --dark-bg: #0b0e14; 
-      --card-bg: #151922; 
-      --text: #e0e0e0; 
-      --input-bg: #080a0f; 
+      --bronze: #b89225; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
       --alert: #ff5252; 
     }
-    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--dark-bg); color: var(--text); height: 100vh; overflow: hidden; }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; overflow: hidden; height: 100vh; }
     
-    .container { display: flex; height: 100vh; width: 100%; }
-    
-    /* LEFT PANEL (Branding & 3D Globe) */
-    .left-panel {
-      flex: 1;
-      background-color: var(--dark-bg);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 60px;
-      overflow: hidden;
-    }
-    .left-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(11,14,20,0.1), rgba(11,14,20,0.95)); z-index: 2;}
-    
-    #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
-
+    /* TOP NAVIGATION */
     .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
     .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
     .back-home:hover { color: #fff; }
 
-    .brand-content { position: relative; z-index: 3; max-width: 500px; margin-top: -10vh; }
-    .brand-content a { text-decoration: none; }
-    .brand-content h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 48px; margin: 0; letter-spacing: 2px; transition: 0.3s; }
-    .brand-content h1:hover { color: #fff; }
-    .brand-content p { font-size: 18px; line-height: 1.6; margin-top: 15px; color: #ccc; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-
-    /* RIGHT PANEL (Login Form) */
-    .right-panel { flex: 1; background-color: var(--dark-bg); display: flex; flex-direction: column; justify-content: center; padding: 60px 80px; overflow-y: auto; max-width: 550px; position: relative; border-left: 1px solid #222; z-index: 4; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
-
-    .login-box { background: var(--card-bg); padding: 40px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    /* ORIGINAL FULL-SCREEN 3D LAYOUT */
+    #view-verify {
+      display: flex; align-items: center; justify-content: flex-start; padding-left: 12%;
+      background: url('https://images.unsplash.com/photo-1605337030588-468f3a39e80e?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+      position: relative;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #view-verify::before { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(135deg, rgba(11, 14, 20, 0.95) 0%, rgba(11, 14, 20, 0.75) 100%); z-index: 0; }
     
-    h2 { font-family: 'Cinzel', serif; color: white; margin-top: 0; margin-bottom: 25px; font-size: 24px; text-align: center; }
-    
-    .form-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: bold; }
-    input { width: 100%; padding: 15px; background: var(--input-bg); border: 1px solid #333; color: white; border-radius: 4px; font-family: 'Lato', sans-serif; box-sizing: border-box; transition: 0.3s; }
-    input:focus { border-color: var(--gold); outline: none; }
+    /* 3D CANVAS STYLING */
+    #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
 
-    .btn-submit { background: var(--gold); color: #000; width: 100%; padding: 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; margin-top: 10px; }
-    .btn-submit:hover { background: var(--gold-dim); }
+    /* FLOATING GLASSMORPHISM CARD */
+    .card { position: relative; z-index: 2; background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); width: 100%; max-width: 380px; padding: 40px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; }
+    h1.brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 28px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
+    .subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #aaa; margin-bottom: 25px; }
+
+    /* FORM STYLING */
+    .form-group { margin-bottom: 15px; text-align: left; }
+    label { display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: bold; }
+    input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border 0.3s; font-family: 'Lato', sans-serif; letter-spacing: 1px;}
+    input:focus { border-color: var(--gold); background: #000; }
+
+    .gold-btn { width: 100%; margin-top: 10px; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; border-radius: 4px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; }
+    .gold-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
 
     /* OAUTH BUTTONS */
-    .oauth-btn { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: none; letter-spacing: 0; }
+    .oauth-btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: none; letter-spacing: 0; }
     .oauth-google { background-color: #fff; color: #444; border: 1px solid #ccc; }
     .oauth-google:hover { background-color: #f1f1f1; }
     .oauth-microsoft { background-color: #2F2F2F; color: #fff; border: 1px solid #444; }
@@ -69,71 +59,61 @@
     .oauth-linkedin { background-color: #0077b5; color: #fff; border: 1px solid #0077b5; }
     .oauth-linkedin:hover { background-color: #006097; }
 
-    .divider { display: flex; align-items: center; margin: 25px 0; color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-    .divider hr { flex: 1; border: none; border-top: 1px solid #333; }
-    .divider span { padding: 0 15px; }
+    .divider { display: flex; align-items: center; margin: 20px 0; color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .divider hr { flex: 1; border: none; border-top: 1px solid #444; }
+    .divider span { padding: 0 10px; }
 
-    .register-link { text-align: center; margin-top: 25px; font-size: 13px; color: #888; }
-    .register-link a { color: var(--gold); text-decoration: none; font-weight: bold; }
-    .register-link a:hover { text-decoration: underline; }
+    .register-link { text-align: center; margin-top: 20px; font-size: 12px; color: #888; }
+    .register-link a { color: var(--gold); text-decoration: none; font-weight: bold; border-bottom: 1px solid transparent; transition: 0.3s;}
+    .register-link a:hover { border-bottom: 1px solid var(--gold); }
 
     /* CUSTOM ALERT MODAL */
     #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
-    .alert-box { background: var(--card-bg); border: 1px solid var(--gold); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .alert-box { background: var(--slate); border: 1px solid var(--gold); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
     .alert-box h3 { color: var(--gold); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
-    .alert-box p { font-size: 15px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
-    .alert-btn { background: var(--gold); border: none; color: #000; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-    .alert-btn:hover { background: var(--gold-dim); }
+    .alert-box p { font-size: 14px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
+    .alert-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .alert-btn:hover { background: var(--gold); color: #000; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
     @media (max-width: 900px) {
-      .container { flex-direction: column; overflow-y: auto; }
-      .left-panel { min-height: 400px; padding: 30px; flex: none; justify-content: center; }
-      .brand-content { margin-top: 0; }
       .top-nav { top: 20px; left: 20px; }
-      .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; border-left: none; }
-      body { overflow-y: auto; }
+      #view-verify { justify-content: center; padding-left: 0; padding: 20px; }
+      .card { padding: 30px 20px; }
     }
   </style>
 </head>
 <body>
 
-<div id="custom-alert">
-  <div class="alert-box">
-    <h3 id="alert-title">Notice</h3>
-    <p id="alert-message">Message goes here.</p>
-    <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+  <div id="custom-alert">
+    <div class="alert-box">
+      <h3 id="alert-title">Notice</h3>
+      <p id="alert-message">Message goes here.</p>
+      <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+    </div>
   </div>
-</div>
 
-<div class="container">
-  <div class="left-panel">
+  <div id="view-verify">
     <canvas id="networkGlobe"></canvas>
-    
+
     <div class="top-nav">
       <a href="index.html" class="back-home">← Back to Home</a>
     </div>
     
-    <div class="brand-content">
-      <a href="index.html"><h1>Muziris</h1></a>
-      <p>Global Command Center.<br>Sign in to manage your catalog, track logistics, and respond to sourcing requests.</p>
-    </div>
-  </div>
-
-  <div class="right-panel">
-    <div class="login-box">
-      <h2>Supplier Sign In</h2>
+    <div class="card">
+      <h1 class="brand">Muziris</h1>
+      <div class="subtitle">Global Command Center</div>
       
       <form id="loginForm" onsubmit="event.preventDefault(); triggerEmailLogin();">
         <div class="form-group">
           <label>Official Email</label>
-          <input type="email" id="login-email" placeholder="name@company.com" required>
+          <input type="email" id="login-email" placeholder="name@company.com" required autocomplete="email">
         </div>
         <div class="form-group">
           <label>Secure Password / PIN</label>
-          <input type="password" id="login-password" placeholder="••••••••" required>
+          <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
         </div>
-        <button type="submit" class="btn-submit" id="btn-login">Sign In</button>
+        <button type="submit" class="gold-btn" id="btn-login">Sign In</button>
       </form>
 
       <div class="divider">
@@ -141,218 +121,215 @@
       </div>
 
       <button class="oauth-btn oauth-google" onclick="triggerOAuth('Google')">
-        <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
         Sign in with Google
       </button>
       <button class="oauth-btn oauth-microsoft" onclick="triggerOAuth('Microsoft')">
-        <svg width="20" height="20" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M10 0H0v10h10V0z" fill="#f25022"/><path d="M21 0H11v10h10V0z" fill="#7fba00"/><path d="M10 11H0v10h10V11z" fill="#00a4ef"/><path d="M21 11H11v10h10V11z" fill="#ffb900"/></svg>
+        <svg width="18" height="18" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M10 0H0v10h10V0z" fill="#f25022"/><path d="M21 0H11v10h10V0z" fill="#7fba00"/><path d="M10 11H0v10h10V11z" fill="#00a4ef"/><path d="M21 11H11v10h10V11z" fill="#ffb900"/></svg>
         Sign in with Microsoft
       </button>
       <button class="oauth-btn oauth-linkedin" onclick="triggerOAuth('LinkedIn')">
-        <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
         Sign in with LinkedIn
       </button>
 
       <div class="register-link">
-        Don't have an account? <a href="join.html">Apply to be a Supplier</a>
+        Not registered yet? <a href="join.html">Apply Here</a>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-  let globeAnimating = true;
+  <script>
+    let globeAnimating = true;
 
-  function initGlobe() {
-    const canvas = document.getElementById('networkGlobe');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const parent = canvas.parentElement;
-    let width, height;
-    
-    let nodes = [];
-    const numNodes = 150; 
-    
-    function resize() {
-      width = canvas.width = parent.clientWidth;
-      height = canvas.height = parent.clientHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const radius = Math.min(width, height) * 0.5;
-
-    for (let i = 0; i < numNodes; i++) {
-      const phi = Math.acos(-1 + (2 * i) / numNodes);
-      const theta = Math.sqrt(numNodes * Math.PI) * phi;
-      nodes.push({
-        baseX: radius * Math.cos(theta) * Math.sin(phi),
-        baseY: radius * Math.sin(theta) * Math.sin(phi),
-        baseZ: radius * Math.cos(phi)
-      });
-    }
-
-    let rotationY = 0;
-    let rotationX = 0.2; 
-
-    function animate() {
-      if(!globeAnimating) return; 
-      ctx.clearRect(0, 0, width, height);
-      rotationY += 0.002;
+    function initGlobe() {
+      const canvas = document.getElementById('networkGlobe');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
       
-      const cx = width / 2;
-      const cy = height / 2;
+      let nodes = [];
+      const numNodes = 250; 
+      const radius = window.innerWidth > 900 ? 400 : 250; 
       
-      const projectedNodes = [];
-      
-      for (let i = 0; i < numNodes; i++) {
-        let node = nodes[i];
-        let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
-        let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
-        let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
-        let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
-        const scale = 800 / (800 + z2);
-        projectedNodes.push({ x: cx + x2 * scale, y: cy + y1 * scale, z: z2, scale: scale });
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
       }
-      
-      ctx.lineWidth = 0.5;
+      window.addEventListener('resize', resize);
+      resize();
+
       for (let i = 0; i < numNodes; i++) {
-        for (let j = i + 1; j < numNodes; j++) {
-          const p1 = projectedNodes[i];
-          const p2 = projectedNodes[j];
-          const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+        const phi = Math.acos(-1 + (2 * i) / numNodes);
+        const theta = Math.sqrt(numNodes * Math.PI) * phi;
+        nodes.push({
+          baseX: radius * Math.cos(theta) * Math.sin(phi),
+          baseY: radius * Math.sin(theta) * Math.sin(phi),
+          baseZ: radius * Math.cos(phi)
+        });
+      }
+
+      let rotationY = 0;
+      let rotationX = 0.3; 
+
+      function animate() {
+        if(!globeAnimating) return; 
+        ctx.clearRect(0, 0, width, height);
+        rotationY += 0.0015;
+        
+        const cx = width > 900 ? width * 0.75 : width / 2;
+        const cy = height / 2;
+        
+        const projectedNodes = [];
+        
+        for (let i = 0; i < numNodes; i++) {
+          let node = nodes[i];
           
-          if (dist < 80 * p1.scale) {
-            const alpha = Math.max(0, 1 - (dist / (80 * p1.scale))) * (p1.z > -100 ? 0.6 : 0.05);
-            ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
+          let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
+          let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
+          
+          let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
+          let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
+          
+          const scale = 800 / (800 + z2);
+          const screenX = cx + x2 * scale;
+          const screenY = cy + y1 * scale;
+          
+          projectedNodes.push({ x: screenX, y: screenY, z: z2, scale: scale });
+        }
+        
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < numNodes; i++) {
+          for (let j = i + 1; j < numNodes; j++) {
+            const p1 = projectedNodes[i];
+            const p2 = projectedNodes[j];
+            const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+            
+            if (dist < 90 * p1.scale) {
+              const alpha = Math.max(0, 1 - (dist / (90 * p1.scale))) * (p1.z > -100 ? 0.6 : 0.05);
+              ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
           }
         }
-      }
-      
-      for (let i = 0; i < numNodes; i++) {
-        const p = projectedNodes[i];
-        const alpha = p.z > -100 ? 0.8 : 0.1;
-        ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.5 * p.scale, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      
-      requestAnimationFrame(animate);
-    }
-    animate();
-  }
-
-  window.onload = function() { 
-    // If they are already logged in, redirect them straight to the dashboard
-    if (localStorage.getItem('verifiedSupplierId')) {
-      window.location.href = 'supplier-dashboard.html';
-      return;
-    }
-    initGlobe(); 
-  };
-  
-  function showAlert(title, message) {
-    document.getElementById('alert-title').innerText = title;
-    document.getElementById('alert-message').innerText = message;
-    document.getElementById('custom-alert').style.display = 'flex';
-  }
-  function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
-</script>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
-    authDomain: "muziris-ac9dd.firebaseapp.com",
-    projectId: "muziris-ac9dd",
-    storageBucket: "muziris-ac9dd.firebasestorage.app",
-    messagingSenderId: "929662963272",
-    appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
-
-  // Function for the standard Email/Password form
-  window.triggerEmailLogin = function() {
-    const email = document.getElementById('login-email').value;
-    const pass = document.getElementById('login-password').value;
-    const btn = document.getElementById('btn-login');
-    
-    btn.innerText = "AUTHENTICATING...";
-    btn.disabled = true;
-
-    // Connect to Firebase for email authentication
-    signInWithEmailAndPassword(auth, email, pass)
-      .then((userCredential) => {
-        finalizeLogin(userCredential.user.email);
-      })
-      .catch((error) => {
-        btn.innerText = "SIGN IN";
-        btn.disabled = false;
         
-        // For prototype demonstration, if Firebase isn't fully seeded, we'll allow a "magic override"
-        if(email.includes('@')) {
-            console.log("Firebase Auth failed, but simulating success for prototype flow.");
-            finalizeLogin(email);
-        } else {
-            showAlert("Authentication Failed", "Invalid email or password.");
+        for (let i = 0; i < numNodes; i++) {
+          const p = projectedNodes[i];
+          const alpha = p.z > -100 ? 0.8 : 0.1;
+          ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 1.5 * p.scale, 0, Math.PI * 2);
+          ctx.fill();
         }
-      });
-  };
-
-  // Function for SSO Buttons
-  window.triggerOAuth = function(provider) {
-    if (provider !== 'Google') {
-      showAlert("Coming Soon", provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.");
-      return;
+        
+        requestAnimationFrame(animate);
+      }
+      animate();
     }
 
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        finalizeLogin(result.user.email);
-      }).catch((error) => {
-        showAlert("Authentication Failed", error.message);
-      });
-  };
+    window.onload = function() { 
+      // If they are already logged in, redirect them straight to the dashboard
+      if (localStorage.getItem('verifiedSupplierId')) {
+        window.location.href = 'supplier-dashboard.html';
+        return;
+      }
+      initGlobe(); 
+    };
 
-  // Securely load the dashboard after any successful login method
-  function finalizeLogin(userEmail) {
-    // In a live production app, we would send the email to server.js to fetch the exact Supplier ID.
-    // For this flow, we will pull it from memory if they just registered, or mock it if they are testing.
-    let storedId = localStorage.getItem('verifiedSupplierId') || 'SUP-77291';
-    let storedCompany = localStorage.getItem('verifiedCompany') || 'Global Trading Co.';
-    
-    localStorage.setItem('verifiedSupplierId', storedId);
-    localStorage.setItem('verifiedCompany', storedCompany);
-    localStorage.setItem('verifiedCurrency', 'USD');
-    
-    window.location.href = 'supplier-dashboard.html';
-  }
-</script>
+    function showAlert(title, message) {
+      document.getElementById('alert-title').innerText = title;
+      document.getElementById('alert-message').innerText = message;
+      document.getElementById('custom-alert').style.display = 'flex';
+    }
 
-<script src="muziris-bot.js"></script>
+    function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+  </script>
 
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-    var s1=document.createElement("script"),
-        s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+      authDomain: "muziris-ac9dd.firebaseapp.com",
+      projectId: "muziris-ac9dd",
+      storageBucket: "muziris-ac9dd.firebasestorage.app",
+      messagingSenderId: "929662963272",
+      appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    // Function for the standard Email/Password form
+    window.triggerEmailLogin = function() {
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-password').value;
+      const btn = document.getElementById('btn-login');
+      
+      btn.innerText = "AUTHENTICATING...";
+      btn.disabled = true;
+
+      signInWithEmailAndPassword(auth, email, pass)
+        .then((userCredential) => {
+          finalizeLogin(userCredential.user.email);
+        })
+        .catch((error) => {
+          btn.innerText = "SIGN IN";
+          btn.disabled = false;
+          
+          if(email.includes('@')) {
+              console.log("Firebase Auth failed, but simulating success for prototype flow.");
+              finalizeLogin(email);
+          } else {
+              showAlert("Authentication Failed", "Invalid email or password.");
+          }
+        });
+    };
+
+    // Function for SSO Buttons
+    window.triggerOAuth = function(provider) {
+      if (provider !== 'Google') {
+        showAlert("Coming Soon", provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.");
+        return;
+      }
+
+      signInWithPopup(auth, googleProvider)
+        .then((result) => {
+          finalizeLogin(result.user.email);
+        }).catch((error) => {
+          showAlert("Authentication Failed", error.message);
+        });
+    };
+
+    // Securely load the dashboard after any successful login method
+    function finalizeLogin(userEmail) {
+      let storedId = localStorage.getItem('verifiedSupplierId') || 'SUP-77291';
+      let storedCompany = localStorage.getItem('verifiedCompany') || 'Global Trading Co.';
+      
+      localStorage.setItem('verifiedSupplierId', storedId);
+      localStorage.setItem('verifiedCompany', storedCompany);
+      localStorage.setItem('verifiedCurrency', 'USD');
+      
+      window.location.href = 'supplier-dashboard.html';
+    }
+  </script>
+
+  <script src="muziris-bot.js"></script>
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
 </body>
 </html>
