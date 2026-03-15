@@ -36,32 +36,33 @@
     /* 3D CANVAS STYLING */
     #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
 
-    /* FLOATING GLASSMORPHISM CARD */
-    .card { position: relative; z-index: 2; background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); width: 100%; max-width: 380px; padding: 40px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; }
-    h1.brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 28px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
-    .subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #aaa; margin-bottom: 25px; }
+    /* COMPACT FLOATING GLASSMORPHISM CARD */
+    .card { position: relative; z-index: 2; background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); width: 100%; max-width: 360px; padding: 35px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; }
+    h1.brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
+    .subtitle { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #aaa; margin-bottom: 25px; }
 
     /* FORM STYLING */
     .form-group { margin-bottom: 15px; text-align: left; }
     label { display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: bold; }
-    input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border 0.3s; font-family: 'Lato', sans-serif; letter-spacing: 1px;}
+    input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border 0.3s; font-family: 'Lato', sans-serif; letter-spacing: 1px;}
     input:focus { border-color: var(--gold); background: #000; }
 
-    .gold-btn { width: 100%; margin-top: 10px; padding: 14px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; border-radius: 4px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; }
+    .gold-btn { width: 100%; margin-top: 5px; padding: 12px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; }
     .gold-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
 
-    /* OAUTH BUTTONS */
-    .oauth-btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: none; letter-spacing: 0; }
-    .oauth-google { background-color: #fff; color: #444; border: 1px solid #ccc; }
-    .oauth-google:hover { background-color: #f1f1f1; }
-    .oauth-microsoft { background-color: #2F2F2F; color: #fff; border: 1px solid #444; }
-    .oauth-microsoft:hover { background-color: #404040; }
-    .oauth-linkedin { background-color: #0077b5; color: #fff; border: 1px solid #0077b5; }
-    .oauth-linkedin:hover { background-color: #006097; }
+    .divider { display: flex; align-items: center; margin: 20px 0; color: #555; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .divider hr { flex: 1; border: none; border-top: 1px solid #333; }
+    .divider span { padding: 0 15px; }
 
-    .divider { display: flex; align-items: center; margin: 20px 0; color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    .divider hr { flex: 1; border: none; border-top: 1px solid #444; }
-    .divider span { padding: 0 10px; }
+    /* COMPACT OAUTH ICON BUTTONS */
+    .oauth-group { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+    .oauth-btn { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 8px; cursor: pointer; transition: 0.3s; border: 1px solid #444; }
+    .oauth-google { background-color: #fff; border-color: #ccc; }
+    .oauth-google:hover { background-color: #f1f1f1; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(255,255,255,0.2); }
+    .oauth-microsoft { background-color: #2F2F2F; }
+    .oauth-microsoft:hover { background-color: #404040; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+    .oauth-linkedin { background-color: #0077b5; border-color: #0077b5; }
+    .oauth-linkedin:hover { background-color: #006097; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 119, 181, 0.3); }
 
     .register-link { text-align: center; margin-top: 20px; font-size: 12px; color: #888; }
     .register-link a { color: var(--gold); text-decoration: none; font-weight: bold; border-bottom: 1px solid transparent; transition: 0.3s;}
@@ -72,8 +73,8 @@
     .alert-box { background: var(--slate); border: 1px solid var(--gold); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
     .alert-box h3 { color: var(--gold); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
     .alert-box p { font-size: 14px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
-    .alert-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-    .alert-btn:hover { background: var(--gold); color: #000; }
+    .alert-btn { background: var(--gold); border: none; color: #000; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .alert-btn:hover { background: var(--bronze); }
 
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
     @media (max-width: 900px) {
@@ -117,21 +118,20 @@
       </form>
 
       <div class="divider">
-        <hr><span>OR CONNECT WITH</span><hr>
+        <hr><span>OR</span><hr>
       </div>
 
-      <button class="oauth-btn oauth-google" onclick="triggerOAuth('Google')">
-        <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
-        Sign in with Google
-      </button>
-      <button class="oauth-btn oauth-microsoft" onclick="triggerOAuth('Microsoft')">
-        <svg width="18" height="18" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M10 0H0v10h10V0z" fill="#f25022"/><path d="M21 0H11v10h10V0z" fill="#7fba00"/><path d="M10 11H0v10h10V11z" fill="#00a4ef"/><path d="M21 11H11v10h10V11z" fill="#ffb900"/></svg>
-        Sign in with Microsoft
-      </button>
-      <button class="oauth-btn oauth-linkedin" onclick="triggerOAuth('LinkedIn')">
-        <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        Sign in with LinkedIn
-      </button>
+      <div class="oauth-group">
+        <button type="button" class="oauth-btn oauth-google" onclick="triggerOAuth('Google')" title="Sign in with Google">
+          <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+        </button>
+        <button type="button" class="oauth-btn oauth-microsoft" onclick="triggerOAuth('Microsoft')" title="Sign in with Microsoft">
+          <svg width="20" height="20" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M10 0H0v10h10V0z" fill="#f25022"/><path d="M21 0H11v10h10V0z" fill="#7fba00"/><path d="M10 11H0v10h10V11z" fill="#00a4ef"/><path d="M21 11H11v10h10V11z" fill="#ffb900"/></svg>
+        </button>
+        <button type="button" class="oauth-btn oauth-linkedin" onclick="triggerOAuth('LinkedIn')" title="Sign in with LinkedIn">
+          <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </button>
+      </div>
 
       <div class="register-link">
         Not registered yet? <a href="join.html">Apply Here</a>
