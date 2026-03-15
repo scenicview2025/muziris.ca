@@ -173,7 +173,6 @@
     .oauth-linkedin { background-color: #0077b5; color: #fff; border: 1px solid #0077b5; }
     .oauth-linkedin:hover { background-color: #006097; }
     
-    /* 🟢 NEW: Email Button Styling */
     .oauth-email { background-color: #1a1e29; color: #fff; border: 1px solid #444; }
     .oauth-email:hover { background-color: #252b3b; border-color: var(--gold); }
 
@@ -485,8 +484,91 @@
   }
 </script>
 
+<script type="module">
+  // Import Firebase directly via reliable CDN so it works purely in HTML
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+  // Your specific Firebase configuration (Grabbed from your screenshot)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+    authDomain: "muziris-ac9dd.firebaseapp.com",
+    projectId: "muziris-ac9dd",
+    storageBucket: "muziris-ac9dd.firebasestorage.app",
+    messagingSenderId: "929662963272",
+    appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+  };
+
+  // Initialize the Firebase App & Auth Engine
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  // Attach functions to the global window so your buttons can click them
+  window.triggerOAuth = function(provider) {
+    if (provider !== 'Google') {
+      // Show pending alert for MS/LinkedIn
+      document.getElementById('alert-title').innerText = "Coming Soon";
+      document.getElementById('alert-message').innerText = provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.";
+      document.getElementById('custom-alert').style.display = 'flex';
+      return;
+    }
+
+    const generatedId = document.getElementById('final-id').innerText;
+    const tempCompany = localStorage.getItem('tempCompany') || "Supplier";
+
+    // 🚀 TRIGGER REAL GOOGLE POPUP
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const user = result.user;
+        
+        // Google Auth Successful! Securely store credentials.
+        localStorage.setItem('verifiedSupplierId', generatedId);
+        localStorage.setItem('verifiedCompany', tempCompany);
+        localStorage.setItem('verifiedCurrency', 'USD');
+        localStorage.setItem('firebaseToken', user.uid); // Save secure Firebase ID
+        
+        document.getElementById('alert-title').innerText = "Authentication Successful";
+        document.getElementById('alert-message').innerText = "Your Muziris profile is now securely linked to: " + user.email;
+        document.getElementById('custom-alert').style.display = 'flex';
+        
+        setTimeout(() => {
+          window.location.href = 'supplier-dashboard.html';
+        }, 2000);
+      }).catch((error) => {
+        document.getElementById('alert-title').innerText = "Authentication Failed";
+        document.getElementById('alert-message').innerText = error.message;
+        document.getElementById('custom-alert').style.display = 'flex';
+      });
+  };
+
+  // Email Magic Link (Simulated until domain is verified in Firebase)
+  window.triggerEmailAuth = function() {
+    const email = document.getElementById('email').value;
+    const generatedId = document.getElementById('final-id').innerText;
+    const tempCompany = localStorage.getItem('tempCompany') || "Supplier";
+    
+    const code = prompt(`A secure verification code has been sent to ${email}.\n\nFor this prototype, enter 1234 to verify:`);
+    
+    if(code === "1234") {
+      localStorage.setItem('verifiedSupplierId', generatedId);
+      localStorage.setItem('verifiedCompany', tempCompany);
+      localStorage.setItem('verifiedCurrency', 'USD');
+      
+      document.getElementById('alert-title').innerText = "Authentication Successful";
+      document.getElementById('alert-message').innerText = "Your email has been verified and linked securely.";
+      document.getElementById('custom-alert').style.display = 'flex';
+      
+      setTimeout(() => {
+        window.location.href = 'supplier-dashboard.html';
+      }, 1500);
+    } else if (code !== null) {
+      alert("Invalid verification code. Please try again.");
+    }
+  };
+</script>
+
 <script>
-  // NEW RENDER API URL
   const WEB_APP_URL = "https://muziris-api.onrender.com/register-supplier";
   
   const lists = {
@@ -516,12 +598,6 @@
     populateLists(lists); 
     initGlobe();
   };
-
-  function showAlert(title, message) {
-    document.getElementById('alert-title').innerText = title;
-    document.getElementById('alert-message').innerText = message;
-    document.getElementById('custom-alert').style.display = 'flex';
-  }
 
   function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
 
@@ -558,12 +634,18 @@
   function nextStep(current) {
     if(current === 1) {
       if(!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value || !document.getElementById('countrySelect').value) { 
-        showAlert("Missing Information", "Please fill in all required Company Details before proceeding."); return; 
+        document.getElementById('alert-title').innerText = "Missing Information";
+        document.getElementById('alert-message').innerText = "Please fill in all required Company Details before proceeding.";
+        document.getElementById('custom-alert').style.display = 'flex';
+        return; 
       }
     }
     if(current === 2) {
       if(!document.getElementById('address1').value || !document.getElementById('city').value || !document.getElementById('state').value || !document.getElementById('zipcode').value) {
-        showAlert("Missing Information", "Please fill in all required Address fields to ensure successful registration."); return;
+        document.getElementById('alert-title').innerText = "Missing Information";
+        document.getElementById('alert-message').innerText = "Please fill in all required Address fields to ensure successful registration.";
+        document.getElementById('custom-alert').style.display = 'flex';
+        return;
       }
     }
 
@@ -587,16 +669,13 @@
     btn.innerText = "Processing...";
     btn.disabled = true;
     
-    // Combine phone code and number into the hidden input
     const finalPhone = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
     document.getElementById('fullPhone').value = finalPhone;
 
-    // Gather all form data
     var form = document.getElementById('regForm');
     var data = {};
     new FormData(form).forEach((value, key) => data[key] = value);
 
-    // Send JSON data to Render API
     fetch(WEB_APP_URL, {
       method: 'POST',
       headers: {
@@ -612,62 +691,23 @@
         document.getElementById('form-container').style.display = 'none';
         document.getElementById('success-screen').style.display = 'block';
         document.getElementById('final-id').innerText = response.id;
-        
-        // Temporarily hold company name for SSO simulation
         localStorage.setItem('tempCompany', data.companyName);
       } else {
-        showAlert("Registration Error", response.error);
+        document.getElementById('alert-title').innerText = "Registration Error";
+        document.getElementById('alert-message').innerText = response.error;
+        document.getElementById('custom-alert').style.display = 'flex';
         btn.innerText = "Create Profile";
         btn.disabled = false;
       }
     })
     .catch(error => {
       console.error(error);
-      showAlert("Connection Error", "Could not connect to the server. Please try again.");
+      document.getElementById('alert-title').innerText = "Connection Error";
+      document.getElementById('alert-message').innerText = "Could not connect to the server. Please try again.";
+      document.getElementById('custom-alert').style.display = 'flex';
       btn.innerText = "Create Profile";
       btn.disabled = false;
     });
-  }
-
-  function triggerOAuth(provider) {
-    const generatedId = document.getElementById('final-id').innerText;
-    const tempCompany = localStorage.getItem('tempCompany') || "Supplier";
-    
-    // Authenticate them immediately
-    localStorage.setItem('verifiedSupplierId', generatedId);
-    localStorage.setItem('verifiedCompany', tempCompany);
-    localStorage.setItem('verifiedCurrency', 'USD'); // Default fallback
-    
-    // Quick visual feedback before redirect
-    showAlert("Authentication Successful", `Your profile is now securely linked to your ${provider} account.`);
-    
-    setTimeout(() => {
-      window.location.href = 'supplier-dashboard.html';
-    }, 1500);
-  }
-
-  // 🟢 NEW: EMAIL MAGIC LINK SIMULATION
-  function triggerEmailAuth() {
-    const email = document.getElementById('email').value;
-    const generatedId = document.getElementById('final-id').innerText;
-    const tempCompany = localStorage.getItem('tempCompany') || "Supplier";
-    
-    // Simulate OTP / Magic Link
-    const code = prompt(`A secure verification code has been sent to ${email}.\n\nFor this prototype, enter 1234 to verify:`);
-    
-    if(code === "1234") {
-      localStorage.setItem('verifiedSupplierId', generatedId);
-      localStorage.setItem('verifiedCompany', tempCompany);
-      localStorage.setItem('verifiedCurrency', 'USD');
-      
-      showAlert("Authentication Successful", "Your email has been verified and linked securely.");
-      
-      setTimeout(() => {
-        window.location.href = 'supplier-dashboard.html';
-      }, 1500);
-    } else if (code !== null) {
-      alert("Invalid verification code. Please try again.");
-    }
   }
 </script>
 
