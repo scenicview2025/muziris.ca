@@ -16,7 +16,6 @@
       --alert: #ff5252; 
     }
     
-    /* 🟢 FIX: Allowed scrolling and dynamic height for mobile */
     body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; min-height: 100vh; overflow-y: auto; overflow-x: hidden; }
     
     /* TOP NAVIGATION */
@@ -24,7 +23,6 @@
     .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
     .back-home:hover { color: #fff; }
 
-    /* 🟢 FIX: 100dvh prevents mobile browser bar overlap */
     #view-verify {
       display: flex; align-items: center; justify-content: flex-start; padding-left: 12%;
       background: url('https://images.unsplash.com/photo-1605337030588-468f3a39e80e?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
@@ -36,7 +34,6 @@
     }
     #view-verify::before { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(135deg, rgba(11, 14, 20, 0.95) 0%, rgba(11, 14, 20, 0.75) 100%); z-index: 0; }
     
-    /* 🟢 FIX: Globe fixed to background so it doesn't break if user scrolls */
     #networkGlobe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
 
     /* COMPACT FLOATING GLASSMORPHISM CARD */
@@ -45,10 +42,14 @@
     .subtitle { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #aaa; margin-bottom: 25px; }
 
     /* FORM STYLING */
-    .form-group { margin-bottom: 15px; text-align: left; }
+    .form-group { margin-bottom: 15px; text-align: left; position: relative; }
     label { display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: bold; }
     input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border 0.3s; font-family: 'Lato', sans-serif; letter-spacing: 1px;}
     input:focus { border-color: var(--gold); background: #000; }
+
+    /* FORGOT PASSWORD LINK */
+    .forgot-link { position: absolute; right: 0; top: 0; font-size: 10px; color: var(--gold); text-decoration: none; text-transform: uppercase; font-weight: bold; transition: 0.3s; cursor: pointer; }
+    .forgot-link:hover { color: #fff; }
 
     .gold-btn { width: 100%; margin-top: 5px; padding: 12px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; }
     .gold-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
@@ -81,14 +82,13 @@
 
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
-    /* 🟢 FIX: Specialized Mobile Media Query for Login Flow */
     @media (max-width: 900px) {
       .top-nav { top: 20px; left: 20px; }
       #view-verify { 
         justify-content: center; 
         padding-left: 0; 
-        padding-top: 80px; /* Room for back button */
-        padding-bottom: 80px; /* Room for Tawk.to chat widget */
+        padding-top: 80px; 
+        padding-bottom: 80px; 
         flex-direction: column;
       }
       .card { padding: 30px 20px; margin: auto; }
@@ -123,6 +123,7 @@
         </div>
         <div class="form-group">
           <label>Password</label>
+          <a class="forgot-link" onclick="window.triggerForgotPassword()">Forgot?</a>
           <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
         </div>
         <button type="submit" class="gold-btn" id="btn-login">Sign In</button>
@@ -261,7 +262,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+    // 🟢 ADDED: sendPasswordResetEmail to the import list
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
@@ -276,7 +278,31 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // 1. NATIVE EMAIL & PASSWORD LOGIC (Firebase Auth -> Postgres Check)
+    // 🟢 NEW: Forgot Password Logic
+    window.triggerForgotPassword = function() {
+      const email = document.getElementById('login-email').value.trim();
+      
+      if (!email) {
+        showAlert("Email Required", "Please enter your official email address in the box first, then click 'Forgot?'.");
+        return;
+      }
+      
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          showAlert("Link Sent", "If an account exists for " + email + ", a secure password reset link has been sent to your inbox.");
+        })
+        .catch((error) => {
+          // Ignore "user not found" errors for security reasons (prevents email enumeration), 
+          // but show other errors.
+          if(error.code === 'auth/user-not-found') {
+             showAlert("Link Sent", "If an account exists for " + email + ", a secure password reset link has been sent to your inbox.");
+          } else {
+             showAlert("Error", error.message);
+          }
+        });
+    };
+
+    // 1. NATIVE EMAIL & PASSWORD LOGIC
     window.triggerEmailLogin = function() {
       const email = document.getElementById('login-email').value;
       const pass = document.getElementById('login-password').value;
@@ -305,7 +331,7 @@
         });
     };
 
-    // 2. GOOGLE SSO LOGIC (Firebase Auth -> Postgres Check)
+    // 2. GOOGLE SSO LOGIC
     window.triggerOAuth = function(provider) {
       if (provider !== 'Google') {
         document.getElementById('alert-title').innerText = "Coming Soon";
