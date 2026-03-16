@@ -657,7 +657,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
@@ -682,16 +682,30 @@
 
     const generatedId = document.getElementById('final-id').innerText;
     const tempCompany = localStorage.getItem('tempCompany') || "Supplier";
+    
+    // Grab the email they typed into the registration form
+    const registeredEmail = document.getElementById('email').value.trim().toLowerCase();
 
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const user = result.user;
+        const authEmail = user.email.toLowerCase();
+        
+        // 🟢 THE FIX: Check if the emails match!
+        if (authEmail !== registeredEmail) {
+           // If they don't match, kick them out of Firebase and show an error
+           signOut(auth);
+           document.getElementById('alert-title').innerText = "Email Mismatch";
+           document.getElementById('alert-message').innerText = `You registered your company with ${registeredEmail}, but tried to link the Google account ${authEmail}. Please use the matching account.`;
+           document.getElementById('custom-alert').style.display = 'flex';
+           return; // Stop the code right here
+        }
         
         // Push the Google email straight to the Bouncer!
         fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: user.email })
+          body: JSON.stringify({ email: authEmail })
         })
         .then(res => res.json())
         .then(data => {
@@ -734,11 +748,18 @@
 
   // 🟢 2. PROCESS THE DATA FROM THE MODAL
   window.processEmailRegistration = function() {
-    const loginEmail = document.getElementById('auth-email').value.trim();
+    const loginEmail = document.getElementById('auth-email').value.trim().toLowerCase();
     const loginPassword = document.getElementById('auth-password').value;
+    const registeredEmail = document.getElementById('email').value.trim().toLowerCase();
 
     if (!loginEmail) {
       alert("Please provide an email address.");
+      return;
+    }
+
+    // 🟢 SECONDARY FIX: Ensure the typed email also matches the registered email here!
+    if (loginEmail !== registeredEmail) {
+      alert(`The email must match the one you registered with (${registeredEmail}).`);
       return;
     }
 
@@ -781,7 +802,6 @@
         });
       })
       .catch((error) => {
-        // Handle Firebase errors (e.g., email already in use)
         document.getElementById('alert-title').innerText = "Registration Failed";
         document.getElementById('alert-message').innerText = error.message;
         document.getElementById('custom-alert').style.display = 'flex';
