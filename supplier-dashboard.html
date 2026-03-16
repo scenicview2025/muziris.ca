@@ -359,8 +359,11 @@
     }
 
     function logoutSupplier() {
+      // Clear the local storage session
       localStorage.clear();
-      window.location.href = 'index.html';
+      
+      // Redirect back to the supplier login page
+      window.location.href = 'suppliers.html';
     }
   </script>
 </body>
