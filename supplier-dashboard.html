@@ -176,7 +176,7 @@
     
     <div class="action-grid">
       
-      <a href="suppliers.html" class="action-btn">
+      <a href="product-upload.html" class="action-btn">
         <div class="action-icon">📦</div>
         <h3 class="action-title">Single Product Upload</h3>
         <p class="action-desc">Upload a new item to the staging ledger, or utilize the visual editor to modify existing catalog items.</p>
@@ -298,7 +298,7 @@
                   <div class="alert-item-name">${rej.product_name}</div>
                   <div class="alert-item-msg"><strong>Admin Note:</strong> ${rej.admin_comments || 'Please review your data.'}</div>
                 </div>
-                <a href="suppliers.html?edit=${rej.product_id}" class="fix-btn">Fix Issue</a>
+                <a href="product-upload.html?edit=${rej.product_id}" class="fix-btn">Fix Issue</a>
               </div>
             `;
           });
