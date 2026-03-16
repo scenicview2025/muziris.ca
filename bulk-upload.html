@@ -13,9 +13,9 @@
     .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle, rgba(11,14,20,0.7) 0%, rgba(11,14,20,0.98) 100%); z-index: 1; pointer-events: none;}
     
     /* TOP NAVIGATION */
-    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
-    .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
-    .back-home:hover { color: #fff; }
+.top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+.back-btn { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+.back-btn:hover { color: #fff; }
 
     .container { position: relative; z-index: 2; max-width: 800px; margin: 40px auto; padding: 40px; background: rgba(21, 25, 34, 0.95); border: 1px solid var(--gold); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
     h1 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-top: 0; }
@@ -57,7 +57,7 @@
   <div class="overlay"></div>
 
   <div class="top-nav">
-    <a href="suppliers.html" class="back-home">← Back to Portal</a>
+    <a href="supplier-dashboard.html" class="back-btn">← Back to Dashboard</a>
   </div>
 
   <div class="container" id="mainUI" style="display: none;">
@@ -106,7 +106,7 @@
     <p style="color: #888; font-size: 14px;">Our Data Team will review your items shortly. You may now safely return to the main portal.</p>
     <button class="btn" style="margin-top: 30px; margin-bottom: 20px;" onclick="window.location.reload()">Submit Another CSV</button>
     <br>
-    <a href="suppliers.html" style="color: var(--gold); text-decoration: underline; font-size: 14px;">← Return to Main Portal</a>
+    <a href="supplier-dashboard.html" style="color: var(--gold); text-decoration: underline; font-size: 14px;">← Return to Dashboard</a>
   </div>
 
   <script>
@@ -117,8 +117,8 @@
       const verifiedId = localStorage.getItem('verifiedSupplierId');
       const verifiedCurrency = localStorage.getItem('verifiedCurrency'); 
       
-      if (!verifiedId) {
-        window.location.href = 'suppliers.html'; 
+     if (!verifiedId) {
+        window.location.href = 'index.html'; // Or 'supplier-dashboard.html' depending on your login flow
       } else {
         document.getElementById('supId').value = verifiedId;
         window.officialCurrency = verifiedCurrency || "USD"; 
