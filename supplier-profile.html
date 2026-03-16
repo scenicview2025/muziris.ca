@@ -20,18 +20,21 @@
     /* EDITABLE BANNER & LOGO */
     .hero-section { background: var(--slate); border-radius: 12px; border: 1px solid #333; margin-bottom: 30px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     
-    .banner-zone { width: 100%; height: 250px; background: #1a1e29 url('https://images.unsplash.com/photo-1553456558-aff63285aaa1?q=80&w=2000&auto=format&fit=crop') center/cover; position: relative; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
-    .banner-zone::after { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(21, 25, 34, 1)); transition: 0.3s; }
-    .banner-zone:hover::after { background: rgba(0,0,0,0.6); }
-    .edit-overlay { position: relative; z-index: 2; background: rgba(0,0,0,0.6); color: #fff; padding: 10px 20px; border-radius: 4px; border: 1px solid #fff; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0; transition: 0.3s; font-weight: bold;}
-    .banner-zone:hover .edit-overlay { opacity: 1; }
+    /* 🟢 THE FIX: Beautiful built-in default global trade cover photo */
+    .banner-zone { width: 100%; height: 250px; background: #1a1e29 url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat; position: relative; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+    .banner-zone::after { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(21, 25, 34, 1)); transition: 0.3s; }
+    .banner-zone:hover::after { background: rgba(0,0,0,0.7); }
+    
+    /* Premium Edit Overlay Button */
+    .edit-overlay { position: relative; z-index: 2; background: rgba(212, 175, 55, 0.15); color: #fff; padding: 12px 25px; border-radius: 30px; border: 1px solid var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0; transition: 0.3s; font-weight: bold; backdrop-filter: blur(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.5);}
+    .banner-zone:hover .edit-overlay { opacity: 1; transform: translateY(-2px); }
 
     .profile-info { padding: 0 40px 40px 40px; display: flex; gap: 30px; margin-top: -60px; position: relative; z-index: 5; align-items: flex-end;}
     
     .logo-zone { width: 130px; height: 130px; border-radius: 8px; background: #000; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.8); cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .logo-zone img { width: 100%; height: 100%; object-fit: cover; }
-    .logo-zone .edit-overlay { position: absolute; opacity: 0; }
-    .logo-zone:hover .edit-overlay { opacity: 1; }
+    .logo-zone .edit-overlay { position: absolute; opacity: 0; border-radius: 4px; padding: 8px 15px; border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.7);}
+    .logo-zone:hover .edit-overlay { opacity: 1; transform: none; }
 
     .company-titles { flex: 1; }
     .company-name { font-family: 'Cinzel', serif; font-size: 32px; color: #fff; margin: 0 0 5px 0; }
@@ -153,7 +156,8 @@
     </div>
   </div>
 
-  <div style="height: 100px;"></div> <div class="save-bar">
+  <div style="height: 100px;"></div> 
+  <div class="save-bar">
     <button class="btn-gold" id="saveBtn" onclick="saveProfile()">Save Public Profile</button>
   </div>
 
@@ -167,6 +171,12 @@
       if (!supplierId) { window.location.href = 'index.html'; return; }
       
       document.getElementById('ui-id').innerText = "ID: " + supplierId;
+      // We also pull the company name directly from local storage so it renders instantly
+      const savedCompany = localStorage.getItem('verifiedCompany');
+      if (savedCompany) {
+         document.getElementById('ui-name').innerText = savedCompany;
+      }
+      
       fetchProfileData(supplierId);
     };
 
@@ -178,15 +188,19 @@
       })
       .then(r => r.json())
       .then(data => {
-        if(data.error) return alert("Error loading profile.");
+        if(data.error) return console.log("Profile not found, using defaults.");
         
         // Populate Header
-        document.getElementById('ui-name').innerText = data.company_name;
+        if(data.company_name) {
+          document.getElementById('ui-name').innerText = data.company_name;
+        }
         if(data.logo_url) {
           document.getElementById('ui-logo').src = data.logo_url;
           currentLogoUrl = data.logo_url;
         }
-        if(data.banner_url) {
+        
+        // Only override the default beautiful banner if they have actually saved a custom one
+        if(data.banner_url && data.banner_url.trim() !== "") {
           document.getElementById('ui-banner').style.backgroundImage = `url('${data.banner_url}')`;
           currentBannerUrl = data.banner_url;
         }
@@ -230,7 +244,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          supplierId: supplierId + "_branding", // Keep brand assets organized
+          supplierId: supplierId + "_branding", 
           fileName: fileObj.name,
           mimeType: fileObj.type,
           fileData: fileObj.data
@@ -273,7 +287,7 @@
         const profileData = {
           supplierId: supplierId,
           logo_url: currentLogoUrl,
-          banner_url: currentBannerUrl,
+          banner_url: currentBannerUrl, // This will be empty string if they never uploaded one, which is fine (frontend falls back to default)
           company_bio: document.getElementById('bio').value,
           year_established: document.getElementById('year').value,
           employee_count: document.getElementById('employees').value,
