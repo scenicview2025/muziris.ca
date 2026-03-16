@@ -1,622 +1,315 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Muziris | Brand Profile Editor</title>
-
   <link rel="icon" type="image/png" href="MC.png">
-
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-
   <style>
-
     :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; }
-
     body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); overflow-x: hidden; }
-
     
-
     header { background: rgba(11, 14, 20, 0.95); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-
     .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
-
     .back-btn { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; }
-
     .back-btn:hover { color: #fff; }
-
-
 
     .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
 
-
-
     /* EDITABLE BANNER & LOGO */
-
     .hero-section { background: var(--slate); border-radius: 12px; border: 1px solid #333; margin-bottom: 30px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-
     
-
     .banner-zone { width: 100%; height: 250px; background: #1a1e29 url('https://images.unsplash.com/photo-1553456558-aff63285aaa1?q=80&w=2000&auto=format&fit=crop') center/cover; position: relative; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
-
     .banner-zone::after { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(21, 25, 34, 1)); transition: 0.3s; }
-
     .banner-zone:hover::after { background: rgba(0,0,0,0.6); }
-
     .edit-overlay { position: relative; z-index: 2; background: rgba(0,0,0,0.6); color: #fff; padding: 10px 20px; border-radius: 4px; border: 1px solid #fff; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0; transition: 0.3s; font-weight: bold;}
-
     .banner-zone:hover .edit-overlay { opacity: 1; }
 
-
-
     .profile-info { padding: 0 40px 40px 40px; display: flex; gap: 30px; margin-top: -60px; position: relative; z-index: 5; align-items: flex-end;}
-
     
-
     .logo-zone { width: 130px; height: 130px; border-radius: 8px; background: #000; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.8); cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-
     .logo-zone img { width: 100%; height: 100%; object-fit: cover; }
-
     .logo-zone .edit-overlay { position: absolute; opacity: 0; }
-
     .logo-zone:hover .edit-overlay { opacity: 1; }
 
-
-
     .company-titles { flex: 1; }
-
     .company-name { font-family: 'Cinzel', serif; font-size: 32px; color: #fff; margin: 0 0 5px 0; }
-
     .supplier-id { font-size: 12px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-weight: bold; background: rgba(212,175,55,0.1); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); display: inline-block;}
 
-
-
     /* ALIBABA STYLE BENTO GRID */
-
     .bento-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-
     .card { background: var(--slate); border: 1px solid #333; border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-
     .card-title { font-family: 'Cinzel', serif; color: var(--gold); margin-top: 0; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; letter-spacing: 1px;}
-
     
-
     /* BEAUTIFUL INPUTS */
-
     .form-group { margin-bottom: 20px; }
-
     .form-group label { display: block; color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold;}
-
     .input-clean { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #333; color: #fff; padding: 12px 15px; border-radius: 6px; font-family: 'Lato', sans-serif; font-size: 14px; box-sizing: border-box; transition: 0.3s; }
-
     .input-clean:focus { border-color: var(--gold); outline: none; background: #000; box-shadow: 0 0 10px rgba(212,175,55,0.1); }
-
     textarea.input-clean { resize: vertical; min-height: 120px; line-height: 1.6; }
 
-
-
     .save-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(11, 14, 20, 0.95); border-top: 1px solid var(--gold); padding: 20px; text-align: center; z-index: 100; backdrop-filter: blur(10px); }
-
     .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; padding: 15px 40px; border-radius: 4px; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(212,175,55,0.3);}
-
     .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212,175,55,0.5);}
-
     .btn-gold:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; transform: none;}
-
-
 
     #loading-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; color: var(--gold); font-size: 18px; font-family: 'Cinzel', serif; letter-spacing: 2px;}
 
-
-
     @media (max-width: 768px) {
-
       .profile-info { flex-direction: column; align-items: center; text-align: center; }
-
       .bento-grid { grid-template-columns: 1fr; }
-
     }
-
   </style>
-
 </head>
-
 <body>
-
-
 
   <div id="loading-overlay">Syncing with Muziris Ledger...</div>
 
-
-
   <header>
-
     <h1 class="brand">Muziris</h1>
-
     <a href="supplier-dashboard.html" class="back-btn">← Back to Dashboard</a>
-
   </header>
 
-
-
   <input type="file" id="bannerUpload" accept="image/*" style="display:none;" onchange="handleImagePreview(this, 'banner')">
-
   <input type="file" id="logoUpload" accept="image/*" style="display:none;" onchange="handleImagePreview(this, 'logo')">
 
-
-
   <div class="container">
-
     
-
     <div class="hero-section">
-
       <div class="banner-zone" id="ui-banner" onclick="document.getElementById('bannerUpload').click()">
-
         <div class="edit-overlay">📷 Update Cover Photo</div>
-
       </div>
-
       <div class="profile-info">
-
         <div class="logo-zone" onclick="document.getElementById('logoUpload').click()">
-
           <img id="ui-logo" src="MC.png" alt="Logo">
-
           <div class="edit-overlay">📷 Logo</div>
-
         </div>
-
         <div class="company-titles">
-
           <h2 class="company-name" id="ui-name">Loading Company...</h2>
-
           <div class="supplier-id" id="ui-id">ID: ...</div>
-
         </div>
-
       </div>
-
     </div>
-
-
 
     <div class="bento-grid">
-
       
-
       <div class="left-col" style="display: flex; flex-direction: column; gap: 20px;">
-
         <div class="card">
-
           <h3 class="card-title">Company Overview</h3>
-
           <div class="form-group">
-
             <label>About Us / Bio (Public Facing)</label>
-
             <textarea id="bio" class="input-clean" placeholder="Describe your factory, history, machinery, and mission..."></textarea>
-
           </div>
-
         </div>
-
-
 
         <div class="card">
-
           <h3 class="card-title">Trade Capabilities</h3>
-
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-
             <div class="form-group">
-
               <label>Primary Export Markets</label>
-
               <input type="text" id="markets" class="input-clean" placeholder="e.g. North America, Europe, UAE">
-
             </div>
-
             <div class="form-group">
-
               <label>Nearest Shipping Port</label>
-
               <input type="text" id="port" class="input-clean" placeholder="e.g. Shenzhen Port, Mumbai Port">
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
-
 
       <div class="right-col" style="display: flex; flex-direction: column; gap: 20px;">
-
         <div class="card">
-
           <h3 class="card-title">Business Identity</h3>
-
           <div class="form-group">
-
             <label>Year Established</label>
-
             <input type="number" id="year" class="input-clean" placeholder="e.g. 2005">
-
           </div>
-
           <div class="form-group">
-
             <label>Total Employees</label>
-
             <select id="employees" class="input-clean">
-
               <option value="">Select Size...</option>
-
               <option value="1-50">1 - 50 Employees</option>
-
               <option value="51-200">51 - 200 Employees</option>
-
               <option value="201-500">201 - 500 Employees</option>
-
               <option value="500+">500+ Employees</option>
-
             </select>
-
           </div>
-
           <div class="form-group">
-
             <label>Certifications (Comma Separated)</label>
-
             <input type="text" id="certs" class="input-clean" placeholder="e.g. ISO 9001, BSCI, FDA">
-
           </div>
-
         </div>
-
-
 
         <div class="card">
-
           <h3 class="card-title">Digital Presence</h3>
-
           <div class="form-group">
-
             <label>Official Website</label>
-
             <input type="text" id="website" class="input-clean" placeholder="https://www.yourcompany.com">
-
           </div>
-
         </div>
-
       </div>
 
-
-
     </div>
-
   </div>
-
-
 
   <div style="height: 100px;"></div> <div class="save-bar">
-
     <button class="btn-gold" id="saveBtn" onclick="saveProfile()">Save Public Profile</button>
-
   </div>
 
-
-
   <script>
-
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
-
     let currentLogoUrl = "";
-
     let currentBannerUrl = "";
 
-
-
     window.onload = function() {
-
       const supplierId = localStorage.getItem('verifiedSupplierId');
-
       if (!supplierId) { window.location.href = 'index.html'; return; }
-
       
-
       document.getElementById('ui-id').innerText = "ID: " + supplierId;
-
       fetchProfileData(supplierId);
-
     };
 
-
-
     function fetchProfileData(id) {
-
       fetch(API_BASE_URL + '/get-supplier-profile', {
-
         method: 'POST',
-
         headers: { 'Content-Type': 'application/json' },
-
         body: JSON.stringify({ supplierId: id })
-
       })
-
       .then(r => r.json())
-
       .then(data => {
-
         if(data.error) return alert("Error loading profile.");
-
         
-
         // Populate Header
-
         document.getElementById('ui-name').innerText = data.company_name;
-
         if(data.logo_url) {
-
           document.getElementById('ui-logo').src = data.logo_url;
-
           currentLogoUrl = data.logo_url;
-
         }
-
         if(data.banner_url) {
-
           document.getElementById('ui-banner').style.backgroundImage = `url('${data.banner_url}')`;
-
           currentBannerUrl = data.banner_url;
-
         }
-
-
 
         // Populate Fields
-
         document.getElementById('bio').value = data.company_bio || "";
-
         document.getElementById('year').value = data.year_established || "";
-
         document.getElementById('employees').value = data.employee_count || "";
-
         document.getElementById('markets').value = data.export_markets || "";
-
         document.getElementById('certs').value = data.certifications || "";
-
         document.getElementById('port').value = data.nearest_port || "";
-
         document.getElementById('website').value = data.website || "";
-
       })
-
       .catch(err => console.error(err));
-
     }
-
-
 
     // --- CLOUDINARY IMAGE UPLOAD LOGIC ---
-
     function handleImagePreview(input, type) {
-
       if (input.files && input.files[0]) {
-
         const reader = new FileReader();
-
         reader.onload = function(e) {
-
           if(type === 'banner') {
-
             document.getElementById('ui-banner').style.backgroundImage = `url('${e.target.result}')`;
-
           } else {
-
             document.getElementById('ui-logo').src = e.target.result;
-
           }
-
         }
-
         reader.readAsDataURL(input.files[0]);
-
       }
-
     }
-
-
 
     const readFileAsBase64 = (file) => new Promise((resolve, reject) => {
-
       const reader = new FileReader();
-
       reader.onload = () => resolve({ name: file.name, type: file.type, data: reader.result.split(',')[1] });
-
       reader.onerror = reject;
-
       reader.readAsDataURL(file);
-
     });
 
-
-
     async function uploadToCloudinary(fileObj, supplierId) {
-
       const response = await fetch(API_BASE_URL + '/upload-media', {
-
         method: 'POST',
-
         headers: { 'Content-Type': 'application/json' },
-
         body: JSON.stringify({
-
           supplierId: supplierId + "_branding", // Keep brand assets organized
-
           fileName: fileObj.name,
-
           mimeType: fileObj.type,
-
           fileData: fileObj.data
-
         })
-
       });
-
       const result = await response.json();
-
       if(result.success) return result.url;
-
       throw new Error("Upload failed");
-
     }
-
-
 
     // --- SAVE LOGIC ---
-
     async function saveProfile() {
-
       const supplierId = localStorage.getItem('verifiedSupplierId');
-
       const btn = document.getElementById('saveBtn');
-
       const overlay = document.getElementById('loading-overlay');
-
       
-
       btn.disabled = true;
-
       overlay.style.display = "flex";
 
-
-
       try {
-
         // 1. Upload Banner if changed
-
         const bannerFile = document.getElementById('bannerUpload').files[0];
-
         if(bannerFile) {
-
            overlay.innerText = "Encrypting Banner Image...";
-
            const bFile = await readFileAsBase64(bannerFile);
-
            currentBannerUrl = await uploadToCloudinary(bFile, supplierId);
-
         }
-
-
 
         // 2. Upload Logo if changed
-
         const logoFile = document.getElementById('logoUpload').files[0];
-
         if(logoFile) {
-
            overlay.innerText = "Encrypting Logo Image...";
-
            const lFile = await readFileAsBase64(logoFile);
-
            currentLogoUrl = await uploadToCloudinary(lFile, supplierId);
-
         }
 
+        // 3. Prepare data and handle empty Year Input securely
+        const yearInput = document.getElementById('year').value;
+        const parsedYear = yearInput === "" ? null : parseInt(yearInput, 10);
 
-
-        // 3. Save to Database
-
+        // 4. Save to Database
         overlay.innerText = "Saving to Muziris Ledger...";
-
         
-
         const profileData = {
-
           supplierId: supplierId,
-
           logo_url: currentLogoUrl,
-
           banner_url: currentBannerUrl,
-
           company_bio: document.getElementById('bio').value,
-
-          year_established: document.getElementById('year').value,
-
+          year_established: parsedYear, 
           employee_count: document.getElementById('employees').value,
-
           export_markets: document.getElementById('markets').value,
-
           certifications: document.getElementById('certs').value,
-
           nearest_port: document.getElementById('port').value,
-
           website: document.getElementById('website').value
-
         };
 
-
-
         const res = await fetch(API_BASE_URL + '/update-supplier-profile', {
-
           method: 'POST',
-
           headers: { 'Content-Type': 'application/json' },
-
           body: JSON.stringify(profileData)
-
         });
-
         
-
         const result = await res.json();
-
         
-
         if(result.success) {
-
           overlay.style.display = "none";
-
           btn.disabled = false;
-
           btn.innerText = "✓ PROFILE SAVED";
-
           setTimeout(() => { btn.innerText = "Save Public Profile"; }, 3000);
-
         } else {
-
           throw new Error(result.error);
-
         }
 
-
-
       } catch (err) {
-
         overlay.style.display = "none";
-
         btn.disabled = false;
-
         alert("Error saving profile: " + err.message);
-
       }
-
     }
-
   </script>
-
 </body>
-
 </html>
-
