@@ -696,81 +696,59 @@
       });
   };
 
-  // 🟢 PIN VERIFICATION + EMAIL/PASSWORD SETUP
+  // 🟢 DIRECT EMAIL/PASSWORD SETUP (No PIN Required)
   window.triggerEmailAuth = function() { 
-    const supplierId = document.getElementById('final-id').innerText;
+    // Grab the email they already typed in the form to save them time
+    const formEmail = document.getElementById('email').value.trim();
     
-    // 1. Ask for the PIN (Last 4 digits of phone)
-    const userPin = prompt("SECURITY CHECK\n\nPlease enter the LAST 4 DIGITS of the phone number you just registered:");
-    if (!userPin) return;
+    // 1. Confirm Email
+    const loginEmail = prompt("Account Setup\n\nPlease confirm your email address:", formEmail);
+    if (!loginEmail) return;
 
-    // 2. Verify the PIN with your backend
-    fetch("https://muziris-api.onrender.com/api/verify-supplier", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: supplierId, phoneSuffix: userPin })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.valid) {
-        // 3. PIN is correct! Now ask for Email and Password
-        const loginEmail = prompt("PIN Verified!\n\nEnter the Email Address you want to use for logging in:");
-        if (!loginEmail) return;
+    // 2. Create Password
+    const loginPassword = prompt("Create a strong password (minimum 6 characters):");
+    if (!loginPassword || loginPassword.length < 6) {
+      alert("Password must be at least 6 characters. Please try again.");
+      return;
+    }
 
-        const loginPassword = prompt("Create a strong password (minimum 6 characters):");
-        if (!loginPassword || loginPassword.length < 6) {
-          alert("Password must be at least 6 characters. Please try again.");
-          return;
-        }
-
-        // 4. Create the account in Firebase
-        createUserWithEmailAndPassword(auth, loginEmail, loginPassword)
-          .then((userCredential) => {
-            const user = userCredential.user;
+    // 3. Create the account directly in Firebase
+    createUserWithEmailAndPassword(auth, loginEmail, loginPassword)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        
+        // 4. Send the Firebase email to your backend to link the profile and log them in
+        fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: user.email })
+        })
+        .then(res => res.json())
+        .then(ssoData => {
+          if(ssoData.success) {
+            localStorage.setItem('verifiedSupplierId', ssoData.supplierId);
+            localStorage.setItem('verifiedCompany', ssoData.companyName);
+            localStorage.setItem('verifiedCurrency', ssoData.currency);
             
-            // 5. Push the new Firebase email straight to your Bouncer (SSO Route)
-            fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email: user.email })
-            })
-            .then(res => res.json())
-            .then(ssoData => {
-              if(ssoData.success) {
-                localStorage.setItem('verifiedSupplierId', ssoData.supplierId);
-                localStorage.setItem('verifiedCompany', ssoData.companyName);
-                localStorage.setItem('verifiedCurrency', ssoData.currency);
-                
-                document.getElementById('alert-title').innerText = "Account Secured";
-                document.getElementById('alert-message').innerText = "Your password has been set successfully! Logging you in...";
-                document.getElementById('custom-alert').style.display = 'flex';
-                
-                setTimeout(() => { window.location.href = 'supplier-dashboard.html'; }, 2000);
-              } else {
-                 document.getElementById('alert-title').innerText = "Access Denied";
-                 document.getElementById('alert-message').innerText = ssoData.error;
-                 document.getElementById('custom-alert').style.display = 'flex';
-              }
-            });
-          })
-          .catch((error) => {
-            document.getElementById('alert-title').innerText = "Registration Failed";
-            document.getElementById('alert-message').innerText = error.message;
+            document.getElementById('alert-title').innerText = "Account Secured";
+            document.getElementById('alert-message').innerText = "Your account has been created successfully! Logging you in...";
             document.getElementById('custom-alert').style.display = 'flex';
-          });
-
-      } else {
-        // PIN was wrong
-        document.getElementById('alert-title').innerText = "Verification Failed";
-        document.getElementById('alert-message').innerText = "The PIN does not match the registered phone number. Please try again.";
+            
+            setTimeout(() => { window.location.href = 'supplier-dashboard.html'; }, 2000);
+          } else {
+             // If the email isn't in your PostgreSQL database yet
+             document.getElementById('alert-title').innerText = "Access Denied";
+             document.getElementById('alert-message').innerText = ssoData.error;
+             document.getElementById('custom-alert').style.display = 'flex';
+          }
+        });
+      })
+      .catch((error) => {
+        // Handle Firebase errors (e.g., email already in use)
+        document.getElementById('alert-title').innerText = "Registration Failed";
+        document.getElementById('alert-message').innerText = error.message;
         document.getElementById('custom-alert').style.display = 'flex';
-      }
-    })
-    .catch(err => {
-      document.getElementById('alert-title').innerText = "Network Error";
-      document.getElementById('alert-message').innerText = "Could not verify PIN. Please check your connection.";
-      document.getElementById('custom-alert').style.display = 'flex';
-    });
+      });
   };
 </script>
 
