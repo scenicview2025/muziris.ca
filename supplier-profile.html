@@ -6,6 +6,9 @@
   <title>Muziris | Brand Profile Editor</title>
   <link rel="icon" type="image/png" href="MC.png">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+
   <style>
     :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; }
     body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); overflow-x: hidden; }
@@ -53,8 +56,17 @@
     .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; padding: 15px 40px; border-radius: 4px; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(212,175,55,0.3);}
     .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212,175,55,0.5);}
     .btn-gold:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; transform: none;}
+    .btn-outline { background: transparent; color: var(--mist); border: 1px solid #555; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: 0.3s; font-family: 'Lato', sans-serif;}
+    .btn-outline:hover { background: #333; border-color: #fff; }
 
     #loading-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; color: var(--gold); font-size: 18px; font-family: 'Cinzel', serif; letter-spacing: 2px;}
+
+    /* CROP MODAL STYLES */
+    #crop-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 9000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;}
+    .crop-container { width: 100%; max-width: 800px; height: 400px; background: #000; }
+    .crop-controls { margin-top: 20px; display: flex; gap: 15px; align-items: center; justify-content: center; width: 100%; max-width: 800px;}
+    .zoom-btn { background: #222; color: #fff; border: 1px solid #444; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;}
+    .zoom-btn:hover { background: var(--gold); color: #000; border-color: var(--gold);}
 
     @media (max-width: 768px) {
       .profile-info { flex-direction: column; align-items: center; text-align: center; }
@@ -65,6 +77,21 @@
 <body>
 
   <div id="loading-overlay">Syncing with Muziris Ledger...</div>
+
+  <div id="crop-modal">
+    <h3 style="font-family: 'Cinzel', serif; color: var(--gold); margin-top: 0;">Adjust Cover Photo</h3>
+    <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Drag to move. Use scroll wheel or buttons to zoom.</p>
+    <div class="crop-container">
+      <img id="crop-image" src="" style="display: block; max-width: 100%;">
+    </div>
+    <div class="crop-controls">
+      <button class="zoom-btn" onclick="zoomCropper(0.1)">+</button>
+      <button class="zoom-btn" onclick="zoomCropper(-0.1)">-</button>
+      <div style="flex: 1;"></div>
+      <button class="btn-outline" onclick="closeCropModal()">Cancel</button>
+      <button class="btn-gold" style="padding: 10px 20px;" onclick="applyCrop()">Apply Crop</button>
+    </div>
+  </div>
 
   <header>
     <h1 class="brand">Muziris</h1>
@@ -157,10 +184,16 @@
     <button class="btn-gold" id="saveBtn" onclick="saveProfile()">Save Public Profile</button>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
   <script>
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     let currentLogoUrl = "";
     let currentBannerUrl = "";
+    
+    // Crop Variables
+    let cropper = null;
+    let croppedBannerData = null; // Holds the base64 data to be uploaded
 
     window.onload = function() {
       const supplierId = localStorage.getItem('verifiedSupplierId');
@@ -203,13 +236,14 @@
       .catch(err => console.error(err));
     }
 
-    // --- CLOUDINARY IMAGE UPLOAD LOGIC ---
+    // --- CROPPER LOGIC ---
     function handleImagePreview(input, type) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
           if(type === 'banner') {
-            document.getElementById('ui-banner').style.backgroundImage = `url('${e.target.result}')`;
+            openCropModal(e.target.result);
+            input.value = ''; // Reset input so user can select the same file again if they cancel
           } else {
             document.getElementById('ui-logo').src = e.target.result;
           }
@@ -218,6 +252,64 @@
       }
     }
 
+    function openCropModal(imageSrc) {
+      const modal = document.getElementById('crop-modal');
+      const image = document.getElementById('crop-image');
+      image.src = imageSrc;
+      modal.style.display = 'flex';
+
+      // Destroy old cropper instance if it exists
+      if (cropper) { cropper.destroy(); }
+
+      // Initialize Cropper tailored for a wide banner
+      cropper = new Cropper(image, {
+        aspectRatio: 4 / 1, // Matches typical 1000x250 banner
+        viewMode: 1,
+        dragMode: 'move', // Lets user drag image to pan
+        autoCropArea: 1,
+        restore: false,
+        guides: true,
+        center: true,
+        highlight: false,
+        cropBoxMovable: false, // Fix crop box, user moves the image behind it
+        cropBoxResizable: false,
+        toggleDragModeOnDblclick: false,
+      });
+    }
+
+    function closeCropModal() {
+      document.getElementById('crop-modal').style.display = 'none';
+      if (cropper) {
+        cropper.destroy();
+        cropper = null;
+      }
+    }
+
+    function zoomCropper(ratio) {
+      if (cropper) cropper.zoom(ratio);
+    }
+
+    function applyCrop() {
+      if (!cropper) return;
+      
+      // Get cropped image as a canvas
+      const canvas = cropper.getCroppedCanvas({ width: 1200, height: 300 });
+      const base64Url = canvas.toDataURL('image/jpeg', 0.85); // 0.85 quality compression
+      
+      // Update UI
+      document.getElementById('ui-banner').style.backgroundImage = `url('${base64Url}')`;
+
+      // Save the data to be uploaded later
+      croppedBannerData = {
+        name: "banner_cropped.jpg",
+        type: "image/jpeg",
+        data: base64Url.split(',')[1] // Strip off the 'data:image/jpeg;base64,' prefix
+      };
+
+      closeCropModal();
+    }
+
+    // --- UPLOAD & SAVE LOGIC ---
     const readFileAsBase64 = (file) => new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve({ name: file.name, type: file.type, data: reader.result.split(',')[1] });
@@ -230,7 +322,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          supplierId: supplierId + "_branding", // Keep brand assets organized
+          supplierId: supplierId + "_branding",
           fileName: fileObj.name,
           mimeType: fileObj.type,
           fileData: fileObj.data
@@ -241,7 +333,6 @@
       throw new Error("Upload failed");
     }
 
-    // --- SAVE LOGIC ---
     async function saveProfile() {
       const supplierId = localStorage.getItem('verifiedSupplierId');
       const btn = document.getElementById('saveBtn');
@@ -251,12 +342,10 @@
       overlay.style.display = "flex";
 
       try {
-        // 1. Upload Banner if changed
-        const bannerFile = document.getElementById('bannerUpload').files[0];
-        if(bannerFile) {
+        // 1. Upload Banner if changed (using the cropped data instead of the file input)
+        if(croppedBannerData) {
            overlay.innerText = "Encrypting Banner Image...";
-           const bFile = await readFileAsBase64(bannerFile);
-           currentBannerUrl = await uploadToCloudinary(bFile, supplierId);
+           currentBannerUrl = await uploadToCloudinary(croppedBannerData, supplierId);
         }
 
         // 2. Upload Logo if changed
@@ -299,6 +388,10 @@
           overlay.style.display = "none";
           btn.disabled = false;
           btn.innerText = "✓ PROFILE SAVED";
+          
+          // Reset the cropped data since it's now saved to the backend
+          croppedBannerData = null; 
+          
           setTimeout(() => { btn.innerText = "Save Public Profile"; }, 3000);
         } else {
           throw new Error(result.error);
