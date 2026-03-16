@@ -44,7 +44,7 @@
     .edit-profile-btn:hover { background: var(--gold); color: #000; }
 
     /* FINANCIAL WIDGET */
-    .finance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; text-decoration: none; color: inherit; transition: 0.3s; border-radius: 12px; }
+    .finance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; text-decoration: none; color: inherit; transition: 0.3s; border-radius: 12px; }
     .finance-card { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 30px; position: relative; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; display: block; text-decoration: none;}
     .finance-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     .finance-card.available { border-top: 4px solid var(--success); }
@@ -56,7 +56,7 @@
     .finance-currency { font-size: 16px; color: var(--gold); margin-left: 5px; font-family: 'Lato', sans-serif; font-weight: normal; letter-spacing: 0;}
     .finance-sub { font-size: 12px; color: #aaa; margin-top: 8px; }
 
-    /* WIDGETS & BENTO GRID */
+    /* WIDGETS */
     .alerts-widget { grid-column: span 3; background: rgba(255, 82, 82, 0.05); border: 1px solid rgba(255, 82, 82, 0.3); border-radius: 12px; padding: 25px; display: none; margin-bottom: 20px;}
     .rfq-widget { grid-column: span 3; background: rgba(30, 136, 229, 0.05); border: 1px solid rgba(30, 136, 229, 0.3); border-radius: 12px; padding: 25px; display: none; margin-bottom: 20px;}
     .alerts-title { color: var(--alert); font-family: 'Cinzel', serif; margin-top: 0; font-size: 18px; display: flex; align-items: center; gap: 10px; }
@@ -67,26 +67,57 @@
     .fix-btn { background: var(--alert); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; text-decoration: none; }
     .rfq-btn { background: var(--blue); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; text-decoration: none; }
 
-    .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-    .bento-card { background: var(--slate); border: 1px solid #333; border-radius: 12px; padding: 30px; transition: transform 0.3s, border-color 0.3s; position: relative; overflow: hidden; }
-    .bento-card:hover { transform: translateY(-5px); border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    /* BENTO BOX GRID */
+    .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+    .bento-card { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 30px; transition: transform 0.3s, border-color 0.3s; position: relative; overflow: hidden; }
+    .bento-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #888; margin-bottom: 15px; font-weight: bold; display: flex; justify-content: space-between; }
     .card-metric { font-family: 'Cinzel', serif; font-size: 48px; color: #fff; margin: 0; line-height: 1; }
-    .metric-sub { font-size: 13px; color: var(--gold); margin-top: 10px; }
+    .metric-sub { font-size: 12px; color: var(--gold); margin-top: 10px; }
     .card-success { color: var(--success); }
 
-    /* ACTION BUTTONS */
+    /* ACTION BUTTONS LAUNCHPAD (Original 2x2 Grid) */
     .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; transition: 0.3s; border-radius: 12px;}
-    .action-btn { background: linear-gradient(135deg, #151922 0%, #0b0e14 100%); border: 1px solid #444; border-radius: 12px; padding: 30px; text-align: left; cursor: pointer; transition: 0.3s; display: block; text-decoration: none; color: inherit; }
-    .action-btn:hover { border-color: var(--gold); background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, #0b0e14 100%); }
+    .action-btn { background: linear-gradient(135deg, #151922 0%, #0b0e14 100%); border: 1px solid #444; border-radius: 8px; padding: 30px; text-align: left; cursor: pointer; transition: 0.3s; display: block; text-decoration: none; color: inherit; }
+    .action-btn:hover { border-color: var(--gold); background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, #0b0e14 100%); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     .action-icon { font-size: 32px; margin-bottom: 15px; }
-    .action-title { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold); margin: 0 0 10px 0; }
+    .action-title { font-family: 'Cinzel', serif; font-size: 18px; color: var(--gold); margin: 0 0 10px 0; letter-spacing: 1px; text-transform: uppercase;}
     .action-desc { font-size: 13px; color: #888; line-height: 1.5; margin: 0; }
 
-    .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(212,175,55,0.3);}
+    /* SCROLLING CATALOG SHELF */
+    .catalog-section-title { color: var(--gold); font-family: 'Cinzel', serif; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 50px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; text-transform: uppercase; font-size: 20px;}
+    .catalog-shelf { display: flex; gap: 20px; overflow-x: auto; padding: 10px 0 20px 0; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+    .catalog-shelf::-webkit-scrollbar { height: 8px; }
+    .catalog-shelf::-webkit-scrollbar-track { background: #0b0e14; border-radius: 4px;}
+    .catalog-shelf::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    .catalog-shelf::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+    
+    .catalog-card { flex: 0 0 240px; background: var(--slate); border: 1px solid #333; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; scroll-snap-align: start; display: flex; flex-direction: column;}
+    .catalog-card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
+    .catalog-img { height: 180px; background: #000 center/cover no-repeat; border-bottom: 1px solid #333; }
+    .catalog-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;}
+    .catalog-title { font-size: 14px; color: #fff; font-weight: bold; margin: 0 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Lato', sans-serif;}
+    .catalog-cat { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+    .catalog-status { margin-top: 15px; font-size: 10px; font-weight: bold; text-transform: uppercase; padding: 6px 10px; border-radius: 4px; display: inline-block; width: fit-content; letter-spacing: 1px;}
+    .catalog-empty { width: 100%; padding: 40px; background: rgba(255,255,255,0.02); border: 1px dashed #444; border-radius: 8px; text-align: center; color: #888; font-size: 14px; }
+
+    /* PRODUCT INSIGHT MODAL */
+    #insight-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; backdrop-filter: blur(5px);}
+    .insight-box { background: var(--slate); width: 90%; max-width: 850px; padding: 0; border-radius: 8px; border: 1px solid var(--gold); overflow: hidden; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.9); display: flex;}
+    .insight-img-side { width: 45%; background: #000 center/cover no-repeat; border-right: 1px solid #333; min-height: 400px; position: relative;}
+    .insight-content-side { width: 55%; padding: 40px; display: flex; flex-direction: column; justify-content: space-between;}
+    .insight-close { position: absolute; top: 15px; right: 20px; color: #888; font-size: 28px; cursor: pointer; font-weight: bold; transition: 0.3s; z-index: 10; }
+    .insight-close:hover { color: #fff; transform: scale(1.1);}
+    
+    .insight-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
+    .insight-stat { background: #0b0e14; border: 1px solid #333; padding: 20px; border-radius: 8px; text-align: center; }
+    .insight-stat-val { font-family: 'Cinzel', serif; font-size: 32px; color: var(--gold); margin: 0; line-height: 1; }
+    .insight-stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; font-weight: bold;}
+    
+    .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; padding: 12px 20px; border-radius: 4px; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(212,175,55,0.3); text-align: center; text-decoration: none;}
     .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.5);}
 
-    /* 🟢 GUIDED TOUR STYLES */
+    /* GUIDED TOUR STYLES */
     .tour-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 9998; backdrop-filter: blur(2px); }
     .tour-tooltip { display: none; position: absolute; z-index: 10000; background: var(--slate); border: 1px solid var(--gold); padding: 25px; border-radius: 8px; width: 320px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); transition: top 0.4s ease, left 0.4s ease; }
     .tour-tooltip::before { content: ''; position: absolute; top: -10px; left: 30px; border-width: 0 10px 10px 10px; border-style: solid; border-color: transparent transparent var(--gold) transparent; }
@@ -99,6 +130,9 @@
       .finance-grid, .bento-grid, .action-grid { grid-template-columns: 1fr; }
       .brand-info-wrap { flex-direction: column; align-items: center; text-align: center; }
       .edit-profile-btn { align-self: center; margin-top: 15px; }
+      .insight-box { flex-direction: column; max-height: 90vh; overflow-y: auto;}
+      .insight-img-side { width: 100%; height: 250px; min-height: 250px; border-right: none; border-bottom: 1px solid #333;}
+      .insight-content-side { width: 100%; }
     }
   </style>
 </head>
@@ -106,12 +140,50 @@
 
   <div id="tour-overlay" class="tour-overlay"></div>
   <div id="tour-tooltip" class="tour-tooltip">
-    <div id="tour-counter" class="tour-step-counter">STEP 1 OF 3</div>
+    <div id="tour-counter" class="tour-step-counter">STEP 1 OF 4</div>
     <h4 id="tour-title" class="tour-title">Brand Identity</h4>
-    <p id="tour-text" class="tour-text">Complete your public profile. A strong brand identity and professional cover photo builds immense trust with international buyers.</p>
+    <p id="tour-text" class="tour-text">Complete your public profile. A professional logo and bio builds immense trust with international buyers.</p>
     <div style="display:flex; justify-content:space-between; align-items:center;">
       <button onclick="endTour()" style="background:transparent; border:none; color:#888; font-size:12px; cursor:pointer; text-decoration:underline;">Skip Tour</button>
       <button onclick="nextTourStep()" class="btn-gold" id="tour-next-btn">Next &rarr;</button>
+    </div>
+  </div>
+
+  <div id="insight-modal">
+    <div class="insight-box">
+      <div class="insight-close" onclick="closeInsight()">×</div>
+      
+      <div class="insight-img-side" id="insight-img">
+        <div id="insight-status-badge" style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.8); backdrop-filter:blur(5px); padding:8px 12px; border-radius:4px; font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; border:1px solid #333;"></div>
+      </div>
+      
+      <div class="insight-content-side">
+        <div>
+          <h2 id="insight-name" style="margin:0 0 5px 0; color:#fff; font-family:'Lato', sans-serif; font-size:24px;">Product Name</h2>
+          <div id="insight-cat" style="color:var(--gold); font-size:11px; text-transform:uppercase; letter-spacing:1px;">Category &rsaquo; Sub-Category</div>
+          
+          <div id="insight-alerts" style="display:none; margin-top: 15px; background: rgba(255, 82, 82, 0.1); border: 1px solid rgba(255, 82, 82, 0.4); padding: 15px; border-radius: 4px;">
+            <strong style="color:var(--alert); font-size:12px; text-transform:uppercase;">🚨 Action Required</strong>
+            <div id="insight-alerts-text" style="color:#ccc; font-size:13px; margin-top:5px; line-height:1.4;"></div>
+          </div>
+
+          <div class="insight-stats-grid">
+            <div class="insight-stat">
+              <h3 class="insight-stat-val" id="insight-views">0</h3>
+              <div class="insight-stat-label">Profile Views</div>
+            </div>
+            <div class="insight-stat">
+              <h3 class="insight-stat-val" id="insight-rfqs">0</h3>
+              <div class="insight-stat-label">Total RFQs</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn-gold" id="insight-edit-btn" style="width:100%;">✎ Edit Product Data</button>
+          <button id="insight-delete-btn" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:12px; border-radius:4px; font-weight:bold; font-size:12px; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:0.3s;">Delete from Ledger</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -139,7 +211,7 @@
 
     <div class="finance-grid" id="tour-step-2">
       <a href="escrow-wallet.html" class="finance-card available">
-        <div class="finance-title">🟢 Available Balance</div>
+        <div class="finance-title"><span style="color:var(--success);">●</span> Available Balance</div>
         <h2 class="finance-amount"><span id="fin-available">0.00</span><span class="finance-currency" id="curr-1">USD</span></h2>
         <div class="finance-sub">Funds cleared and ready for withdrawal.</div>
       </a>
@@ -167,7 +239,7 @@
       <div id="rfqContainer"></div>
     </div>
 
-    <div class="bento-grid" style="margin-top: 20px;">
+    <div class="bento-grid">
       <div class="bento-card">
         <div class="card-title">Live Catalog <span class="card-success">● Active</span></div>
         <h3 class="card-metric" id="metric-live">0</h3>
@@ -187,7 +259,7 @@
       </div>
     </div>
 
-    <h3 style="color: var(--gold); font-family: 'Cinzel', serif; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">Launchpad</h3>
+    <h3 style="color: var(--gold); font-family: 'Cinzel', serif; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px; text-transform: uppercase;">Launchpad</h3>
     
     <div class="action-grid" id="tour-step-3">
       <a href="product-upload.html" class="action-btn">
@@ -215,10 +287,22 @@
       </a>
     </div>
 
+    <div class="catalog-section-title" id="tour-step-4">
+      <div id="ui-catalog-title">Company Catalog</div>
+      <span style="font-size:12px; color:#888; font-family:'Lato', sans-serif; letter-spacing:1px; text-transform:uppercase;">Scroll to view &rarr;</span>
+    </div>
+    <div class="catalog-shelf" id="catalog-shelf">
+      <div class="catalog-empty">Syncing global ledger...</div>
+    </div>
+
   </div>
 
   <script>
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    
+    // Global Storage for Modal Math
+    window.supplierInventory = [];
+    window.supplierRfqs = [];
 
     window.onload = function() {
       const savedId = localStorage.getItem('verifiedSupplierId');
@@ -233,21 +317,24 @@
       document.getElementById('ui-supplier-id').innerText = savedId;
       document.getElementById('ui-company-name').innerText = savedCompany;
       document.getElementById('ui-logo-placeholder').innerText = savedCompany.substring(0,1).toUpperCase();
+      document.getElementById('ui-catalog-title').innerText = savedCompany + " Active Catalog";
       
       document.getElementById('curr-1').innerText = " " + savedCurrency;
       document.getElementById('curr-2').innerText = " " + savedCurrency;
       document.getElementById('curr-3').innerText = " " + savedCurrency;
 
-      fetchDashboardStats(savedId);
+      // We fetch RFQs first so we can count them for the Product Insight Modal
+      fetchRfqData(savedId).then(() => {
+         fetchDashboardStats(savedId);
+      });
+      
       fetchProfileBranding(savedId); 
-      fetchRfqData(savedId);
       fetchWalletData(savedId);
 
-      // 🟢 THE FIX: Trigger the tour initialization
       initTour();
     };
 
-    // --- 🟢 GUIDED TOUR LOGIC ---
+    // --- GUIDED TOUR LOGIC ---
     let currentStepIndex = 0;
     let activeHighlightElement = null;
 
@@ -264,15 +351,19 @@
       },
       {
         targetId: 'tour-step-3',
-        title: 'Catalog Launchpad',
-        text: 'Ready to build your catalog? Use the Launchpad to upload your first product to the global ledger and start accepting quotes.'
+        title: 'Launchpad Tools',
+        text: 'Use the Launchpad to upload single products, utilize the Mass CSV Engine for bulk uploads, and review analytics.'
+      },
+      {
+        targetId: 'tour-step-4',
+        title: 'Active Catalog',
+        text: 'Your products will appear here. Click on any item to view its performance insights, edit pricing, or resolve issues.'
       }
     ];
 
     function initTour() {
-      // Check local storage. If they've seen it, do nothing.
       if (!localStorage.getItem('muzirisTourCompleted')) {
-        setTimeout(startTour, 1000); // Give the dashboard 1 second to fetch data and look nice
+        setTimeout(startTour, 1500); 
       }
     }
 
@@ -283,38 +374,30 @@
     }
 
     function showTourStep(index) {
-      // Remove highlight from previous element
       if (activeHighlightElement) {
         activeHighlightElement.classList.remove('tour-highlight');
       }
-
       if (index >= tourData.length) {
         endTour();
         return;
       }
-
       const step = tourData[index];
       const targetElement = document.getElementById(step.targetId);
-      
       if (!targetElement) { nextTourStep(); return; }
 
-      // Highlight the new element
       activeHighlightElement = targetElement;
       activeHighlightElement.classList.add('tour-highlight');
 
-      // Update Tooltip Text
       document.getElementById('tour-counter').innerText = `STEP ${index + 1} OF ${tourData.length}`;
       document.getElementById('tour-title').innerText = step.title;
       document.getElementById('tour-text').innerText = step.text;
 
-      // Position the Tooltip exactly below the highlighted element
       const rect = targetElement.getBoundingClientRect();
       const tooltip = document.getElementById('tour-tooltip');
       
       let topPosition = rect.bottom + window.scrollY + 20;
       let leftPosition = rect.left + window.scrollX + 20;
 
-      // Prevent tooltip from overflowing off the right edge of the screen
       if (leftPosition + 350 > window.innerWidth) {
         leftPosition = window.innerWidth - 360;
       }
@@ -322,13 +405,11 @@
       tooltip.style.top = topPosition + 'px';
       tooltip.style.left = leftPosition + 'px';
 
-      // Smooth scroll to the highlighted element
       window.scrollTo({
         top: rect.top + window.scrollY - 150,
         behavior: 'smooth'
       });
 
-      // Update button text on the last step
       if (index === tourData.length - 1) {
         document.getElementById('tour-next-btn').innerText = "Finish Tour ✓";
       }
@@ -345,10 +426,107 @@
       if (activeHighlightElement) {
         activeHighlightElement.classList.remove('tour-highlight');
       }
-      // Save flag so they are never bothered again
       localStorage.setItem('muzirisTourCompleted', 'true');
     }
-    // --- END TOUR LOGIC ---
+
+    // --- CATALOG SHELF & PRODUCT INSIGHT MODAL ---
+    function renderCatalogShelf(items) {
+      const shelf = document.getElementById('catalog-shelf');
+      if(!items || items.length === 0) {
+        shelf.innerHTML = '<div class="catalog-empty">No products found in your catalog. Use the Single Product Upload tool above to get started!</div>';
+        return;
+      }
+      
+      let html = '';
+      items.forEach(item => {
+        let img = item.hero_img || 'MC.png';
+        let statusColor = item.status === 'LIVE' || item.status === 'ACTIVE' ? 'var(--success)' : 
+                          item.status === 'NEEDS FIX' ? 'var(--alert)' : 'var(--bronze)';
+        let statusBg = item.status === 'LIVE' || item.status === 'ACTIVE' ? 'rgba(76,175,80,0.1)' : 
+                       item.status === 'NEEDS FIX' ? 'rgba(255,82,82,0.1)' : 'rgba(184,146,37,0.1)';
+        
+        html += `
+          <div class="catalog-card" onclick="openProductInsight('${item.product_id}')">
+            <div class="catalog-img" style="background-image: url('${img}')"></div>
+            <div class="catalog-info">
+              <div>
+                <h4 class="catalog-title">${item.product_name}</h4>
+                <div class="catalog-cat">${item.main_category}</div>
+              </div>
+              <div class="catalog-status" style="color:${statusColor}; background:${statusBg}; border: 1px solid ${statusColor};">● ${item.status}</div>
+            </div>
+          </div>
+        `;
+      });
+      shelf.innerHTML = html;
+    }
+
+    function openProductInsight(productId) {
+      const item = window.supplierInventory.find(p => p.product_id === productId);
+      if(!item) return;
+
+      let rfqCount = 0;
+      if(window.supplierRfqs) {
+         rfqCount = window.supplierRfqs.filter(r => r.product_id === productId).length;
+      }
+      
+      let mockViews = 0;
+      if (item.status === 'LIVE' || item.status === 'ACTIVE') {
+         mockViews = (productId.charCodeAt(0) * 3) + 14 + (rfqCount * 22); 
+      }
+
+      document.getElementById('insight-img').style.backgroundImage = `url('${item.hero_img || 'MC.png'}')`;
+      document.getElementById('insight-name').innerText = item.product_name;
+      document.getElementById('insight-cat').innerText = item.main_category + " › " + item.sub_category;
+      
+      let statusColor = item.status === 'LIVE' || item.status === 'ACTIVE' ? 'var(--success)' : 
+                        item.status === 'NEEDS FIX' ? 'var(--alert)' : 'var(--bronze)';
+      document.getElementById('insight-status-badge').innerHTML = `<span style="color:${statusColor};">● ${item.status}</span>`;
+
+      if(item.status === 'NEEDS FIX' && item.admin_comments) {
+          document.getElementById('insight-alerts').style.display = 'block';
+          document.getElementById('insight-alerts-text').innerText = item.admin_comments;
+      } else {
+          document.getElementById('insight-alerts').style.display = 'none';
+      }
+
+      document.getElementById('insight-views').innerText = mockViews;
+      document.getElementById('insight-rfqs').innerText = rfqCount;
+
+      document.getElementById('insight-edit-btn').onclick = () => window.location.href = `product-upload.html?edit=${item.product_id}`;
+      document.getElementById('insight-delete-btn').onclick = () => deleteProductDashboard(item.product_id);
+
+      document.getElementById('insight-modal').style.display = 'flex';
+    }
+
+    function closeInsight() {
+      document.getElementById('insight-modal').style.display = 'none';
+    }
+    
+    function deleteProductDashboard(productId) {
+      if(confirm("🚨 WARNING: This will permanently delete this product from the Global Ledger. Proceed?")) {
+          var id = localStorage.getItem('verifiedSupplierId');
+          document.getElementById('insight-delete-btn').innerText = "Deleting...";
+          fetch(API_BASE_URL + '/delete-product', {
+             method: 'POST',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify({ supplierId: id, productId: productId })
+          })
+          .then(res => res.json())
+          .then(res => {
+              if(res.success) {
+                  closeInsight();
+                  fetchDashboardStats(id); 
+              } else {
+                  alert("Could not delete product.");
+                  document.getElementById('insight-delete-btn').innerText = "Delete from Ledger";
+              }
+          }).catch(e => {
+             alert("Network error.");
+             document.getElementById('insight-delete-btn').innerText = "Delete from Ledger";
+          });
+      }
+    }
 
 
     function fetchWalletData(supplierId) {
@@ -393,6 +571,8 @@
       .then(res => res.json())
       .then(data => {
         if(data.error) return;
+        
+        window.supplierInventory = data;
 
         let liveCount = 0;
         let pendingCount = 0;
@@ -404,8 +584,14 @@
           else pendingCount++; 
         });
 
-        document.getElementById('metric-live').innerText = liveCount;
-        document.getElementById('metric-pending').innerText = pendingCount;
+        // Render Shelf
+        renderCatalogShelf(data);
+
+        // Update Bento Boxes
+        document.getElementById('alertsWidget').style.display = 'none';
+        
+        if(document.getElementById('metric-live')) document.getElementById('metric-live').innerText = liveCount;
+        if(document.getElementById('metric-pending')) document.getElementById('metric-pending').innerText = pendingCount;
 
         if (rejectedItems.length > 0) {
           document.getElementById('alertsWidget').style.display = 'block';
@@ -417,7 +603,7 @@
                   <div class="alert-item-name">${rej.product_name}</div>
                   <div class="alert-item-msg"><strong>Admin Note:</strong> ${rej.admin_comments || 'Please review your data.'}</div>
                 </div>
-                <a href="product-upload.html?edit=${rej.product_id}" class="fix-btn">Fix Issue</a>
+                <button onclick="openProductInsight('${rej.product_id}')" class="fix-btn">Fix Issue</button>
               </div>
             `;
           });
@@ -428,7 +614,7 @@
     }
 
     function fetchRfqData(supplierId) {
-      fetch(API_BASE_URL + '/get-supplier-rfqs', {
+      return fetch(API_BASE_URL + '/get-supplier-rfqs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ supplierId: supplierId })
@@ -436,6 +622,8 @@
       .then(res => res.json())
       .then(data => {
         if(data.error) return;
+        
+        window.supplierRfqs = data;
 
         let activeRfqCount = 0;
         let pendingRfqs = [];
@@ -447,7 +635,7 @@
           }
         });
 
-        document.getElementById('metric-rfq').innerText = activeRfqCount;
+        if(document.getElementById('metric-rfq')) document.getElementById('metric-rfq').innerText = activeRfqCount;
 
         if (pendingRfqs.length > 0) {
           document.getElementById('rfqWidget').style.display = 'block';
@@ -478,16 +666,11 @@
     }
 
     function logoutSupplier() {
-      // 🟢 THE FIX: Only remove the sensitive login tokens, leave preferences intact!
       localStorage.removeItem('verifiedSupplierId');
       localStorage.removeItem('verifiedCompany');
       localStorage.removeItem('verifiedCurrency');
-      
-      // Redirect back to the supplier login page
       window.location.href = 'suppliers.html';
     }
   </script>
 </body>
 </html>
-
-
