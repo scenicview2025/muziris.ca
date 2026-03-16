@@ -635,7 +635,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
@@ -696,60 +696,79 @@
       });
   };
 
-  // 🟢 REAL EMAIL OTP LOGIC
+  // 🟢 PIN VERIFICATION + EMAIL/PASSWORD SETUP
   window.triggerEmailAuth = function() { 
-    const emailInput = document.getElementById('email');
-    const email = emailInput.value.trim();
+    const supplierId = document.getElementById('final-id').innerText;
     
-    if(!email) {
-      document.getElementById('alert-title').innerText = "Missing Email";
-      document.getElementById('alert-message').innerText = "Please ensure your email is typed correctly in Step 1.";
-      document.getElementById('custom-alert').style.display = 'flex';
-      return;
-    }
+    // 1. Ask for the PIN (Last 4 digits of phone)
+    const userPin = prompt("SECURITY CHECK\n\nPlease enter the LAST 4 DIGITS of the phone number you just registered:");
+    if (!userPin) return;
 
-    // Step 1: Tell the server to send the code
-    fetch("https://muziris-api.onrender.com/api/send-otp", {
+    // 2. Verify the PIN with your backend
+    fetch("https://muziris-api.onrender.com/api/verify-supplier", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify({ id: supplierId, phoneSuffix: userPin })
     })
     .then(res => res.json())
     .then(data => {
-      if (data.success) {
-        // Step 2: Prompt the user for the code they received
-        const userCode = prompt(`A real secure verification code has been sent to ${email}.\n\nPlease check your inbox (and spam folder) and enter the 6-digit code below:`);
-        
-        if(userCode) {
-           // Step 3: Send code to server to verify
-           fetch("https://muziris-api.onrender.com/api/verify-otp", {
-             method: "POST",
-             headers: { "Content-Type": "application/json" },
-             body: JSON.stringify({ email: email, otp: userCode })
-           })
-           .then(r => r.json())
-           .then(vData => {
-              if(vData.success) {
-                 localStorage.setItem('verifiedSupplierId', vData.supplierId);
-                 localStorage.setItem('verifiedCompany', vData.companyName);
-                 localStorage.setItem('verifiedCurrency', vData.currency);
-                 window.location.href = 'supplier-dashboard.html';
+      if (data.valid) {
+        // 3. PIN is correct! Now ask for Email and Password
+        const loginEmail = prompt("PIN Verified!\n\nEnter the Email Address you want to use for logging in:");
+        if (!loginEmail) return;
+
+        const loginPassword = prompt("Create a strong password (minimum 6 characters):");
+        if (!loginPassword || loginPassword.length < 6) {
+          alert("Password must be at least 6 characters. Please try again.");
+          return;
+        }
+
+        // 4. Create the account in Firebase
+        createUserWithEmailAndPassword(auth, loginEmail, loginPassword)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            
+            // 5. Push the new Firebase email straight to your Bouncer (SSO Route)
+            fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: user.email })
+            })
+            .then(res => res.json())
+            .then(ssoData => {
+              if(ssoData.success) {
+                localStorage.setItem('verifiedSupplierId', ssoData.supplierId);
+                localStorage.setItem('verifiedCompany', ssoData.companyName);
+                localStorage.setItem('verifiedCurrency', ssoData.currency);
+                
+                document.getElementById('alert-title').innerText = "Account Secured";
+                document.getElementById('alert-message').innerText = "Your password has been set successfully! Logging you in...";
+                document.getElementById('custom-alert').style.display = 'flex';
+                
+                setTimeout(() => { window.location.href = 'supplier-dashboard.html'; }, 2000);
               } else {
-                 document.getElementById('alert-title').innerText = "Authentication Failed";
-                 document.getElementById('alert-message').innerText = vData.error;
+                 document.getElementById('alert-title').innerText = "Access Denied";
+                 document.getElementById('alert-message').innerText = ssoData.error;
                  document.getElementById('custom-alert').style.display = 'flex';
               }
-           });
-        }
+            });
+          })
+          .catch((error) => {
+            document.getElementById('alert-title').innerText = "Registration Failed";
+            document.getElementById('alert-message').innerText = error.message;
+            document.getElementById('custom-alert').style.display = 'flex';
+          });
+
       } else {
-        document.getElementById('alert-title').innerText = "Error";
-        document.getElementById('alert-message').innerText = data.error;
+        // PIN was wrong
+        document.getElementById('alert-title').innerText = "Verification Failed";
+        document.getElementById('alert-message').innerText = "The PIN does not match the registered phone number. Please try again.";
         document.getElementById('custom-alert').style.display = 'flex';
       }
     })
     .catch(err => {
       document.getElementById('alert-title').innerText = "Network Error";
-      document.getElementById('alert-message').innerText = "Could not send email. Please try again.";
+      document.getElementById('alert-message').innerText = "Could not verify PIN. Please check your connection.";
       document.getElementById('custom-alert').style.display = 'flex';
     });
   };
