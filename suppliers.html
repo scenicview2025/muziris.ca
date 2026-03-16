@@ -116,13 +116,13 @@
       <h1 class="brand">Muziris</h1>
       <div class="subtitle">Global Command Center</div>
       
-      <form id="loginForm" onsubmit="event.preventDefault(); triggerEmailLogin();">
+      <form id="loginForm" onsubmit="event.preventDefault(); window.triggerEmailLogin();">
         <div class="form-group">
           <label>Official Email</label>
           <input type="email" id="login-email" placeholder="name@company.com" required autocomplete="email">
         </div>
         <div class="form-group">
-          <label>Secure Password / PIN</label>
+          <label>Password</label>
           <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
         </div>
         <button type="submit" class="gold-btn" id="btn-login">Sign In</button>
@@ -241,6 +241,7 @@
       animate();
     }
 
+    // Auto-login if they already have an active session
     window.onload = function() { 
       if (localStorage.getItem('verifiedSupplierId')) {
         window.location.href = 'supplier-dashboard.html';
@@ -260,7 +261,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
@@ -275,6 +276,7 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
+    // 1. NATIVE EMAIL & PASSWORD LOGIC (Firebase Auth -> Postgres Check)
     window.triggerEmailLogin = function() {
       const email = document.getElementById('login-email').value;
       const pass = document.getElementById('login-password').value;
@@ -283,139 +285,96 @@
       btn.innerText = "AUTHENTICATING...";
       btn.disabled = true;
 
+      // Step A: Check password with Firebase
       signInWithEmailAndPassword(auth, email, pass)
         .then((userCredential) => {
-          finalizeLogin(userCredential.user.email);
+          // Password is correct! Now proceed to Step B
+          verifyWithMuzirisDatabase(userCredential.user.email);
         })
         .catch((error) => {
           btn.innerText = "SIGN IN";
           btn.disabled = false;
           
-          if(email.includes('@')) {
-              console.log("Firebase Auth failed, but simulating success for prototype flow.");
-              finalizeLogin(email);
-          } else {
-              showAlert("Authentication Failed", "Invalid email or password.");
-          }
+          let errorMessage = "Invalid email or password. Please try again.";
+          if (error.code === 'auth/user-not-found') errorMessage = "Account not found. Please register first.";
+          if (error.code === 'auth/too-many-requests') errorMessage = "Too many failed attempts. Try again later.";
+          
+          document.getElementById('alert-title').innerText = "Authentication Failed";
+          document.getElementById('alert-message').innerText = errorMessage;
+          document.getElementById('custom-alert').style.display = 'flex';
         });
     };
 
+    // 2. GOOGLE SSO LOGIC (Firebase Auth -> Postgres Check)
     window.triggerOAuth = function(provider) {
       if (provider !== 'Google') {
-        showAlert("Coming Soon", provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.");
+        document.getElementById('alert-title').innerText = "Coming Soon";
+        document.getElementById('alert-message').innerText = provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.";
+        document.getElementById('custom-alert').style.display = 'flex';
         return;
       }
 
+      // Step A: Check Google Identity with Firebase
       signInWithPopup(auth, googleProvider)
         .then((result) => {
-          finalizeLogin(result.user.email);
+          // Google login successful! Now proceed to Step B
+          verifyWithMuzirisDatabase(result.user.email);
         }).catch((error) => {
-          showAlert("Authentication Failed", error.message);
+          document.getElementById('alert-title').innerText = "Authentication Failed";
+          document.getElementById('alert-message').innerText = error.message;
+          document.getElementById('custom-alert').style.display = 'flex';
         });
     };
 
-    function finalizeLogin(userEmail) {
-      let storedId = localStorage.getItem('verifiedSupplierId') || 'SUP-77291';
-      let storedCompany = localStorage.getItem('verifiedCompany') || 'Global Trading Co.';
-      
-      localStorage.setItem('verifiedSupplierId', storedId);
-      localStorage.setItem('verifiedCompany', storedCompany);
-      localStorage.setItem('verifiedCurrency', 'USD');
-      
-      window.location.href = 'supplier-dashboard.html';
-    }
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
-    authDomain: "muziris-ac9dd.firebaseapp.com",
-    projectId: "muziris-ac9dd",
-    storageBucket: "muziris-ac9dd.firebasestorage.app",
-    messagingSenderId: "929662963272",
-    appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
-
-  // 1. NATIVE EMAIL & PIN LOGIC (Bypasses Firebase, checks DB directly)
-  window.triggerEmailLogin = function() {
-    const email = document.getElementById('login-email').value;
-    const pin = document.getElementById('login-password').value;
-    const btn = document.getElementById('btn-login');
-    
-    btn.innerText = "AUTHENTICATING...";
-    btn.disabled = true;
-
-    fetch("https://muziris-api.onrender.com/api/login-supplier-pin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, pin: pin })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        localStorage.setItem('verifiedSupplierId', data.supplierId);
-        localStorage.setItem('verifiedCompany', data.companyName);
-        localStorage.setItem('verifiedCurrency', data.currency);
-        window.location.href = 'supplier-dashboard.html';
-      } else {
-        showAlert("Authentication Failed", data.error);
-        btn.innerText = "SIGN IN";
-        btn.disabled = false;
-      }
-    })
-    .catch(err => {
-      showAlert("Network Error", "Failed to connect to verification server.");
-      btn.innerText = "SIGN IN";
-      btn.disabled = false;
-    });
-  };
-
-  // 2. GOOGLE SSO LOGIC (Uses Firebase, then checks DB Bouncer)
-  window.triggerOAuth = function(provider) {
-    if (provider !== 'Google') {
-      showAlert("Coming Soon", provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.");
-      return;
-    }
-
-    // Trigger Google Popup
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        const userEmail = result.user.email;
-        
-        // Google says they are real. Now ask the Database: Are they a supplier?
-        fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: userEmail })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            // They are a real supplier! Let them in.
-            localStorage.setItem('verifiedSupplierId', data.supplierId);
-            localStorage.setItem('verifiedCompany', data.companyName);
-            localStorage.setItem('verifiedCurrency', data.currency);
-            window.location.href = 'supplier-dashboard.html';
-          } else {
-            // Kick them out of Firebase so they don't get stuck logged in
-            signOut(auth);
-            showAlert("Access Denied", data.error);
-          }
-        })
-        .catch(err => {
+    // Step B: Ask the Muziris Database if they are a real supplier
+    function verifyWithMuzirisDatabase(userEmail) {
+      fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // They are a real supplier! Let them in.
+          localStorage.setItem('verifiedSupplierId', data.supplierId);
+          localStorage.setItem('verifiedCompany', data.companyName);
+          localStorage.setItem('verifiedCurrency', data.currency);
+          window.location.href = 'supplier-dashboard.html';
+        } else {
+          // Kick them out of Firebase so they don't get stuck logged in to a dead account
           signOut(auth);
-          showAlert("Network Error", "Failed to verify account with Muziris Ledger.");
-        });
-
-      }).catch((error) => {
-        showAlert("Google Authentication Failed", error.message);
+          document.getElementById('alert-title').innerText = "Access Denied";
+          document.getElementById('alert-message').innerText = data.error;
+          document.getElementById('custom-alert').style.display = 'flex';
+          
+          const btn = document.getElementById('btn-login');
+          if(btn) { btn.innerText = "SIGN IN"; btn.disabled = false; }
+        }
+      })
+      .catch(err => {
+        signOut(auth);
+        document.getElementById('alert-title').innerText = "Network Error";
+        document.getElementById('alert-message').innerText = "Failed to verify account with Muziris Ledger.";
+        document.getElementById('custom-alert').style.display = 'flex';
+        
+        const btn = document.getElementById('btn-login');
+        if(btn) { btn.innerText = "SIGN IN"; btn.disabled = false; }
       });
-  };
-</script>
+    }
+  </script>
+
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+      var s1=document.createElement("script"),
+          s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
 </body>
 </html>
