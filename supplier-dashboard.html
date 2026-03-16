@@ -478,7 +478,12 @@
     }
 
     function logoutSupplier() {
-      localStorage.clear();
+      // 🟢 THE FIX: Only remove the sensitive login tokens, leave preferences intact!
+      localStorage.removeItem('verifiedSupplierId');
+      localStorage.removeItem('verifiedCompany');
+      localStorage.removeItem('verifiedCurrency');
+      
+      // Redirect back to the supplier login page
       window.location.href = 'suppliers.html';
     }
   </script>
