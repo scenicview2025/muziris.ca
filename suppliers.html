@@ -372,7 +372,6 @@
         return;
       }
 
-      // Because they verified their PIN, we know it's really them. 
       // Let's create their Firebase account now.
       createUserWithEmailAndPassword(auth, email, newPassword)
         .then((userCredential) => {
@@ -382,10 +381,12 @@
           }, 1500);
         })
         .catch((error) => {
-          // If Firebase says the email is already in use, it means they DID create a password 
-          // before closing the window, they just forgot it.
           if(error.code === 'auth/email-already-in-use') {
-            showAlert("Account Exists", "This email already has a password set. Please use the 'Forgot Password' link on the main login screen.");
+            // 🟢 THE FIX: Better messaging that points them to the SSO buttons!
+            showAlert(
+              "Account Already Exists", 
+              "This email is already registered. If you previously connected your account using Google, Microsoft, or LinkedIn, please close this window and click those buttons on the main screen to log in instantly. \n\nIf you registered with an email and password, use the 'Forgot?' link."
+            );
             document.getElementById('recovery-modal').style.display = 'none';
           } else {
             showAlert("Firebase Error", error.message);
