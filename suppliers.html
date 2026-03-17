@@ -452,8 +452,14 @@
           btn.disabled = false;
           
           let errorMessage = "Invalid email or password. Please try again.";
-          if (error.code === 'auth/user-not-found') errorMessage = "Account not found. Please register first, or use 'Finish Account Setup' below.";
-          if (error.code === 'auth/too-many-requests') errorMessage = "Too many failed attempts. Try again later.";
+          
+          // 🟢 THE FIX: Catch the new 'invalid-credential' error from Firebase
+          if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
+            errorMessage = "Invalid credentials. If you created a profile but haven't set a password yet, please click 'Finish Account Setup' at the bottom of the page.";
+          }
+          if (error.code === 'auth/too-many-requests') {
+            errorMessage = "Too many failed attempts. Try again later.";
+          }
           
           document.getElementById('alert-title').innerText = "Authentication Failed";
           document.getElementById('alert-message').innerText = errorMessage;
