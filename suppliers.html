@@ -375,11 +375,21 @@
       // Let's create their Firebase account now.
       createUserWithEmailAndPassword(auth, email, newPassword)
         .then((userCredential) => {
-          showAlert("Account Secured", "Password set successfully! Logging you in...");
-          setTimeout(() => {
-            window.location.href = 'supplier-dashboard.html';
-          }, 1500);
+          // 🟢 NEW: Send the verification email immediately
+          sendEmailVerification(userCredential.user)
+            .then(() => {
+              // 🟢 NEW: Sign them out so they can't bypass the email check
+              signOut(auth);
+              
+              // Tell them to check their inbox
+              showAlert("Verify Your Email", "A verification link has been sent to " + email + ". Please check your inbox and click the link to activate your account before logging in.");
+              
+              // Close the modal
+              document.getElementById('recovery-modal').style.display = 'none';
+            });
         })
+        .catch((error) => {
+          // ... (keep your existing catch block here) ...
         .catch((error) => {
           if(error.code === 'auth/email-already-in-use') {
             // 🟢 THE FIX: Better messaging that points them to the SSO buttons!
