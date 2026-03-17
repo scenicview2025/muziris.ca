@@ -105,6 +105,34 @@
     </div>
   </div>
 
+  <div id="recovery-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease;">
+    <div class="alert-box" style="text-align: left; max-width: 400px; border-color: var(--gold);">
+      <h3 style="color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; text-align: left;">Secure Account Recovery</h3>
+      <p style="font-size: 12px; color: #aaa; margin-bottom: 20px; text-align: left;">To verify your identity, please enter your registered email and the last 4 digits of the phone number you provided.</p>
+      
+      <div class="form-group" style="text-align: left;">
+        <label style="color: #888; font-size: 11px;">Registered Email</label>
+        <input type="email" id="recovery-email" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box;">
+      </div>
+      
+      <div class="form-group" style="margin-top: 15px; text-align: left;">
+        <label style="color: #888; font-size: 11px;">Secure PIN (Last 4 of Phone)</label>
+        <input type="text" id="recovery-pin" maxlength="4" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box; letter-spacing: 5px; font-weight: bold; text-align: center;">
+      </div>
+
+      <div id="new-password-section" style="display: none; margin-top: 20px; padding-top: 15px; border-top: 1px solid #333; text-align: left;">
+        <p style="color: #4CAF50; font-size: 12px; font-weight: bold; margin-bottom: 10px;">✅ Identity Verified. Set your new password.</p>
+        <input type="password" id="new-firebase-password" placeholder="Minimum 6 characters" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box;">
+        <button class="gold-btn" style="width: 100%; margin-top: 15px;" onclick="window.finalizeRecoveryPassword()">Save & Login</button>
+      </div>
+
+      <div id="recovery-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+        <button class="alert-btn" style="background: transparent; border: 1px solid #555; color: #aaa;" onclick="document.getElementById('recovery-modal').style.display='none'">Cancel</button>
+        <button class="alert-btn" style="padding: 10px 20px; font-size: 12px;" onclick="window.verifyPin()">Verify Identity</button>
+      </div>
+    </div>
+  </div>
+
   <div id="view-verify">
     <canvas id="networkGlobe"></canvas>
 
@@ -148,6 +176,12 @@
       <div class="register-link">
         Not registered yet? <a href="join.html">Apply Here</a>
       </div>
+
+      <div class="register-link" style="margin-top: 15px;">
+        <p style="color: #666; font-size: 11px; margin-bottom: 5px;">Created a profile but didn't set a password?</p>
+        <a href="javascript:void(0)" onclick="window.openRecoveryModal()" style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Finish Account Setup</a>
+      </div>
+      
     </div>
   </div>
 
@@ -262,8 +296,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-    // 🟢 ADDED: sendPasswordResetEmail to the import list
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+    // 🟢 ADDED: createUserWithEmailAndPassword to the import list for the Recovery logic
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
@@ -278,7 +312,87 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // 🟢 NEW: Forgot Password Logic
+    // 🟢 NEW: RECOVERY MODAL LOGIC 🟢
+    window.openRecoveryModal = function() {
+      // Pre-fill email if they already typed it in the login box
+      const existingEmail = document.getElementById('login-email').value;
+      if (existingEmail) {
+        document.getElementById('recovery-email').value = existingEmail;
+      }
+      
+      document.getElementById('recovery-modal').style.display = 'flex';
+      document.getElementById('new-password-section').style.display = 'none';
+      document.getElementById('recovery-actions').style.display = 'flex';
+      document.getElementById('recovery-pin').value = '';
+      document.getElementById('new-firebase-password').value = '';
+    };
+
+    window.verifyPin = function() {
+      const email = document.getElementById('recovery-email').value.trim();
+      const pin = document.getElementById('recovery-pin').value.trim();
+
+      if(!email || pin.length !== 4) {
+        showAlert("Error", "Please enter a valid email and 4-digit PIN.");
+        return;
+      }
+
+      // Hit your custom backend route!
+      fetch("https://muziris-api.onrender.com/api/login-supplier-pin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, pin: pin })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          // It matched! Show the password creation box.
+          document.getElementById('recovery-actions').style.display = 'none';
+          document.getElementById('new-password-section').style.display = 'block';
+          
+          // Save their info temporarily so we can log them in after
+          localStorage.setItem('verifiedSupplierId', data.supplierId);
+          localStorage.setItem('verifiedCompany', data.companyName);
+          localStorage.setItem('verifiedCurrency', data.currency);
+        } else {
+          showAlert("Verification Failed", data.error || "Invalid PIN or Email.");
+        }
+      })
+      .catch(err => {
+        showAlert("Network Error", "Could not connect to the server to verify your PIN.");
+      });
+    };
+
+    window.finalizeRecoveryPassword = function() {
+      const email = document.getElementById('recovery-email').value.trim();
+      const newPassword = document.getElementById('new-firebase-password').value;
+
+      if(newPassword.length < 6) {
+        showAlert("Error", "Password must be at least 6 characters.");
+        return;
+      }
+
+      // Because they verified their PIN, we know it's really them. 
+      // Let's create their Firebase account now.
+      createUserWithEmailAndPassword(auth, email, newPassword)
+        .then((userCredential) => {
+          showAlert("Account Secured", "Password set successfully! Logging you in...");
+          setTimeout(() => {
+            window.location.href = 'supplier-dashboard.html';
+          }, 1500);
+        })
+        .catch((error) => {
+          // If Firebase says the email is already in use, it means they DID create a password 
+          // before closing the window, they just forgot it.
+          if(error.code === 'auth/email-already-in-use') {
+            showAlert("Account Exists", "This email already has a password set. Please use the 'Forgot Password' link on the main login screen.");
+            document.getElementById('recovery-modal').style.display = 'none';
+          } else {
+            showAlert("Firebase Error", error.message);
+          }
+        });
+    };
+
+    // Forgot Password Logic
     window.triggerForgotPassword = function() {
       const email = document.getElementById('login-email').value.trim();
       
@@ -292,8 +406,6 @@
           showAlert("Link Sent", "If an account exists for " + email + ", a secure password reset link has been sent to your inbox.");
         })
         .catch((error) => {
-          // Ignore "user not found" errors for security reasons (prevents email enumeration), 
-          // but show other errors.
           if(error.code === 'auth/user-not-found') {
              showAlert("Link Sent", "If an account exists for " + email + ", a secure password reset link has been sent to your inbox.");
           } else {
@@ -322,7 +434,7 @@
           btn.disabled = false;
           
           let errorMessage = "Invalid email or password. Please try again.";
-          if (error.code === 'auth/user-not-found') errorMessage = "Account not found. Please register first.";
+          if (error.code === 'auth/user-not-found') errorMessage = "Account not found. Please register first, or use 'Finish Account Setup' below.";
           if (error.code === 'auth/too-many-requests') errorMessage = "Too many failed attempts. Try again later.";
           
           document.getElementById('alert-title').innerText = "Authentication Failed";
