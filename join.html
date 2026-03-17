@@ -638,7 +638,7 @@
         localStorage.setItem('tempCompany', data.companyName);
       } else {
         document.getElementById('alert-title').innerText = "Registration Error";
-        document.getElementById('alert-message').innerText = response.error;
+        document.getElementById('alert-message').innerText = response.error || "An unexpected server error occurred.";
         document.getElementById('custom-alert').style.display = 'flex';
         btn.innerText = "Create Profile";
         btn.disabled = false;
