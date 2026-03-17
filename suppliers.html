@@ -1,530 +1,1059 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
+
 <html>
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <title>Muziris | Supplier Secure Login</title>
+
   <link rel="icon" type="image/png" href="MC.png">
+
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
   <style>
+
     :root { 
+
       --gold: #D4AF37; 
+
       --bronze: #b89225; 
+
       --void: #0b0e14; 
+
       --slate: #151922; 
+
       --mist: #e0e0e0; 
+
       --alert: #ff5252; 
+
     }
+
     
+
     body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; min-height: 100vh; overflow-y: auto; overflow-x: hidden; }
+
     
+
     /* TOP NAVIGATION */
+
     .top-nav { position: absolute; top: 30px; left: 40px; z-index: 10; }
+
     .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+
     .back-home:hover { color: #fff; }
 
+
+
     #view-verify {
+
       display: flex; align-items: center; justify-content: flex-start; padding-left: 12%;
+
       background: url('https://images.unsplash.com/photo-1605337030588-468f3a39e80e?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+
       position: relative;
+
       min-height: 100vh;
+
       min-height: 100dvh; 
+
       width: 100%;
+
       box-sizing: border-box;
+
     }
+
     #view-verify::before { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(135deg, rgba(11, 14, 20, 0.95) 0%, rgba(11, 14, 20, 0.75) 100%); z-index: 0; }
+
     
+
     #networkGlobe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
 
+
+
     /* COMPACT FLOATING GLASSMORPHISM CARD */
+
     .card { position: relative; z-index: 2; background: rgba(21, 25, 34, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); width: 100%; max-width: 360px; padding: 35px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center; margin: auto 0; }
+
     h1.brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0 0 5px 0; text-transform: uppercase; }
+
     .subtitle { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #aaa; margin-bottom: 25px; }
 
+
+
     /* FORM STYLING */
+
     .form-group { margin-bottom: 15px; text-align: left; position: relative; }
+
     label { display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; font-weight: bold; }
+
     input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border 0.3s; font-family: 'Lato', sans-serif; letter-spacing: 1px;}
+
     input:focus { border-color: var(--gold); background: #000; }
 
+
+
     /* FORGOT PASSWORD LINK */
+
     .forgot-link { position: absolute; right: 0; top: 0; font-size: 10px; color: var(--gold); text-decoration: none; text-transform: uppercase; font-weight: bold; transition: 0.3s; cursor: pointer; }
+
     .forgot-link:hover { color: #fff; }
 
+
+
     .gold-btn { width: 100%; margin-top: 5px; padding: 12px; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; }
+
     .gold-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
 
+
+
     .divider { display: flex; align-items: center; margin: 20px 0; color: #555; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
     .divider hr { flex: 1; border: none; border-top: 1px solid #333; }
+
     .divider span { padding: 0 15px; }
 
+
+
     /* COMPACT OAUTH ICON BUTTONS */
+
     .oauth-group { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+
     .oauth-btn { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 8px; cursor: pointer; transition: 0.3s; border: 1px solid #444; }
+
     .oauth-google { background-color: #fff; border-color: #ccc; }
+
     .oauth-google:hover { background-color: #f1f1f1; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(255,255,255,0.2); }
+
     .oauth-microsoft { background-color: #2F2F2F; }
+
     .oauth-microsoft:hover { background-color: #404040; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+
     .oauth-linkedin { background-color: #0077b5; border-color: #0077b5; }
+
     .oauth-linkedin:hover { background-color: #006097; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 119, 181, 0.3); }
 
+
+
     .register-link { text-align: center; margin-top: 20px; font-size: 12px; color: #888; }
+
     .register-link a { color: var(--gold); text-decoration: none; font-weight: bold; border-bottom: 1px solid transparent; transition: 0.3s;}
+
     .register-link a:hover { border-bottom: 1px solid var(--gold); }
 
+
+
     /* CUSTOM ALERT MODAL */
+
     /* Change this line: */
+
     #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100000; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+
     .alert-box { background: var(--slate); border: 1px solid var(--gold); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
     .alert-box h3 { color: var(--gold); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
+
     .alert-box p { font-size: 14px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
+
     .alert-btn { background: var(--gold); border: none; color: #000; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+
     .alert-btn:hover { background: var(--bronze); }
+
+
 
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
+
+
     @media (max-width: 900px) {
+
       .top-nav { top: 20px; left: 20px; }
+
       #view-verify { 
+
         justify-content: center; 
+
         padding-left: 0; 
+
         padding-top: 80px; 
+
         padding-bottom: 80px; 
+
         flex-direction: column;
+
       }
+
       .card { padding: 30px 20px; margin: auto; }
+
     }
+
   </style>
+
 </head>
+
 <body>
 
+
+
   <div id="custom-alert">
+
     <div class="alert-box">
+
       <h3 id="alert-title">Notice</h3>
+
       <p id="alert-message">Message goes here.</p>
+
       <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+
     </div>
+
   </div>
+
+
 
   <div id="recovery-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease;">
+
     <div class="alert-box" style="text-align: left; max-width: 400px; border-color: var(--gold);">
+
       <h3 style="color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; text-align: left;">Secure Account Recovery</h3>
+
       <p style="font-size: 12px; color: #aaa; margin-bottom: 20px; text-align: left;">To verify your identity, please enter your registered email and the last 4 digits of the phone number you provided.</p>
+
       
+
       <div class="form-group" style="text-align: left;">
+
         <label style="color: #888; font-size: 11px;">Registered Email</label>
+
         <input type="email" id="recovery-email" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box;">
+
       </div>
+
       
+
       <div class="form-group" style="margin-top: 15px; text-align: left;">
+
         <label style="color: #888; font-size: 11px;">Secure PIN (Last 4 of Phone)</label>
+
         <input type="text" id="recovery-pin" maxlength="4" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box; letter-spacing: 5px; font-weight: bold; text-align: center;">
+
       </div>
+
+
 
       <div id="new-password-section" style="display: none; margin-top: 20px; padding-top: 15px; border-top: 1px solid #333; text-align: left;">
+
         <p style="color: #4CAF50; font-size: 12px; font-weight: bold; margin-bottom: 10px;">✅ Identity Verified. Set your new password.</p>
+
         <input type="password" id="new-firebase-password" placeholder="Minimum 6 characters" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box;">
+
         <button class="gold-btn" style="width: 100%; margin-top: 15px;" onclick="window.finalizeRecoveryPassword()">Save & Login</button>
+
       </div>
+
+
 
       <div id="recovery-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+
         <button class="alert-btn" style="background: transparent; border: 1px solid #555; color: #aaa;" onclick="document.getElementById('recovery-modal').style.display='none'">Cancel</button>
+
         <button class="alert-btn" style="padding: 10px 20px; font-size: 12px;" onclick="window.verifyPin()">Verify Identity</button>
+
       </div>
+
     </div>
+
   </div>
+
+
 
   <div id="view-verify">
+
     <canvas id="networkGlobe"></canvas>
 
+
+
     <div class="top-nav">
+
       <a href="index.html" class="back-home">← Back to Home</a>
+
     </div>
+
     
+
     <div class="card">
+
       <h1 class="brand">Muziris</h1>
+
       <div class="subtitle">Global Command Center</div>
+
       
+
       <form id="loginForm" onsubmit="event.preventDefault(); window.triggerEmailLogin();">
+
         <div class="form-group">
+
           <label>Official Email</label>
+
           <input type="email" id="login-email" placeholder="name@company.com" required autocomplete="email">
+
         </div>
+
         <div class="form-group">
+
           <label>Password</label>
+
           <a class="forgot-link" onclick="window.triggerForgotPassword()">Forgot?</a>
+
           <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+
         </div>
+
         <button type="submit" class="gold-btn" id="btn-login">Sign In</button>
+
       </form>
 
+
+
       <div class="divider">
+
         <hr><span>OR</span><hr>
+
       </div>
+
+
 
       <div class="oauth-group">
+
         <button type="button" class="oauth-btn oauth-google" onclick="triggerOAuth('Google')" title="Sign in with Google">
+
           <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+
         </button>
+
         <button type="button" class="oauth-btn oauth-microsoft" onclick="triggerOAuth('Microsoft')" title="Sign in with Microsoft">
+
           <svg width="20" height="20" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M10 0H0v10h10V0z" fill="#f25022"/><path d="M21 0H11v10h10V0z" fill="#7fba00"/><path d="M10 11H0v10h10V11z" fill="#00a4ef"/><path d="M21 11H11v10h10V11z" fill="#ffb900"/></svg>
+
         </button>
+
         <button type="button" class="oauth-btn oauth-linkedin" onclick="triggerOAuth('LinkedIn')" title="Sign in with LinkedIn">
+
           <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+
         </button>
+
       </div>
+
+
 
       <div class="register-link">
+
         Not registered yet? <a href="join.html">Apply Here</a>
+
       </div>
+
+
 
       <div class="register-link" style="margin-top: 15px;">
+
         <p style="color: #666; font-size: 11px; margin-bottom: 5px;">Created a profile but didn't set a password?</p>
+
         <a href="javascript:void(0)" onclick="window.openRecoveryModal()" style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Finish Account Setup</a>
+
       </div>
+
       
+
     </div>
+
   </div>
 
+
+
   <script>
+
     let globeAnimating = true;
 
+
+
     function initGlobe() {
+
       const canvas = document.getElementById('networkGlobe');
+
       if (!canvas) return;
+
       const ctx = canvas.getContext('2d');
+
       let width, height;
+
       
+
       let nodes = [];
+
       const numNodes = 250; 
+
       const radius = window.innerWidth > 900 ? 400 : 250; 
+
       
+
       function resize() {
+
         width = canvas.width = window.innerWidth;
+
         height = canvas.height = window.innerHeight;
+
       }
+
       window.addEventListener('resize', resize);
+
       resize();
 
+
+
       for (let i = 0; i < numNodes; i++) {
+
         const phi = Math.acos(-1 + (2 * i) / numNodes);
+
         const theta = Math.sqrt(numNodes * Math.PI) * phi;
+
         nodes.push({
+
           baseX: radius * Math.cos(theta) * Math.sin(phi),
+
           baseY: radius * Math.sin(theta) * Math.sin(phi),
+
           baseZ: radius * Math.cos(phi)
+
         });
+
       }
+
+
 
       let rotationY = 0;
+
       let rotationX = 0.3; 
 
+
+
       function animate() {
+
         if(!globeAnimating) return; 
+
         ctx.clearRect(0, 0, width, height);
+
         rotationY += 0.0015;
+
         
+
         const cx = width > 900 ? width * 0.75 : width / 2;
+
         const cy = height / 2;
+
         
+
         const projectedNodes = [];
+
         
+
         for (let i = 0; i < numNodes; i++) {
+
           let node = nodes[i];
+
           
+
           let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
+
           let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
+
           
+
           let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
+
           let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
+
           
+
           const scale = 800 / (800 + z2);
+
           const screenX = cx + x2 * scale;
+
           const screenY = cy + y1 * scale;
+
           
+
           projectedNodes.push({ x: screenX, y: screenY, z: z2, scale: scale });
+
         }
+
         
+
         ctx.lineWidth = 0.5;
+
         for (let i = 0; i < numNodes; i++) {
+
           for (let j = i + 1; j < numNodes; j++) {
+
             const p1 = projectedNodes[i];
+
             const p2 = projectedNodes[j];
+
             const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+
             
+
             if (dist < 90 * p1.scale) {
+
               const alpha = Math.max(0, 1 - (dist / (90 * p1.scale))) * (p1.z > -100 ? 0.6 : 0.05);
+
               ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+
               ctx.beginPath();
+
               ctx.moveTo(p1.x, p1.y);
+
               ctx.lineTo(p2.x, p2.y);
+
               ctx.stroke();
+
             }
+
           }
+
         }
+
         
+
         for (let i = 0; i < numNodes; i++) {
+
           const p = projectedNodes[i];
+
           const alpha = p.z > -100 ? 0.8 : 0.1;
+
           ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+
           ctx.beginPath();
+
           ctx.arc(p.x, p.y, 1.5 * p.scale, 0, Math.PI * 2);
+
           ctx.fill();
+
         }
+
         
+
         requestAnimationFrame(animate);
+
       }
+
       animate();
+
     }
+
+
 
     // Auto-login if they already have an active session
+
     window.onload = function() { 
+
       if (localStorage.getItem('verifiedSupplierId')) {
+
         window.location.href = 'supplier-dashboard.html';
+
         return;
+
       }
+
       initGlobe(); 
+
     };
+
+
 
     function showAlert(title, message) {
+
       document.getElementById('alert-title').innerText = title;
+
       document.getElementById('alert-message').innerText = message;
+
       document.getElementById('custom-alert').style.display = 'flex';
+
     }
+
+
 
     function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
   </script>
+
+
 
   <script type="module">
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+
     // 🟢 ADDED: createUserWithEmailAndPassword to the import list for the Recovery logic
+
     import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
+
+
     const firebaseConfig = {
+
       apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+
       authDomain: "muziris-ac9dd.firebaseapp.com",
+
       projectId: "muziris-ac9dd",
+
       storageBucket: "muziris-ac9dd.firebasestorage.app",
+
       messagingSenderId: "929662963272",
+
       appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+
     };
+
+
 
     const app = initializeApp(firebaseConfig);
+
     const auth = getAuth(app);
+
     const googleProvider = new GoogleAuthProvider();
 
+
+
     // 🟢 NEW: RECOVERY MODAL LOGIC 🟢
+
     window.openRecoveryModal = function() {
+
       // Pre-fill email if they already typed it in the login box
+
       const existingEmail = document.getElementById('login-email').value;
+
       if (existingEmail) {
+
         document.getElementById('recovery-email').value = existingEmail;
+
       }
+
       
+
       document.getElementById('recovery-modal').style.display = 'flex';
+
       document.getElementById('new-password-section').style.display = 'none';
+
       document.getElementById('recovery-actions').style.display = 'flex';
+
       document.getElementById('recovery-pin').value = '';
+
       document.getElementById('new-firebase-password').value = '';
+
     };
+
+
 
     window.verifyPin = function() {
+
       const email = document.getElementById('recovery-email').value.trim();
+
       const pin = document.getElementById('recovery-pin').value.trim();
 
+
+
       if(!email || pin.length !== 4) {
+
         showAlert("Error", "Please enter a valid email and 4-digit PIN.");
+
         return;
+
       }
+
+
 
       // Hit your custom backend route!
+
       fetch("https://muziris-api.onrender.com/api/login-supplier-pin", {
+
         method: "POST",
+
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({ email: email, pin: pin })
+
       })
+
       .then(res => res.json())
+
       .then(data => {
+
         if(data.success) {
+
           // It matched! Show the password creation box.
+
           document.getElementById('recovery-actions').style.display = 'none';
+
           document.getElementById('new-password-section').style.display = 'block';
+
           
+
           // Save their info temporarily so we can log them in after
+
           localStorage.setItem('verifiedSupplierId', data.supplierId);
+
           localStorage.setItem('verifiedCompany', data.companyName);
+
           localStorage.setItem('verifiedCurrency', data.currency);
+
         } else {
+
           showAlert("Verification Failed", data.error || "Invalid PIN or Email.");
+
         }
+
       })
+
       .catch(err => {
+
         showAlert("Network Error", "Could not connect to the server to verify your PIN.");
+
       });
+
     };
+
+
 
     window.finalizeRecoveryPassword = function() {
+
       const email = document.getElementById('recovery-email').value.trim();
+
       const newPassword = document.getElementById('new-firebase-password').value;
 
+
+
       if(newPassword.length < 6) {
+
         showAlert("Error", "Password must be at least 6 characters.");
+
         return;
+
       }
+
+
 
       // Let's create their Firebase account now.
+
       createUserWithEmailAndPassword(auth, email, newPassword)
+
         .then((userCredential) => {
+
           // 🟢 NEW: Send the verification email immediately
+
           sendEmailVerification(userCredential.user)
+
             .then(() => {
+
               // 🟢 NEW: Sign them out so they can't bypass the email check
+
               signOut(auth);
+
               
+
               // Tell them to check their inbox
+
               showAlert("Verify Your Email", "A verification link has been sent to " + email + ". Please check your inbox and click the link to activate your account before logging in.");
+
               
+
               // Close the modal
+
               document.getElementById('recovery-modal').style.display = 'none';
+
             });
+
         })
+
         .catch((error) => {
+
           // ... (keep your existing catch block here) ...
+
         .catch((error) => {
+
           if(error.code === 'auth/email-already-in-use') {
+
             // 🟢 THE FIX: Better messaging that points them to the SSO buttons!
+
             showAlert(
+
               "Account Already Exists", 
+
               "This email is already registered. If you previously connected your account using Google, Microsoft, or LinkedIn, please close this window and click those buttons on the main screen to log in instantly. \n\nIf you registered with an email and password, use the 'Forgot?' link."
+
             );
+
             document.getElementById('recovery-modal').style.display = 'none';
+
           } else {
+
             showAlert("Firebase Error", error.message);
+
           }
+
         });
+
     };
+
+
 
     // Forgot Password Logic
+
     window.triggerForgotPassword = function() {
+
       const email = document.getElementById('login-email').value.trim();
+
       
+
       if (!email) {
+
         showAlert("Email Required", "Please enter your official email address in the box first, then click 'Forgot?'.");
+
         return;
+
       }
+
       
+
       sendPasswordResetEmail(auth, email)
+
         .then(() => {
+
           showAlert("Link Sent", "If an account exists for " + email + ", a secure password reset link has been sent to your inbox.");
+
         })
+
         .catch((error) => {
+
           if(error.code === 'auth/user-not-found') {
+
              showAlert("Link Sent", "If an account exists for " + email + ", a secure password reset link has been sent to your inbox.");
+
           } else {
+
              showAlert("Error", error.message);
+
           }
+
         });
+
     };
+
+
 
     // 1. NATIVE EMAIL & PASSWORD LOGIC
+
     window.triggerEmailLogin = function() {
+
       const email = document.getElementById('login-email').value;
+
       const pass = document.getElementById('login-password').value;
+
       const btn = document.getElementById('btn-login');
+
       
+
       btn.innerText = "AUTHENTICATING...";
+
       btn.disabled = true;
 
+
+
       // Step A: Check password with Firebase
+
       signInWithEmailAndPassword(auth, email, pass)
+
         .then((userCredential) => {
+
           // Password is correct! Now proceed to Step B
+
           verifyWithMuzirisDatabase(userCredential.user.email);
+
         })
+
         .catch((error) => {
+
           btn.innerText = "SIGN IN";
+
           btn.disabled = false;
+
           
+
           let errorMessage = "Invalid email or password. Please try again.";
+
           if (error.code === 'auth/user-not-found') errorMessage = "Account not found. Please register first, or use 'Finish Account Setup' below.";
+
           if (error.code === 'auth/too-many-requests') errorMessage = "Too many failed attempts. Try again later.";
+
           
+
           document.getElementById('alert-title').innerText = "Authentication Failed";
+
           document.getElementById('alert-message').innerText = errorMessage;
+
           document.getElementById('custom-alert').style.display = 'flex';
+
         });
+
     };
+
+
 
     // 2. GOOGLE SSO LOGIC
+
     window.triggerOAuth = function(provider) {
+
       if (provider !== 'Google') {
+
         document.getElementById('alert-title').innerText = "Coming Soon";
+
         document.getElementById('alert-message').innerText = provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.";
+
         document.getElementById('custom-alert').style.display = 'flex';
+
         return;
+
       }
 
+
+
       // Step A: Check Google Identity with Firebase
+
       signInWithPopup(auth, googleProvider)
+
         .then((result) => {
+
           // Google login successful! Now proceed to Step B
+
           verifyWithMuzirisDatabase(result.user.email);
+
         }).catch((error) => {
+
           document.getElementById('alert-title').innerText = "Authentication Failed";
+
           document.getElementById('alert-message').innerText = error.message;
+
           document.getElementById('custom-alert').style.display = 'flex';
+
         });
+
     };
 
+
+
     // Step B: Ask the Muziris Database if they are a real supplier
+
     function verifyWithMuzirisDatabase(userEmail) {
+
       fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
+
         method: "POST",
+
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({ email: userEmail })
+
       })
+
       .then(res => res.json())
+
       .then(data => {
+
         if (data.success) {
+
           // They are a real supplier! Let them in.
+
           localStorage.setItem('verifiedSupplierId', data.supplierId);
+
           localStorage.setItem('verifiedCompany', data.companyName);
+
           localStorage.setItem('verifiedCurrency', data.currency);
+
           window.location.href = 'supplier-dashboard.html';
+
         } else {
+
           // Kick them out of Firebase so they don't get stuck logged in to a dead account
+
           signOut(auth);
+
           document.getElementById('alert-title').innerText = "Access Denied";
+
           document.getElementById('alert-message').innerText = data.error;
+
           document.getElementById('custom-alert').style.display = 'flex';
+
           
+
           const btn = document.getElementById('btn-login');
+
           if(btn) { btn.innerText = "SIGN IN"; btn.disabled = false; }
+
         }
+
       })
+
       .catch(err => {
+
         signOut(auth);
+
         document.getElementById('alert-title').innerText = "Network Error";
+
         document.getElementById('alert-message').innerText = "Failed to verify account with Muziris Ledger.";
+
         document.getElementById('custom-alert').style.display = 'flex';
+
         
+
         const btn = document.getElementById('btn-login');
+
         if(btn) { btn.innerText = "SIGN IN"; btn.disabled = false; }
+
       });
+
     }
+
   </script>
 
+
+
   <script type="text/javascript">
+
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+
   (function(){
+
       var s1=document.createElement("script"),
+
           s0=document.getElementsByTagName("script")[0];
+
       s1.async=true;
+
       s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+
       s1.charset='UTF-8';
+
       s1.setAttribute('crossorigin','*');
+
       s0.parentNode.insertBefore(s1,s0);
+
   })();
+
   </script>
+
 </body>
+
 </html>
