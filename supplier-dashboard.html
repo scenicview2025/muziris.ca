@@ -306,7 +306,6 @@
 
     window.onload = function() {
       const savedId = localStorage.getItem('verifiedSupplierId');
-      // 🟢 THE FIX: Added fallback safety nets for new registrations
       const savedCompany = localStorage.getItem('verifiedCompany') || 'New Supplier';
       const savedCurrency = localStorage.getItem('verifiedCurrency') || 'USD';
       
@@ -335,11 +334,11 @@
         console.log("Minor UI load error bypassed:", e);
       }
 
-      // 🟢 THE FIX: Ensure the tour initializes regardless of minor DOM errors
+      // 🟢 THE FIX: 5 Login Rule
       initTour();
     };
 
-    // --- GUIDED TOUR LOGIC ---
+    // --- 🟢 GUIDED TOUR LOGIC (5 Logins Rule) ---
     let currentStepIndex = 0;
     let activeHighlightElement = null;
 
@@ -367,7 +366,13 @@
     ];
 
     function initTour() {
-      if (!localStorage.getItem('muzirisTourCompleted')) {
+      // Get how many times the tour has run. Default is 0.
+      let tourCount = parseInt(localStorage.getItem('muzirisTourCount') || '0');
+      
+      // If they haven't seen it 5 times yet, run the tour.
+      if (tourCount < 5) {
+        // Increment the count immediately so we don't get stuck in a loop
+        localStorage.setItem('muzirisTourCount', tourCount + 1);
         setTimeout(startTour, 1500); 
       }
     }
@@ -431,7 +436,10 @@
       if (activeHighlightElement) {
         activeHighlightElement.classList.remove('tour-highlight');
       }
-      localStorage.setItem('muzirisTourCompleted', 'true');
+      
+      // If the user explicitly clicks "Skip" or "Finish", 
+      // max out the counter so it never bothers them again.
+      localStorage.setItem('muzirisTourCount', '5');
     }
 
     // --- CATALOG SHELF & PRODUCT INSIGHT MODAL ---
