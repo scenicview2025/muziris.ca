@@ -177,7 +177,8 @@
     .oauth-email:hover { background-color: #252b3b; border-color: var(--gold); }
 
     /* CUSTOM ALERT MODAL */
-    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+    /* 🟢 BUMPED Z-INDEX TO 100000 🟢 */
+    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100000; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
     .alert-box { background: var(--card-bg); border: 1px solid var(--alert); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
     .alert-box h3 { color: var(--alert); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
     .alert-box p { font-size: 15px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
@@ -657,7 +658,8 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+  // 🟢 ADDED: sendEmailVerification to the import list
+  import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
@@ -757,7 +759,7 @@
       return;
     }
 
-    // 🟢 SECONDARY FIX: Ensure the typed email also matches the registered email here!
+    // Ensure the typed email matches the registered email
     if (loginEmail !== registeredEmail) {
       alert(`The email must match the one you registered with (${registeredEmail}).`);
       return;
@@ -776,30 +778,22 @@
       .then((userCredential) => {
         const user = userCredential.user;
         
-        // 4. Send the Firebase email to your backend to link the profile and log them in
-        fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: user.email })
-        })
-        .then(res => res.json())
-        .then(ssoData => {
-          if(ssoData.success) {
-            localStorage.setItem('verifiedSupplierId', ssoData.supplierId);
-            localStorage.setItem('verifiedCompany', ssoData.companyName);
-            localStorage.setItem('verifiedCurrency', ssoData.currency);
+        // 🟢 NEW: Send the verification email immediately
+        sendEmailVerification(user)
+          .then(() => {
+            // 🟢 NEW: Sign them out so they can't bypass the email check
+            signOut(auth);
             
-            document.getElementById('alert-title').innerText = "Account Secured";
-            document.getElementById('alert-message').innerText = "Your account has been created successfully! Logging you in...";
+            // Show the success message
+            document.getElementById('alert-title').innerText = "Verify Your Email";
+            document.getElementById('alert-message').innerText = "Profile Secured! A verification link has been sent to " + user.email + ". Please check your inbox and click the link to activate your account.";
             document.getElementById('custom-alert').style.display = 'flex';
             
-            setTimeout(() => { window.location.href = 'supplier-dashboard.html'; }, 2000);
-          } else {
-             document.getElementById('alert-title').innerText = "Access Denied";
-             document.getElementById('alert-message').innerText = ssoData.error;
-             document.getElementById('custom-alert').style.display = 'flex';
-          }
-        });
+            // Redirect them to the secure login page after 4 seconds
+            setTimeout(() => { 
+              window.location.href = 'suppliers.html'; 
+            }, 4000);
+          });
       })
       .catch((error) => {
         document.getElementById('alert-title').innerText = "Registration Failed";
