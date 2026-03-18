@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Muziris | Sales Staff Portal</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; background-color: #0b0e14; color: #e0e0e0; }
+        .auth-container { max-width: 400px; margin: 100px auto; background: #151922; padding: 30px; border-radius: 8px; border: 1px solid #333; text-align: center; }
+        .auth-container h2 { color: #D4AF37; margin-top: 0; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input, .input-group select { width: 100%; padding: 10px; background: #0b0e14; border: 1px solid #333; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        .btn-gold { background-color: #D4AF37; color: #000; padding: 12px; border: none; font-weight: bold; width: 100%; cursor: pointer; border-radius: 4px; text-transform: uppercase; }
+        .btn-gold:hover { background-color: #c19b2e; }
+        .toggle-link { color: #888; font-size: 12px; cursor: pointer; margin-top: 15px; display: block; }
+        .toggle-link:hover { color: #D4AF37; }
+
+        /* Dashboard Styles */
+        #dashboard { display: none; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+        .header h1 { color: #D4AF37; margin: 0; }
+        .grid-container { display: flex; gap: 20px; }
+        .panel { flex: 1; background: #151922; padding: 20px; border: 1px solid #333; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        th, td { padding: 10px; border-bottom: 1px solid #333; text-align: left; }
+        th { color: #D4AF37; }
+        .btn-email { background: #1E88E5; color: #fff; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .btn-email:hover { background: #1565C0; }
+    </style>
+</head>
+<body>
+
+    <div id="authView" class="auth-container">
+        <h2>Muziris Staff Access</h2>
+        <div id="loginForm">
+            <div class="input-group"><label>Staff ID</label><input type="text" id="loginId" placeholder="e.g. MUZ-001"></div>
+            <div class="input-group"><label>Password</label><input type="password" id="loginPass"></div>
+            <button class="btn-gold" onclick="login()">Access Portal</button>
+            <span class="toggle-link" onclick="toggleAuth()">First time? Set up profile here</span>
+        </div>
+
+        <div id="registerForm" style="display:none;">
+            <div class="input-group"><label>Assigned Staff ID</label><input type="text" id="regId"></div>
+            <div class="input-group"><label>Full Name</label><input type="text" id="regName"></div>
+            <div class="input-group"><label>Email</label><input type="email" id="regEmail"></div>
+            <div class="input-group"><label>Role</label><input type="text" id="regRole" placeholder="e.g. Sales Executive"></div>
+            <div class="input-group"><label>Create Password</label><input type="password" id="regPass1"></div>
+            <div class="input-group"><label>Confirm Password</label><input type="password" id="regPass2"></div>
+            <button class="btn-gold" onclick="register()">Create Profile</button>
+            <span class="toggle-link" onclick="toggleAuth()">Already registered? Login</span>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        <div class="header">
+            <h1>Sales Dashboard</h1>
+            <div>
+                <span id="welcomeText" style="margin-right: 20px; color: #aaa;"></span>
+                <button class="btn-gold" style="width: auto; padding: 8px 15px;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="panel" style="flex: 0.5;">
+                <h3 style="color:#D4AF37; margin-top:0;">Add New Lead</h3>
+                <div class="input-group">
+                    <label>Lead Type</label>
+                    <select id="leadType"><option value="supplier">Supplier</option><option value="buyer">Buyer</option></select>
+                </div>
+                <div class="input-group"><label>Company Name</label><input type="text" id="leadCompany"></div>
+                <div class="input-group"><label>Contact Person</label><input type="text" id="leadContact"></div>
+                <div class="input-group"><label>Email</label><input type="email" id="leadEmail"></div>
+                <div class="input-group"><label>Country</label><input type="text" id="leadCountry"></div>
+                <button class="btn-gold" onclick="submitLead()">Save Lead Data</button>
+            </div>
+
+            <div class="panel" style="flex: 1.5;">
+                <h3 style="color:#D4AF37; margin-top:0;">My Collected Leads</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Company</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Country</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leadsTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Auth Logic ---
+        function toggleAuth() {
+            const l = document.getElementById('loginForm');
+            const r = document.getElementById('registerForm');
+            l.style.display = l.style.display === 'none' ? 'block' : 'none';
+            r.style.display = r.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function register() {
+            const p1 = document.getElementById('regPass1').value;
+            const p2 = document.getElementById('regPass2').value;
+            if (p1 !== p2) return alert("Passwords do not match!");
+
+            const payload = {
+                staffId: document.getElementById('regId').value,
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value,
+                role: document.getElementById('regRole').value,
+                password: p1
+            };
+
+            const res = await fetch('/api/staff/register', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+            const data = await res.json();
+            if (data.success) { alert("Registration successful! Please login."); toggleAuth(); } 
+            else alert("Error: " + data.error);
+        }
+
+        async function login() {
+            const staffId = document.getElementById('loginId').value;
+            const password = document.getElementById('loginPass').value;
+            
+            const res = await fetch('/api/staff/login', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({staffId, password}) });
+            const data = await res.json();
+            
+            if (data.success) {
+                document.getElementById('authView').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('welcomeText').innerText = `Welcome, ${data.staff.name} (${data.staff.role})`;
+                fetchLeads();
+            } else alert(data.error);
+        }
+
+        function logout() {
+            document.getElementById('authView').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginPass').value = '';
+        }
+
+        // --- Lead Management Logic ---
+        async function submitLead() {
+            const type = document.getElementById('leadType').value;
+            const payload = {
+                companyName: document.getElementById('leadCompany').value,
+                contactPerson: document.getElementById('leadContact').value,
+                email: document.getElementById('leadEmail').value,
+                country: document.getElementById('leadCountry').value,
+            };
+            
+            // Submits to your existing supplier endpoint (you can duplicate for buyers)
+            const endpoint = type === 'supplier' ? '/register-supplier' : '/register-buyer'; 
+            
+            const res = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+            const data = await res.json();
+            
+            if (data.success) {
+                alert("Lead Saved!");
+                fetchLeads(); // Refresh table
+            } else alert("Error: " + data.error);
+        }
+
+        async function fetchLeads() {
+            const res = await fetch('/api/staff/leads');
+            const data = await res.json();
+            const tbody = document.getElementById('leadsTableBody');
+            tbody.innerHTML = '';
+
+            data.leads.forEach(lead => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="color:${lead.type === 'Supplier' ? '#4CAF50' : '#1E88E5'}">${lead.type}</td>
+                        <td>${lead.company_name}</td>
+                        <td>${lead.contact_person}</td>
+                        <td>${lead.email}</td>
+                        <td>${lead.country}</td>
+                        <td><button class="btn-email" onclick="sendOneClickEmail('${lead.email}', '${lead.contact_person}', '${lead.type}')">✉️ Send 1-Click Email</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function sendOneClickEmail(email, name, type) {
+            if(!confirm(`Send outreach email to ${name} at ${email}?`)) return;
+            
+            const res = await fetch('/api/staff/send-email', { 
+                method: 'POST', headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({email, name, templateType: type}) 
+            });
+            const data = await res.json();
+            if(data.success) alert("Email sent successfully!");
+            else alert("Error sending email.");
+        }
+    </script>
+</body>
+</html>
