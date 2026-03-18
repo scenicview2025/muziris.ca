@@ -146,23 +146,38 @@
         // --- Lead Management Logic ---
         async function submitLead() {
             const type = document.getElementById('leadType').value;
+            
+            // Adding placeholder "TBD" data for fields the database requires but this quick-form doesn't ask for.
             const payload = {
                 companyName: document.getElementById('leadCompany').value,
                 contactPerson: document.getElementById('leadContact').value,
                 email: document.getElementById('leadEmail').value,
                 country: document.getElementById('leadCountry').value,
+                phone: 'TBD',
+                address1: 'TBD',
+                city: 'TBD',
+                state: 'TBD',
+                zipcode: 'TBD',
+                exports: 'No',
+                industry: 'TBD',
+                category: 'TBD'
             };
             
-            // Submits to your existing supplier endpoint (you can duplicate for buyers)
             const endpoint = type === 'supplier' ? '/register-supplier' : '/register-buyer'; 
             
-            const res = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-            const data = await res.json();
-            
-            if (data.success) {
-                alert("Lead Saved!");
-                fetchLeads(); // Refresh table
-            } else alert("Error: " + data.error);
+            try {
+                const res = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert("Lead Saved Successfully!");
+                    document.getElementById('leadCompany').value = '';
+                    document.getElementById('leadContact').value = '';
+                    document.getElementById('leadEmail').value = '';
+                    document.getElementById('leadCountry').value = '';
+                    fetchLeads(); // Refresh table
+                } else alert("Error: " + data.error);
+            } catch(e) { alert("Connection Error: " + e.message); }
         }
 
         async function fetchLeads() {
