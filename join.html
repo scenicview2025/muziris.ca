@@ -538,9 +538,21 @@
     initGlobe();
   };
 
-  function showAlert(title, message) {
+  function showAlert(title, message, redirectUrl = null) {
     document.getElementById('alert-title').innerText = title;
     document.getElementById('alert-message').innerText = message;
+    
+    // Grab the dismiss button
+    const alertBtn = document.querySelector('#custom-alert .alert-btn');
+    
+    // If we passed a URL, tell the button to redirect after closing. Otherwise, just close it normally.
+    alertBtn.onclick = function() {
+      closeAlert();
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      }
+    };
+    
     document.getElementById('custom-alert').style.display = 'flex';
   }
 
@@ -759,7 +771,6 @@
       return;
     }
 
-    // Ensure the typed email matches the registered email
     if (loginEmail !== registeredEmail) {
       alert(`The email must match the one you registered with (${registeredEmail}).`);
       return;
@@ -770,37 +781,29 @@
       return;
     }
 
-    // Hide the setup modal while processing
     document.getElementById('email-auth-modal').style.display = 'none';
 
-    // 3. Create the account directly in Firebase
     createUserWithEmailAndPassword(auth, loginEmail, loginPassword)
       .then((userCredential) => {
         const user = userCredential.user;
         
-        // 🟢 NEW: Send the verification email immediately
         sendEmailVerification(user)
           .then(() => {
-            // 🟢 NEW: Sign them out so they can't bypass the email check
             signOut(auth);
             
-            // Show the success message
-            document.getElementById('alert-title').innerText = "Verify Your Email";
-            document.getElementById('alert-message').innerText = "Profile Secured! A verification link has been sent to " + user.email + ". Please check your inbox and click the link to activate your account.";
-            document.getElementById('custom-alert').style.display = 'flex';
-            
-            // Redirect them to the secure login page after 4 seconds
-            setTimeout(() => { 
-              window.location.href = 'suppliers.html'; 
-            }, 4000);
+            // 🟢 THE UX FIX: Pass 'suppliers.html' to the new alert to handle the redirect!
+            showAlert(
+              "Verify Your Email", 
+              "Profile Secured! A verification link has been sent to " + user.email + ". Please check your inbox and click the link to activate your account.",
+              "suppliers.html"
+            );
           });
       })
       .catch((error) => {
-        document.getElementById('alert-title').innerText = "Registration Failed";
-        document.getElementById('alert-message').innerText = error.message;
-        document.getElementById('custom-alert').style.display = 'flex';
+        showAlert("Registration Failed", error.message);
       });
   };
+  
 </script>
 
 <script src="muziris-bot.js"></script>
