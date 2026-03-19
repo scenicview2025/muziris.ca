@@ -334,11 +334,11 @@
         console.log("Minor UI load error bypassed:", e);
       }
 
-      // 🟢 THE FIX: 5 Login Rule
-      initTour();
+      // Initialize the Tour
+      initTour(savedId);
     };
 
-    // --- 🟢 GUIDED TOUR LOGIC (5 Logins Rule) ---
+    // --- 🟢 GUIDED TOUR LOGIC (ID-Based Memory) ---
     let currentStepIndex = 0;
     let activeHighlightElement = null;
 
@@ -365,14 +365,15 @@
       }
     ];
 
-    function initTour() {
-      // Get how many times the tour has run. Default is 0.
-      let tourCount = parseInt(localStorage.getItem('muzirisTourCount') || '0');
+    function initTour(supplierId) {
+      // 🟢 THE FIX: We use a specific key for THIS supplier ID.
+      // So if you create a new account, the browser sees it as a brand new tour count!
+      const tourKey = 'muzirisTourCount_' + supplierId;
+      let tourCount = parseInt(localStorage.getItem(tourKey) || '0');
       
-      // If they haven't seen it 5 times yet, run the tour.
+      // If THIS specific user hasn't seen it 5 times yet, run the tour.
       if (tourCount < 5) {
-        // Increment the count immediately so we don't get stuck in a loop
-        localStorage.setItem('muzirisTourCount', tourCount + 1);
+        localStorage.setItem(tourKey, tourCount + 1);
         setTimeout(startTour, 1500); 
       }
     }
@@ -437,9 +438,11 @@
         activeHighlightElement.classList.remove('tour-highlight');
       }
       
-      // If the user explicitly clicks "Skip" or "Finish", 
-      // max out the counter so it never bothers them again.
-      localStorage.setItem('muzirisTourCount', '5');
+      // If they skip or finish, max out the counter for THIS specific user.
+      const savedId = localStorage.getItem('verifiedSupplierId');
+      if(savedId) {
+         localStorage.setItem('muzirisTourCount_' + savedId, '5');
+      }
     }
 
     // --- CATALOG SHELF & PRODUCT INSIGHT MODAL ---
