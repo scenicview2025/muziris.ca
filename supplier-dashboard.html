@@ -486,10 +486,8 @@
          rfqCount = window.supplierRfqs.filter(r => r.product_id === productId).length;
       }
       
-      let mockViews = 0;
-      if (item.status === 'LIVE' || item.status === 'ACTIVE') {
-         mockViews = (productId.charCodeAt(0) * 3) + 14 + (rfqCount * 22); 
-      }
+      // Safely pull real views from the database (defaults to 0 if the column doesn't exist yet)
+      let realViews = item.views ? parseInt(item.views) : 0;
 
       document.getElementById('insight-img').style.backgroundImage = `url('${item.hero_img || 'MC.png'}')`;
       document.getElementById('insight-name').innerText = item.product_name;
@@ -506,7 +504,7 @@
           document.getElementById('insight-alerts').style.display = 'none';
       }
 
-      document.getElementById('insight-views').innerText = mockViews;
+      document.getElementById('insight-views').innerText = realViews;
       document.getElementById('insight-rfqs').innerText = rfqCount;
 
       document.getElementById('insight-edit-btn').onclick = () => window.location.href = `product-upload.html?edit=${item.product_id}`;
