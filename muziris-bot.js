@@ -1,8 +1,9 @@
 // ==========================================
-// ELITE MUZIRIS AI CONCIERGE WIDGET (v2.0)
+// ELITE MUZIRIS AI CONCIERGE WIDGET (v3.0 - Node.js Powered)
 // ==========================================
 
-const MUZIRIS_API_URL = "https://script.google.com/macros/s/AKfycbyGaJlZrB05JP2BFCBHs9yCEV5BFex6sX7dIBte64s-KcF35NMnnnq5ppyMCztXzLOe4g/exec";
+// 🟢 CHANGED: Now points directly to your elite Render server!
+const MUZIRIS_API_URL = "https://muziris-api.onrender.com/api/public-web-chat";
 
 // 1. INJECT HIGH-END UI & CSS
 const botHTML = `
@@ -145,7 +146,8 @@ async function sendChatMessage() {
 
     const response = await fetch(MUZIRIS_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      // 🟢 CHANGED: Now uses standard JSON headers so Render understands it!
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         action: 'chatBot', 
         message: finalMessageForAI,
