@@ -1,1 +1,609 @@
+Working
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Supplier Registration</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --gold-dim: #b89225; 
+      --dark-bg: #0b0e14; 
+      --card-bg: #151922; 
+      --text: #e0e0e0; 
+      --input-bg: #080a0f; 
+      --alert: #ff5252; 
+    }
+    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--dark-bg); color: var(--text); height: 100vh; overflow: hidden; }
+    
+    .container { display: flex; height: 100vh; width: 100%; }
+    
+    /* LEFT PANEL (Branding & 3D Globe) */
+    .left-panel {
+      flex: 1;
+      background-color: var(--dark-bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 60px;
+      overflow: hidden;
+    }
+    .left-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(11,14,20,0.1), rgba(11,14,20,0.95)); z-index: 2;}
+    
+    /* 3D CANVAS STYLING */
+    #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
+
+    /* TOP NAVIGATION */
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+    .back-home:hover { color: #fff; }
+
+    .brand-content { position: relative; z-index: 3; max-width: 500px; margin-top: 15vh; }
+    .brand-content a { text-decoration: none; }
+    .brand-content h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 48px; margin: 0; letter-spacing: 2px; transition: 0.3s; }
+    .brand-content h1:hover { color: #fff; }
+    .brand-content p { font-size: 18px; line-height: 1.6; margin-top: 15px; color: #ccc; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+    /* TRUST LINK STYLING (UPDATED FOR DUAL BUTTONS) */
+    .trust-link-box {
+      margin-top: 40px;
+      background: rgba(212, 175, 55, 0.05);
+      border-left: 3px solid var(--gold);
+      display: inline-flex;
+      flex-direction: column;
+      border-radius: 0 4px 4px 0;
+      overflow: hidden;
+    }
+    .trust-link-box a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 25px;
+      transition: background 0.3s, color 0.3s, padding-left 0.3s;
+    }
+    .trust-link-box a:hover { 
+      background: rgba(212, 175, 55, 0.15);
+      color: #fff; 
+      padding-left: 30px;
+    }
+    .trust-link-box a:not(:last-child) {
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    /* ECO PLEDGE STYLING */
+    .eco-pledge {
+      margin-top: auto; 
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 25px;
+      max-width: 450px;
+      position: relative;
+      z-index: 3;
+    }
+    .eco-icon svg {
+      width: 48px;
+      height: 48px;
+      opacity: 0.95;
+    }
+    .eco-text strong {
+      color: #e0e0e0;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 2px;
+      font-size: 13px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .eco-text p {
+      color: #888;
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0;
+      text-shadow: none;
+    }
+    .eco-text span {
+      color: #4CAF50;
+      font-style: italic;
+      font-weight: bold;
+    }
+
+    /* RIGHT PANEL (Form) */
+    .right-panel { flex: 1; background-color: var(--dark-bg); display: flex; flex-direction: column; justify-content: flex-start; padding: 100px 80px 200px 80px; overflow-y: auto; max-width: 650px; position: relative; border-left: 1px solid #222; z-index: 4; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
+
+    /* LOGIN LINK */
+    .login-link-container { display: flex; justify-content: flex-end; margin-bottom: 30px; }
+    .login-btn { border: 1px solid var(--gold); color: var(--gold); text-decoration: none; padding: 8px 20px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .login-btn:hover { background: var(--gold); color: #000; }
+
+    /* PROGRESS BAR */
+    .progress-container { margin-bottom: 30px; }
+    .progress-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); width: 25%; transition: width 0.4s ease; }
+    .step-indicator { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    .step-active { color: var(--gold); font-weight: bold; }
+
+    /* FORM STYLING */
+    .form-step { display: none; animation: fadeIn 0.5s ease; }
+    .form-step.active { display: block; }
+    h2 { font-family: 'Cinzel', serif; color: white; margin-bottom: 25px; font-size: 24px; }
+    .form-group { margin-bottom: 20px; }
+    
+    /* Input Split grid */
+    .input-row { display: flex; gap: 15px; margin-bottom: 20px; }
+    .input-row .form-group { flex: 1; margin-bottom: 0; }
+
+    label { display: block; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+    input, select, textarea { width: 100%; padding: 15px; background: var(--input-bg); border: 1px solid #333; color: white; border-radius: 4px; font-family: 'Lato', sans-serif; box-sizing: border-box; transition: 0.3s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
+
+    /* Phone Input Group */
+    .phone-group { display: flex; gap: 10px; }
+    .phone-code { width: 80px; background: #0f1219; color: #ffffff; font-weight: bold; text-align: center; border: 1px solid #333; cursor: not-allowed; }
+    .phone-code::placeholder { color: #666; font-weight: normal; }
+    .phone-number { flex: 1; }
+
+    /* BUTTONS */
+    .btn-group { display: flex; justify-content: space-between; margin-top: 30px; }
+    button { padding: 15px 30px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .btn-next { background: var(--gold); color: #000; }
+    .btn-next:hover { background: var(--gold-dim); }
+    .btn-prev { background: transparent; color: #666; border: 1px solid #333; }
+    .btn-prev:hover { border-color: #666; color: #ccc; }
+
+    /* SUCCESS SCREEN */
+    #success-screen { display: none; text-align: center; }
+    .id-box { background: var(--card-bg); border: 1px solid var(--gold); padding: 20px; margin: 30px 0; border-radius: 8px; }
+    .id-text { font-size: 32px; color: var(--gold); font-family: 'Cinzel', serif; letter-spacing: 3px; margin: 10px 0; }
+
+    /* CUSTOM ALERT MODAL */
+    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+    .alert-box { background: var(--card-bg); border: 1px solid var(--alert); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .alert-box h3 { color: var(--alert); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
+    .alert-box p { font-size: 15px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
+    .alert-btn { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .alert-btn:hover { background: var(--alert); color: #000; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 900px) {
+      .container { flex-direction: column; overflow-y: auto; }
+      .left-panel { min-height: 500px; padding: 30px; flex: none; justify-content: center; }
+      .brand-content { margin-top: 60px; }
+      .top-nav { top: 20px; left: 20px; }
+      .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; border-left: none; }
+      body { overflow-y: auto; }
+      .input-row { flex-direction: column; gap: 20px; }
+      .eco-pledge { margin-top: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="custom-alert">
+  <div class="alert-box">
+    <h3 id="alert-title">Notice</h3>
+    <p id="alert-message">Message goes here.</p>
+    <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="left-panel">
+    <canvas id="networkGlobe"></canvas>
+    
+    <div class="top-nav">
+      <a href="index.html" class="back-home">← Back to Home</a>
+    </div>
+    
+    <div class="brand-content">
+      <a href="index.html"><h1>Muziris</h1></a>
+      <p>Connect with international buyers through our secure Global Trade Network. Register today to expand your reach.</p>
+      
+      <div class="trust-link-box">
+        <a href="sell.html">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+          Why Partner With Muziris?
+        </a>
+        <a href="how-it-works.html">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          How It Works
+        </a>
+      </div>
+    </div>
+
+    <div class="eco-pledge">
+      <div class="eco-icon">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="30" cy="34" r="22" fill="#0b0e14" stroke="#4CAF50" stroke-width="2.5"/>
+          <path d="M8 34h44" stroke="#4CAF50" stroke-width="1.5" stroke-opacity="0.5"/>
+          <path d="M30 12c8 0 14 9.8 14 22s-6 22-14 22-14-9.8-14-22 6-22 14-22z" stroke="#4CAF50" stroke-width="1.5" stroke-opacity="0.5"/>
+          <path d="M62 18 C 64 42, 46 62, 22 62 C 42 56, 52 42, 62 18 Z" fill="#4CAF50"/>
+          <path d="M62 18 C 52 30, 42 46, 22 62" stroke="#0b0e14" stroke-width="2"/>
+          <path d="M12 20 C 12 8, 28 4, 46 8" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
+          <polygon points="44,2 52,8 42,12" fill="#4CAF50"/>
+        </svg>
+      </div>
+      <div class="eco-text">
+        <strong>PROTECT OUR PLANET</strong>
+        <p>Muziris is committed to sustainable global trade. We support eco-conscious manufacturing and the universal principles to <span>Reduce, Reuse, and Recycle</span>.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-panel">
+    
+    <div id="success-screen">
+      <h2 style="color:var(--gold)">Registration Complete</h2>
+      <p>Thank you for joining Muziris. Your application has been processed.</p>
+      <div class="id-box">
+        <div style="font-size:10px; color:#888; text-transform:uppercase;">Your Supplier ID</div>
+        <div class="id-text" id="final-id">GENERATING...</div>
+      </div>
+      <p style="font-size:13px; color:#666; margin-bottom: 30px;">A welcome email containing your Official ID and Login PIN has been sent to your inbox.</p>
+      
+      <a href="suppliers.html" class="btn-next" style="display: inline-block; padding: 15px 30px; border-radius: 4px; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; color: #000;">Go to Supplier Portal</a>
+    </div>
+
+    <div id="form-container">
+      
+      <div class="login-link-container">
+        <a href="suppliers.html" class="login-btn">Already Registered? Sign In</a>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="step-indicator">
+          <span id="step1-ind" class="step-active">Company</span>
+          <span id="step2-ind">Address</span>
+          <span id="step3-ind">Business</span>
+          <span id="step4-ind">Review</span>
+        </div>
+      </div>
+
+      <form id="regForm">
+        
+        <div class="form-step active" id="step1">
+          <h2>Company Details</h2>
+          <div class="form-group"><label>Company Name *</label><input type="text" name="companyName" id="companyName" required></div>
+          <div class="form-group"><label>Contact Person *</label><input type="text" name="contactPerson" id="contactPerson" required></div>
+          <div class="form-group"><label>Official Email *</label><input type="email" name="email" id="email" required></div>
+          
+          <div class="form-group">
+            <label>Country *</label>
+            <select name="country" id="countrySelect" required onchange="updatePhoneCode()">
+              <option value="">Select Country...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>WhatsApp / Mobile Number *</label>
+            <div class="phone-group">
+              <input type="text" id="dialCode" class="phone-code" readonly placeholder="+00">
+              <input type="text" id="phone" placeholder="Phone Number" inputmode="numeric" required>
+            </div>
+            <input type="hidden" name="phone" id="fullPhone">
+          </div>
+
+          <div class="btn-group" style="justify-content: flex-end;"><button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step2">
+          <h2>Registered Address</h2>
+          
+          <div class="form-group"><label>Address Line 1 *</label><input type="text" name="address1" id="address1" placeholder="Street address, company building" required></div>
+          <div class="form-group"><label>Address Line 2 (Optional)</label><input type="text" name="address2" id="address2" placeholder="Suite, unit, building, floor, etc."></div>
+          
+          <div class="input-row">
+            <div class="form-group"><label>City *</label><input type="text" name="city" id="city" placeholder="e.g. Toronto, Mumbai" required></div>
+            <div class="form-group"><label>State / Province *</label><input type="text" name="state" id="state" placeholder="e.g. Ontario, Gujarat" required></div>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group"><label>Zip / Postal Code *</label><input type="text" name="zipcode" id="zipcode" placeholder="Postal Code" required></div>
+            <div class="form-group"><label>Do you currently export?</label><select name="exports"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+          </div>
+          
+          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(2)">Back</button><button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step3">
+          <h2>Business Profile</h2>
+          
+          <div class="input-row">
+            <div class="form-group"><label>Primary Industry</label><select name="industry" id="industrySelect"></select></div>
+            <div class="form-group"><label>Primary Category</label><select name="category" id="categorySelect"></select></div>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group">
+              <label>Year Established</label>
+              <input type="number" name="yearEstablished" placeholder="e.g. 2010" min="1900" max="2026">
+            </div>
+            <div class="form-group">
+              <label>Factory Size (Employees)</label>
+              <select name="employeeCount">
+                <option value="">Select Size...</option>
+                <option value="1-50">1 - 50 Employees</option>
+                <option value="51-200">51 - 200 Employees</option>
+                <option value="201-500">201 - 500 Employees</option>
+                <option value="500+">500+ Employees</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group"><label>Website URL</label><input type="text" name="website" placeholder="https://..."></div>
+          
+          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(3)">Back</button><button type="button" class="btn-next" onclick="nextStep(3)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step4">
+          <h2>Verification</h2>
+          <div class="form-group"><label>GST / Tax ID Number</label><input type="text" name="taxId"></div>
+          <div class="form-group"><label>Certifications</label><input type="text" name="certifications"></div>
+          <div class="form-group"><label>Product Catalog Link</label><input type="text" name="catalogLink"></div>
+          <div style="margin-top: 30px; padding: 15px; border: 1px dashed #444; font-size: 11px; color: #888;">By clicking submit, you agree to Muziris Terms of Trade. Your default payment term is Muziris Secure Escrow.</div>
+          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(4)">Back</button><button type="button" class="btn-next" id="submitBtn" onclick="submitForm()">Submit Registration</button></div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  let globeAnimating = true;
+
+  function initGlobe() {
+    const canvas = document.getElementById('networkGlobe');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const parent = canvas.parentElement;
+    let width, height;
+    
+    let nodes = [];
+    const numNodes = 200; 
+    
+    function resize() {
+      width = canvas.width = parent.clientWidth;
+      height = canvas.height = parent.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const radius = Math.min(width, height) * 0.45;
+
+    for (let i = 0; i < numNodes; i++) {
+      const phi = Math.acos(-1 + (2 * i) / numNodes);
+      const theta = Math.sqrt(numNodes * Math.PI) * phi;
+      nodes.push({
+        baseX: radius * Math.cos(theta) * Math.sin(phi),
+        baseY: radius * Math.sin(theta) * Math.sin(phi),
+        baseZ: radius * Math.cos(phi)
+      });
+    }
+
+    let rotationY = 0;
+    let rotationX = 0.2; 
+
+    function animate() {
+      if(!globeAnimating) return; 
+      ctx.clearRect(0, 0, width, height);
+      rotationY += 0.0015;
+      
+      const cx = width / 2;
+      const cy = height / 2;
+      
+      const projectedNodes = [];
+      
+      for (let i = 0; i < numNodes; i++) {
+        let node = nodes[i];
+        let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
+        let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
+        let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
+        let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
+        const scale = 800 / (800 + z2);
+        projectedNodes.push({ x: cx + x2 * scale, y: cy + y1 * scale, z: z2, scale: scale });
+      }
+      
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < numNodes; i++) {
+        for (let j = i + 1; j < numNodes; j++) {
+          const p1 = projectedNodes[i];
+          const p2 = projectedNodes[j];
+          const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+          
+          if (dist < 80 * p1.scale) {
+            const alpha = Math.max(0, 1 - (dist / (80 * p1.scale))) * (p1.z > -100 ? 0.6 : 0.05);
+            ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      for (let i = 0; i < numNodes; i++) {
+        const p = projectedNodes[i];
+        const alpha = p.z > -100 ? 0.8 : 0.1;
+        ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
+</script>
+
+<script>
+  // NEW RENDER API URL
+  const WEB_APP_URL = "https://muziris-api.onrender.com/register-supplier";
+  
+  const lists = {
+    countries: [
+      { name: "Canada", code: "+1" }, { name: "United States", code: "+1" }, { name: "India", code: "+91" }, 
+      { name: "China", code: "+86" }, { name: "United Kingdom", code: "+44" }, { name: "Australia", code: "+61" }, 
+      { name: "Germany", code: "+49" }, { name: "France", code: "+33" }, { name: "Italy", code: "+39" }, 
+      { name: "Spain", code: "+34" }, { name: "Brazil", code: "+55" }, { name: "Mexico", code: "+52" }, 
+      { name: "Japan", code: "+81" }, { name: "South Korea", code: "+82" }, { name: "Vietnam", code: "+84" }, 
+      { name: "Thailand", code: "+66" }, { name: "Indonesia", code: "+62" }, { name: "Malaysia", code: "+60" }, 
+      { name: "Singapore", code: "+65" }, { name: "Philippines", code: "+63" }, { name: "Bangladesh", code: "+880" }, 
+      { name: "Sri Lanka", code: "+94" }, { name: "Pakistan", code: "+92" }, { name: "UAE", code: "+971" }, 
+      { name: "Saudi Arabia", code: "+966" }, { name: "South Africa", code: "+27" }, { name: "Nigeria", code: "+234" }, 
+      { name: "Kenya", code: "+254" }, { name: "Egypt", code: "+20" }, { name: "Turkey", code: "+90" }, 
+      { name: "Netherlands", code: "+31" }, { name: "Belgium", code: "+32" }, { name: "Sweden", code: "+46" }, 
+      { name: "Norway", code: "+47" }, { name: "Denmark", code: "+45" }, { name: "Switzerland", code: "+41" }, 
+      { name: "Poland", code: "+48" }, { name: "Russia", code: "+7" }, { name: "Argentina", code: "+54" }, 
+      { name: "Chile", code: "+56" }, { name: "Colombia", code: "+57" }, { name: "Peru", code: "+51" }, 
+      { name: "New Zealand", code: "+64" }, { name: "Ireland", code: "+353" }, { name: "Portugal", code: "+351" }, 
+      { name: "Other", code: "+" }
+    ],
+    industries: ["Agriculture & Food", "Apparel & Textiles", "Automotive & Transport", "Chemicals & Plastics", "Construction & Real Estate", "Consumer Electronics", "Energy & Environment", "Health & Medical", "Home & Garden", "Industrial Machinery", "Jewelry & Luxury", "Minerals & Metals", "Packaging & Printing", "Personal Care & Beauty", "Security & Protection"],
+    categories: ["Raw Materials", "Finished Goods", "Components & Parts", "Machinery & Equipment", "Tools & Hardware", "Packaging Materials", "Services & Logistics", "Private Label / OEM"]
+  };
+
+  window.onload = function() { 
+    populateLists(lists); 
+    initGlobe();
+  };
+
+  function showAlert(title, message) {
+    document.getElementById('alert-title').innerText = title;
+    document.getElementById('alert-message').innerText = message;
+    document.getElementById('custom-alert').style.display = 'flex';
+  }
+
+  function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+  function populateLists(data) {
+    var cSelect = document.getElementById("countrySelect");
+    data.countries.forEach(c => { 
+      var opt = document.createElement("option"); 
+      opt.value = c.name; 
+      opt.innerText = c.name; 
+      opt.setAttribute("data-code", c.code);
+      cSelect.appendChild(opt); 
+    });
+
+    var iSelect = document.getElementById("industrySelect");
+    data.industries.forEach(i => { var opt = document.createElement("option"); opt.value = i; opt.innerText = i; iSelect.appendChild(opt); });
+
+    var catSelect = document.getElementById("categorySelect");
+    data.categories.forEach(c => { var opt = document.createElement("option"); opt.value = c; opt.innerText = c; catSelect.appendChild(opt); });
+  }
+
+  function updatePhoneCode() {
+    const select = document.getElementById("countrySelect");
+    const selectedOption = select.options[select.selectedIndex];
+    const dialCodeInput = document.getElementById("dialCode");
+    
+    if(selectedOption && selectedOption.value !== "") {
+      dialCodeInput.value = selectedOption.getAttribute("data-code");
+      document.getElementById("phone").focus(); 
+    } else {
+      dialCodeInput.value = "";
+    }
+  }
+
+  function nextStep(current) {
+    if(current === 1) {
+      if(!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value || !document.getElementById('countrySelect').value) { 
+        showAlert("Missing Information", "Please fill in all required Company Details before proceeding."); return; 
+      }
+    }
+    if(current === 2) {
+      if(!document.getElementById('address1').value || !document.getElementById('city').value || !document.getElementById('state').value || !document.getElementById('zipcode').value) {
+        showAlert("Missing Information", "Please fill in all required Address fields to ensure successful registration."); return;
+      }
+    }
+
+    document.getElementById('step' + current).classList.remove('active');
+    document.getElementById('step' + (current+1)).classList.add('active');
+    document.getElementById('progress').style.width = (((current + 1) / 4) * 100) + "%";
+    document.getElementById('step' + current + '-ind').classList.remove('step-active');
+    document.getElementById('step' + (current+1) + '-ind').classList.add('step-active');
+  }
+
+  function prevStep(current) {
+    document.getElementById('step' + current).classList.remove('active');
+    document.getElementById('step' + (current-1)).classList.add('active');
+    document.getElementById('progress').style.width = (((current - 1) / 4) * 100) + "%";
+    document.getElementById('step' + current + '-ind').classList.remove('step-active');
+    document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
+  }
+
+  function submitForm() {
+    var btn = document.getElementById('submitBtn');
+    btn.innerText = "Processing...";
+    btn.disabled = true;
+    
+    // Combine phone code and number into the hidden input
+    const finalPhone = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
+    document.getElementById('fullPhone').value = finalPhone;
+
+    // Gather all form data
+    var form = document.getElementById('regForm');
+    var data = {};
+    new FormData(form).forEach((value, key) => data[key] = value);
+
+    // Send JSON data to Render API
+    fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(response => {
+      if(response.success) {
+        globeAnimating = false; 
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+        document.getElementById('final-id').innerText = response.id;
+      } else {
+        showAlert("Registration Error", response.error);
+        btn.innerText = "Submit Registration";
+        btn.disabled = false;
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      showAlert("Connection Error", "Could not connect to the server. Please try again.");
+      btn.innerText = "Submit Registration";
+      btn.disabled = false;
+    });
+  }
+</script>
+
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+</body>
+</html>
 
