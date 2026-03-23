@@ -1,1 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | How It Works</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --bronze: #b89225; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+    }
+    
+    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); overflow-x: hidden; line-height: 1.6; }
+    
+    /* 3D GLOBE BACKGROUND */
+    #networkGlobe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6; }
+    .bg-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, rgba(11,14,20,0.4) 0%, rgba(11,14,20,0.95) 100%); z-index: 1; pointer-events: none; }
 
+    /* NAVIGATION */
+    .top-nav { position: relative; z-index: 10; padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(11,14,20,0.8); backdrop-filter: blur(10px); }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; text-decoration: none; letter-spacing: 3px; font-weight: bold; text-transform: uppercase; }
+    .nav-links a { color: #aaa; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; margin-left: 30px; }
+    .nav-links a:hover { color: #fff; }
+    .nav-links .btn-join { border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 4px; }
+    .nav-links .btn-join:hover { background: var(--gold); color: #000; }
+
+    /* HERO SECTION */
+    .hero { position: relative; z-index: 2; padding: 100px 5% 60px; text-align: center; max-width: 900px; margin: 0 auto; }
+    .hero h1 { font-family: 'Cinzel', serif; color: #fff; font-size: 48px; margin-bottom: 20px; letter-spacing: 2px; }
+    .hero h1 span { color: var(--gold); }
+    .hero p { font-size: 18px; color: #aaa; max-width: 700px; margin: 0 auto 40px; }
+
+    /* CONTENT WRAPPER */
+    .content-wrapper { position: relative; z-index: 2; max-width: 1000px; margin: 0 auto; padding: 0 5% 100px; }
+
+    /* TIMELINE STEPS */
+    .step-card { background: rgba(21, 25, 34, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 40px; margin-bottom: 30px; display: flex; gap: 40px; align-items: center; box-shadow: 0 15px 30px rgba(0,0,0,0.4); transition: transform 0.3s, border-color 0.3s; }
+    .step-card:hover { transform: translateX(10px); border-color: var(--gold); }
+    
+    .step-number { font-family: 'Cinzel', serif; font-size: 64px; color: rgba(212, 175, 55, 0.2); font-weight: bold; line-height: 1; min-width: 80px; text-align: center; }
+    .step-card:hover .step-number { color: var(--gold); }
+    
+    .step-content { flex: 1; }
+    .step-content h3 { font-family: 'Cinzel', serif; color: #fff; font-size: 24px; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; }
+    .step-content p { color: #ccc; font-size: 15px; margin: 0; }
+    
+    /* HIGHLIGHT BOX */
+    .highlight-box { margin-top: 20px; padding: 15px 20px; background: #080a0f; border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; display: inline-block; }
+    .highlight-box span { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 5px; font-weight: bold; }
+    .highlight-box p { font-size: 13px; color: #888; margin: 0; }
+
+    /* CALL TO ACTION */
+    .cta-section { text-align: center; padding: 60px 0; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 60px; }
+    .cta-section h2 { font-family: 'Cinzel', serif; color: #fff; font-size: 32px; margin-bottom: 20px; }
+    .gold-btn { display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; padding: 18px 40px; border-radius: 4px; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; transition: transform 0.3s, box-shadow 0.3s; }
+    .gold-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(212,175,55,0.3); }
+
+    @media (max-width: 768px) {
+      .step-card { flex-direction: column; gap: 20px; text-align: center; padding: 30px 20px; }
+      .step-card:hover { transform: translateY(-10px); }
+      .highlight-box { text-align: left; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="networkGlobe"></canvas>
+  <div class="bg-overlay"></div>
+
+  <div class="top-nav">
+    <a href="/" class="brand">Muziris</a>
+    <div class="nav-links">
+      <a href="zero-risk">Zero-Risk Expansion</a>
+      <a href="concierge">Trade Concierge</a>
+      <a href="suppliers">Login</a>
+      <a href="join" class="btn-join">Apply as Supplier</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>The Future of <br><span>Enterprise Sourcing</span></h1>
+    <p>From initial inquiry to final payout, see how Muziris protects your capital, automates your logistics, and scales your manufacturing business.</p>
+  </div>
+
+  <div class="content-wrapper">
+
+    <div class="step-card">
+      <div class="step-number">01</div>
+      <div class="step-content">
+        <h3>Secure Onboarding</h3>
+        <p>Complete your initial profile. Once verified by our global team, you gain access to your private Supplier Dashboard. You can upload your catalog individually, in bulk via CSV, or have our AI auto-generate your product descriptions to appeal to North American enterprise buyers.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-number">02</div>
+      <div class="step-content">
+        <h3>AI-Powered Matching & Inquiries</h3>
+        <p>Your products go live on the Muziris Global Catalog. As verified buyers browse, our Omni-Channel AI acts as your 24/7 digital receptionist, answering questions in any language, handling initial negotiations, and capturing RFQs (Requests for Quotation) while you sleep.</p>
+        <div class="highlight-box">
+          <span>Supported By Humans</span>
+          <p>Complex buyer negotiations are automatically escalated to your dedicated Muziris Procurement Specialist.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-number">03</div>
+      <div class="step-content">
+        <h3>Escrow Funded Production</h3>
+        <p>Once a buyer accepts your quotation, they deposit 100% of the required funds directly into the Muziris Secure Escrow Vault. You receive official notification that the funds are locked and verified. You can now begin manufacturing with absolute certainty that you will be paid.</p>
+        <div class="highlight-box">
+          <span>Zero Payment Risk</span>
+          <p>Eliminate buyer defaults and the hassle of chasing international wire transfers.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-number">04</div>
+      <div class="step-content">
+        <h3>Automated Freight & Customs</h3>
+        <p>You focus on making exceptional products; we handle moving them. Once production is complete, Muziris Logistics partners coordinate the pickup, manage port customs, and secure ocean or air freight directly to the buyer's destination.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-number">05</div>
+      <div class="step-content">
+        <h3>Guaranteed Payout</h3>
+        <p>Upon successful delivery and final inspection by the buyer, the smart contract is executed. The Muziris Escrow Vault instantly releases your funds directly to your connected business bank account in your native currency.</p>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h2>Join the Global Network</h2>
+      <p style="color: #aaa; margin-bottom: 30px;">Partner with Muziris and take the risk out of international trade.</p>
+      <a href="join" class="gold-btn">Start Your Application</a>
+    </div>
+
+  </div>
+
+  <script>
+    let globeAnimating = true;
+    function initGlobe() {
+      const canvas = document.getElementById('networkGlobe');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      
+      let nodes = [];
+      const numNodes = 250; 
+      
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const radius = Math.min(width, height) * 0.5;
+
+      for (let i = 0; i < numNodes; i++) {
+        const phi = Math.acos(-1 + (2 * i) / numNodes);
+        const theta = Math.sqrt(numNodes * Math.PI) * phi;
+        nodes.push({
+          baseX: radius * Math.cos(theta) * Math.sin(phi),
+          baseY: radius * Math.sin(theta) * Math.sin(phi),
+          baseZ: radius * Math.cos(phi)
+        });
+      }
+
+      let rotationY = 0;
+      let rotationX = 0.2; 
+
+      function animate() {
+        if(!globeAnimating) return; 
+        ctx.clearRect(0, 0, width, height);
+        rotationY += 0.001; 
+        
+        const cx = width / 2;
+        const cy = height / 2;
+        
+        const projectedNodes = [];
+        
+        for (let i = 0; i < numNodes; i++) {
+          let node = nodes[i];
+          let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
+          let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
+          let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
+          let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
+          const scale = 800 / (800 + z2);
+          projectedNodes.push({ x: cx + x2 * scale, y: cy + y1 * scale, z: z2, scale: scale });
+        }
+        
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < numNodes; i++) {
+          for (let j = i + 1; j < numNodes; j++) {
+            const p1 = projectedNodes[i];
+            const p2 = projectedNodes[j];
+            const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+            
+            if (dist < 100 * p1.scale) {
+              const alpha = Math.max(0, 1 - (dist / (100 * p1.scale))) * (p1.z > -100 ? 0.5 : 0.05);
+              ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+        
+        for (let i = 0; i < numNodes; i++) {
+          const p = projectedNodes[i];
+          const alpha = p.z > -100 ? 0.8 : 0.1;
+          ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 1.5 * p.scale, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+    window.onload = initGlobe;
+  </script>
+</body>
+</html>
