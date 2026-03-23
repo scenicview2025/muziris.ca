@@ -144,10 +144,11 @@ async function sendChatMessage() {
       hiddenContext = `[SYSTEM NOTE: The user is on the 'How It Works' page. Explain our 5 step process: 1. Secure Onboarding, 2. AI Matching & RFQs, 3. Escrow Funded Production, 4. Automated Freight, 5. Guaranteed Payout.]\n\nUser says: `;
     } else if (currentPath.includes("zero-risk.html")) {
       hiddenContext = `[SYSTEM NOTE: The user is on the 'Zero-Risk Expansion' page. Pitch our financial model: 1. Zero upfront listing fees or subscriptions. 2. We only make money by applying a transactional margin to the buyer's invoice when an escrow contract is signed. 3. Zero payment risk due to 100% Escrow funding before production.]\n\nUser says: `;
+    } else if (currentPath.includes("concierge.html")) {
+      hiddenContext = `[SYSTEM NOTE: The user is on the 'Trade Concierge' page. Emphasize that our AI works 24/7 in over 40 languages to capture leads, but complex negotiations and logistics are handled by a dedicated human Muziris Procurement Specialist.]\n\nUser says: `;
     }
 
     const finalMessageForAI = hiddenContext ? (hiddenContext + message) : message;
-
     const response = await fetch(MUZIRIS_API_URL, {
       method: 'POST',
       // 🟢 CHANGED: Now uses standard JSON headers so Render understands it!
