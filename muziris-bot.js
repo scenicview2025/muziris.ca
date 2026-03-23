@@ -140,6 +140,10 @@ async function sendChatMessage() {
       - AI Tools: The form has "Auto-Tagline" and "Auto-Write" buttons to help them write descriptions based on the Product Name and Category.]\n\nUser says: `;
     } else if (currentPath.includes("join.html")) {
       hiddenContext = `[SYSTEM NOTE: The user is on the main Join page deciding whether to register.]\n\nUser says: `;
+    } else if (currentPath.includes("how-it-works.html")) {
+      hiddenContext = `[SYSTEM NOTE: The user is on the 'How It Works' page. Explain our 5 step process: 1. Secure Onboarding, 2. AI Matching & RFQs, 3. Escrow Funded Production, 4. Automated Freight, 5. Guaranteed Payout.]\n\nUser says: `;
+    } else if (currentPath.includes("zero-risk.html")) {
+      hiddenContext = `[SYSTEM NOTE: The user is on the 'Zero-Risk Expansion' page. Pitch our financial model: 1. Zero upfront listing fees or subscriptions. 2. We only make money by applying a transactional margin to the buyer's invoice when an escrow contract is signed. 3. Zero payment risk due to 100% Escrow funding before production.]\n\nUser says: `;
     }
 
     const finalMessageForAI = hiddenContext ? (hiddenContext + message) : message;
