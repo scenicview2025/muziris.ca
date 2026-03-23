@@ -799,11 +799,11 @@
           .then(() => {
             signOut(auth);
             
-            // 🟢 THE UX FIX: Pass 'suppliers.html' to the new alert to handle the redirect!
+            // 🟢 THE UX FIX: Pass 'suppliers' to the new alert to handle the redirect!
             showAlert(
               "Verify Your Email", 
               "Profile Secured! A verification link has been sent to " + user.email + ". Please check your inbox and click the link to activate your account.",
-              "suppliers.html"
+              "suppliers"
             );
           });
       })
