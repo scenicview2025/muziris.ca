@@ -296,21 +296,22 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
-      authDomain: "muziris-ac9dd.firebaseapp.com",
-      projectId: "muziris-ac9dd",
-      storageBucket: "muziris-ac9dd.firebasestorage.app",
-      messagingSenderId: "929662963272",
-      appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+    authDomain: "muziris-ac9dd.firebaseapp.com",
+    projectId: "muziris-ac9dd",
+    storageBucket: "muziris-ac9dd.firebasestorage.app",
+    messagingSenderId: "929662963272",
+    appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const googleProvider = new GoogleAuthProvider();
-
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+  const microsoftProvider = new OAuthProvider('microsoft.com');
+    
     // 🟢 RECOVERY MODAL LOGIC 🟢
     window.openRecoveryModal = function() {
       // Pre-fill email if they already typed it in the login box
