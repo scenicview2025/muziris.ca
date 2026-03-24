@@ -468,19 +468,22 @@
         });
     };
 
-    // 2. GOOGLE SSO LOGIC
+    // 2. GOOGLE & MICROSOFT SSO LOGIC
     window.triggerOAuth = function(provider) {
-      if (provider !== 'Google') {
+      if (provider === 'LinkedIn') {
         document.getElementById('alert-title').innerText = "Coming Soon";
-        document.getElementById('alert-message').innerText = provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.";
+        document.getElementById('alert-message').innerText = "LinkedIn Single Sign-On is currently pending API approval. Please use Google, Microsoft, or Email for now.";
         document.getElementById('custom-alert').style.display = 'flex';
         return;
       }
 
-      // Step A: Check Google Identity with Firebase
-      signInWithPopup(auth, googleProvider)
+      // 🟢 Determine which provider they clicked
+      const activeProvider = provider === 'Microsoft' ? microsoftProvider : googleProvider;
+
+      // Step A: Check Identity with Firebase
+      signInWithPopup(auth, activeProvider)
         .then((result) => {
-          // Google login successful! Now proceed to Step B
+          // SSO login successful! Now proceed to Step B
           verifyWithMuzirisDatabase(result.user.email);
         }).catch((error) => {
           document.getElementById('alert-title').innerText = "Authentication Failed";
@@ -525,19 +528,6 @@
         if(btn) { btn.innerText = "SIGN IN"; btn.disabled = false; }
       });
     }
-  </script>
-
-  <script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-      var s1=document.createElement("script"),
-          s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-  })();
   </script>
 </body>
 </html>
