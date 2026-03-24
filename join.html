@@ -467,13 +467,37 @@
 
         <div class="form-step" id="step4">
           <h2>Verification</h2>
-          <div class="form-group"><label>GST / Tax ID Number</label><input type="text" name="taxId"></div>
-          <div class="form-group"><label>Certifications</label><input type="text" name="certifications"></div>
-          <div class="form-group"><label>Product Catalog Link</label><input type="text" name="catalogLink"></div>
-          <div style="margin-top: 30px; padding: 15px; border: 1px dashed #444; font-size: 11px; color: #888;">By clicking submit, you agree to Muziris Terms of Trade. Your default payment term is Muziris Secure Escrow.</div>
-          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(4)">Back</button><button type="button" class="btn-next" id="submitBtn" onclick="submitForm()">Create Profile</button></div>
+          
+          <div class="form-group">
+            <label>
+              GST / Tax ID Number 
+              <span class="info-icon" data-tooltip="Optional for now. However, providing your official tax ID fast-tracks your profile to 'Verified' status for enterprise buyers.">?</span>
+            </label>
+            <input type="text" name="taxId" placeholder="Corporate Tax ID, VAT, or GST">
+          </div>
+          
+          <div class="form-group">
+            <label>
+              Certifications 
+              <span class="info-icon" data-tooltip="e.g. ISO 9001, CE, FDA, FSC, GMP, OEKO-TEX. Separate multiple certifications with commas.">?</span>
+            </label>
+            <input type="text" name="certifications" placeholder="e.g. ISO 9001, CE, FDA...">
+          </div>
+          
+          <div class="form-group">
+            <label>Product Catalog Link</label>
+            <input type="text" name="catalogLink" placeholder="Google Drive, Dropbox, or Website URL">
+          </div>
+          
+          <div style="margin-top: 30px; padding: 15px; border: 1px dashed #444; font-size: 11px; color: #888; border-radius: 4px; line-height: 1.5;">
+            By clicking submit, you agree to Muziris Terms of Trade. Your default payment term is <strong style="color:var(--gold);">Muziris Secure Escrow</strong>.
+          </div>
+          
+          <div class="btn-group">
+            <button type="button" class="btn-prev" onclick="prevStep(4)">Back</button>
+            <button type="button" class="btn-next" id="submitBtn" onclick="submitForm()">Create Profile</button>
+          </div>
         </div>
-
       </form>
     </div>
   </div>
