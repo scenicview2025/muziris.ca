@@ -754,7 +754,8 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+  // 🟢 ADDED: OAuthProvider is imported here to support Microsoft
+  import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, createUserWithEmailAndPassword, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
@@ -767,38 +768,42 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  
+  // 🟢 Initialize both providers
   const googleProvider = new GoogleAuthProvider();
+  const microsoftProvider = new OAuthProvider('microsoft.com');
 
   window.triggerOAuth = function(provider) {
-    if (provider !== 'Google') {
+    // Keep LinkedIn disabled for now until a custom backend handshake is built
+    if (provider === 'LinkedIn') {
       document.getElementById('alert-title').innerText = "Coming Soon";
-      document.getElementById('alert-message').innerText = provider + " Single Sign-On is currently pending API approval. Please use Google or Email for now.";
+      document.getElementById('alert-message').innerText = "LinkedIn Single Sign-On is currently pending API approval. Please use Google, Microsoft, or Email for now.";
       document.getElementById('custom-alert').style.display = 'flex';
       return;
     }
 
     const generatedId = document.getElementById('final-id').innerText;
     const tempCompany = localStorage.getItem('tempCompany') || "Supplier";
-    
-    // Grab the email they typed into the registration form
     const registeredEmail = document.getElementById('email').value.trim().toLowerCase();
 
-    signInWithPopup(auth, googleProvider)
+    // 🟢 Determine which provider button they clicked
+    const activeProvider = provider === 'Microsoft' ? microsoftProvider : googleProvider;
+
+    signInWithPopup(auth, activeProvider)
       .then((result) => {
         const user = result.user;
         const authEmail = user.email.toLowerCase();
         
-        // 🟢 THE FIX: Check if the emails match!
+        // Check if the emails match!
         if (authEmail !== registeredEmail) {
-           // If they don't match, kick them out of Firebase and show an error
            signOut(auth);
            document.getElementById('alert-title').innerText = "Email Mismatch";
-           document.getElementById('alert-message').innerText = `You registered your company with ${registeredEmail}, but tried to link the Google account ${authEmail}. Please use the matching account.`;
+           document.getElementById('alert-message').innerText = `You registered your company with ${registeredEmail}, but tried to link a different ${provider} account (${authEmail}). Please use the matching account.`;
            document.getElementById('custom-alert').style.display = 'flex';
-           return; // Stop the code right here
+           return; 
         }
         
-        // Push the Google email straight to the Bouncer!
+        // Push the email straight to the backend
         fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -829,21 +834,15 @@
       });
   };
 
-  // 🟢 1. OPEN THE CUSTOM MODAL
+  // OPEN THE CUSTOM MODAL
   window.triggerEmailAuth = function() { 
     const formEmail = document.getElementById('email').value.trim();
-    
-    // Pre-fill the email they already typed
     document.getElementById('auth-email').value = formEmail;
-    
-    // Clear any old passwords out of the box
     document.getElementById('auth-password').value = "";
-    
-    // Show the beautiful modal
     document.getElementById('email-auth-modal').style.display = 'flex';
   };
 
-  // 🟢 2. PROCESS THE DATA FROM THE MODAL
+  // PROCESS THE DATA FROM THE MODAL
   window.processEmailRegistration = function() {
     const loginEmail = document.getElementById('auth-email').value.trim().toLowerCase();
     const loginPassword = document.getElementById('auth-password').value;
@@ -874,7 +873,6 @@
           .then(() => {
             signOut(auth);
             
-            // 🟢 THE UX FIX: Pass 'suppliers' to the new alert to handle the redirect!
             showAlert(
               "Verify Your Email", 
               "Profile Secured! A verification link has been sent to " + user.email + ". Please check your inbox and click the link to activate your account.",
@@ -886,22 +884,6 @@
         showAlert("Registration Failed", error.message);
       });
   };
-  
-</script>
-
-<script src="muziris-bot.js"></script>
-
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-    var s1=document.createElement("script"),
-        s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-})();
 </script>
 
 </body>
