@@ -146,6 +146,8 @@ async function sendChatMessage() {
       hiddenContext = `[SYSTEM NOTE: The user is on the 'Zero-Risk Expansion' page. Pitch our financial model: 1. Zero upfront listing fees or subscriptions. 2. We only make money by applying a transactional margin to the buyer's invoice when an escrow contract is signed. 3. Zero payment risk due to 100% Escrow funding before production.]\n\nUser says: `;
     } else if (currentPath.includes("concierge.html")) {
       hiddenContext = `[SYSTEM NOTE: The user is on the 'Trade Concierge' page. Emphasize that our AI works 24/7 in over 40 languages to capture leads, but complex negotiations and logistics are handled by a dedicated human Muziris Procurement Specialist.]\n\nUser says: `;
+    } else if (currentPath.includes("suppliers.html")) {
+      hiddenContext = `[SYSTEM NOTE: The user is on the Supplier Secure Login page. If they forgot their password, tell them to type their email and click 'Forgot?'. If they haven't set a password yet, tell them to click 'Finish Account Setup' at the bottom.]\n\nUser says: `;
     }
 
     const finalMessageForAI = hiddenContext ? (hiddenContext + message) : message;
