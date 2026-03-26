@@ -149,10 +149,11 @@
           <label>Official Email</label>
           <input type="email" id="login-email" placeholder="name@company.com" required autocomplete="email">
         </div>
-        <div class="form-group">
+       <div class="form-group" style="position: relative;">
           <label>Password</label>
           <a class="forgot-link" onclick="window.triggerForgotPassword()">Forgot?</a>
-          <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+          <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password" style="padding-right: 60px;">
+          <span id="toggleLoginPassword" style="position: absolute; right: 12px; top: 38px; cursor: pointer; color: var(--gold); font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Show</span>
         </div>
         <button type="submit" class="gold-btn" id="btn-login">Sign In</button>
       </form>
