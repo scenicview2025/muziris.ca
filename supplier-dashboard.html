@@ -465,21 +465,30 @@
       document.getElementById('tour-title').innerText = step.title;
       document.getElementById('tour-text').innerText = step.text;
 
-      const rect = targetElement.getBoundingClientRect();
+      // 🟢 THE FIX: Calculate position inside the scrolling container
       const tooltip = document.getElementById('tour-tooltip');
+      const mainContent = document.querySelector('.main-content');
       
-      let topPosition = rect.bottom + window.scrollY + 20;
-      let leftPosition = rect.left + window.scrollX + 20;
+      // Move the tooltip inside the scrollable container so it sticks to the element!
+      if (tooltip.parentElement !== mainContent) {
+        mainContent.appendChild(tooltip);
+      }
 
-      if (leftPosition + 350 > window.innerWidth) {
-        leftPosition = window.innerWidth - 360;
+      const rect = targetElement.getBoundingClientRect();
+      const mainRect = mainContent.getBoundingClientRect();
+      
+      let topPosition = (rect.bottom - mainRect.top) + mainContent.scrollTop + 20;
+      let leftPosition = (rect.left - mainRect.left) + mainContent.scrollLeft + 20;
+
+      if (leftPosition + 350 > mainContent.clientWidth) {
+        leftPosition = mainContent.clientWidth - 360;
       }
 
       tooltip.style.top = topPosition + 'px';
       tooltip.style.left = leftPosition + 'px';
 
-      document.querySelector('.main-content').scrollTo({
-        top: rect.top + document.querySelector('.main-content').scrollTop - 150,
+      mainContent.scrollTo({
+        top: (rect.top - mainRect.top) + mainContent.scrollTop - 100,
         behavior: 'smooth'
       });
 
@@ -487,7 +496,6 @@
         document.getElementById('tour-next-btn').innerText = "Finish Tour ✓";
       }
     }
-
     function nextTourStep() {
       currentStepIndex++;
       showTourStep(currentStepIndex);
