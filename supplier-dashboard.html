@@ -434,7 +434,7 @@
       const tourKey = 'muzirisTourCount_' + supplierId;
       let tourCount = parseInt(localStorage.getItem(tourKey) || '0');
       
-      if (tourCount < 5) {
+      if (tourCount < 2) {
         localStorage.setItem(tourKey, tourCount + 1);
         setTimeout(startTour, 1500); 
       }
