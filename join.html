@@ -621,6 +621,18 @@
   window.onload = function() { 
     populateLists(lists); 
     initGlobe();
+
+    // 🟢 SHOW/HIDE PASSWORD LOGIC
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('auth-password');
+
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.textContent = type === 'password' ? 'SHOW' : 'HIDE';
+      });
+    }
   };
 
   function showAlert(title, message, redirectUrl = null) {
