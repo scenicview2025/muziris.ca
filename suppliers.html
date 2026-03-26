@@ -279,12 +279,24 @@
 
     // Auto-login if they already have an active session
     window.onload = function() { 
-      if (localStorage.getItem('verifiedSupplierId')) {
-        window.location.href = 'supplier-dashboard.html';
-        return;
-      }
-      initGlobe(); 
-    };
+    if (localStorage.getItem('verifiedSupplierId')) {
+      window.location.href = 'supplier-dashboard.html';
+      return;
+    }
+    initGlobe(); 
+
+    // 🟢 SHOW/HIDE PASSWORD LOGIC FOR LOGIN PAGE
+    const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+    const loginPasswordInput = document.getElementById('login-password');
+
+    if (toggleLoginPassword && loginPasswordInput) {
+      toggleLoginPassword.addEventListener('click', function () {
+        const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        loginPasswordInput.setAttribute('type', type);
+        this.textContent = type === 'password' ? 'SHOW' : 'HIDE';
+      });
+    }
+  };
 
     function showAlert(title, message) {
       document.getElementById('alert-title').innerText = title;
