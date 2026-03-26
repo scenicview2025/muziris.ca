@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Global Terms of Trade</title>
+  <link rel="icon" type="image/png" href="MC.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --dark-bg: #0b0e14; 
+      --card-bg: #151922; 
+      --text-main: #e0e0e0; 
+      --text-muted: #888888;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Lato', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-main);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP NAVIGATION */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      background: rgba(11, 14, 20, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      border-bottom: 1px solid #222;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-logo {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 24px;
+      text-decoration: none;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .close-btn:hover { color: #fff; }
+
+    /* LEGAL CONTENT CONTAINER */
+    .legal-container {
+      max-width: 800px;
+      margin: 60px auto 100px auto;
+      padding: 0 30px;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      color: #ffffff;
+      font-size: 36px;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .last-updated {
+      color: var(--gold);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 50px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #333;
+    }
+
+    .legal-clause { margin-bottom: 40px; }
+    
+    .legal-clause h2 {
+      color: var(--gold);
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+    }
+
+    .legal-clause p {
+      color: #cccccc;
+      font-size: 15px;
+      margin: 0 0 15px 0;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid #222;
+      color: var(--text-muted);
+      font-size: 12px;
+      background: var(--card-bg);
+    }
+
+    @media (max-width: 768px) {
+      .top-nav { padding: 20px; }
+      .legal-container { margin-top: 40px; padding: 0 20px; }
+      h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-nav">
+    <a href="index.html" class="brand-logo">Muziris</a>
+    <a href="javascript:window.close();" class="close-btn">✕ Close Tab</a>
+  </div>
+
+  <div class="legal-container">
+    <h1>Global Terms of Trade</h1>
+    <div class="last-updated">Last Updated: March 2026</div>
+
+    <div class="legal-clause">
+      <h2>1. Acceptance of Terms</h2>
+      <p>By creating an account on the Muziris Global Sourcing Platform ("Platform"), you agree to be bound by these Terms of Trade. These terms apply to all Buyers, Suppliers, and Freight Partners using the Platform.</p>
+    </div>
+
+    <div class="legal-clause">
+      <h2>2. Platform Role & Secure Escrow</h2>
+      <p>Muziris acts as a B2B platform and secure facilitator. All transactions initiated through the Platform must utilize Muziris Secure Escrow unless explicitly negotiated otherwise.</p>
+      <p>Funds will be held in our secure escrow vault and released to the Supplier only upon successful delivery and inspection of goods, exactly as defined in the specific RFQ contract.</p>
+    </div>
+
+    <div class="legal-clause">
+      <h2>3. User Responsibilities & Accuracy</h2>
+      <p>Suppliers guarantee that all product specifications, certifications, minimum order quantities, and pricing matrices provided to the Platform are accurate and up-to-date. Buyers guarantee that their intent to purchase and provided logistics destinations are legitimate.</p>
+      <p>Muziris reserves the irrevocable right to suspend or terminate any account found to be providing fraudulent data or attempting to bypass the platform ledger.</p>
+    </div>
+
+    <div class="legal-clause">
+      <h2>4. Cross-Platform Promotion & Marketing Rights</h2>
+      <p>To maximize sales and global reach for our Suppliers, Muziris retains the irrevocable right to display, market, and promote any uploaded products, catalogs, images, and brand biographies across third-party platforms, affiliate networks, social media channels, and external digital marketplaces.</p>
+      <p>By uploading content to Muziris, the Supplier grants Muziris a continuous, royalty-free license to utilize these digital assets for global promotional purposes.</p>
+    </div>
+
+    <div class="legal-clause">
+      <h2>5. Platform Fees & Margins</h2>
+      <p>Muziris applies a standardized category markup and platform fee to transactions processed through the Platform. These fees cover escrow security, platform maintenance, global marketing, and administrative governance.</p>
+      <p>All fees are transparently locked in at the time a Request for Quotation (RFQ) is finalized and funded by the Buyer.</p>
+    </div>
+
+    <div class="legal-clause">
+      <h2>6. Dispute Resolution & Arbitration</h2>
+      <p>In the event of a dispute regarding product quality, missing inventory, or logistics delays, funds will remain completely frozen in Muziris Escrow. Both parties agree to enter a 14-day binding arbitration process mediated by the Muziris Compliance Team before seeking external legal action.</p>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    &copy; 2026 Muziris International. All Rights Reserved.
+  </div>
+
+</body>
+</html>
