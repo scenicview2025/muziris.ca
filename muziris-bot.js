@@ -148,7 +148,10 @@ async function sendChatMessage() {
       hiddenContext = `[SYSTEM NOTE: The user is on the 'Trade Concierge' page. Emphasize that our AI works 24/7 in over 40 languages to capture leads, but complex negotiations and logistics are handled by a dedicated human Muziris Procurement Specialist.]\n\nUser says: `;
     } else if (currentPath.includes("suppliers.html")) {
       hiddenContext = `[SYSTEM NOTE: The user is on the Supplier Secure Login page. If they forgot their password, tell them to type their email and click 'Forgot?'. If they haven't set a password yet, tell them to click 'Finish Account Setup' at the bottom.]\n\nUser says: `;
+    } else if (currentPath.includes("supplier-dashboard.html")) {
+      hiddenContext = `[SYSTEM NOTE: The user is currently on their private Supplier Dashboard. Explain that they can view their Escrow Wallet, respond to open RFQs, see items rejected by Admin (Action Required), and use the Launchpad to upload new products to the catalog.]\n\nUser says: `;
     }
+    
 
     const finalMessageForAI = hiddenContext ? (hiddenContext + message) : message;
     const response = await fetch(MUZIRIS_API_URL, {
