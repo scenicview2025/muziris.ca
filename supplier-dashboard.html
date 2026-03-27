@@ -380,6 +380,20 @@
 
   <script>
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
+
+    // 🟢 MOBILE MENU TOGGLE LOGIC
+    window.toggleMobileMenu = function() {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.getElementById('mobile-overlay');
+      
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        overlay.style.display = 'none';
+      } else {
+        sidebar.classList.add('open');
+        overlay.style.display = 'block';
+      }
+    };
     
     // Global Storage for Modal Math
     window.supplierInventory = [];
