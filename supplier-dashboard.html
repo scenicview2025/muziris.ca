@@ -469,30 +469,44 @@
       document.getElementById('tour-title').innerText = step.title;
       document.getElementById('tour-text').innerText = step.text;
 
-      // 🟢 THE FIX: Calculate position inside the scrolling container
+      // 🟢 THE ULTIMATE FIX: Anchor to the dashboard body directly
       const tooltip = document.getElementById('tour-tooltip');
-      const mainContent = document.querySelector('.main-content');
+      const dashBody = document.querySelector('.dashboard-body');
       
-      // Move the tooltip inside the scrollable container so it sticks to the element!
-      if (tooltip.parentElement !== mainContent) {
-        mainContent.appendChild(tooltip);
+      // Ensure the dashboard body can anchor absolute elements safely
+      dashBody.style.position = 'relative';
+      
+      // Move tooltip safely inside the standard block element
+      if (tooltip.parentElement !== dashBody) {
+        dashBody.appendChild(tooltip);
       }
 
-      const rect = targetElement.getBoundingClientRect();
-      const mainRect = mainContent.getBoundingClientRect();
+      // Calculate exact pixel position relative to the dashboard body ONLY
+      let topPos = 0;
+      let leftPos = 0;
+      let el = targetElement;
       
-      let topPosition = (rect.bottom - mainRect.top) + mainContent.scrollTop + 20;
-      let leftPosition = (rect.left - mainRect.left) + mainContent.scrollLeft + 20;
-
-      if (leftPosition + 350 > mainContent.clientWidth) {
-        leftPosition = mainContent.clientWidth - 360;
+      while (el && el !== dashBody) {
+        topPos += el.offsetTop;
+        leftPos += el.offsetLeft;
+        el = el.offsetParent;
       }
 
-      tooltip.style.top = topPosition + 'px';
-      tooltip.style.left = leftPosition + 'px';
+      let finalTop = topPos + targetElement.offsetHeight + 20;
+      let finalLeft = leftPos + 20;
 
-      mainContent.scrollTo({
-        top: (rect.top - mainRect.top) + mainContent.scrollTop - 100,
+      // Prevent tooltip from overflowing the right side of the screen
+      if (finalLeft + 350 > dashBody.clientWidth) {
+        finalLeft = dashBody.clientWidth - 360;
+      }
+
+      // Apply the flawless coordinates
+      tooltip.style.top = finalTop + 'px';
+      tooltip.style.left = finalLeft + 'px';
+
+      // Scroll the screen so the target is nicely in view
+      document.querySelector('.main-content').scrollTo({
+        top: topPos - 40,
         behavior: 'smooth'
       });
 
