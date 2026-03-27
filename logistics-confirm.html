@@ -140,6 +140,18 @@
 
   <script>
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
+
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedSupplierId')) {
+        window.location.replace('suppliers');
+      }
+    });
+
+    // 🟢 SECURITY: Hard redirect if ID is missing
+    if (!localStorage.getItem('verifiedSupplierId')) {
+      window.location.replace('suppliers');
+    }
     
     const urlParams = new URLSearchParams(window.location.search);
     let rfqId = urlParams.get('rfq'); 
