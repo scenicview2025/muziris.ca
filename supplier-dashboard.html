@@ -416,7 +416,10 @@
       document.getElementById('display-company').innerText = savedCompany;
       document.getElementById('display-id').innerText = "ID: " + (savedId || 'UNKNOWN');
 
-      if (!savedId) { return; } // Handled by Firebase, but safe to abort API calls
+      if (!savedId) { 
+        window.location.replace('suppliers'); 
+        return; 
+      }
 
       try {
         // Update Brand Details
