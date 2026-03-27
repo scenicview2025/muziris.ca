@@ -201,9 +201,16 @@
     let cropper = null;
     let croppedBannerData = null; // Holds the base64 data to be uploaded
 
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedSupplierId')) {
+        window.location.replace('suppliers');
+      }
+    });
+
     window.onload = function() {
       const supplierId = localStorage.getItem('verifiedSupplierId');
-      if (!supplierId) { window.location.href = 'index.html'; return; }
+      if (!supplierId) { window.location.replace('suppliers'); return; }
       
       document.getElementById('ui-id').innerText = "ID: " + supplierId;
       fetchProfileData(supplierId);
