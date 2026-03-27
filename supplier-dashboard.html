@@ -179,7 +179,11 @@
     // 🟢 LOGOUT FUNCTION
     window.logoutSupplier = function() {
       signOut(auth).then(() => {
-        localStorage.clear();
+        // 🟢 THE FIX: Surgically remove session data without touching the Tour Memory
+        localStorage.removeItem('verifiedSupplierId');
+        localStorage.removeItem('verifiedCompany');
+        localStorage.removeItem('verifiedCurrency');
+        
         window.location.href = 'suppliers';
       }).catch((error) => {
         alert("Error logging out.");
