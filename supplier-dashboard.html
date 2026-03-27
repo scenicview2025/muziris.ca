@@ -510,7 +510,8 @@
       
       const savedId = localStorage.getItem('verifiedSupplierId');
       if(savedId) {
-         localStorage.setItem('muzirisTourCount_' + savedId, '5');
+         // 🟢 Changed to 2: This permanently dismisses the tour if they click Skip/Finish
+         localStorage.setItem('muzirisTourCount_' + savedId, '2');
       }
     }
 
