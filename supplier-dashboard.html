@@ -447,10 +447,7 @@
     function startTour() {
       document.getElementById('tour-overlay').style.display = 'block';
       document.getElementById('tour-tooltip').style.display = 'block';
-      
-      // 🟢 THE FIX: Lock the scrollbar so the user cannot fight the Javascript animation
-      document.querySelector('.main-content').style.overflowY = 'hidden';
-      
+      // 🟢 FIX: Removed the overflow hidden lock so mobile users can swipe freely!
       showTourStep(0);
     }
 
