@@ -120,12 +120,21 @@
     // 🚀 POINTING TO THE NEW NODE.JS RENDER SERVER
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedSupplierId')) {
+        window.location.replace('suppliers');
+      }
+    });
+
     window.onload = function() {
       const verifiedId = localStorage.getItem('verifiedSupplierId');
       const verifiedCurrency = localStorage.getItem('verifiedCurrency'); 
       
-     if (!verifiedId) {
-        window.location.href = 'index.html'; // Or 'supplier-dashboard.html' depending on your login flow
+      // 🟢 SECURITY: Hard redirect if ID is missing
+      if (!verifiedId) {
+        window.location.replace('suppliers'); 
+        return;
       } else {
         document.getElementById('supId').value = verifiedId;
         window.officialCurrency = verifiedCurrency || "USD"; 
