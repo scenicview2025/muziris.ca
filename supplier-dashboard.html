@@ -180,19 +180,18 @@
     // 🟢 SECURITY: Check if user is logged in
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = 'suppliers'; // Redirect to clean URL
+        window.location.replace('suppliers'); // 🟢 CHANGED
       }
     });
 
     // 🟢 LOGOUT FUNCTION
     window.logoutSupplier = function() {
       signOut(auth).then(() => {
-        // 🟢 THE FIX: Surgically remove session data without touching the Tour Memory
         localStorage.removeItem('verifiedSupplierId');
         localStorage.removeItem('verifiedCompany');
         localStorage.removeItem('verifiedCurrency');
         
-        window.location.href = 'suppliers';
+        window.location.replace('suppliers'); // 🟢 CHANGED
       }).catch((error) => {
         alert("Error logging out.");
       });
