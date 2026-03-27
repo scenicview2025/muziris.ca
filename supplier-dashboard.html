@@ -399,6 +399,14 @@
     window.supplierInventory = [];
     window.supplierRfqs = [];
 
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      // If the page is loaded from cache OR they don't have an ID, kick them out immediately
+      if (!localStorage.getItem('verifiedSupplierId')) {
+        window.location.replace('suppliers');
+      }
+    });
+    
     window.onload = function() {
       const savedId = localStorage.getItem('verifiedSupplierId');
       const savedCompany = localStorage.getItem('verifiedCompany') || 'New Supplier';
