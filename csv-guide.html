@@ -187,7 +187,20 @@
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     let catData = {};
 
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedSupplierId')) {
+        window.location.replace('suppliers');
+      }
+    });
+
     window.onload = function() {
+      // 🟢 SECURITY: Hard redirect if ID is missing (backup check)
+      if (!localStorage.getItem('verifiedSupplierId')) {
+        window.location.replace('suppliers');
+        return;
+      }
+
       fetch(API_BASE_URL + '/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
