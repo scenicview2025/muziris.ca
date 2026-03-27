@@ -505,9 +505,10 @@
       tooltip.style.top = finalTop + 'px';
       tooltip.style.left = finalLeft + 'px';
 
-      // Scroll the screen so the target is nicely in view
-      document.querySelector('.main-content').scrollTo({
-        top: topPos - 40,
+      // 🟢 THE MOBILE FIX: Scroll to center the tooltip itself on the screen
+      const scrollContainer = document.querySelector('.main-content');
+      scrollContainer.scrollTo({
+        top: finalTop - (scrollContainer.clientHeight / 2) + 50,
         behavior: 'smooth'
       });
 
