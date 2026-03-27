@@ -145,11 +145,19 @@
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     let supplierCurrency = "USD";
 
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedSupplierId')) {
+        window.location.replace('suppliers');
+      }
+    });
+
     window.onload = function() {
       const supplierId = localStorage.getItem('verifiedSupplierId');
       supplierCurrency = localStorage.getItem('verifiedCurrency') || "USD";
       
-      if (!supplierId) { window.location.href = 'index.html'; return; }
+      // 🟢 SECURITY: Hard redirect if ID is missing
+      if (!supplierId) { window.location.replace('suppliers'); return; }
       
       document.getElementById('kpi-currency-sub').innerText = `Total Contract Value (${supplierCurrency})`;
       fetchAnalytics(supplierId);
