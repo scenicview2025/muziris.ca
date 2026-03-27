@@ -86,6 +86,28 @@ document.addEventListener("DOMContentLoaded", function() {
       clearInterval(hideTawk);
     }
   }, 500);
+
+  // 🟢 NEW: PROACTIVE POPUP FOR PRODUCT UPLOAD PAGE
+  if (window.location.pathname.includes("product-upload.html")) {
+    setTimeout(() => {
+      // 1. Change the default greeting
+      const history = document.getElementById('m-chat-history');
+      history.innerHTML = `<div class="m-msg m-msg-ai">Hello! I am here to help you upload your product to the ledger. Do you need help writing a description or setting up your pricing matrix?</div>`;
+      
+      // 2. Pop the chat open automatically!
+      document.getElementById('muziris-chat-window').style.display = 'flex';
+      setTimeout(() => document.getElementById('muziris-chat-window').style.opacity = '1', 10);
+    }, 3000); // Waits 3 seconds before popping up
+  }
+});
+  
+  // Keep Tawk.to hidden until we explicitly call it
+  const hideTawk = setInterval(() => {
+    if (typeof Tawk_API !== 'undefined' && Tawk_API.hideWidget) {
+      Tawk_API.hideWidget();
+      clearInterval(hideTawk);
+    }
+  }, 500);
 });
 
 // 2. CORE LOGIC & ANIMATIONS
