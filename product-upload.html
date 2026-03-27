@@ -362,14 +362,22 @@
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     var catData = {};
 
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedSupplierId')) {
+        window.location.replace('suppliers');
+      }
+    });
+
     window.onload = function() {
       // 1. Verify user is actually logged in!
       var savedId = localStorage.getItem('verifiedSupplierId');
       var savedCompany = localStorage.getItem('verifiedCompany');
       var savedCurrency = localStorage.getItem('verifiedCurrency') || 'USD';
 
+      // 🟢 SECURITY: Hard redirect if ID is missing
       if (!savedId) {
-        window.location.href = 'index.html'; 
+        window.location.replace('suppliers'); 
         return;
       }
 
