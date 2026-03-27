@@ -530,9 +530,11 @@
         activeHighlightElement.classList.remove('tour-highlight');
       }
       
+      // 🟢 THE FIX: Unlock the scrollbar so the user can browse normally again
+      document.querySelector('.main-content').style.overflowY = 'auto';
+      
       const savedId = localStorage.getItem('verifiedSupplierId');
       if(savedId) {
-         // 🟢 Changed to 2: This permanently dismisses the tour if they click Skip/Finish
          localStorage.setItem('muzirisTourCount_' + savedId, '2');
       }
     }
