@@ -263,10 +263,15 @@
     </div>
   </div>
 
+  <div class="mobile-nav-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
+
   <div class="main-content">
     
     <div class="topbar">
-      <h1 class="welcome-text">Welcome, <span id="display-company" style="color: var(--gold);">Loading...</span></h1>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        <h1 class="welcome-text">Welcome, <span id="display-company" style="color: var(--gold);">Loading...</span></h1>
+      </div>
       <div class="supplier-id-badge" id="display-id">ID: LOADING</div>
     </div>
 
