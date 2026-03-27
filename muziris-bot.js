@@ -172,8 +172,27 @@ async function sendChatMessage() {
       hiddenContext = `[SYSTEM NOTE: The user is on the Supplier Secure Login page. If they forgot their password, tell them to type their email and click 'Forgot?'. If they haven't set a password yet, tell them to click 'Finish Account Setup' at the bottom.]\n\nUser says: `;
     } else if (currentPath.includes("supplier-dashboard.html")) {
       hiddenContext = `[SYSTEM NOTE: The user is currently on their private Supplier Dashboard. Explain that they can view their Escrow Wallet, respond to open RFQs, see items rejected by Admin (Action Required), and use the Launchpad to upload new products to the catalog.]\n\nUser says: `;
+
+    } else if (currentPath.includes("product-upload.html")) {
+      // 🟢 DYNAMIC DOM SCRAPING: Find out exactly what step they are on!
+      let currentActiveStep = "Unknown Step";
+      const stepHeader = document.querySelector('.form-step.active .step-title');
+      if (stepHeader) {
+          currentActiveStep = stepHeader.innerText; 
+      }
+
+      hiddenContext = `[SYSTEM NOTE: The user is currently on the Single Product Upload page. 
+      LIVE STATUS: They are currently looking at the "${currentActiveStep}" section of the form.
+      
+      FULL PAGE FUNCTIONS TO REMEMBER:
+      - Step 1 (Basic Info): Requires Supplier ID, Company Name, Category, and Product Name.
+      - Step 2 (Product Details & Pricing): They can select OEM/ODM services, write packaging details, and build a Volume Pricing Matrix.
+      - Step 2 AI Tools: There are two buttons ("✨ Auto-Tagline" and "✨ Auto-Write with AI") that will automatically write their descriptions for them if they are stuck.
+      - Step 3 (Media Upload): They can upload up to 5 images (Hero image must be white background) and 1 PDF catalog. Max file size is 25MB.
+      - Edit Mode: If they clicked "Edit Existing Listings" at the top, the whole form unrolls into one page.
+      
+      Tailor your answer based on the fact that they are currently looking at ${currentActiveStep}.]\n\nUser says: `;
     }
-    
 
     const finalMessageForAI = hiddenContext ? (hiddenContext + message) : message;
     const response = await fetch(MUZIRIS_API_URL, {
