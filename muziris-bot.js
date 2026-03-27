@@ -150,7 +150,10 @@ async function sendChatMessage() {
       hiddenContext = `[SYSTEM NOTE: The user is on the Supplier Secure Login page. If they forgot their password, tell them to type their email and click 'Forgot?'. If they haven't set a password yet, tell them to click 'Finish Account Setup' at the bottom.]\n\nUser says: `;
     } else if (currentPath.includes("supplier-dashboard.html")) {
       hiddenContext = `[SYSTEM NOTE: The user is currently on their private Supplier Dashboard. Explain that they can view their Escrow Wallet, respond to open RFQs, see items rejected by Admin (Action Required), and use the Launchpad to upload new products to the catalog.]\n\nUser says: `;
+    } else if (currentPath.includes("product-upload.html")) {
+      hiddenContext = `[SYSTEM NOTE: The user is currently on the Single Product Upload page. Explain that they can fill out the 3-step form to add a new product, or click "Edit Existing Listings" at the top to modify an old one. Remind them to use the ✨ Auto-Write AI buttons if they need help writing descriptions.]\n\nUser says: `;
     }
+    
     
 
     const finalMessageForAI = hiddenContext ? (hiddenContext + message) : message;
