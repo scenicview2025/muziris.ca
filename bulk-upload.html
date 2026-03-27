@@ -7,6 +7,13 @@
   <link rel="icon" type="image/png" href="MC.png">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  
+  <script>
+    if (!localStorage.getItem('verifiedSupplierId')) {
+      window.location.replace('suppliers');
+    }
+  </script>
+
   <style>
     :root { --gold: #D4AF37; --bg-dark: #0b0e14; --card-bg: #151922; --text: #e0e0e0; }
     body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--bg-dark); color: var(--text); background-image: url('network-bg.png'); background-size: cover; background-position: center; background-attachment: fixed;}
