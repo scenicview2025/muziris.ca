@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Muziris | Official Supplier Quotation Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <script>
+    if (!localStorage.getItem('verifiedSupplierId')) {
+      window.location.replace('suppliers');
+    }
+  </script>
+
   <style>
     :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --blue: #1E88E5; }
     body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
