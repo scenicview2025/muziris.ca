@@ -315,6 +315,15 @@
             }
         }
 
+        // 🟢 ROUTE TO PUBLIC SUPPLIER STOREFRONT
+        function goToSupplierStore() {
+            const sid = document.getElementById('m-supplier-link').getAttribute('data-sid');
+            if(sid && sid !== "undefined") {
+                // This will route them to the public profile page we are going to build!
+                window.location.href = 'factory.html?id=' + sid; 
+            }
+        }
+
         function convertPrice(cadPrice) {
             if(!cadPrice || isNaN(cadPrice)) return "0.00";
             return (cadPrice * exchangeRates[activeCurrency]).toFixed(2);
