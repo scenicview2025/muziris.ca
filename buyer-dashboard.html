@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Buyer Procurement Hub</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <script>
+    if (!localStorage.getItem('verifiedBuyerEmail')) {
+      window.location.replace('index.html'); // Redirect to main login
+    }
+  </script>
+
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --bronze: #b89225; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+      --success: #4CAF50;
+      --blue: #1E88E5;
+    }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; -webkit-font-smoothing: antialiased; }
+    .brand-font { font-family: 'Cinzel', serif; }
+    
+    header { background: rgba(11, 14, 20, 0.95); border-bottom: 1px solid #333; backdrop-filter: blur(10px); }
+    
+    .kpi-card { background: var(--slate); border: 1px solid #333; border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 3px solid var(--gold); transition: 0.3s; }
+    .kpi-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+    
+    .table-container { background: var(--slate); border: 1px solid #333; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th { color: #888; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; padding: 16px 20px; border-bottom: 1px solid #333; background: rgba(0,0,0,0.2); }
+    td { padding: 16px 20px; border-bottom: 1px solid #222; color: #ccc; vertical-align: middle; }
+    tr:hover td { background-color: #1a1e29; }
+
+    .status-badge { padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border: 1px solid transparent; display: inline-block;}
+    .status-pending { background: rgba(255, 255, 255, 0.05); color: #aaa; border-color: #444; }
+    .status-action { background: rgba(212, 175, 55, 0.1); color: var(--gold); border-color: var(--gold); animation: pulse-border 2s infinite;}
+    .status-escrow { background: rgba(30, 136, 229, 0.1); color: var(--blue); border-color: var(--blue); }
+    .status-shipped { background: rgba(76, 175, 80, 0.1); color: var(--success); border-color: var(--success); }
+
+    .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(212,175,55,0.2);}
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(212,175,55,0.4); }
+    .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer;}
+    .btn-outline:hover { background: var(--gold); color: #000; }
+
+    /* Modal Styling */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+    .modal-content { background: var(--slate); width: 100%; max-width: 800px; max-height: 90vh; border-radius: 12px; border: 1px solid var(--gold); overflow-y: auto; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+    .modal-header { position: sticky; top: 0; background: var(--slate); padding: 25px; border-bottom: 1px solid #333; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
+    
+    .financial-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px dashed #333; font-size: 14px; }
+    .financial-row.total { border-bottom: none; border-top: 2px solid var(--gold); margin-top: 10px; padding-top: 20px; font-size: 18px; font-weight: bold; color: #fff; }
+
+    @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-50 py-4 px-6 sm:px-10 flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold tracking-widest text-[#D4AF37] brand-font uppercase m-0 leading-none">Muziris</h1>
+      <span class="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-bold">Procurement Portal</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <a href="catalog.html" class="text-sm font-bold text-[#D4AF37] hover:text-white transition uppercase tracking-widest">Global Catalog</a>
+      <button onclick="logoutBuyer()" class="text-xs text-gray-400 hover:text-red-400 uppercase tracking-widest font-bold transition border border-gray-600 hover:border-red-400 px-4 py-2 rounded">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="flex justify-between items-end mb-8">
+      <div>
+        <h2 class="text-3xl font-bold text-white brand-font">Sourcing Command Center</h2>
+        <p class="text-sm text-gray-400 mt-2" id="ui-buyer-email">Logged in as: Loading...</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="kpi-card">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Active RFQs</div>
+        <h3 class="text-4xl text-white brand-font m-0" id="kpi-active">0</h3>
+      </div>
+      <div class="kpi-card" style="border-top-color: var(--blue);">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Funds Locked in Escrow</div>
+        <h3 class="text-4xl text-white brand-font m-0" id="kpi-escrow">$0.00</h3>
+        <div class="text-[10px] text-[var(--blue)] uppercase tracking-widest font-bold mt-2">Protected by Muziris Vault</div>
+      </div>
+      <div class="kpi-card" style="border-top-color: var(--success);">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Total Deals Completed</div>
+        <h3 class="text-4xl text-white brand-font m-0" id="kpi-completed">0</h3>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <div class="p-6 border-b border-[#333] flex justify-between items-center bg-[#111827]">
+        <h3 class="text-lg font-bold text-[#D4AF37] brand-font uppercase tracking-widest m-0">Procurement Contracts</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Contract ID</th>
+              <th>Date</th>
+              <th>Product & Supplier</th>
+              <th>Destination</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="rfq-body">
+            <tr><td colspan="6" class="text-center py-10 text-gray-500">Syncing with Muziris Ledger...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="quote-modal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 class="text-2xl font-bold text-[#D4AF37] brand-font m-0">Official Supplier Quote</h2>
+          <div class="text-xs text-gray-400 mt-1 font-mono" id="modal-rfq-id">RFQ-123456</div>
+        </div>
+        <button class="text-gray-500 hover:text-white text-2xl transition" onclick="closeModal({target:{id:'quote-modal'}})">×</button>
+      </div>
+      
+      <div class="p-8">
+        <div class="bg-[#0b0e14] border border-[#333] p-6 rounded-lg mb-8">
+          <div class="text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-4 border-b border-[#333] pb-2">Supplier Message</div>
+          <p class="text-sm text-gray-300 italic" id="modal-supplier-msg">"We have reviewed your request and confirm we can meet your quality standards. Please see the finalized pricing below."</p>
+        </div>
+
+        <h3 class="text-sm text-[#D4AF37] font-bold uppercase tracking-widest mb-4 border-b border-[#333] pb-2">Financial Breakdown</h3>
+        <div id="modal-financials" class="mb-8">
+          </div>
+
+        <div class="bg-[rgba(30,136,229,0.1)] border border-[var(--blue)] p-6 rounded-lg mb-8">
+          <h4 class="text-[var(--blue)] font-bold text-sm uppercase tracking-widest mb-2 flex items-center gap-2"><i class="fas fa-lock"></i> Escrow Protection Active</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            By funding this contract, your money is securely locked in the Muziris Escrow Vault. 
+            The supplier will be notified to begin production immediately. <strong>Muziris will not release these funds to the supplier until 7 days after the shipment arrives at your destination.</strong>
+          </p>
+        </div>
+
+        <div class="flex gap-4">
+          <button class="flex-1 btn-outline py-4 text-sm" onclick="closeModal({target:{id:'quote-modal'}})">Review Later</button>
+          <button class="flex-[2] btn-gold py-4 text-sm flex justify-center items-center gap-2" onclick="fundEscrow()" id="btn-fund">
+            <i class="fas fa-shield-check"></i> SECURE FUNDS IN ESCROW (PAY)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    let currentBuyerEmail = "";
+    let allBuyerRfqs = [];
+    let activeRfqForModal = null;
+
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedBuyerEmail')) window.location.replace('index.html');
+    });
+
+    window.onload = function() {
+      currentBuyerEmail = localStorage.getItem('verifiedBuyerEmail');
+      if (!currentBuyerEmail) { window.location.replace('index.html'); return; }
+      
+      document.getElementById('ui-buyer-email').innerText = "Logged in as: " + currentBuyerEmail;
+      fetchBuyerRfqs();
+    };
+
+    function fetchBuyerRfqs() {
+      // In a real app, you'd hit an endpoint like /get-buyer-rfqs. 
+      // For this architecture, we will fetch the global RFQs and filter by this buyer's email.
+      fetch(API_BASE_URL + '/get-admin-rfqs', { // Re-using admin endpoint for architecture mockup
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey: "MUZIRIS_MASTER_KEY_2026" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.error) throw new Error(data.error);
+        
+        // Filter only RFQs belonging to this buyer
+        allBuyerRfqs = data.filter(r => r.buyer_email && r.buyer_email.toLowerCase() === currentBuyerEmail.toLowerCase());
+        renderDashboard();
+      })
+      .catch(err => {
+        document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-10 text-red-400">Database Connection Failed.</td></tr>`;
+      });
+    }
+
+    function renderDashboard() {
+      let activeCount = 0;
+      let completedCount = 0;
+      let escrowLocked = 0;
+      let html = "";
+
+      if(allBuyerRfqs.length === 0) {
+        document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-500">No active sourcing requests. Browse the catalog to start.</td></tr>`;
+        return;
+      }
+
+      // Sort by newest first
+      allBuyerRfqs.sort((a,b) => new Date(b.submitted_date) - new Date(a.submitted_date));
+
+      allBuyerRfqs.forEach(rfq => {
+        let isActionable = (rfq.status === 'Supplier Replied' || rfq.status === 'Quote Sent');
+        let isEscrow = ['Funded Escrow', 'In Production', 'Shipped'].includes(rfq.status);
+        let isCompleted = (rfq.status === 'Completed');
+        
+        if(!isCompleted && rfq.status !== 'Cancelled') activeCount++;
+        if(isCompleted) completedCount++;
+
+        // Calculate Escrow if applicable
+        let contractTotal = 0;
+        if(rfq.supplier_quote) {
+           try {
+             let q = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
+             if(q.finalQuoteItems) q.finalQuoteItems.forEach(i => contractTotal += parseFloat(i.supplierTotalRaw || 0));
+             if(q.extraFees) {
+               contractTotal += parseFloat(q.extraFees.customizationFee || 0);
+               contractTotal += parseFloat(q.extraFees.sampleFee || 0);
+             }
+           } catch(e){}
+        }
+        
+        if(isEscrow) escrowLocked += contractTotal;
+
+        // Visuals
+        let statusBadge = `<span class="status-badge status-pending">${rfq.status}</span>`;
+        let actionBtn = `<button class="btn-outline opacity-50 cursor-not-allowed" disabled>Processing</button>`;
+
+        if(isActionable) {
+          statusBadge = `<span class="status-badge status-action">Requires Funding</span>`;
+          actionBtn = `<button class="btn-gold" onclick="openQuoteModal('${rfq.rfq_id}')">Review & Fund</button>`;
+        } else if (isEscrow) {
+          statusBadge = `<span class="status-badge status-escrow">${rfq.status}</span>`;
+          actionBtn = `<button class="btn-outline" onclick="alert('Tracking ID will be available once goods reach the port.')">Track Status</button>`;
+        } else if (isCompleted) {
+          statusBadge = `<span class="status-badge status-shipped">Delivered</span>`;
+          actionBtn = `<button class="btn-outline">View Receipt</button>`;
+        }
+
+        html += `
+          <tr>
+            <td class="font-mono text-[#D4AF37] font-bold">${rfq.rfq_id}</td>
+            <td class="text-gray-400">${new Date(rfq.submitted_date).toLocaleDateString()}</td>
+            <td>
+              <div class="font-bold text-white">${rfq.product_name}</div>
+              <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Supplier ID: ${rfq.supplier_id}</div>
+            </td>
+            <td class="text-gray-400">${rfq.destination || 'EXW (No Port)'}</td>
+            <td>${statusBadge}</td>
+            <td class="text-right">${actionBtn}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('rfq-body').innerHTML = html;
+      document.getElementById('kpi-active').innerText = activeCount;
+      document.getElementById('kpi-completed').innerText = completedCount;
+      document.getElementById('kpi-escrow').innerText = "$" + escrowLocked.toLocaleString(undefined, {minimumFractionDigits: 2});
+    }
+
+    function openQuoteModal(rfqId) {
+      activeRfqForModal = allBuyerRfqs.find(r => r.rfq_id === rfqId);
+      if(!activeRfqForModal || !activeRfqForModal.supplier_quote) return;
+
+      let q = typeof activeRfqForModal.supplier_quote === 'string' ? JSON.parse(activeRfqForModal.supplier_quote) : activeRfqForModal.supplier_quote;
+      
+      document.getElementById('modal-rfq-id').innerText = rfqId;
+      document.getElementById('modal-supplier-msg').innerText = `"${q.evidence?.supplierReply || 'Please review the official itemized quote below.'}"`;
+
+      let finHtml = "";
+      let grandTotal = 0;
+      let curr = activeRfqForModal.currency || "USD";
+
+      // Items
+      if(q.finalQuoteItems) {
+        q.finalQuoteItems.forEach(item => {
+          let itemTotal = parseFloat(item.supplierTotalRaw || 0);
+          grandTotal += itemTotal;
+          finHtml += `
+            <div class="financial-row">
+              <div>
+                <strong class="text-white">${item.variantName}</strong>
+                <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Qty: ${item.quantity} | Final Base Rate</div>
+              </div>
+              <div class="font-mono text-[#D4AF37]">$${itemTotal.toFixed(2)} ${curr}</div>
+            </div>
+          `;
+        });
+      }
+
+      // Fees
+      if(q.extraFees) {
+        let custFee = parseFloat(q.extraFees.customizationFee || 0);
+        let sampFee = parseFloat(q.extraFees.sampleFee || 0);
+        
+        if(custFee > 0) {
+          grandTotal += custFee;
+          finHtml += `<div class="financial-row"><div><strong class="text-gray-300">Customization / Mold Fee</strong><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">${q.extraFees.customizationNotes || 'Branding setup'}</div></div><div class="font-mono text-gray-300">$${custFee.toFixed(2)} ${curr}</div></div>`;
+        }
+        if(sampFee > 0) {
+          grandTotal += sampFee;
+          finHtml += `<div class="financial-row"><div><strong class="text-gray-300">Physical Sample Production</strong></div><div class="font-mono text-gray-300">$${sampFee.toFixed(2)} ${curr}</div></div>`;
+        }
+      }
+
+      // Muziris Platform Fee (Simulated 2.5% for buyer)
+      let platformFee = grandTotal * 0.025;
+      grandTotal += platformFee;
+      finHtml += `<div class="financial-row"><div><strong class="text-gray-400">Muziris Escrow & Audit Fee (2.5%)</strong></div><div class="font-mono text-gray-400">$${platformFee.toFixed(2)} ${curr}</div></div>`;
+
+      // Total
+      finHtml += `
+        <div class="financial-row total">
+          <div>TOTAL LANDED COST</div>
+          <div class="text-[#D4AF37]">$${grandTotal.toFixed(2)} ${curr}</div>
+        </div>
+      `;
+
+      document.getElementById('modal-financials').innerHTML = finHtml;
+      document.getElementById('quote-modal').style.display = 'flex';
+    }
+
+    function fundEscrow() {
+      if(!activeRfqForModal) return;
+      
+      const btn = document.getElementById('btn-fund');
+      btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> PROCESSING PAYMENT...`;
+      btn.disabled = true;
+
+      // Update status in backend
+      fetch(API_BASE_URL + '/update-rfq-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rfqId: activeRfqForModal.rfq_id, newStatus: 'Funded Escrow' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          document.getElementById('quote-modal').style.display = 'none';
+          alert("✓ PAYMENT SECURED IN ESCROW\n\nYour funds have been locked in the Muziris Vault. The supplier has been notified to begin production immediately.");
+          fetchBuyerRfqs(); // Refresh dashboard
+        } else {
+          alert("Payment Error: " + data.error);
+        }
+        btn.innerHTML = `<i class="fas fa-shield-check"></i> SECURE FUNDS IN ESCROW (PAY)`;
+        btn.disabled = false;
+      })
+      .catch(err => {
+        alert("Network Error during payment processing.");
+        btn.innerHTML = `<i class="fas fa-shield-check"></i> SECURE FUNDS IN ESCROW (PAY)`;
+        btn.disabled = false;
+      });
+    }
+
+    function closeModal(e) {
+      if(e.target.id === 'quote-modal' || e.target.closest('.modal-close')) {
+        document.getElementById('quote-modal').style.display = 'none';
+      }
+    }
+
+    function logoutBuyer() {
+      localStorage.removeItem('verifiedBuyerEmail');
+      window.location.replace('index.html');
+    }
+  </script>
+</body>
+</html>
