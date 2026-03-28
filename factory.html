@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muziris | Verified Factory Profile</title>
+    <link rel="icon" type="image/png" href="MC.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #FAFAFA; color: #111827; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .brand-font { font-family: 'Cinzel', serif; }
+        
+        /* Premium Header */
+        .glass-header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+        /* Factory Banner */
+        .factory-banner { width: 100%; height: 350px; background: #111827 center/cover no-repeat; position: relative; }
+        .factory-banner::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(17,24,39,0.9) 100%); }
+        
+        /* Profile Layout */
+        .profile-container { margin-top: -100px; position: relative; z-index: 10; }
+        .factory-logo { width: 160px; height: 160px; border-radius: 16px; background: #fff; border: 4px solid #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.15); object-fit: cover; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #D4AF37; font-family: 'Cinzel', serif; overflow: hidden; }
+
+        /* Bento Cards */
+        .bento-card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .bento-title { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #9ca3af; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
+
+        /* Product Grid (Matches Catalog) */
+        .product-card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.04); border-radius: 12px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; cursor: pointer; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.02); border-color: rgba(212, 175, 55, 0.3); }
+
+        /* Buttons */
+        .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 10px 20px rgba(212,175,55,0.2);}
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(212,175,55,0.4); }
+        .btn-disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; box-shadow: none; pointer-events: none;}
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="glass-header sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="catalog.html" class="text-2xl font-bold tracking-widest text-gray-900 brand-font uppercase text-decoration-none">Muziris</a>
+            <a href="catalog.html" class="text-xs font-bold uppercase tracking-widest text-[#D4AF37] hover:text-black transition">← Back to Global Catalog</a>
+        </div>
+    </header>
+
+    <div id="loading" class="text-center py-32">
+        <i class="fas fa-circle-notch fa-spin text-4xl text-[#D4AF37] mb-4"></i>
+        <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Connecting to Factory Profile...</h3>
+    </div>
+
+    <div id="factory-content" style="display: none;">
+        <div id="ui-banner" class="factory-banner"></div>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 profile-container pb-20">
+            
+            <div class="flex flex-col md:flex-row gap-8 items-end mb-12">
+                <div id="ui-logo" class="factory-logo">M</div>
+                <div class="flex-1 pb-2">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 px-3 py-1 rounded text-[10px] uppercase tracking-widest font-bold">
+                            <i class="fas fa-check-circle mr-1"></i> Verified Supplier
+                        </span>
+                        <span class="text-gray-500 font-mono text-xs font-bold" id="ui-id">ID: ...</span>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-white brand-font tracking-wide" id="ui-name">Company Name</h1>
+                </div>
+                <div class="pb-2 flex gap-4">
+                    <a href="#" id="ui-pdf-btn" class="btn-gold btn-disabled" target="_blank">
+                        <i class="fas fa-file-pdf text-lg"></i> Download Catalog PDF
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="lg:col-span-1 space-y-8">
+                    
+                    <div class="bento-card">
+                        <div class="bento-title"><i class="fas fa-building text-[#D4AF37]"></i> Know Your Supplier</div>
+                        <p class="text-sm text-gray-600 leading-relaxed mb-6" id="ui-bio">No description provided by the supplier.</p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                                <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Established</span>
+                                <span class="text-sm font-bold text-gray-900" id="ui-year">-</span>
+                            </div>
+                            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                                <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Factory Size</span>
+                                <span class="text-sm font-bold text-gray-900" id="ui-emp">-</span>
+                            </div>
+                            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                                <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Export Markets</span>
+                                <span class="text-sm font-bold text-gray-900 text-right w-1/2" id="ui-markets">-</span>
+                            </div>
+                            <div class="flex justify-between items-center py-3">
+                                <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Nearest Port</span>
+                                <span class="text-sm font-bold text-gray-900" id="ui-port">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bento-card">
+                        <div class="bento-title"><i class="fas fa-certificate text-[#D4AF37]"></i> Compliance & Certificates</div>
+                        <div id="ui-certs" class="flex flex-wrap gap-2 mt-4">
+                            <span class="text-sm text-gray-500 italic">No certificates listed.</span>
+                        </div>
+                    </div>
+
+                    <div class="bento-card bg-[#0b0e14] border-black">
+                        <div class="flex items-center gap-4 mb-4">
+                            <i class="fas fa-shield-alt text-[#D4AF37] text-3xl"></i>
+                            <div>
+                                <h4 class="font-bold text-white text-sm tracking-wide uppercase">Muziris Escrow Protection</h4>
+                                <p class="text-xs text-gray-400 mt-1">This supplier operates under the strict Muziris milestone payment system.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="lg:col-span-2">
+                    <div class="flex justify-between items-end mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900 brand-font">Factory Catalog</h2>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest"><span id="product-count" class="text-[#D4AF37]">0</span> Active Items</span>
+                    </div>
+
+                    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        </div>
+
+                    <div id="empty-state" class="hidden text-center py-20 bg-white border border-dashed border-gray-300 rounded-xl mt-6">
+                        <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
+                        <h3 class="text-lg font-bold text-gray-900">No public products</h3>
+                        <p class="text-sm text-gray-500 mt-1">This supplier has not verified any items to the global ledger yet.</p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = "https://muziris-api.onrender.com/api";
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const supplierId = urlParams.get('id');
+
+            if (!supplierId) {
+                document.getElementById('loading').innerHTML = "<div class='text-red-500 font-bold uppercase tracking-widest py-20'>INVALID SECURE LINK. NO FACTORY ID FOUND.</div>";
+                return;
+            }
+
+            document.getElementById('ui-id').innerText = "ID: " + supplierId;
+
+            // Fetch Profile and Inventory simultaneously
+            Promise.all([
+                fetch(API_BASE_URL + '/get-supplier-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ supplierId: supplierId })
+                }).then(res => res.json()),
+                
+                fetch(API_BASE_URL + '/get-inventory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: supplierId })
+                }).then(res => res.json())
+            ])
+            .then(([profileData, inventoryData]) => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('factory-content').style.display = 'block';
+
+                renderProfile(profileData);
+                renderInventory(inventoryData);
+            })
+            .catch(err => {
+                document.getElementById('loading').innerHTML = "<div class='text-red-500 font-bold uppercase tracking-widest py-20'>FACTORY OFFLINE OR NOT FOUND.</div>";
+            });
+        };
+
+        function renderProfile(data) {
+            if (data.error) return;
+
+            document.getElementById('ui-name').innerText = data.company_name || "Muziris Factory";
+            if (data.banner_url) document.getElementById('ui-banner').style.backgroundImage = `url('${data.banner_url}')`;
+            
+            if (data.logo_url) {
+                document.getElementById('ui-logo').innerHTML = `<img src="${data.logo_url}" class="w-full h-full object-cover">`;
+            } else {
+                document.getElementById('ui-logo').innerText = (data.company_name || "M").charAt(0).toUpperCase();
+            }
+
+            if (data.company_bio) document.getElementById('ui-bio').innerText = data.company_bio;
+            if (data.year_established) document.getElementById('ui-year').innerText = data.year_established;
+            if (data.employee_count) document.getElementById('ui-emp').innerText = data.employee_count;
+            if (data.export_markets) document.getElementById('ui-markets').innerText = data.export_markets;
+            if (data.nearest_port) document.getElementById('ui-port').innerText = data.nearest_port;
+
+            // Parse Certificates
+            if (data.certifications && data.certifications.trim() !== "") {
+                const certs = data.certifications.split(',');
+                let certHtml = "";
+                certs.forEach(c => {
+                    if (c.trim()) {
+                        certHtml += `<span class="bg-gray-100 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-md text-[11px] font-bold uppercase tracking-widest flex items-center gap-2"><i class="fas fa-award text-[#D4AF37]"></i> ${c.trim()}</span>`;
+                    }
+                });
+                document.getElementById('ui-certs').innerHTML = certHtml;
+            }
+
+            // Enable PDF Button if catalog exists. (Fallback: Check if any inventory item has a catalog_pdf)
+            // Note: If you saved the PDF to the profile, it will be in `data.catalog_url`. 
+            // If it's attached to individual products, we will handle it in renderInventory.
+        }
+
+        function renderInventory(products) {
+            const grid = document.getElementById('productGrid');
+            const emptyState = document.getElementById('empty-state');
+            
+            // Only show LIVE or ACTIVE products to buyers
+            let liveProducts = Array.isArray(products) ? products.filter(p => p.status === 'LIVE' || p.status === 'ACTIVE') : [];
+            
+            document.getElementById('product-count').innerText = liveProducts.length;
+
+            if (liveProducts.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            let foundPdf = false;
+
+            liveProducts.forEach(p => {
+                // If a product has a PDF catalog, enable the main download button
+                if(p.catalog_pdf && !foundPdf) {
+                    const btn = document.getElementById('ui-pdf-btn');
+                    btn.href = p.catalog_pdf;
+                    btn.classList.remove('btn-disabled');
+                    foundPdf = true;
+                }
+
+                let fallbackImg = p.hero_img || 'MC.png';
+                
+                // Extract starting price from matrix
+                let startingPrice = "N/A";
+                try {
+                    let matrix = typeof p.pricing_matrix === 'string' ? JSON.parse(p.pricing_matrix) : p.pricing_matrix;
+                    if(matrix && matrix.length > 0) startingPrice = matrix[0].supplierPriceRaw || matrix[0].price;
+                } catch(e){}
+
+                grid.innerHTML += `
+                <div class="product-card group" onclick="window.location.href='catalog.html'">
+                    <div class="h-48 bg-[#f8f9fa] flex items-center justify-center relative border-b border-gray-100 p-4">
+                        <img src="${fallbackImg}" class="max-h-full max-w-full object-contain mix-blend-multiply" onerror="this.src='MC.png'" loading="lazy">
+                    </div>
+                    <div class="p-5 flex flex-col justify-between">
+                        <div>
+                            <p class="text-[9px] text-[#D4AF37] uppercase tracking-[0.15em] font-bold mb-1 truncate">${p.main_category}</p>
+                            <h3 class="text-sm font-bold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-[#D4AF37] transition-colors">${p.product_name}</h3>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Starting Price</p>
+                            <p class="text-sm font-mono font-bold text-gray-900">$${startingPrice}</p>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+    </script>
+</body>
+</html>
