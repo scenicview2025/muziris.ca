@@ -399,6 +399,12 @@
             if(!p) return;
             currentActiveId = p.id;
 
+            // 🟢 NEW: Inject the Company Name (Fallback to 'Verified Factory' if missing)
+            document.getElementById('m-supplier-name').innerText = p.companyName || "Verified Muziris Factory";
+            
+            // Store the supplier ID temporarily so the link knows where to go
+            document.getElementById('m-supplier-link').setAttribute('data-sid', p.supplierId);
+
             document.getElementById('m-cat').innerText = p.category + (p.subCategory ? " / " + p.subCategory : "");
             document.getElementById('m-title').innerText = p.name;
             document.getElementById('m-desc').innerText = p.desc || "Standard enterprise configuration.";
