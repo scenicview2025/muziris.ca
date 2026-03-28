@@ -1,578 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muziris | Global Sourcing Catalog</title>
-    <link rel="icon" type="image/png" href="MC.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Buyer Procurement Hub</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <script>
+    if (!localStorage.getItem('verifiedBuyerEmail')) {
+      window.location.replace('index.html'); // Redirect to main login
+    }
+  </script>
+
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --bronze: #b89225; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+      --success: #4CAF50;
+      --blue: #1E88E5;
+    }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; -webkit-font-smoothing: antialiased; }
+    .brand-font { font-family: 'Cinzel', serif; }
     
-    <style>
-        body { background-color: #FAFAFA; color: #111827; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-        .brand-font { font-family: 'Cinzel', serif; }
-        .gold-text { color: #D4AF37; }
-        .dark-void { background-color: #0b0e14; }
-        
-        /* Premium Header */
-        .glass-header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+    header { background: rgba(11, 14, 20, 0.95); border-bottom: 1px solid #333; backdrop-filter: blur(10px); }
+    
+    .kpi-card { background: var(--slate); border: 1px solid #333; border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 3px solid var(--gold); transition: 0.3s; }
+    .kpi-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+    
+    .table-container { background: var(--slate); border: 1px solid #333; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th { color: #888; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; padding: 16px 20px; border-bottom: 1px solid #333; background: rgba(0,0,0,0.2); }
+    td { padding: 16px 20px; border-bottom: 1px solid #222; color: #ccc; vertical-align: middle; }
+    tr:hover td { background-color: #1a1e29; }
 
-        /* High-end Product Cards */
-        .product-card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.04); border-radius: 12px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; }
-        .product-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.02); border-color: rgba(212, 175, 55, 0.3); }
-        .img-container img { transition: transform 0.6s ease; }
-        .product-card:hover .img-container img { transform: scale(1.05); }
+    .status-badge { padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border: 1px solid transparent; display: inline-block;}
+    .status-pending { background: rgba(255, 255, 255, 0.05); color: #aaa; border-color: #444; }
+    .status-action { background: rgba(212, 175, 55, 0.1); color: var(--gold); border-color: var(--gold); animation: pulse-border 2s infinite;}
+    .status-escrow { background: rgba(30, 136, 229, 0.1); color: var(--blue); border-color: var(--blue); }
+    .status-shipped { background: rgba(76, 175, 80, 0.1); color: var(--success); border-color: var(--success); }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+    .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(212,175,55,0.2);}
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(212,175,55,0.4); }
+    .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; cursor: pointer;}
+    .btn-outline:hover { background: var(--gold); color: #000; }
 
-        /* Modals */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11, 14, 20, 0.7); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; opacity: 1; transition: opacity 0.3s ease; }
-        .modal-content { background: #ffffff; width: 100%; max-width: 1100px; max-height: 90vh; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column; md:flex-row; position: relative; animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .rfq-content { background: #ffffff; width: 100%; max-width: 850px; max-height: 90vh; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.2); overflow-y: auto; position: relative; animation: slideUp 0.4s ease; padding: 40px; }
-        
-        .modal-close { position: absolute; top: 20px; right: 20px; color: #9ca3af; font-size: 28px; cursor: pointer; z-index: 10; transition: 0.3s; line-height: 1; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f3f4f6; }
-        .modal-close:hover { color: #111827; background: #e5e7eb; transform: rotate(90deg); }
+    /* Modal Styling */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+    .modal-content { background: var(--slate); width: 100%; max-width: 800px; max-height: 90vh; border-radius: 12px; border: 1px solid var(--gold); overflow-y: auto; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+    .modal-header { position: sticky; top: 0; background: var(--slate); padding: 25px; border-bottom: 1px solid #333; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
+    
+    .financial-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px dashed #333; font-size: 14px; }
+    .financial-row.total { border-bottom: none; border-top: 2px solid var(--gold); margin-top: 10px; padding-top: 20px; font-size: 18px; font-weight: bold; color: #fff; }
 
-        /* Form Inputs Premium Theme */
-        .premium-input { width: 100%; padding: 12px 16px; background: #f9fafb; border: 1px solid #e5e7eb; color: #111827; border-radius: 8px; outline: none; transition: 0.3s; font-size: 14px; }
-        .premium-input:focus { border-color: #D4AF37; background: #ffffff; box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
-        .readonly-input { background: rgba(212,175,55,0.05); color: #b89225; border-color: rgba(212,175,55,0.2); font-weight: 600; cursor: not-allowed; }
-
-        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes pulse-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        .loader-pulse { animation: pulse-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    </style>
+    @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <header class="glass-header sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <h1 class="text-2xl font-bold tracking-widest text-gray-900 brand-font uppercase cursor-pointer" onclick="filterCat('All', document.getElementById('btn-cat-all'))">Muziris</h1>
-            
-            <div class="hidden md:flex flex-1 max-w-2xl mx-10">
-                <div class="relative w-full">
-                    <input type="text" id="searchInput" placeholder="Search enterprise catalog..." class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-full focus:ring-[#D4AF37] focus:border-[#D4AF37] block pl-10 p-3 outline-none transition-all shadow-sm" onkeyup="handleSearch()">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><i class="fas fa-search text-gray-400"></i></div>
-                </div>
-            </div>
+  <header class="sticky top-0 z-50 py-4 px-6 sm:px-10 flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold tracking-widest text-[#D4AF37] brand-font uppercase m-0 leading-none">Muziris</h1>
+      <span class="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-bold">Procurement Portal</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <a href="catalog.html" class="text-sm font-bold text-[#D4AF37] hover:text-white transition uppercase tracking-widest">Global Catalog</a>
+      <button onclick="logoutBuyer()" class="text-xs text-gray-400 hover:text-red-400 uppercase tracking-widest font-bold transition border border-gray-600 hover:border-red-400 px-4 py-2 rounded">Sign Out</button>
+    </div>
+  </header>
 
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200">
-                    <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase">Market</span>
-                    <select id="currencySelect" onchange="updateCurrency()" class="bg-transparent text-gray-900 text-xs font-bold outline-none cursor-pointer">
-                        <option value="CAD" selected>CAD ($)</option>
-                        <option value="USD">USD ($)</option>
-                        <option value="EUR">EUR (€)</option>
-                        <option value="GBP">GBP (£)</option>
-                        <option value="AUD">AUD ($)</option>
-                    </select>
-                </div>
-            </div>
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="flex justify-between items-end mb-8">
+      <div>
+        <h2 class="text-3xl font-bold text-white brand-font">Sourcing Command Center</h2>
+        <p class="text-sm text-gray-400 mt-2" id="ui-buyer-email">Logged in as: Loading...</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="kpi-card">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Active RFQs</div>
+        <h3 class="text-4xl text-white brand-font m-0" id="kpi-active">0</h3>
+      </div>
+      <div class="kpi-card" style="border-top-color: var(--blue);">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Funds Locked in Escrow</div>
+        <h3 class="text-4xl text-white brand-font m-0" id="kpi-escrow">$0.00</h3>
+        <div class="text-[10px] text-[var(--blue)] uppercase tracking-widest font-bold mt-2">Protected by Muziris Vault</div>
+      </div>
+      <div class="kpi-card" style="border-top-color: var(--success);">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Total Deals Completed</div>
+        <h3 class="text-4xl text-white brand-font m-0" id="kpi-completed">0</h3>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <div class="p-6 border-b border-[#333] flex justify-between items-center bg-[#111827]">
+        <h3 class="text-lg font-bold text-[#D4AF37] brand-font uppercase tracking-widest m-0">Procurement Contracts</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Contract ID</th>
+              <th>Date</th>
+              <th>Product & Supplier</th>
+              <th>Destination</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="rfq-body">
+            <tr><td colspan="6" class="text-center py-10 text-gray-500">Syncing with Muziris Ledger...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="quote-modal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 class="text-2xl font-bold text-[#D4AF37] brand-font m-0">Official Supplier Quote</h2>
+          <div class="text-xs text-gray-400 mt-1 font-mono" id="modal-rfq-id">RFQ-123456</div>
         </div>
-    </header>
+        <button class="text-gray-500 hover:text-white text-2xl transition" onclick="closeModal({target:{id:'quote-modal'}})">×</button>
+      </div>
+      
+      <div class="p-8">
+        <div class="bg-[#0b0e14] border border-[#333] p-6 rounded-lg mb-8">
+          <div class="text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-4 border-b border-[#333] pb-2">Supplier Message</div>
+          <p class="text-sm text-gray-300 italic" id="modal-supplier-msg">"We have reviewed your request and confirm we can meet your quality standards. Please see the finalized pricing below."</p>
+        </div>
 
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8">
+        <h3 class="text-sm text-[#D4AF37] font-bold uppercase tracking-widest mb-4 border-b border-[#333] pb-2">Financial Breakdown</h3>
+        <div id="modal-financials" class="mb-8">
+          </div>
+
+        <div class="bg-[rgba(30,136,229,0.1)] border border-[var(--blue)] p-6 rounded-lg mb-8">
+          <h4 class="text-[var(--blue)] font-bold text-sm uppercase tracking-widest mb-2 flex items-center gap-2"><i class="fas fa-lock"></i> Escrow Protection Active</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            By funding this contract, your money is securely locked in the Muziris Escrow Vault. 
+            The supplier will be notified to begin production immediately. <strong>Muziris will not release these funds to the supplier until 7 days after the shipment arrives at your destination.</strong>
+          </p>
+        </div>
+
+        <div class="flex gap-4">
+          <button class="flex-1 btn-outline py-4 text-sm" onclick="closeModal({target:{id:'quote-modal'}})">Review Later</button>
+          <button class="flex-[2] btn-gold py-4 text-sm flex justify-center items-center gap-2" onclick="fundEscrow()" id="btn-fund">
+            <i class="fas fa-shield-check"></i> SECURE FUNDS IN ESCROW (PAY)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    let currentBuyerEmail = "";
+    let allBuyerRfqs = [];
+    let activeRfqForModal = null;
+
+    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedBuyerEmail')) window.location.replace('index.html');
+    });
+
+    window.onload = function() {
+      currentBuyerEmail = localStorage.getItem('verifiedBuyerEmail');
+      if (!currentBuyerEmail) { window.location.replace('index.html'); return; }
+      
+      document.getElementById('ui-buyer-email').innerText = "Logged in as: " + currentBuyerEmail;
+      fetchBuyerRfqs();
+    };
+
+    function fetchBuyerRfqs() {
+      // In a real app, you'd hit an endpoint like /get-buyer-rfqs. 
+      // For this architecture, we will fetch the global RFQs and filter by this buyer's email.
+      fetch(API_BASE_URL + '/get-admin-rfqs', { // Re-using admin endpoint for architecture mockup
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey: "MUZIRIS_MASTER_KEY_2026" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.error) throw new Error(data.error);
         
-        <aside class="w-full md:w-64 flex-shrink-0">
-            <div class="sticky top-28 space-y-8">
-                <div>
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Categories</h3>
-                    <div class="space-y-2" id="categoryNav">
-                        </div>
-                </div>
-                <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i class="fas fa-shield-alt text-[#D4AF37] text-xl"></i>
-                        <h4 class="font-bold text-gray-900 text-sm tracking-wide">Escrow Protected</h4>
-                    </div>
-                    <p class="text-xs text-gray-500 leading-relaxed">All Muziris transactions are secured. Funds are held until destination delivery is confirmed.</p>
-                </div>
-            </div>
-        </aside>
+        // Filter only RFQs belonging to this buyer
+        allBuyerRfqs = data.filter(r => r.buyer_email && r.buyer_email.toLowerCase() === currentBuyerEmail.toLowerCase());
+        renderDashboard();
+      })
+      .catch(err => {
+        document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-10 text-red-400">Database Connection Failed.</td></tr>`;
+      });
+    }
 
-        <div class="flex-1">
-            <div class="flex justify-between items-end mb-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900 brand-font" id="current-category-title">Global Ledger</h2>
-                    <p class="text-sm text-gray-500 mt-1">Showing <span id="product-count" class="font-bold text-gray-900">0</span> verified products</p>
-                </div>
-            </div>
+    function renderDashboard() {
+      let activeCount = 0;
+      let completedCount = 0;
+      let escrowLocked = 0;
+      let html = "";
 
-            <div id="loader" class="text-center py-20">
-                <i class="fas fa-circle-notch fa-spin text-3xl text-[#D4AF37] mb-4"></i>
-                <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase loader-pulse">Establishing Secure Connection</h3>
-            </div>
+      if(allBuyerRfqs.length === 0) {
+        document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-500">No active sourcing requests. Browse the catalog to start.</td></tr>`;
+        return;
+      }
 
-            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            
-            <div id="empty-state" class="hidden text-center py-20 bg-white border border-dashed border-gray-300 rounded-xl mt-6">
-                <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
-                <h3 class="text-lg font-bold text-gray-900">No products found</h3>
-                <p class="text-sm text-gray-500 mt-1">Try adjusting your search or category filters.</p>
+      // Sort by newest first
+      allBuyerRfqs.sort((a,b) => new Date(b.submitted_date) - new Date(a.submitted_date));
+
+      allBuyerRfqs.forEach(rfq => {
+        let isActionable = (rfq.status === 'Supplier Replied' || rfq.status === 'Quote Sent');
+        let isEscrow = ['Funded Escrow', 'In Production', 'Shipped'].includes(rfq.status);
+        let isCompleted = (rfq.status === 'Completed');
+        
+        if(!isCompleted && rfq.status !== 'Cancelled') activeCount++;
+        if(isCompleted) completedCount++;
+
+        // Calculate Escrow if applicable
+        let contractTotal = 0;
+        if(rfq.supplier_quote) {
+           try {
+             let q = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
+             if(q.finalQuoteItems) q.finalQuoteItems.forEach(i => contractTotal += parseFloat(i.supplierTotalRaw || 0));
+             if(q.extraFees) {
+               contractTotal += parseFloat(q.extraFees.customizationFee || 0);
+               contractTotal += parseFloat(q.extraFees.sampleFee || 0);
+             }
+           } catch(e){}
+        }
+        
+        if(isEscrow) escrowLocked += contractTotal;
+
+        // Visuals
+        let statusBadge = `<span class="status-badge status-pending">${rfq.status}</span>`;
+        let actionBtn = `<button class="btn-outline opacity-50 cursor-not-allowed" disabled>Processing</button>`;
+
+        if(isActionable) {
+          statusBadge = `<span class="status-badge status-action">Requires Funding</span>`;
+          actionBtn = `<button class="btn-gold" onclick="openQuoteModal('${rfq.rfq_id}')">Review & Fund</button>`;
+        } else if (isEscrow) {
+          statusBadge = `<span class="status-badge status-escrow">${rfq.status}</span>`;
+          actionBtn = `<button class="btn-outline" onclick="alert('Tracking ID will be available once goods reach the port.')">Track Status</button>`;
+        } else if (isCompleted) {
+          statusBadge = `<span class="status-badge status-shipped">Delivered</span>`;
+          actionBtn = `<button class="btn-outline">View Receipt</button>`;
+        }
+
+        html += `
+          <tr>
+            <td class="font-mono text-[#D4AF37] font-bold">${rfq.rfq_id}</td>
+            <td class="text-gray-400">${new Date(rfq.submitted_date).toLocaleDateString()}</td>
+            <td>
+              <div class="font-bold text-white">${rfq.product_name}</div>
+              <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Supplier ID: ${rfq.supplier_id}</div>
+            </td>
+            <td class="text-gray-400">${rfq.destination || 'EXW (No Port)'}</td>
+            <td>${statusBadge}</td>
+            <td class="text-right">${actionBtn}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('rfq-body').innerHTML = html;
+      document.getElementById('kpi-active').innerText = activeCount;
+      document.getElementById('kpi-completed').innerText = completedCount;
+      document.getElementById('kpi-escrow').innerText = "$" + escrowLocked.toLocaleString(undefined, {minimumFractionDigits: 2});
+    }
+
+    function openQuoteModal(rfqId) {
+      activeRfqForModal = allBuyerRfqs.find(r => r.rfq_id === rfqId);
+      if(!activeRfqForModal || !activeRfqForModal.supplier_quote) return;
+
+      let q = typeof activeRfqForModal.supplier_quote === 'string' ? JSON.parse(activeRfqForModal.supplier_quote) : activeRfqForModal.supplier_quote;
+      
+      document.getElementById('modal-rfq-id').innerText = rfqId;
+      document.getElementById('modal-supplier-msg').innerText = `"${q.evidence?.supplierReply || 'Please review the official itemized quote below.'}"`;
+
+      let finHtml = "";
+      let grandTotal = 0;
+      let curr = activeRfqForModal.currency || "USD";
+
+      // Items
+      if(q.finalQuoteItems) {
+        q.finalQuoteItems.forEach(item => {
+          let itemTotal = parseFloat(item.supplierTotalRaw || 0);
+          grandTotal += itemTotal;
+          finHtml += `
+            <div class="financial-row">
+              <div>
+                <strong class="text-white">${item.variantName}</strong>
+                <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Qty: ${item.quantity} | Final Base Rate</div>
+              </div>
+              <div class="font-mono text-[#D4AF37]">$${itemTotal.toFixed(2)} ${curr}</div>
             </div>
+          `;
+        });
+      }
+
+      // Fees
+      if(q.extraFees) {
+        let custFee = parseFloat(q.extraFees.customizationFee || 0);
+        let sampFee = parseFloat(q.extraFees.sampleFee || 0);
+        
+        if(custFee > 0) {
+          grandTotal += custFee;
+          finHtml += `<div class="financial-row"><div><strong class="text-gray-300">Customization / Mold Fee</strong><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">${q.extraFees.customizationNotes || 'Branding setup'}</div></div><div class="font-mono text-gray-300">$${custFee.toFixed(2)} ${curr}</div></div>`;
+        }
+        if(sampFee > 0) {
+          grandTotal += sampFee;
+          finHtml += `<div class="financial-row"><div><strong class="text-gray-300">Physical Sample Production</strong></div><div class="font-mono text-gray-300">$${sampFee.toFixed(2)} ${curr}</div></div>`;
+        }
+      }
+
+      // Muziris Platform Fee (Simulated 2.5% for buyer)
+      let platformFee = grandTotal * 0.025;
+      grandTotal += platformFee;
+      finHtml += `<div class="financial-row"><div><strong class="text-gray-400">Muziris Escrow & Audit Fee (2.5%)</strong></div><div class="font-mono text-gray-400">$${platformFee.toFixed(2)} ${curr}</div></div>`;
+
+      // Total
+      finHtml += `
+        <div class="financial-row total">
+          <div>TOTAL LANDED COST</div>
+          <div class="text-[#D4AF37]">$${grandTotal.toFixed(2)} ${curr}</div>
         </div>
-    </main>
+      `;
 
-    <div id="product-modal" class="modal-overlay" onclick="closeModal(event, 'product-modal')">
-        <div class="modal-content flex-col md:flex-row" onclick="event.stopPropagation()">
-            <div class="modal-close" onclick="closeModal(event, 'product-modal')"><i class="fas fa-times"></i></div>
-            
-            <div class="md:w-5/12 bg-gray-50 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-gray-200">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 w-full max-w-md aspect-square flex items-center justify-center">
-                    <img id="m-main-img" class="max-w-full max-h-full object-contain mix-blend-multiply transition-all duration-300" src="" onerror="this.src='MC.png'">
-                </div>
-                <div class="flex gap-3 overflow-x-auto w-full justify-center pb-2" id="m-thumbs"></div>
-            </div>
-            
-            <div class="md:w-7/12 p-8 md:p-10 overflow-y-auto">
-                <div class="text-[10px] text-[#D4AF37] uppercase tracking-[0.2em] font-bold mb-2" id="m-cat">Category</div>
-                <h2 class="text-3xl text-gray-900 font-bold brand-font mb-4 leading-tight" id="m-title">Product Name</h2>
-                <div class="text-sm text-gray-500 leading-relaxed mb-8 pb-8 border-b border-gray-100" id="m-desc">Description goes here...</div>
-                
-                <div class="grid grid-cols-2 gap-6 mb-8 bg-gray-50 p-6 rounded-xl border border-gray-100">
-                    <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Enterprise ID</span><span class="text-sm font-mono text-[#D4AF37] font-bold" id="m-id"></span></div>
-                    <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Incoterms</span><span class="text-sm text-gray-900 font-medium" id="m-terms"></span></div>
-                    <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Est. Lead Time</span><span class="text-sm text-gray-900 font-medium" id="m-lead"></span></div>
-                    <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Factory Services</span><span class="text-sm text-gray-900 font-medium" id="m-srv"></span></div>
-                    <div class="col-span-2"><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Master Packaging</span><span class="text-sm text-gray-900 font-medium" id="m-pkg"></span></div>
-                </div>
+      document.getElementById('modal-financials').innerHTML = finHtml;
+      document.getElementById('quote-modal').style.display = 'flex';
+    }
 
-                <div class="overflow-hidden rounded-xl border border-gray-200 mb-8">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-gray-50 border-b border-gray-200">
-                            <tr>
-                                <th class="p-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Specification</th>
-                                <th class="p-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Volume Tier</th>
-                                <th class="p-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Unit</th>
-                                <th class="p-4 text-[10px] text-gray-500 uppercase tracking-widest font-bold text-right">Unit Price (<span class="ui-curr-symbol">CAD</span>)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="m-pricing-body" class="divide-y divide-gray-100 bg-white"></tbody>
-                    </table>
-                </div>
+    function fundEscrow() {
+      if(!activeRfqForModal) return;
+      
+      const btn = document.getElementById('btn-fund');
+      btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> PROCESSING PAYMENT...`;
+      btn.disabled = true;
 
-                <button class="w-full dark-void text-[#D4AF37] font-bold py-4 rounded-lg text-sm uppercase tracking-[0.15em] hover:bg-black transition shadow-lg border border-black" onclick="openRFQ()">
-                    Request Official Quote
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="rfq-modal" class="modal-overlay" onclick="closeModal(event, 'rfq-modal')">
-        <div class="rfq-content" onclick="event.stopPropagation()">
-            <div class="modal-close" onclick="closeModal(event, 'rfq-modal')"><i class="fas fa-times"></i></div>
-            
-            <div class="text-center mb-10 border-b border-gray-100 pb-8">
-                <h2 class="text-2xl font-bold text-gray-900 brand-font uppercase tracking-widest mb-2">Initiate Sourcing Contract</h2>
-                <p class="text-sm text-gray-500">Specify your volume requirements and logistics to receive a final landed quote.</p>
-            </div>
-
-            <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-6">
-                
-                <div>
-                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Sourcing Target</label>
-                    <input type="text" id="rfq-product-name" class="premium-input readonly-input" readonly>
-                    <input type="hidden" id="rfq-product-id">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Volume Configuration & Negotiation *</label>
-                    <div class="bg-gray-50 border border-gray-200 p-6 rounded-xl max-h-[400px] overflow-y-auto">
-                        <div class="flex gap-4 mb-4 text-[10px] text-gray-400 uppercase tracking-widest font-bold border-b border-gray-200 pb-3">
-                            <div class="flex-[2]">Matrix Details</div>
-                            <div class="flex-1 text-center">Req. Qty</div>
-                            <div class="flex-1 text-center">Est. Total</div>
-                            <div class="flex-[1.2] text-center">Target Total</div>
-                        </div>
-                        <div id="rfq-variants-container" class="space-y-3"></div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 italic mt-2">* Input desired quantity. Leave "Target Total" blank to accept standard pricing.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">White Label / Customization</label>
-                        <select id="rfq-customization" class="premium-input cursor-pointer">
-                            <option value="No">No - Standard Factory Spec</option>
-                            <option value="OEM">Yes - OEM (Brand Labeling)</option>
-                            <option value="ODM">Yes - ODM (Custom Mold/Design)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Pre-Production Sample</label>
-                        <select id="rfq-sample" class="premium-input cursor-pointer">
-                            <option value="Yes">Yes, require physical sample</option>
-                            <option value="No">No, proceed to mass production</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="bg-[#FAFAFA] border border-[#D4AF37]/30 p-6 rounded-xl shadow-inner">
-                    <label class="block text-xs text-[#D4AF37] uppercase tracking-widest font-bold mb-4">Compliance & Media Evidence</label>
-                    <div class="flex flex-wrap gap-6">
-                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-gray-900 transition">
-                            <input type="checkbox" id="req-certs" value="Yes" class="w-4 h-4 text-[#D4AF37] focus:ring-[#D4AF37] rounded border-gray-300"> 
-                            Factory Certifications (ISO, CE, FDA)
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-gray-900 transition">
-                            <input type="checkbox" id="req-video" value="Yes" class="w-4 h-4 text-[#D4AF37] focus:ring-[#D4AF37] rounded border-gray-300"> 
-                            Raw Production Video
-                        </label>
-                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-gray-900 transition">
-                            <input type="checkbox" id="req-photos" value="Yes" class="w-4 h-4 text-[#D4AF37] focus:ring-[#D4AF37] rounded border-gray-300"> 
-                            Unedited Product Photos
-                        </label>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Freight & Logistics Strategy *</label>
-                    <select id="rfq-logistics" onchange="toggleShippingAddress()" class="premium-input cursor-pointer" required>
-                        <option value="">Select Routing...</option>
-                        <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF to door)</option>
-                        <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB port)</option>
-                    </select>
-                </div>
-
-                <div id="destination-box" style="display:none;">
-                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Final Destination Hub</label>
-                    <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON, Canada (Required for DDP quote)">
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Registered Entity Name *</label>
-                        <input type="text" id="rfq-company" class="premium-input" placeholder="Company Ltd." required>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Authorized Email *</label>
-                        <input type="email" id="rfq-email" class="premium-input" placeholder="procurement@company.com" required>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Technical Notes / Addendums</label>
-                    <textarea id="rfq-notes" rows="4" class="premium-input" placeholder="Specify pantone colors, exact dimensions, or specialized packaging requests here..."></textarea>
-                </div>
-
-                <button type="submit" id="btn-submit-rfq" class="w-full bg-[#D4AF37] text-black font-bold py-4 rounded-lg text-sm uppercase tracking-[0.15em] hover:bg-[#b89225] transition shadow-lg mt-6">
-                    Submit Sourcing Request
-                </button>
-                <div class="text-center text-[10px] text-gray-400 mt-4 tracking-widest uppercase font-bold">
-                    <i class="fas fa-lock mr-1"></i> Secured by Muziris Enterprise Architecture
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        const API_BASE_URL = "https://muziris-api.onrender.com/api";
-        let allProducts = [];
-        let currentActiveId = "";
-        const exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
-        let activeCurrency = "CAD";
-
-        window.onload = function() {
-            fetch(API_BASE_URL + '/public-catalog', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({})
-            })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('loader').style.display = 'none';
-                if(data.products) {
-                    allProducts = data.products.reverse(); 
-                    renderCategories(data.categories);
-                    renderGrid(allProducts, 'All');
-                } else {
-                    document.getElementById('productGrid').innerHTML = "<p class='col-span-full text-center text-red-500 py-10'>System Offline. Could not reach enterprise database.</p>";
-                }
-            }).catch(err => {
-                document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold uppercase tracking-widest'>Connection Failed. Secure link offline.</div>";
-            });
-        };
-
-        function updateCurrency() {
-            activeCurrency = document.getElementById('currencySelect').value;
-            document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
-            handleSearch(); 
-            if(currentActiveId && document.getElementById('product-modal').style.display === 'flex') {
-                openModal(currentActiveId);
-            }
+      // Update status in backend
+      fetch(API_BASE_URL + '/update-rfq-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rfqId: activeRfqForModal.rfq_id, newStatus: 'Funded Escrow' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          document.getElementById('quote-modal').style.display = 'none';
+          alert("✓ PAYMENT SECURED IN ESCROW\n\nYour funds have been locked in the Muziris Vault. The supplier has been notified to begin production immediately.");
+          fetchBuyerRfqs(); // Refresh dashboard
+        } else {
+          alert("Payment Error: " + data.error);
         }
+        btn.innerHTML = `<i class="fas fa-shield-check"></i> SECURE FUNDS IN ESCROW (PAY)`;
+        btn.disabled = false;
+      })
+      .catch(err => {
+        alert("Network Error during payment processing.");
+        btn.innerHTML = `<i class="fas fa-shield-check"></i> SECURE FUNDS IN ESCROW (PAY)`;
+        btn.disabled = false;
+      });
+    }
 
-        function convertPrice(cadPrice) {
-            if(!cadPrice || isNaN(cadPrice)) return "0.00";
-            return (cadPrice * exchangeRates[activeCurrency]).toFixed(2);
-        }
+    function closeModal(e) {
+      if(e.target.id === 'quote-modal' || e.target.closest('.modal-close')) {
+        document.getElementById('quote-modal').style.display = 'none';
+      }
+    }
 
-        function renderCategories(catObj) {
-            const nav = document.getElementById('categoryNav');
-            nav.innerHTML = `<button id="btn-cat-all" class="cat-btn block w-full text-left px-4 py-3 rounded-xl text-sm font-bold bg-[#0b0e14] text-[#D4AF37] transition shadow-md active" onclick="filterCat('All', this)">Global Catalog</button>`;
-            for (const cat in catObj) {
-                nav.innerHTML += `<button class="cat-btn block w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition border border-transparent" onclick="filterCat('${cat}', this)">${cat}</button>`;
-            }
-        }
-
-        function filterCat(catName, btnElement) {
-            document.querySelectorAll('.cat-btn').forEach(b => {
-                b.className = "cat-btn block w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 transition border border-transparent";
-            });
-            btnElement.className = "cat-btn block w-full text-left px-4 py-3 rounded-xl text-sm font-bold bg-[#0b0e14] text-[#D4AF37] transition shadow-md active";
-            document.getElementById('searchInput').value = ""; 
-            document.getElementById('current-category-title').innerText = catName === 'All' ? 'Global Ledger' : catName;
-            
-            if(catName === 'All') renderGrid(allProducts, 'All');
-            else renderGrid(allProducts.filter(p => p.category === catName), catName);
-        }
-
-        function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allProducts.filter(p => 
-                p.name.toLowerCase().includes(query) || 
-                p.id.toLowerCase().includes(query) || 
-                p.category.toLowerCase().includes(query)
-            );
-            renderGrid(filtered, 'Search Results');
-        }
-
-        function renderGrid(products, title) {
-            const grid = document.getElementById('productGrid');
-            const emptyState = document.getElementById('empty-state');
-            grid.innerHTML = "";
-            document.getElementById('product-count').innerText = products.length;
-
-            if(products.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            }
-            emptyState.classList.add('hidden');
-
-            products.forEach(p => {
-                let fallbackImg = p.hero ? p.hero : 'MC.png';
-                let displayPrice = convertPrice(p.startingPriceCAD);
-                grid.innerHTML += `
-                <div class="product-card group cursor-pointer" onclick="openModal('${p.id}')">
-                    <div class="h-56 bg-[#f8f9fa] flex items-center justify-center relative img-container border-b border-gray-100 p-4">
-                        <img src="${fallbackImg}" alt="${p.name}" class="max-h-full max-w-full object-contain mix-blend-multiply" onerror="this.src='MC.png'" loading="lazy">
-                        <span class="absolute top-3 right-3 bg-white text-gray-900 px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest rounded shadow-sm border border-gray-100">
-                            <i class="fas fa-check-circle text-[#D4AF37] mr-1"></i> Verified
-                        </span>
-                    </div>
-                    <div class="p-6 flex flex-col justify-between h-[200px]">
-                        <div>
-                            <p class="text-[10px] text-[#D4AF37] uppercase tracking-[0.15em] font-bold mb-1 truncate">${p.category} ${p.subCategory ? ' / ' + p.subCategory : ''}</p>
-                            <h3 class="text-sm font-bold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-[#D4AF37] transition-colors">${p.name}</h3>
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-end mb-4">
-                                <div>
-                                    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Wholesale Base</p>
-                                    <p class="text-sm font-mono font-bold text-gray-900">${displayPrice} <span class="ui-curr-symbol">${activeCurrency}</span></p>
-                                </div>
-                            </div>
-                            <button class="w-full bg-white border border-gray-300 text-gray-900 font-bold py-2.5 rounded-lg text-[10px] uppercase tracking-[0.15em] group-hover:bg-[#0b0e14] group-hover:text-[#D4AF37] group-hover:border-[#0b0e14] transition-all duration-300 shadow-sm">
-                                View Specifications
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
-            });
-        }
-
-        function openModal(productId) {
-            const p = allProducts.find(x => x.id === productId);
-            if(!p) return;
-            currentActiveId = p.id;
-
-            document.getElementById('m-cat').innerText = p.category + (p.subCategory ? " / " + p.subCategory : "");
-            document.getElementById('m-title').innerText = p.name;
-            document.getElementById('m-desc').innerText = p.desc || "Standard enterprise configuration.";
-            document.getElementById('m-id').innerText = p.id;
-            document.getElementById('m-terms').innerText = p.incoterms || "FOB";
-            document.getElementById('m-lead').innerText = p.leadTime ? p.leadTime + " Days" : "TBD";
-            document.getElementById('m-srv').innerText = p.services || "Standard";
-            document.getElementById('m-pkg').innerText = p.pkg || "Export Grade Packaging";
-
-            const mainImg = document.getElementById('m-main-img');
-            const thumbRow = document.getElementById('m-thumbs');
-            mainImg.src = p.hero || 'MC.png';
-            thumbRow.innerHTML = "";
-            
-            let allImgs = [p.hero, ...p.gallery].filter(Boolean);
-            allImgs.forEach((url, idx) => {
-                let activeClass = idx === 0 ? 'border-[#D4AF37] opacity-100 shadow-sm' : 'border-transparent opacity-60 hover:opacity-100';
-                thumbRow.innerHTML += `<img class="w-16 h-16 object-cover border-2 rounded-lg cursor-pointer transition-all bg-white ${activeClass}" src="${url}" onclick="document.getElementById('m-main-img').src='${url}'; document.querySelectorAll('#m-thumbs img').forEach(t=>{t.classList.remove('border-[#D4AF37]', 'opacity-100', 'shadow-sm'); t.classList.add('border-transparent', 'opacity-60')}); this.classList.remove('border-transparent', 'opacity-60'); this.classList.add('border-[#D4AF37]', 'opacity-100', 'shadow-sm');" onerror="this.style.display='none'">`;
-            });
-
-            const tBody = document.getElementById('m-pricing-body');
-            tBody.innerHTML = "";
-            p.variants.forEach(v => {
-                let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
-                let convertedPrice = convertPrice(v.priceCAD);
-                tBody.innerHTML += `
-                <tr class="hover:bg-gray-50 transition">
-                    <td class="p-4 font-bold text-gray-900">${varName}</td>
-                    <td class="p-4 text-gray-600">${v.min} - ${v.max}</td>
-                    <td class="p-4 text-gray-600">${v.unit}</td>
-                    <td class="p-4 text-right font-bold text-[#D4AF37] font-mono">${convertedPrice}</td>
-                </tr>`;
-            });
-
-            document.getElementById('product-modal').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; 
-        }
-
-        function closeModal(e, modalId) {
-            if(e.target.id === modalId || e.target.closest('.modal-close')) {
-                document.getElementById(modalId).style.display = 'none';
-                if(document.getElementById('product-modal').style.display === 'none' && 
-                   document.getElementById('rfq-modal').style.display === 'none') {
-                   document.body.style.overflow = 'auto';
-                }
-            }
-        }
-
-        function openRFQ() {
-            document.getElementById('product-modal').style.display = 'none';
-            
-            const p = allProducts.find(x => x.id === currentActiveId);
-            document.getElementById('rfq-product-id').value = p.id;
-            document.getElementById('rfq-product-name').value = p.name + " (" + p.id + ")";
-            
-            const vContainer = document.getElementById('rfq-variants-container');
-            vContainer.innerHTML = ""; 
-            
-            p.variants.forEach((v, index) => {
-                let varName = v.type === "Standard" ? "Standard" : `${v.type}: ${v.opt}`;
-                let convertedPrice = convertPrice(v.priceCAD);
-                
-                vContainer.innerHTML += `
-                <div class="variant-rfq-row flex flex-col md:flex-row gap-4 items-center bg-white p-4 rounded-lg border border-gray-100 shadow-sm transition hover:border-gray-300">
-                    <div class="flex-[2] w-full text-sm">
-                        <strong class="text-gray-900">${varName}</strong><br>
-                        <span class="text-gray-500 text-xs mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
-                    </div>
-                    
-                    <div class="flex-1 w-full">
-                        <input type="number" min="0" class="v-qty premium-input py-2 text-center" 
-                               data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" 
-                               placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
-                    </div>
-                    
-                    <div class="flex-1 w-full text-center text-[#D4AF37] text-lg font-bold font-mono">
-                        <span class="v-total-display">0.00</span>
-                    </div>
-
-                    <div class="flex-[1.2] w-full">
-                        <input type="number" step="0.01" class="v-target premium-input py-2 text-center" placeholder="Target Total">
-                    </div>
-                </div>`;
-            });
-
-            document.getElementById('rfq-modal').style.display = 'flex';
-        }
-
-        function updateCalculatedTotal(inputElement) {
-            let qty = parseInt(inputElement.value) || 0;
-            let unitPrice = parseFloat(inputElement.getAttribute('data-buyerprice')) || 0;
-            let totalAmount = qty * unitPrice;
-            let row = inputElement.closest('.variant-rfq-row');
-            row.querySelector('.v-total-display').innerText = totalAmount.toFixed(2);
-        }
-
-        function toggleShippingAddress() {
-            const logisticsChoice = document.getElementById('rfq-logistics').value;
-            const destBox = document.getElementById('destination-box');
-            if(logisticsChoice === "Muziris Freight") {
-                destBox.style.display = "block";
-                document.getElementById('rfq-destination').required = true;
-            } else {
-                destBox.style.display = "none";
-                document.getElementById('rfq-destination').required = false;
-            }
-        }
-
-        function submitRFQ() {
-            const btn = document.getElementById('btn-submit-rfq');
-            let requestedVariants = [];
-            const variantRows = document.querySelectorAll('.variant-rfq-row');
-            
-            variantRows.forEach(row => {
-                let qtyInput = row.querySelector('.v-qty');
-                let targetInput = row.querySelector('.v-target');
-                let qty = parseInt(qtyInput.value);
-                
-                if (qty > 0) {
-                   let unitPriceBuyer = parseFloat(qtyInput.getAttribute('data-buyerprice')) || 0;
-                   let totalCurrentBuyer = (qty * unitPriceBuyer).toFixed(2);
-                   let totalTargetBuyer = targetInput.value ? parseFloat(targetInput.value).toFixed(2) : "";
-
-                   requestedVariants.push({
-                     variantId: qtyInput.getAttribute('data-vid'),
-                     variantName: qtyInput.getAttribute('data-vname'),
-                     currentPriceBuyer: totalCurrentBuyer,
-                     quantity: qty,
-                     targetPriceBuyer: totalTargetBuyer
-                   });
-                }
-            });
-
-            if(requestedVariants.length === 0) {
-                 alert("Please enter a quantity for at least one matrix variant.");
-                 return;
-            }
-
-            btn.innerText = "ENCRYPTING SOURCING REQUEST...";
-            btn.disabled = true;
-
-            const rfqData = {
-                productId: document.getElementById('rfq-product-id').value,
-                productName: document.getElementById('rfq-product-name').value,
-                requestedVariants: requestedVariants, 
-                customization: document.getElementById('rfq-customization').value,
-                sample: document.getElementById('rfq-sample').value,
-                reqCerts: document.getElementById('req-certs').checked ? "Yes" : "No",
-                reqVideo: document.getElementById('req-video').checked ? "Yes" : "No",
-                reqPhotos: document.getElementById('req-photos').checked ? "Yes" : "No",
-                logistics: document.getElementById('rfq-logistics').value,
-                destination: document.getElementById('rfq-destination').value,
-                company: document.getElementById('rfq-company').value,
-                email: document.getElementById('rfq-email').value,
-                notes: document.getElementById('rfq-notes').value,
-                currency: activeCurrency
-            };
-
-            fetch(API_BASE_URL + '/submit-rfq', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: rfqData })
-            })
-            .then(res => res.json())
-            .then(resp => {
-                if(resp.success) {
-                    document.getElementById('rfq-modal').style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                    alert("✓ CONTRACT SECURED.\n\nYour RFQ (" + resp.rfqId + ") has been submitted securely. An administrator will review your requirements shortly.");
-                    document.getElementById('rfqForm').reset();
-                } else {
-                    alert("DATABASE ERROR: " + resp.error);
-                }
-                btn.innerText = "SUBMIT SOURCING REQUEST";
-                btn.disabled = false;
-            })
-            .catch(err => {
-                alert("CONNECTION ERROR. SERVER UNREACHABLE.");
-                btn.innerText = "SUBMIT SOURCING REQUEST";
-                btn.disabled = false;
-            });
-        }
-    </script>
+    function logoutBuyer() {
+      localStorage.removeItem('verifiedBuyerEmail');
+      window.location.replace('index.html');
+    }
+  </script>
 </body>
 </html>
