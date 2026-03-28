@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Master Admin Control</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <script>
+    if (!localStorage.getItem('verifiedAdmin')) {
+      // If no admin token, kick them to the homepage
+      window.location.replace('index.html'); 
+    }
+  </script>
+
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+      --success: #4CAF50;
+      --alert: #ff5252;
+    }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; -webkit-font-smoothing: antialiased; }
+    .brand-font { font-family: 'Cinzel', serif; }
+    
+    header { background: rgba(11, 14, 20, 0.95); border-bottom: 1px solid #333; backdrop-filter: blur(10px); border-top: 3px solid #ff5252;}
+    
+    .kpi-card { background: var(--slate); border: 1px solid #333; border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.3s; }
+    
+    .table-container { background: var(--slate); border: 1px solid #333; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th { color: #888; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; padding: 16px 20px; border-bottom: 1px solid #333; background: rgba(0,0,0,0.4); }
+    td { padding: 16px 20px; border-bottom: 1px solid #222; color: #ccc; vertical-align: middle; }
+    tr:hover td { background-color: #1a1e29; }
+
+    .status-badge { padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border: 1px solid transparent; display: inline-block;}
+    .status-pending { background: rgba(212, 175, 55, 0.1); color: var(--gold); border-color: var(--gold); animation: pulse-border 2s infinite;}
+    .status-live { background: rgba(76, 175, 80, 0.1); color: var(--success); border-color: var(--success); }
+    
+    .btn-approve { background: rgba(76, 175, 80, 0.1); color: var(--success); border: 1px solid var(--success); padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+    .btn-approve:hover { background: var(--success); color: #000; }
+    
+    .btn-reject { background: rgba(255, 82, 82, 0.1); color: var(--alert); border: 1px solid var(--alert); padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+    .btn-reject:hover { background: var(--alert); color: #000; }
+
+    @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-50 py-4 px-6 flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <h1 class="text-2xl font-bold tracking-widest text-[#D4AF37] brand-font uppercase m-0 leading-none">Muziris</h1>
+      <span class="bg-red-500/20 text-red-400 border border-red-500/50 px-3 py-1 rounded text-[10px] uppercase tracking-widest font-bold">
+        <i class="fas fa-shield-alt mr-1"></i> System Admin
+      </span>
+    </div>
+    <button onclick="logoutAdmin()" class="text-xs text-gray-400 hover:text-red-400 uppercase tracking-widest font-bold transition border border-gray-600 hover:border-red-400 px-4 py-2 rounded">Lock Terminal</button>
+  </header>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold text-white brand-font">Quality Control & Ledger Oversight</h2>
+      <p class="text-sm text-gray-400 mt-2">Approve new factory listings and monitor platform liquidity.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="kpi-card" style="border-top-color: var(--gold);">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Pending Approvals</div>
+        <h3 class="text-4xl text-white brand-font m-0 text-[#D4AF37]" id="kpi-pending">0</h3>
+        <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">Awaiting QC Review</div>
+      </div>
+      <div class="kpi-card" style="border-top-color: var(--success);">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Live Catalog Size</div>
+        <h3 class="text-4xl text-white brand-font m-0" id="kpi-live">0</h3>
+        <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">Active Products</div>
+      </div>
+      <div class="kpi-card" style="border-top-color: #1E88E5;">
+        <div class="text-[11px] text-gray-400 uppercase tracking-widest font-bold mb-2">Total Escrow Volume</div>
+        <h3 class="text-4xl text-white brand-font m-0" id="kpi-escrow">$0.00</h3>
+        <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">Platform Liquidity</div>
+      </div>
+    </div>
+
+    <div class="table-container mb-12">
+      <div class="p-6 border-b border-[#333] flex justify-between items-center bg-[#111827]">
+        <h3 class="text-lg font-bold text-[#D4AF37] brand-font uppercase tracking-widest m-0"><i class="fas fa-search-check mr-2"></i> Factory Product Queue</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product Details</th>
+              <th>Supplier ID</th>
+              <th>Status</th>
+              <th class="text-right">Moderation Action</th>
+            </tr>
+          </thead>
+          <tbody id="product-queue-body">
+            <tr><td colspan="5" class="text-center py-10 text-gray-500">Fetching Global Ledger...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    const ADMIN_KEY = "MUZIRIS_MASTER_KEY_2026"; // Hardcoded for internal admin route
+
+    // 🟢 ANTI-BACK-BUTTON SECURITY
+    window.addEventListener('pageshow', function(event) {
+      if (!localStorage.getItem('verifiedAdmin')) window.location.replace('index.html');
+    });
+
+    window.onload = function() {
+      fetchAdminData();
+    };
+
+    function fetchAdminData() {
+      // 1. Fetch All Products (Pending & Live)
+      // 2. Fetch All RFQs (to calculate Global Escrow Volume)
+      Promise.all([
+        fetch(API_BASE_URL + '/admin/all-products', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ adminKey: ADMIN_KEY })
+        }).then(res => res.json()).catch(() => []), // Fallback to empty if route doesn't exist yet
+        
+        fetch(API_BASE_URL + '/get-admin-rfqs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ adminKey: ADMIN_KEY })
+        }).then(res => res.json()).catch(() => [])
+      ])
+      .then(([productsData, rfqData]) => {
+        let products = Array.isArray(productsData) ? productsData : (productsData.products || []);
+        let rfqs = Array.isArray(rfqData) ? rfqData : [];
+        
+        renderDashboard(products, rfqs);
+      })
+      .catch(err => {
+        document.getElementById('product-queue-body').innerHTML = `<tr><td colspan="5" class="text-center py-10 text-red-400">Master Database Connection Failed.</td></tr>`;
+      });
+    }
+
+    function renderDashboard(products, rfqs) {
+      let pendingCount = 0;
+      let liveCount = 0;
+      let html = "";
+
+      // Sort products so PENDING is at the top
+      products.sort((a, b) => {
+        if(a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+        if(a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+        return 0;
+      });
+
+      products.forEach(p => {
+        if(p.status === 'PENDING') pendingCount++;
+        if(p.status === 'LIVE' || p.status === 'ACTIVE') liveCount++;
+
+        let imgUrl = p.hero_img || p.hero || 'MC.png';
+        let statusBadge = p.status === 'PENDING' 
+          ? `<span class="status-badge status-pending">Pending Review</span>` 
+          : `<span class="status-badge status-live">Live in Catalog</span>`;
+
+        let actionBtns = p.status === 'PENDING'
+          ? `<div class="flex justify-end gap-2">
+               <button onclick="approveProduct('${p.product_id || p.id}')" class="btn-approve"><i class="fas fa-check"></i> Approve</button>
+               <button onclick="rejectProduct('${p.product_id || p.id}')" class="btn-reject"><i class="fas fa-times"></i> Reject</button>
+             </div>`
+          : `<span class="text-[10px] text-gray-500 uppercase tracking-widest font-bold border border-gray-600 px-2 py-1 rounded">No Action Needed</span>`;
+
+        html += `
+          <tr>
+            <td style="width: 80px;">
+              <div class="w-12 h-12 rounded bg-white p-1 flex items-center justify-center">
+                <img src="${imgUrl}" class="max-w-full max-h-full object-contain" onerror="this.src='MC.png'">
+              </div>
+            </td>
+            <td>
+              <div class="font-bold text-white text-sm">${p.product_name || p.name}</div>
+              <div class="text-[10px] text-gray-400 uppercase tracking-widest mt-1">${p.main_category || p.category} &rsaquo; ${p.sub_category || p.subCategory || ''}</div>
+              <div class="text-[10px] text-[#D4AF37] font-mono mt-1">${p.product_id || p.id}</div>
+            </td>
+            <td class="font-mono text-gray-300 text-xs">${p.supplier_id || 'Unknown'}</td>
+            <td>${statusBadge}</td>
+            <td class="text-right">${actionBtns}</td>
+          </tr>
+        `;
+      });
+
+      if(html === "") {
+        html = `<tr><td colspan="5" class="text-center py-10 text-gray-500">No products found in the database.</td></tr>`;
+      }
+
+      // Calculate Global Escrow Volume
+      let globalEscrow = 0;
+      rfqs.forEach(rfq => {
+        if(['Funded Escrow', 'In Production', 'Shipped'].includes(rfq.status)) {
+          if(rfq.supplier_quote) {
+            try {
+              let q = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
+              if(q.finalQuoteItems) q.finalQuoteItems.forEach(i => globalEscrow += parseFloat(i.supplierTotalRaw || 0));
+            } catch(e){}
+          }
+        }
+      });
+
+      // Update DOM
+      document.getElementById('product-queue-body').innerHTML = html;
+      document.getElementById('kpi-pending').innerText = pendingCount;
+      document.getElementById('kpi-live').innerText = liveCount;
+      document.getElementById('kpi-escrow').innerText = "$" + globalEscrow.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function approveProduct(productId) {
+      if(!confirm("Are you sure you want to push this product LIVE to the global catalog?")) return;
+
+      // Call your backend route to update status to LIVE
+      fetch(API_BASE_URL + '/admin/update-product-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey: ADMIN_KEY, productId: productId, newStatus: 'LIVE' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success || data.result === "SUCCESS") {
+          alert("Product Approved! It is now live in the catalog.");
+          fetchAdminData(); // Refresh table
+        } else {
+          alert("Error approving product: " + (data.error || "Unknown error"));
+        }
+      })
+      .catch(err => alert("Network Error."));
+    }
+
+    function rejectProduct(productId) {
+      let reason = prompt("Enter rejection reason (this will be sent to the supplier):", "Image quality is too low. Please re-upload with a solid white background.");
+      if(reason === null) return; // User cancelled
+
+      // Call your backend route to update status or delete
+      fetch(API_BASE_URL + '/admin/update-product-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey: ADMIN_KEY, productId: productId, newStatus: 'REJECTED', reason: reason })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success || data.result === "SUCCESS") {
+          alert("Product Rejected. The supplier has been notified.");
+          fetchAdminData(); // Refresh table
+        } else {
+          alert("Error rejecting product: " + (data.error || "Unknown error"));
+        }
+      })
+      .catch(err => alert("Network Error."));
+    }
+
+    function logoutAdmin() {
+      localStorage.removeItem('verifiedAdmin');
+      window.location.replace('index.html');
+    }
+  </script>
+</body>
+</html>
