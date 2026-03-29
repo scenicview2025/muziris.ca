@@ -271,13 +271,23 @@
       overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
     }
 
+    // 🟢 The Central Brain: Watch for Login State
     auth.onAuthStateChanged((user) => {
         if (user) {
+            // 🟢 STRICT ROLE ISOLATION: Check if they are actually a Supplier!
+            // Since the Supplier portal saves a 'verifiedSupplierId' to the browser memory, we can check for it.
+            if (localStorage.getItem('verifiedSupplierId')) {
+                alert("SECURITY LOCK:\n\nYour browser is currently logged in as an Enterprise Supplier. You cannot access the Buyer Procurement Hub with a Supplier account.\n\nPlease log out of the Supplier Portal first, or use a different browser.");
+                window.location.replace('index1.html');
+                return; // Stop running code
+            }
+
+            // User IS a Buyer! Let them into the dashboard.
             currentBuyerEmail = user.email;
-            let displayName = user.displayName || user.email.split('@')[0];
-            document.getElementById('ui-buyer-email').innerText = displayName;
-            fetchBuyerRfqs(); 
+            document.getElementById('ui-buyer-email').innerHTML = `Logged in as: <strong class="text-white">${currentBuyerEmail}</strong>`;
+            fetchBuyerRfqs(); // Go get their contracts
         } else {
+            // User IS NOT logged in! Kick them back to the front door.
             window.location.replace('index1.html');
         }
     });
