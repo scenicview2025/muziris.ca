@@ -7,267 +7,271 @@
     <link rel="icon" type="image/png" href="MC.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body { background-color: #FAFAFA; color: #111827; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        :root {
+            --gold: #D4AF37;
+            --gold-dark: #b89225;
+            --void: #0b0e14;
+            --text-dark: #111827;
+            --text-gray: #6b7280;
+            --border-light: #e5e7eb;
+        }
+
+        body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
         .brand-font { font-family: 'Cinzel', serif; }
         
-        /* Premium Header */
-        .glass-header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
-
-        /* Factory Banner */
-        .factory-banner { width: 100%; height: 350px; background: #111827 center/cover no-repeat; position: relative; }
-        .factory-banner::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(17,24,39,0.9) 100%); }
+        /* Premium Layout */
+        .glass-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
         
-        /* Profile Layout */
-        .profile-container { margin-top: -100px; position: relative; z-index: 10; }
-        .factory-logo { width: 160px; height: 160px; border-radius: 16px; background: #fff; border: 4px solid #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.15); object-fit: cover; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #D4AF37; font-family: 'Cinzel', serif; overflow: hidden; }
+        /* Storefront Hero */
+        .hero-banner { height: 320px; background-color: var(--void); background-size: cover; background-position: center; position: relative; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,14,20,0.9) 0%, rgba(11,14,20,0.2) 100%); }
+        
+        .profile-logo { width: 140px; height: 140px; border-radius: 20px; background: #fff; border: 4px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.1); object-fit: contain; padding: 10px; margin-top: -70px; position: relative; z-index: 10; }
+        
+        /* Product Card (Matches Catalog) */
+        .product-card { position: relative; transition: all 0.4s ease; background: #fff; border-radius: 16px; border: 1px solid rgba(0,0,0,0.04); overflow: hidden; cursor: pointer; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); border-color: rgba(212, 175, 55, 0.2); }
+        .img-container { background: #f8f9fa; position: relative; aspect-ratio: 1 / 1; border-bottom: 1px solid rgba(0,0,0,0.02); overflow: hidden; padding: 20px;}
+        .img-container img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 0.6s ease; }
+        .product-card:hover .img-container img { transform: scale(1.05); }
+        
+        .badge-verified { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.9); backdrop-filter: blur(4px); padding: 6px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; color: #111; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(0,0,0,0.05); }
 
-        /* Bento Cards */
-        .bento-card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
-        .bento-title { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #9ca3af; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
+        /* Factory Stats Box */
+        .stat-box { background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; text-align: center; }
+        .stat-value { font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .stat-label { font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; }
 
-        /* Product Grid (Matches Catalog) */
-        .product-card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.04); border-radius: 12px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; cursor: pointer; }
-        .product-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.02); border-color: rgba(212, 175, 55, 0.3); }
-
-        /* Buttons */
-        .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 10px 20px rgba(212,175,55,0.2);}
-        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(212,175,55,0.4); }
-        .btn-disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; box-shadow: none; pointer-events: none;}
+        /* Tabs */
+        .tab-btn { font-size: 14px; font-weight: 600; color: var(--text-gray); padding: 16px 0; border-bottom: 2px solid transparent; transition: 0.3s; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tab-btn:hover { color: var(--text-dark); }
+        .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body>
 
-    <header class="glass-header sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="catalog.html" class="text-2xl font-bold tracking-widest text-gray-900 brand-font uppercase text-decoration-none">Muziris</a>
-            <a href="catalog.html" class="text-xs font-bold uppercase tracking-widest text-[#D4AF37] hover:text-black transition">← Back to Global Catalog</a>
+    <header class="glass-header">
+        <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between gap-8">
+            <h1 class="text-2xl font-bold tracking-widest text-black brand-font uppercase cursor-pointer" onclick="window.location.href='catalog.html'">Muziris</h1>
+            
+            <div class="flex items-center gap-6 text-gray-600">
+                <a href="catalog.html" class="text-sm font-bold uppercase tracking-widest hover:text-[var(--gold)] transition">Back to Catalog</a>
+                <a href="buyer-dashboard.html" class="hover:text-[var(--gold)] transition"><i class="far fa-user text-xl"></i></a>
+            </div>
         </div>
     </header>
 
-    <div id="loading" class="text-center py-32">
-        <i class="fas fa-circle-notch fa-spin text-4xl text-[#D4AF37] mb-4"></i>
-        <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Connecting to Factory Profile...</h3>
+    <div id="loader" class="min-h-[60vh] flex flex-col items-center justify-center">
+        <i class="fas fa-circle-notch fa-spin text-4xl text-[var(--gold)] mb-4"></i>
+        <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Fetching Enterprise Profile...</h3>
     </div>
 
-    <div id="factory-content" style="display: none;">
-        <div id="ui-banner" class="factory-banner"></div>
+    <div id="storefront" style="display: none;">
+        <div class="hero-banner" id="sf-banner">
+            <div class="hero-overlay"></div>
+            <div class="max-w-[1200px] mx-auto px-6 h-full flex items-end pb-8 relative z-10">
+                <div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20 text-white text-xs font-bold uppercase tracking-widest">
+                    <i class="fas fa-shield-check text-[var(--gold)]"></i> Verified Enterprise Supplier
+                </div>
+            </div>
+        </div>
 
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 profile-container pb-20">
-            
-            <div class="flex flex-col md:flex-row gap-8 items-end mb-12">
-                <div id="ui-logo" class="factory-logo">M</div>
+        <div class="max-w-[1200px] mx-auto px-6 mb-12">
+            <div class="flex flex-col md:flex-row gap-8 items-start md:items-end mb-8">
+                <img id="sf-logo" src="MC.png" class="profile-logo">
                 <div class="flex-1 pb-2">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/30 px-3 py-1 rounded text-[10px] uppercase tracking-widest font-bold">
-                            <i class="fas fa-check-circle mr-1"></i> Verified Supplier
-                        </span>
-                        <span class="text-gray-500 font-mono text-xs font-bold" id="ui-id">ID: ...</span>
+                    <h1 class="text-4xl font-bold text-gray-900 brand-font mb-2" id="sf-name">Company Name</h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-500">
+                        <span id="sf-country"><i class="fas fa-map-marker-alt text-gray-400 mr-1"></i> Location</span>
+                        <span>•</span>
+                        <span id="sf-id" class="font-mono bg-gray-100 px-2 py-0.5 rounded text-xs">ID: Loading</span>
+                        <a id="sf-website" href="#" target="_blank" class="text-[var(--gold)] hover:underline hidden"><i class="fas fa-external-link-alt mr-1"></i> Official Site</a>
                     </div>
-                    <h1 class="text-4xl md:text-5xl font-bold text-white brand-font tracking-wide" id="ui-name">Company Name</h1>
                 </div>
-                <div class="pb-2 flex gap-4">
-                    <a href="#" id="ui-pdf-btn" class="btn-gold btn-disabled" target="_blank">
-                        <i class="fas fa-file-pdf text-lg"></i> Download Catalog PDF
-                    </a>
+                <div class="pb-2 w-full md:w-auto">
+                    <button class="w-full md:w-auto bg-[var(--void)] text-[var(--gold)] px-8 py-3 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-[#1a1f2e] transition shadow-lg" onclick="alert('Message system connecting to Hub...')">
+                        <i class="far fa-envelope mr-2"></i> Contact Factory
+                    </button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <div class="lg:col-span-1 space-y-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div class="stat-box">
+                    <div class="stat-value" id="sf-year">-</div>
+                    <div class="stat-label">Year Established</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="sf-emp">-</div>
+                    <div class="stat-label">Employees</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value text-[var(--gold)]" id="sf-certs">Pending</div>
+                    <div class="stat-label">Certifications</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="sf-markets">Global</div>
+                    <div class="stat-label">Main Markets</div>
+                </div>
+            </div>
+
+            <div class="flex gap-8 border-b border-gray-200 mb-8">
+                <button class="tab-btn active" id="tab-products" onclick="switchTab('products')">Products & Inventory</button>
+                <button class="tab-btn" id="tab-about" onclick="switchTab('about')">Company Profile</button>
+            </div>
+
+            <div id="content-products">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 brand-font">Factory Direct Catalog</h3>
+                    <span class="text-sm text-gray-500"><strong id="sf-product-count" class="text-black">0</strong> active items</span>
+                </div>
+                <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    </div>
+                <div id="empty-state" class="hidden text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300 mt-6">
+                    <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">No active products</h3>
+                    <p class="text-sm text-gray-500">This supplier hasn't published their catalog yet.</p>
+                </div>
+            </div>
+
+            <div id="content-about" style="display: none;">
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-lg font-bold text-gray-900 brand-font mb-4 uppercase tracking-widest border-b border-gray-100 pb-4">About the Manufacturer</h3>
+                    <p class="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm" id="sf-bio">No company biography provided.</p>
                     
-                    <div class="bento-card">
-                        <div class="bento-title"><i class="fas fa-building text-[#D4AF37]"></i> Know Your Supplier</div>
-                        <p class="text-sm text-gray-600 leading-relaxed mb-6" id="ui-bio">No description provided by the supplier.</p>
-                        
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                                <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Established</span>
-                                <span class="text-sm font-bold text-gray-900" id="ui-year">-</span>
-                            </div>
-                            <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                                <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Factory Size</span>
-                                <span class="text-sm font-bold text-gray-900" id="ui-emp">-</span>
-                            </div>
-                            <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                                <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Export Markets</span>
-                                <span class="text-sm font-bold text-gray-900 text-right w-1/2" id="ui-markets">-</span>
-                            </div>
-                            <div class="flex justify-between items-center py-3">
-                                <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Nearest Port</span>
-                                <span class="text-sm font-bold text-gray-900" id="ui-port">-</span>
-                            </div>
+                    <h3 class="text-lg font-bold text-gray-900 brand-font mb-4 uppercase tracking-widest border-b border-gray-100 pb-4 mt-10">Logistics & Shipping</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div>
+                            <span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Nearest Export Port</span>
+                            <strong class="text-gray-900 text-sm" id="sf-port">Not specified</strong>
                         </div>
-                    </div>
-
-                    <div class="bento-card">
-                        <div class="bento-title"><i class="fas fa-certificate text-[#D4AF37]"></i> Compliance & Certificates</div>
-                        <div id="ui-certs" class="flex flex-wrap gap-2 mt-4">
-                            <span class="text-sm text-gray-500 italic">No certificates listed.</span>
+                        <div>
+                            <span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Incoterms Supported</span>
+                            <strong class="text-gray-900 text-sm">FOB, CIF, EXW, DDP (via Muziris)</strong>
                         </div>
-                    </div>
-
-                    <div class="bento-card bg-[#0b0e14] border-black">
-                        <div class="flex items-center gap-4 mb-4">
-                            <i class="fas fa-shield-alt text-[#D4AF37] text-3xl"></i>
-                            <div>
-                                <h4 class="font-bold text-white text-sm tracking-wide uppercase">Muziris Escrow Protection</h4>
-                                <p class="text-xs text-gray-400 mt-1">This supplier operates under the strict Muziris milestone payment system.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="lg:col-span-2">
-                    <div class="flex justify-between items-end mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900 brand-font">Factory Catalog</h2>
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest"><span id="product-count" class="text-[#D4AF37]">0</span> Active Items</span>
-                    </div>
-
-                    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        </div>
-
-                    <div id="empty-state" class="hidden text-center py-20 bg-white border border-dashed border-gray-300 rounded-xl mt-6">
-                        <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
-                        <h3 class="text-lg font-bold text-gray-900">No public products</h3>
-                        <p class="text-sm text-gray-500 mt-1">This supplier has not verified any items to the global ledger yet.</p>
                     </div>
                 </div>
-
             </div>
-        </main>
+        </div>
     </div>
 
     <script>
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
+        const exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
+        let activeCurrency = "CAD";
+        let supplierId = "";
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const supplierId = urlParams.get('id');
+            supplierId = urlParams.get('id');
 
             if (!supplierId) {
-                document.getElementById('loading').innerHTML = "<div class='text-red-500 font-bold uppercase tracking-widest py-20'>INVALID SECURE LINK. NO FACTORY ID FOUND.</div>";
+                alert("Invalid Storefront URL. Redirecting to Catalog.");
+                window.location.href = "catalog.html";
                 return;
             }
 
-            document.getElementById('ui-id').innerText = "ID: " + supplierId;
-
-            // Fetch Profile and Inventory simultaneously
+            // Load Profile AND Catalog Data simultaneously
             Promise.all([
-                fetch(API_BASE_URL + '/get-supplier-profile', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ supplierId: supplierId })
-                }).then(res => res.json()),
-                
-                fetch(API_BASE_URL + '/get-inventory', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: supplierId })
-                }).then(res => res.json())
+                fetch(API_BASE_URL + '/get-supplier-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ supplierId }) }).then(r => r.json()),
+                fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) }).then(r => r.json())
             ])
-            .then(([profileData, inventoryData]) => {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('factory-content').style.display = 'block';
+            .then(([profile, catalogData]) => {
+                document.getElementById('loader').style.display = 'none';
+                
+                if (profile.error) {
+                    alert("Supplier not found.");
+                    window.location.href = "catalog.html";
+                    return;
+                }
 
-                renderProfile(profileData);
-                renderInventory(inventoryData);
+                renderProfile(profile);
+
+                // Filter the global catalog for ONLY this supplier's products
+                if(catalogData.products) {
+                    const supplierProducts = catalogData.products.filter(p => p.supplierId === supplierId);
+                    renderGrid(supplierProducts);
+                }
+                
+                document.getElementById('storefront').style.display = 'block';
             })
             .catch(err => {
-                document.getElementById('loading').innerHTML = "<div class='text-red-500 font-bold uppercase tracking-widest py-20'>FACTORY OFFLINE OR NOT FOUND.</div>";
+                document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold'>Database Connection Failed.</div>";
             });
         };
 
         function renderProfile(data) {
-            if (data.error) return;
-
-            document.getElementById('ui-name').innerText = data.company_name || "Muziris Factory";
-            if (data.banner_url) document.getElementById('ui-banner').style.backgroundImage = `url('${data.banner_url}')`;
+            document.title = `Muziris | ${data.company_name}`;
+            document.getElementById('sf-name').innerText = data.company_name;
+            document.getElementById('sf-id').innerText = "ID: " + data.supplier_id;
+            document.getElementById('sf-country').innerHTML = `<i class="fas fa-map-marker-alt text-gray-400 mr-1"></i> ${data.country}`;
             
-            if (data.logo_url) {
-                document.getElementById('ui-logo').innerHTML = `<img src="${data.logo_url}" class="w-full h-full object-cover">`;
-            } else {
-                document.getElementById('ui-logo').innerText = (data.company_name || "M").charAt(0).toUpperCase();
+            if (data.banner_url) document.getElementById('sf-banner').style.backgroundImage = `url('${data.banner_url}')`;
+            if (data.logo_url) document.getElementById('sf-logo').src = data.logo_url;
+            if (data.company_bio) document.getElementById('sf-bio').innerText = data.company_bio;
+            
+            document.getElementById('sf-year').innerText = data.year_established || "-";
+            document.getElementById('sf-emp').innerText = data.employee_count || "-";
+            document.getElementById('sf-certs').innerText = data.certifications || "Standard";
+            document.getElementById('sf-markets').innerText = data.export_markets || "Global";
+            document.getElementById('sf-port').innerText = data.nearest_port || "Factory Default";
+
+            if (data.website) {
+                const webBtn = document.getElementById('sf-website');
+                webBtn.href = data.website.startsWith('http') ? data.website : 'https://' + data.website;
+                webBtn.style.display = 'inline-block';
             }
-
-            if (data.company_bio) document.getElementById('ui-bio').innerText = data.company_bio;
-            if (data.year_established) document.getElementById('ui-year').innerText = data.year_established;
-            if (data.employee_count) document.getElementById('ui-emp').innerText = data.employee_count;
-            if (data.export_markets) document.getElementById('ui-markets').innerText = data.export_markets;
-            if (data.nearest_port) document.getElementById('ui-port').innerText = data.nearest_port;
-
-            // Parse Certificates
-            if (data.certifications && data.certifications.trim() !== "") {
-                const certs = data.certifications.split(',');
-                let certHtml = "";
-                certs.forEach(c => {
-                    if (c.trim()) {
-                        certHtml += `<span class="bg-gray-100 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-md text-[11px] font-bold uppercase tracking-widest flex items-center gap-2"><i class="fas fa-award text-[#D4AF37]"></i> ${c.trim()}</span>`;
-                    }
-                });
-                document.getElementById('ui-certs').innerHTML = certHtml;
-            }
-
-            // Enable PDF Button if catalog exists. (Fallback: Check if any inventory item has a catalog_pdf)
-            // Note: If you saved the PDF to the profile, it will be in `data.catalog_url`. 
-            // If it's attached to individual products, we will handle it in renderInventory.
         }
 
-        function renderInventory(products) {
+        function convertPrice(cadPrice) {
+            if(!cadPrice || isNaN(cadPrice)) return "0.00";
+            return (cadPrice * exchangeRates[activeCurrency]).toFixed(2);
+        }
+
+        function renderGrid(products) {
             const grid = document.getElementById('productGrid');
             const emptyState = document.getElementById('empty-state');
-            
-            // Only show LIVE or ACTIVE products to buyers
-            let liveProducts = Array.isArray(products) ? products.filter(p => p.status === 'LIVE' || p.status === 'ACTIVE') : [];
-            
-            document.getElementById('product-count').innerText = liveProducts.length;
+            grid.innerHTML = "";
+            document.getElementById('sf-product-count').innerText = products.length;
 
-            if (liveProducts.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            }
+            if(products.length === 0) { emptyState.classList.remove('hidden'); return; }
+            emptyState.classList.add('hidden');
 
-            let foundPdf = false;
-
-            liveProducts.forEach(p => {
-                // If a product has a PDF catalog, enable the main download button
-                if(p.catalog_pdf && !foundPdf) {
-                    const btn = document.getElementById('ui-pdf-btn');
-                    btn.href = p.catalog_pdf;
-                    btn.classList.remove('btn-disabled');
-                    foundPdf = true;
-                }
-
-                let fallbackImg = p.hero_img || 'MC.png';
-                
-                // Extract starting price from matrix
-                let startingPrice = "N/A";
-                try {
-                    let matrix = typeof p.pricing_matrix === 'string' ? JSON.parse(p.pricing_matrix) : p.pricing_matrix;
-                    if(matrix && matrix.length > 0) startingPrice = matrix[0].supplierPriceRaw || matrix[0].price;
-                } catch(e){}
+            products.forEach(p => {
+                let fallbackImg = p.hero ? p.hero : 'MC.png';
+                let displayPrice = convertPrice(p.startingPriceCAD);
 
                 grid.innerHTML += `
-                <div class="product-card group" onclick="window.location.href='catalog.html'">
-                    <div class="h-48 bg-[#f8f9fa] flex items-center justify-center relative border-b border-gray-100 p-4">
-                        <img src="${fallbackImg}" class="max-h-full max-w-full object-contain mix-blend-multiply" onerror="this.src='MC.png'" loading="lazy">
+                <div class="product-card" onclick="window.location.href='catalog.html?id=${p.id}'">
+                    <div class="img-container">
+                        <span class="badge-verified">Verified</span>
+                        <img src="${fallbackImg}" alt="${p.name}" onerror="this.src='MC.png'" loading="lazy">
                     </div>
-                    <div class="p-5 flex flex-col justify-between">
-                        <div>
-                            <p class="text-[9px] text-[#D4AF37] uppercase tracking-[0.15em] font-bold mb-1 truncate">${p.main_category}</p>
-                            <h3 class="text-sm font-bold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-[#D4AF37] transition-colors">${p.product_name}</h3>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-gray-100">
-                            <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Starting Price</p>
-                            <p class="text-sm font-mono font-bold text-gray-900">$${startingPrice}</p>
+                    <div class="p-5">
+                        <p class="text-[10px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1">${p.category}</p>
+                        <h3 class="text-sm font-bold text-gray-900 leading-snug line-clamp-2 mb-4 h-10">${p.name}</h3>
+                        
+                        <div class="flex justify-between items-end border-t border-gray-100 pt-4">
+                            <div>
+                                <p class="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-0.5">Starting Price</p>
+                                <p class="text-base font-mono font-bold text-gray-900">$${displayPrice} <span class="text-xs text-gray-500 font-sans">${activeCurrency}</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>`;
             });
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-products').classList.remove('active');
+            document.getElementById('tab-about').classList.remove('active');
+            document.getElementById('content-products').style.display = 'none';
+            document.getElementById('content-about').style.display = 'none';
+
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('content-' + tab).style.display = 'block';
         }
     </script>
 </body>
