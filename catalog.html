@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="MC.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -27,62 +27,61 @@
         /* Premium Layout */
         .glass-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
         
-        /* 🟢 EXACT MATCH: Sidebar Styling */
-        .sidebar-link { display: block; padding: 12px 20px; color: var(--text-gray); font-size: 14px; font-weight: 500; transition: all 0.3s; cursor: pointer; border-radius: 12px; margin-bottom: 4px; }
+        /* Sidebar Styling */
+        .sidebar-link { display: block; padding: 10px 16px; color: var(--text-gray); font-size: 14px; font-weight: 500; transition: all 0.2s; cursor: pointer; border-radius: 8px; margin-bottom: 2px; }
         .sidebar-link:hover { background: #f3f4f6; color: var(--text-dark); }
         .sidebar-link.active { background-color: var(--void); color: var(--gold); font-weight: 700; box-shadow: 0 4px 12px rgba(11, 14, 20, 0.15); }
-        .sidebar-header { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; color: #9ca3af; padding-left: 20px; }
+        .sidebar-header { font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; color: #9ca3af; padding-left: 16px; }
 
-        /* 🟢 EXACT MATCH: Muziris Luxury Buttons */
+        /* Muziris Luxury Buttons */
         .btn-void-gold { background-color: var(--void); color: var(--gold); border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn-void-gold:hover { background-color: #1a1f2e; box-shadow: 0 8px 20px rgba(11, 14, 20, 0.2); transform: translateY(-1px); }
         
         .btn-solid-gold { background-color: #d1b046; color: #000000; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; }
         .btn-solid-gold:hover { background-color: #c2a138; transform: translateY(-1px); }
 
-        /* Product Card */
-        .product-card { position: relative; transition: all 0.4s ease; background: #fff; border-radius: 16px; border: 1px solid rgba(0,0,0,0.04); overflow: hidden; }
-        .product-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); border-color: rgba(212, 175, 55, 0.2); }
-        .img-container { background: #f8f9fa; position: relative; aspect-ratio: 1 / 1; border-bottom: 1px solid rgba(0,0,0,0.02); overflow: hidden; padding: 20px;}
-        .img-container img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 0.6s ease; }
-        .product-card:hover .img-container img { transform: scale(1.05); }
+        /* 🟢 NEW: Highly Optimized Product Card */
+        .product-card { position: relative; transition: all 0.3s ease; background: #fff; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); overflow: hidden; display: flex; flex-direction: column; cursor: pointer;}
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0,0,0,0.08); border-color: rgba(212, 175, 55, 0.4); }
         
+        /* 🟢 NEW: Card Image Container & Zoom Effect */
+        .img-container { background: #fdfdfd; position: relative; aspect-ratio: 1 / 1; border-bottom: 1px solid rgba(0,0,0,0.03); overflow: hidden; padding: 12px; }
+        .img-layer { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .product-card:hover .img-layer.opacity-100 { transform: scale(1.08); }
+        
+        /* 🟢 NEW: Verified Badge (Top Right Pill) */
+        .badge-verified { position: absolute; top: 12px; right: 12px; background: #ffffff; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #111; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 6px rgba(0,0,0,0.05); z-index: 30; display: flex; align-items: center; gap: 4px; }
+        .badge-verified i { color: var(--gold); font-size: 11px; }
+
         /* Views */
         #catalog-view { display: flex; transition: opacity 0.3s; }
         #product-page-view { display: none; background: #FAFAFA; min-height: 100vh; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ========================================= */
-        /* 🟢 EXACT MATCH: RFQ MODAL STYLING         */
-        /* ========================================= */
+        /* RFQ MODAL STYLING */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(240, 240, 240, 0.9); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 16px; overflow-y: auto;}
         .rfq-content { background: #ffffff; width: 100%; max-width: 900px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); padding: 50px 60px; position: relative; animation: modalSlide 0.3s ease; margin: auto;}
         @keyframes modalSlide { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        /* 🟢 EXACT MATCH: Close Button */
         .modal-close { position: absolute; top: 24px; right: 24px; width: 40px; height: 40px; background: #f3f4f6; color: #6b7280; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: all 0.2s ease; }
         .modal-close:hover { background: #e5e7eb; color: #111; transform: rotate(90deg); }
 
-        /* Premium Inputs */
         .premium-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid var(--border-light); color: var(--text-dark); border-radius: 8px; outline: none; transition: all 0.2s; font-size: 14px; font-weight: 500; }
-        .premium-input::placeholder { color: #9ca3af; font-weight: 400; }
         .premium-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
-        
-        /* 🟢 EXACT MATCH: Target Box (Gold tinted) */
         .target-box { background: var(--gold-light); border: 1px solid var(--gold-border); color: var(--gold-dark); font-weight: 600; font-size: 15px; cursor: not-allowed; }
         
-        /* 🟢 EXACT MATCH: Matrix Styling */
         .matrix-container { border: 1px solid var(--border-light); border-radius: 12px; padding: 24px; background: #ffffff; }
         .matrix-header { display: flex; font-size: 10px; color: #9ca3af; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-light); padding-bottom: 16px; margin-bottom: 20px;}
         .matrix-row { display: flex; align-items: center; gap: 24px; padding: 16px; background: #ffffff; border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 12px; }
         .matrix-input { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; font-weight: 500; }
         
-        /* 🟢 EXACT MATCH: Compliance Box */
         .compliance-box { border: 1px solid var(--gold-border); border-radius: 12px; padding: 24px; background: var(--gold-light); }
         .compliance-title { color: var(--gold-dark); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
-
-        /* Form Labels */
         .form-label { display: block; font-size: 11px; color: #6b7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+        
+        .luxury-checkbox { width: 18px; height: 18px; border: 2px solid #d1d5db; border-radius: 4px; appearance: none; outline: none; cursor: pointer; position: relative; transition: 0.2s; background: #fff; margin-top: 2px;}
+        .luxury-checkbox:checked { background-color: var(--gold); border-color: var(--gold); }
+        .luxury-checkbox:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
     </style>
 </head>
 <body>
@@ -94,12 +93,12 @@
             <div class="flex-1 max-w-2xl relative hidden md:block">
                 <div class="relative w-full">
                     <i class="fas fa-search absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="text" id="searchInput" placeholder="Search enterprise catalog..." class="w-full bg-[#f3f4f6] border border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] text-sm font-medium rounded-full py-3.5 pl-12 pr-6 outline-none transition-all" onkeyup="handleSearch()">
+                    <input type="text" id="searchInput" placeholder="Search enterprise catalog..." class="w-full bg-[#f3f4f6] border border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] focus:ring-4 focus:ring-[var(--gold)]/10 text-sm font-medium rounded-full py-3 pl-12 pr-6 outline-none transition-all" onkeyup="handleSearch()">
                 </div>
             </div>
 
             <div class="flex items-center gap-6 text-gray-600 flex-shrink-0">
-                <div class="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 flex items-center gap-2">
+                <div class="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer">
                     <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
                     <select id="currencySelect" onchange="updateCurrency()" class="bg-transparent text-sm font-bold text-gray-900 outline-none cursor-pointer">
                         <option value="CAD" selected>CAD</option>
@@ -113,28 +112,28 @@
         </div>
     </header>
 
-    <main id="catalog-view" class="max-w-[1400px] mx-auto px-6 py-10 flex flex-col md:flex-row gap-12">
+    <main id="catalog-view" class="max-w-[1400px] mx-auto px-4 md:px-6 py-8 flex flex-col md:flex-row gap-8">
         
-        <aside class="w-full md:w-64 flex-shrink-0 hidden md:block sticky top-28 h-fit">
-            <h2 class="sidebar-header">Explore</h2>
-            <div class="space-y-1 mb-8" id="categoryNav">
+        <aside class="w-full md:w-56 flex-shrink-0 hidden md:block sticky top-24 h-fit">
+            <h2 class="sidebar-header">Explore Categories</h2>
+            <div class="space-y-1" id="categoryNav">
                 </div>
         </aside>
 
         <div class="flex-1">
-            <div class="flex justify-between items-end mb-8 pb-4 border-b border-gray-100">
+            <div class="flex justify-between items-end mb-6 pb-2 border-b border-gray-100">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-900 brand-font" id="current-category-title">Global Catalog</h2>
-                    <p class="text-sm text-gray-500 mt-1">Showing <span id="product-count" class="font-bold text-black">0</span> verified products</p>
                 </div>
+                <p class="text-xs text-gray-500 uppercase tracking-widest font-bold"><span id="product-count" class="text-[var(--gold)]">0</span> Items</p>
             </div>
 
             <div id="loader" class="text-center py-20">
                 <i class="fas fa-circle-notch fa-spin text-3xl text-[var(--gold)] mb-4"></i>
-                <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Establishing Secure Connection...</h3>
+                <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Fetching Secure Ledger...</h3>
             </div>
 
-            <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 </div>
             
             <div id="empty-state" class="hidden text-center py-32 bg-white rounded-2xl border border-dashed border-gray-300 mt-6">
@@ -151,64 +150,64 @@
             <span id="pp-breadcrumb-cat" class="text-[var(--gold)] font-bold">Category</span>
         </div>
 
-        <div class="max-w-[1200px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
+        <div class="max-w-[1200px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 bg-white rounded-2xl p-8 md:p-10 shadow-sm border border-gray-100">
             
             <div class="lg:col-span-5">
-                <div class="bg-[#f8f9fa] rounded-2xl aspect-square flex items-center justify-center p-10 mb-6 border border-gray-100 relative overflow-hidden">
-                    <span class="absolute top-5 left-5 bg-white px-4 py-1.5 text-[10px] font-bold rounded-lg uppercase tracking-widest text-gray-900 shadow-sm border border-gray-200 z-10"><i class="fas fa-check-circle text-[var(--gold)] mr-1"></i> Verified</span>
+                <div class="bg-[#f8f9fa] rounded-xl aspect-square flex items-center justify-center p-10 mb-4 border border-gray-100 relative overflow-hidden">
+                    <span class="absolute top-4 left-4 bg-white px-3 py-1.5 text-[10px] font-bold rounded uppercase tracking-widest text-gray-900 shadow-sm border border-gray-200 z-10 flex items-center gap-1.5"><i class="fas fa-check-circle text-[var(--gold)]"></i> Verified</span>
                     <img id="pp-main-img" src="" class="max-w-full max-h-full object-contain mix-blend-multiply transition-transform duration-500 hover:scale-105" onerror="this.src='MC.png'">
                 </div>
-                <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide" id="pp-thumbs"></div>
+                <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" id="pp-thumbs"></div>
             </div>
 
             <div class="lg:col-span-7 flex flex-col justify-center">
-                <div class="flex items-center gap-2 mb-4">
-                    <a id="pp-supplier-link" class="text-xs font-bold text-gray-500 uppercase tracking-widest cursor-pointer hover:text-[var(--gold)] transition flex items-center gap-2" onclick="goToSupplierStore()">
+                <div class="flex items-center gap-2 mb-3">
+                    <a id="pp-supplier-link" class="text-[11px] font-bold text-gray-500 uppercase tracking-widest cursor-pointer hover:text-[var(--gold)] transition flex items-center gap-1.5" onclick="goToSupplierStore()">
                         <i class="fas fa-industry"></i> <span id="pp-card-sup-name">Supplier Name</span>
                     </a>
                 </div>
                 
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-8 brand-font" id="pp-title">Product Name</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-snug mb-6" id="pp-title">Product Name</h1>
                 
-                <div class="mb-8 p-6 bg-[#f8f9fa] rounded-2xl border border-gray-100">
-                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-2">Wholesale Starting Price</div>
-                    <div class="flex items-baseline gap-3">
-                        <span class="text-4xl font-bold text-[var(--gold)] font-mono" id="pp-price">$0.00</span>
-                        <span class="text-gray-500 font-bold uppercase text-xs tracking-widest"><span class="ui-curr-symbol">CAD</span> / Unit</span>
+                <div class="mb-8 p-5 bg-[#f8f9fa] rounded-xl border border-gray-100 border-l-4 border-l-[var(--gold)]">
+                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Wholesale Starting Price</div>
+                    <div class="flex items-end gap-2">
+                        <span class="text-3xl font-extrabold text-gray-900 font-mono" id="pp-price">$0.00</span>
+                        <span class="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1"><span class="ui-curr-symbol">CAD</span></span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10 text-sm border-b border-gray-100 pb-10">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 text-sm border-b border-gray-100 pb-8">
                     <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Lead Time</span><strong id="pp-lead" class="text-gray-900">30 Days</strong></div>
                     <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Incoterms</span><strong id="pp-terms" class="text-gray-900">FOB</strong></div>
                     <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Services</span><strong id="pp-srv" class="text-gray-900">OEM</strong></div>
                     <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Product ID</span><strong id="pp-id" class="font-mono text-gray-900">ID</strong></div>
                 </div>
 
-                <div class="mb-10">
-                    <h3 class="text-xs font-bold uppercase text-gray-900 mb-4 tracking-widest">Volume Matrix</h3>
-                    <div class="border border-gray-200 rounded-xl overflow-hidden">
+                <div class="mb-8">
+                    <h3 class="text-[11px] font-bold uppercase text-gray-900 mb-3 tracking-widest">Volume Matrix</h3>
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
                         <table class="w-full text-sm text-left">
                             <thead class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-widest">
-                                <tr><th class="py-3 px-5 font-bold">Variant</th><th class="py-3 px-5 font-bold">Volume</th><th class="py-3 px-5 text-right font-bold">Unit Price</th></tr>
+                                <tr><th class="py-2.5 px-4 font-bold">Variant</th><th class="py-2.5 px-4 font-bold">Volume</th><th class="py-2.5 px-4 text-right font-bold">Unit Price</th></tr>
                             </thead>
                             <tbody id="pp-pricing-body" class="text-gray-900 font-medium divide-y divide-gray-100"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <button class="btn-void-gold py-5 shadow-xl mb-4 w-full" onclick="openRFQ()">
+                <button class="btn-void-gold py-4 text-sm shadow-lg w-full" onclick="openRFQ()">
                     Request Official Quote
                 </button>
             </div>
         </div>
 
-        <div class="max-w-[1200px] mx-auto px-6 mt-10">
-            <div class="bg-white rounded-3xl p-10 shadow-sm border border-gray-100">
-                <h3 class="text-lg font-bold mb-6 brand-font uppercase tracking-widest">Technical Description</h3>
+        <div class="max-w-[1200px] mx-auto px-6 mt-8">
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-gray-900">Technical Description</h3>
                 <p class="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm" id="pp-desc">Description...</p>
                 
-                <h3 class="text-lg font-bold mb-4 mt-10 brand-font uppercase tracking-widest pt-8 border-t border-gray-100">Master Packaging</h3>
+                <h3 class="text-sm font-bold mb-3 mt-8 uppercase tracking-widest text-gray-900 pt-6 border-t border-gray-100">Master Packaging</h3>
                 <p class="text-gray-600 text-sm" id="pp-pkg">Standard export cartons.</p>
             </div>
         </div>
@@ -218,12 +217,12 @@
         <div class="rfq-content" onclick="event.stopPropagation()">
             <div class="modal-close" onclick="closeModal(event, 'rfq-modal')"><i class="fas fa-times"></i></div>
             
-            <div class="text-center mb-10 border-b border-gray-100 pb-8">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-[0.1em] mb-3 brand-font">Initiate Sourcing Contract</h2>
+            <div class="text-center mb-8 border-b border-gray-100 pb-6">
+                <h2 class="text-2xl font-bold text-gray-900 uppercase tracking-[0.1em] mb-2 brand-font">Initiate Sourcing Contract</h2>
                 <p class="text-sm text-gray-500 font-medium">Specify your volume requirements and logistics to receive a final landed quote.</p>
             </div>
 
-            <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-8">
+            <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-6">
                 
                 <div>
                     <span class="form-label">Sourcing Target</span>
@@ -244,25 +243,25 @@
                     </div>
                 </div>
 
-                <div class="compliance-box">
-                    <div class="compliance-title">Compliance & Media Evidence</div>
-                    <div class="flex flex-col md:flex-row gap-6">
-                        <label class="flex items-center gap-3 cursor-pointer text-sm font-medium text-gray-700 hover:text-black">
-                            <input type="checkbox" id="req-certs" value="Yes" class="w-4 h-4 rounded border-gray-300 text-[var(--gold)] focus:ring-[var(--gold)]"> 
+                <div class="compliance-box p-5">
+                    <div class="compliance-title mb-3">Compliance & Media Evidence</div>
+                    <div class="flex flex-col sm:flex-row gap-5">
+                        <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-certs" value="Yes" class="luxury-checkbox"> 
                             Factory Certifications (ISO, CE, FDA)
                         </label>
-                        <label class="flex items-center gap-3 cursor-pointer text-sm font-medium text-gray-700 hover:text-black">
-                            <input type="checkbox" id="req-video" value="Yes" class="w-4 h-4 rounded border-gray-300 text-[var(--gold)] focus:ring-[var(--gold)]"> 
+                        <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-video" value="Yes" class="luxury-checkbox"> 
                             Raw Production Video
                         </label>
-                        <label class="flex items-center gap-3 cursor-pointer text-sm font-medium text-gray-700 hover:text-black">
-                            <input type="checkbox" id="req-photos" value="Yes" class="w-4 h-4 rounded border-gray-300 text-[var(--gold)] focus:ring-[var(--gold)]"> 
-                            Unedited Product Photos
+                        <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-photos" value="Yes" class="luxury-checkbox"> 
+                            Unedited Photos
                         </label>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <span class="form-label flex gap-1">Freight & Logistics Strategy <span class="text-red-500">*</span></span>
                         <select id="rfq-logistics" onchange="toggleShippingAddress()" class="premium-input cursor-pointer" required>
@@ -277,7 +276,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <span class="form-label flex gap-1">Registered Entity Name <span class="text-red-500">*</span></span>
                         <input type="text" id="rfq-company" class="premium-input" placeholder="Company Ltd." required>
@@ -290,14 +289,14 @@
 
                 <div>
                     <span class="form-label">Technical Notes / Addendums</span>
-                    <textarea id="rfq-notes" rows="3" class="premium-input" placeholder="Specify pantone colors, exact dimensions, or specialized packaging requests here..."></textarea>
+                    <textarea id="rfq-notes" rows="2" class="premium-input" placeholder="Specify pantone colors, exact dimensions, or packaging..."></textarea>
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" id="btn-submit-rfq" class="btn-solid-gold py-5 w-full">
+                    <button type="submit" id="btn-submit-rfq" class="btn-solid-gold py-4 w-full">
                         Submit Sourcing Request
                     </button>
-                    <div class="text-center text-[10px] text-gray-400 mt-4 tracking-[0.1em] uppercase font-bold flex items-center justify-center gap-2">
+                    <div class="text-center text-[10px] text-gray-400 mt-3 tracking-[0.1em] uppercase font-bold flex items-center justify-center gap-1.5">
                         <i class="fas fa-lock text-gray-400"></i> Secured by Muziris Enterprise Architecture
                     </div>
                 </div>
@@ -311,6 +310,7 @@
         let currentActiveId = "";
         const exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
         let activeCurrency = "CAD";
+        window.currentSlides = {}; // Stores the slider state for each card
 
         window.onload = function() {
             fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
@@ -324,14 +324,12 @@
 
                     const urlParams = new URLSearchParams(window.location.search);
                     const productId = urlParams.get('id');
-                    if (productId) {
-                        setTimeout(() => openProductPage(productId, false), 100);
-                    }
+                    if (productId) setTimeout(() => openProductPage(productId, false), 100);
                 } else {
                     document.getElementById('productGrid').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
                 }
             }).catch(err => {
-                document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold'>Connection Failed.</div>";
+                document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
             });
         };
 
@@ -382,6 +380,35 @@
             renderGrid(filtered, 'Search Results');
         }
 
+        // 🟢 NEW: Slider Function Logic
+        function changeSlide(pid, direction, maxIndex) {
+            if (window.currentSlides[pid] === undefined) window.currentSlides[pid] = 0;
+            let current = window.currentSlides[pid];
+            
+            // Hide current
+            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-100', 'opacity-0');
+            document.getElementById(`img-${pid}-${current}`).classList.replace('z-10', 'z-0');
+            let oldDot = document.getElementById(`dot-${pid}-${current}`);
+            if(oldDot) {
+                oldDot.classList.replace('w-4', 'w-2');
+                oldDot.classList.replace('opacity-100', 'opacity-40');
+            }
+
+            // Calculate new index
+            current = (current + direction + maxIndex) % maxIndex;
+            window.currentSlides[pid] = current;
+
+            // Show new
+            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-0', 'opacity-100');
+            document.getElementById(`img-${pid}-${current}`).classList.replace('z-0', 'z-10');
+            let newDot = document.getElementById(`dot-${pid}-${current}`);
+            if(newDot) {
+                newDot.classList.replace('w-2', 'w-4');
+                newDot.classList.replace('opacity-40', 'opacity-100');
+            }
+        }
+
+        // 🟢 NEW: Advanced Render Grid
         function renderGrid(products, title) {
             const grid = document.getElementById('productGrid');
             const emptyState = document.getElementById('empty-state');
@@ -392,24 +419,52 @@
             emptyState.classList.add('hidden');
 
             products.forEach(p => {
-                let fallbackImg = p.hero ? p.hero : 'MC.png';
                 let displayPrice = convertPrice(p.startingPriceCAD);
+                let moq = p.variants && p.variants.length > 0 ? p.variants[0].min : 'Contact';
+                
+                // Collect images for slider
+                let imgs = [p.hero, ...p.gallery].filter(Boolean);
+                if(imgs.length === 0) imgs = ['MC.png'];
+
+                // Generate Slider HTML
+                let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
+                
+                // Verified Badge (Top Right)
+                sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
+
+                // Images
+                imgs.forEach((img, i) => {
+                    let activeClass = i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0';
+                    sliderHtml += `<img src="${img}" class="img-layer absolute inset-0 ${activeClass}" id="img-${p.id}-${i}" loading="lazy" onerror="this.src='MC.png'">`;
+                });
+
+                // Arrows & Dots (Only if multiple images)
+                if(imgs.length > 1) {
+                    sliderHtml += `
+                        <button class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', -1, ${imgs.length})"><i class="fas fa-chevron-left text-[10px] text-gray-800"></i></button>
+                        <button class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', 1, ${imgs.length})"><i class="fas fa-chevron-right text-[10px] text-gray-800"></i></button>
+                        
+                        <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">`;
+                    imgs.forEach((_, i) => {
+                        let dotClass = i === 0 ? 'w-4 opacity-100' : 'w-2 opacity-40';
+                        sliderHtml += `<div class="h-2 bg-white rounded-full transition-all duration-300 shadow-sm ${dotClass}" id="dot-${p.id}-${i}"></div>`;
+                    });
+                    sliderHtml += `</div>`;
+                }
+                sliderHtml += `</div>`;
 
                 grid.innerHTML += `
-                <div class="product-card cursor-pointer" onclick="openProductPage('${p.id}')">
+                <div class="product-card" onclick="openProductPage('${p.id}')">
                     <div class="img-container">
-                        <span class="badge-verified">Verified</span>
-                        <img src="${fallbackImg}" alt="${p.name}" onerror="this.src='MC.png'" loading="lazy">
+                        ${sliderHtml}
                     </div>
-                    <div class="p-5">
-                        <p class="text-[10px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1">${p.category}</p>
-                        <h3 class="text-sm font-bold text-gray-900 leading-snug line-clamp-2 mb-4 h-10">${p.name}</h3>
+                    <div class="p-4 flex flex-col flex-1">
+                        <p class="text-[9px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1 truncate">${p.category}</p>
+                        <h3 class="text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2 h-10 mb-3">${p.name}</h3>
                         
-                        <div class="flex justify-between items-end border-t border-gray-100 pt-4">
-                            <div>
-                                <p class="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-0.5">Starting Price</p>
-                                <p class="text-base font-mono font-bold text-gray-900">$${displayPrice} <span class="text-xs text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
-                            </div>
+                        <div class="mt-auto">
+                            <p class="text-lg md:text-xl font-extrabold text-gray-900 font-mono leading-none">$${displayPrice} <span class="text-[10px] text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
+                            <p class="text-[10px] text-gray-500 font-medium mt-1">MOQ: ${moq}</p>
                         </div>
                     </div>
                 </div>`;
@@ -450,8 +505,8 @@
             thumbRow.innerHTML = "";
             let allImgs = [p.hero, ...p.gallery].filter(Boolean);
             allImgs.forEach((url, idx) => {
-                let activeClass = idx === 0 ? 'border-[var(--gold)] opacity-100 shadow-md' : 'border-transparent opacity-50 hover:opacity-100';
-                thumbRow.innerHTML += `<img class="w-16 h-16 object-cover border-2 rounded-xl cursor-pointer transition-all bg-white ${activeClass}" src="${url}" onclick="document.getElementById('pp-main-img').src='${url}'; document.querySelectorAll('#pp-thumbs img').forEach(t=>{t.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-md'); t.classList.add('border-transparent', 'opacity-50')}); this.classList.remove('border-transparent', 'opacity-50'); this.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-md');" onerror="this.style.display='none'">`;
+                let activeClass = idx === 0 ? 'border-[var(--gold)] opacity-100 shadow-sm' : 'border-transparent opacity-50 hover:opacity-100';
+                thumbRow.innerHTML += `<img class="w-14 h-14 md:w-16 md:h-16 object-cover border-2 rounded-lg cursor-pointer transition-all bg-white ${activeClass}" src="${url}" onclick="document.getElementById('pp-main-img').src='${url}'; document.querySelectorAll('#pp-thumbs img').forEach(t=>{t.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-sm'); t.classList.add('border-transparent', 'opacity-50')}); this.classList.remove('border-transparent', 'opacity-50'); this.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-sm');" onerror="this.style.display='none'">`;
             });
 
             const tBody = document.getElementById('pp-pricing-body');
@@ -461,9 +516,9 @@
                 let convertedPrice = convertPrice(v.priceCAD);
                 tBody.innerHTML += `
                 <tr class="hover:bg-gray-50 transition">
-                    <td class="py-4 px-5">${varName}</td>
-                    <td class="py-4 px-5 text-gray-500">${v.min} - ${v.max} ${v.unit}</td>
-                    <td class="py-4 px-5 text-right font-bold font-mono text-[var(--gold)]">$${convertedPrice}</td>
+                    <td class="py-3 px-4">${varName}</td>
+                    <td class="py-3 px-4 text-gray-500">${v.min} - ${v.max} ${v.unit}</td>
+                    <td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)]">$${convertedPrice}</td>
                 </tr>`;
             });
         }
@@ -479,7 +534,6 @@
 
         function goToSupplierStore() {
             const sid = document.getElementById('pp-supplier-link').getAttribute('data-sid');
-            // This links directly to the factory page!
             if(sid && sid !== "undefined") window.location.href = 'factory.html?id=' + sid; 
         }
 
@@ -508,16 +562,16 @@
                 <div class="matrix-row flex-col md:flex-row">
                     <div class="flex-[2] w-full text-sm">
                         <strong class="text-gray-900 font-bold">${varName}</strong>
-                        <span class="text-gray-500 text-xs mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
+                        <span class="text-gray-500 text-[11px] mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
                     </div>
                     <div class="flex-1 w-full">
-                        <input type="number" min="0" class="v-qty premium-input matrix-input py-2.5" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                        <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
                     </div>
                     <div class="flex-1 w-full text-center text-base font-bold font-mono text-[var(--gold-dark)]">
                         <span class="v-total-display">0.00</span>
                     </div>
                     <div class="flex-[1.2] w-full">
-                        <input type="number" step="0.01" class="v-target premium-input matrix-input py-2.5" placeholder="Target Total">
+                        <input type="number" step="0.01" class="v-target premium-input matrix-input py-2" placeholder="Target Total">
                     </div>
                 </div>`;
             });
