@@ -386,10 +386,16 @@
         // ==========================================
         // THE FULL PAGE PRODUCT VIEW
         // ==========================================
-        function openProductPage(productId) {
+        function openProductPage(productId, updateUrl = true) {
             const p = allProducts.find(x => x.id === productId);
             if(!p) return;
             currentActiveId = p.id;
+
+            // 🟢 NEW: Update the browser URL quietly without reloading
+            if (updateUrl) {
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + productId;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+            }
 
             // Hide Catalog, Show Product Page
             document.getElementById('catalog-view').style.display = 'none';
