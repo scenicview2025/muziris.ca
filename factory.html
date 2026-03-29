@@ -166,7 +166,7 @@
         const exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
         let activeCurrency = "CAD";
         let supplierId = "";
-        window.currentSlides = {}; // 🟢 Track slider states
+        window.currentSlides = {}; // Track slider states
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -238,7 +238,6 @@
             if (window.currentSlides[pid] === undefined) window.currentSlides[pid] = 0;
             let current = window.currentSlides[pid];
             
-            // Hide current
             document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-100', 'opacity-0');
             document.getElementById(`img-${pid}-${current}`).classList.replace('z-10', 'z-0');
             let oldDot = document.getElementById(`dot-${pid}-${current}`);
@@ -247,11 +246,9 @@
                 oldDot.classList.replace('opacity-100', 'opacity-40');
             }
 
-            // Calculate new index
             current = (current + direction + maxIndex) % maxIndex;
             window.currentSlides[pid] = current;
 
-            // Show new
             document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-0', 'opacity-100');
             document.getElementById(`img-${pid}-${current}`).classList.replace('z-0', 'z-10');
             let newDot = document.getElementById(`dot-${pid}-${current}`);
@@ -261,7 +258,7 @@
             }
         }
 
-        // 🟢 NEW: Synchronized Grid Renderer
+        // 🟢 NEW: Synchronized Grid Renderer (Matches updated catalog)
         function renderGrid(products) {
             const grid = document.getElementById('productGrid');
             const emptyState = document.getElementById('empty-state');
