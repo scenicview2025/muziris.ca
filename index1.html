@@ -7,112 +7,142 @@
   <link rel="icon" type="image/png" href="MC.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
   <style>
-    body { background-color: #0b0e14; color: #e0e0e0; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #b89225;
+        --void: #0b0e14;
+        --text-dark: #111827;
+        --text-gray: #6b7280;
+        --border-light: #e5e7eb;
+    }
+
+    body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     .brand-font { font-family: 'Cinzel', serif; }
     
-    /* Premium Gradients & Backgrounds */
-    .hero-bg { background: radial-gradient(circle at center, rgba(30, 40, 60, 0.8) 0%, rgba(11, 14, 20, 1) 100%); position: relative; }
-    .hero-bg::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent); }
+    /* Premium Headers */
+    .glass-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: fixed; width: 100%; top: 0; z-index: 50; }
     
-    .gold-gradient-text { background: linear-gradient(135deg, #F9D423 0%, #FF4E50 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .gold-solid-text { color: #D4AF37; }
-
     /* Buttons */
-    .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2); }
-    .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4); }
+    .btn-void-gold { background-color: var(--void); color: var(--gold); border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; }
+    .btn-void-gold:hover { background-color: #1a1f2e; box-shadow: 0 8px 20px rgba(11, 14, 20, 0.2); transform: translateY(-2px); }
     
-    .btn-outline { background: transparent; border: 1px solid rgba(212, 175, 55, 0.5); color: #D4AF37; transition: all 0.3s ease; }
-    .btn-outline:hover { background: rgba(212, 175, 55, 0.1); border-color: #D4AF37; transform: translateY(-3px); }
+    .btn-solid-gold { background-color: #d1b046; color: #000000; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);}
+    .btn-solid-gold:hover { background-color: #c2a138; transform: translateY(-2px); }
+
+    .btn-outline-dark { background: transparent; border: 1px solid var(--border-light); color: var(--text-dark); transition: all 0.3s ease; border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; justify-content: center; }
+    .btn-outline-dark:hover { background: #f3f4f6; border-color: #9ca3af; transform: translateY(-2px); }
 
     /* Cards */
-    .feature-card { background: rgba(21, 25, 34, 0.6); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); transition: 0.4s; }
-    .feature-card:hover { border-color: rgba(212, 175, 55, 0.3); transform: translateY(-5px); background: rgba(21, 25, 34, 0.9); }
+    .feature-card { background: #ffffff; border: 1px solid var(--border-light); border-radius: 16px; transition: 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .feature-card:hover { border-color: rgba(212, 175, 55, 0.3); transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
 
-    /* Floating Elements for visual depth */
+    /* Floating Elements */
     .float-element { animation: float 6s ease-in-out infinite; }
     @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+
+    /* AUTH MODAL STYLING */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(240, 240, 240, 0.9); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 16px; overflow-y: auto;}
+    .auth-content { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); padding: 40px; position: relative; animation: modalSlide 0.3s ease; margin: auto; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
+    @keyframes modalSlide { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    
+    .modal-close { position: absolute; top: 24px; right: 24px; width: 40px; height: 40px; background: #f3f4f6; color: #6b7280; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: all 0.2s ease; }
+    .modal-close:hover { background: #e5e7eb; color: #111; transform: rotate(90deg); }
+
+    .premium-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid var(--border-light); color: var(--text-dark); border-radius: 8px; outline: none; transition: all 0.2s; font-size: 14px; font-weight: 500; }
+    .premium-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
+
+    .btn-sso { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; background: #fff; border: 1px solid #d1d5db; color: #374151; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .btn-sso:hover { background: #f9fafb; border-color: #9ca3af; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <header class="fixed w-full top-0 z-50 bg-[#0b0e14]/90 backdrop-blur-md border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+  <header class="glass-header">
+    <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <h1 class="text-2xl font-bold tracking-widest text-[#D4AF37] brand-font uppercase m-0 leading-none">Muziris</h1>
+        <h1 class="text-2xl font-bold tracking-widest text-black brand-font uppercase m-0 leading-none">Muziris</h1>
       </div>
       
-      <div class="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wide">
-        <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How it Works</a>
-        <a href="catalog.html" class="text-gray-300 hover:text-white transition">Browse Catalog</a>
-        <a href="suppliers" class="text-[#D4AF37] hover:text-white transition">Factory Login</a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-bold tracking-widest uppercase text-gray-500">
+        <a href="#how-it-works" class="hover:text-black transition">How it Works</a>
+        <a href="catalog.html" class="hover:text-black transition">Global Catalog</a>
+        <a href="suppliers" class="text-[var(--gold)] hover:text-[var(--gold-dark)] transition">Factory Login</a>
       </div>
 
-      <div class="flex items-center gap-4" id="auth-buttons">
-        <button onclick="document.getElementById('buyer-login-modal').style.display='flex'" class="text-sm font-bold text-white hover:text-[#D4AF37] transition uppercase tracking-widest">Buyer Login</button>
-        <a href="catalog.html" class="hidden md:flex btn-gold px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest items-center gap-2">
+      <div class="flex items-center gap-6" id="auth-buttons">
+        <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-sm text-gray-600">
+            <i class="far fa-user text-lg text-black"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-xs text-black">Buyer Login</span>
+        </button>
+        <a href="catalog.html" class="hidden md:flex btn-solid-gold px-6 py-3 rounded-lg text-xs items-center gap-2">
           Start Sourcing <i class="fas fa-arrow-right"></i>
         </a>
       </div>
     </div>
   </header>
 
-  <main class="flex-1 hero-bg pt-32 pb-20 lg:pt-48 lg:pb-32 px-6 relative overflow-hidden">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#D4AF37] opacity-[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+  <main class="flex-1 bg-[#FAFAFA] pt-32 pb-20 lg:pt-48 lg:pb-32 px-6 relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--gold)] opacity-[0.05] blur-[120px] rounded-full pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+    <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
       
       <div class="space-y-8 text-center lg:text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-xs font-bold uppercase tracking-widest mb-4">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/20 text-[var(--gold-dark)] text-[10px] font-bold uppercase tracking-widest mb-2">
           <i class="fas fa-shield-check"></i> 100% Escrow Protected
         </div>
         
-        <h1 class="text-5xl lg:text-7xl font-bold text-white brand-font leading-tight">
+        <h1 class="text-5xl lg:text-7xl font-bold text-gray-900 brand-font leading-tight">
           Global Sourcing.<br>
-          <span class="gold-gradient-text">Zero Risk.</span>
+          <span class="text-[var(--gold)]">Zero Risk.</span>
         </h1>
         
-        <p class="text-lg text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+        <p class="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
           Muziris is the world's most secure B2B manufacturing platform. We connect enterprise buyers with verified global factories, protecting every dollar in our automated milestone escrow vault.
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-          <a href="catalog.html" class="btn-gold px-8 py-4 rounded-xl text-sm font-bold uppercase tracking-widest text-center">
+          <a href="catalog.html" class="btn-void-gold px-8 py-4 w-full sm:w-auto">
             Explore Global Catalog
           </a>
-          <a href="suppliers" class="btn-outline px-8 py-4 rounded-xl text-sm font-bold uppercase tracking-widest text-center bg-[#111827]">
+          <a href="suppliers" class="btn-outline-dark px-8 py-4 w-full sm:w-auto">
             Apply as a Factory
           </a>
         </div>
 
-        <div class="flex items-center justify-center lg:justify-start gap-6 pt-6 text-sm text-gray-500 font-semibold">
-          <div class="flex items-center gap-2"><i class="fas fa-check text-[#D4AF37]"></i> Verified Suppliers</div>
-          <div class="flex items-center gap-2"><i class="fas fa-check text-[#D4AF37]"></i> Escrow Payments</div>
-          <div class="flex items-center gap-2"><i class="fas fa-check text-[#D4AF37]"></i> DDP Logistics</div>
+        <div class="flex items-center justify-center lg:justify-start gap-6 pt-8 text-xs text-gray-500 font-bold uppercase tracking-widest">
+          <div class="flex items-center gap-2"><i class="fas fa-check-circle text-[var(--gold)] text-base"></i> Verified Suppliers</div>
+          <div class="flex items-center gap-2"><i class="fas fa-check-circle text-[var(--gold)] text-base"></i> Escrow Payments</div>
+          <div class="flex items-center gap-2"><i class="fas fa-check-circle text-[var(--gold)] text-base"></i> DDP Logistics</div>
         </div>
       </div>
 
       <div class="relative hidden lg:block float-element">
-        <div class="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent rounded-2xl blur-xl transform rotate-3"></div>
-        <div class="bg-[#111827] border border-[#333] rounded-2xl p-6 shadow-2xl relative z-10">
-          <div class="flex justify-between items-center border-b border-[#222] pb-4 mb-4">
-            <div class="text-[#D4AF37] brand-font font-bold tracking-widest">MUZIRIS LEDGER</div>
-            <div class="flex gap-2"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
+        <div class="absolute inset-0 bg-gradient-to-tr from-[var(--gold)]/10 to-transparent rounded-2xl blur-2xl transform rotate-3"></div>
+        <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-2xl relative z-10">
+          <div class="flex justify-between items-center border-b border-gray-100 pb-5 mb-5">
+            <div class="text-[var(--gold)] brand-font font-bold tracking-widest text-lg">MUZIRIS LEDGER</div>
+            <div class="flex gap-2"><div class="w-3 h-3 rounded-full bg-red-400"></div><div class="w-3 h-3 rounded-full bg-yellow-400"></div><div class="w-3 h-3 rounded-full bg-green-400"></div></div>
           </div>
           <div class="space-y-4">
-            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-              <div><div class="text-xs text-gray-400">Contract ID</div><div class="font-mono text-white font-bold">RFQ-99284A</div></div>
-              <div class="text-right"><div class="text-xs text-gray-400">Status</div><div class="text-[#4CAF50] font-bold text-xs bg-[#4CAF50]/10 px-2 py-1 rounded">Funded Escrow</div></div>
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+              <div><div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Contract ID</div><div class="font-mono text-gray-900 font-bold text-lg">RFQ-99284A</div></div>
+              <div class="text-right"><div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Status</div><div class="text-[#10b981] font-bold text-xs bg-[#10b981]/10 px-3 py-1.5 rounded-md uppercase tracking-widest border border-[#10b981]/20">Funded Escrow</div></div>
             </div>
-            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-              <div><div class="text-xs text-gray-400">Supplier</div><div class="font-bold text-white">Premium Ceramics Ltd.</div></div>
-              <div class="text-right"><div class="text-xs text-gray-400">Total Value</div><div class="font-mono text-[#D4AF37] font-bold">$12,450.00</div></div>
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+              <div><div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Supplier</div><div class="font-bold text-gray-900 text-base">Premium Ceramics Ltd.</div></div>
+              <div class="text-right"><div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Total Value</div><div class="font-mono text-[var(--gold-dark)] font-bold text-xl">$12,450.00</div></div>
             </div>
-            <div class="p-4 bg-[rgba(30,136,229,0.1)] border border-[#1E88E5]/30 rounded-lg mt-4">
-              <div class="text-xs text-[#1E88E5] font-bold uppercase tracking-widest mb-1"><i class="fas fa-lock mr-1"></i> Funds Secured</div>
-              <div class="text-[10px] text-gray-400">Funds will be released to the supplier 7 days after destination delivery.</div>
+            <div class="p-5 bg-[#f0f9ff] border border-[#bae6fd] rounded-xl mt-6 flex items-start gap-4">
+              <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm border border-[#e0f2fe]"><i class="fas fa-lock text-[#0ea5e9]"></i></div>
+              <div>
+                <div class="text-xs text-[#0ea5e9] font-bold uppercase tracking-widest mb-1">Funds Secured</div>
+                <div class="text-xs text-gray-500 font-medium leading-relaxed">Funds are locked in escrow and will be released to the supplier 7 days after destination delivery.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -121,105 +151,196 @@
     </div>
   </main>
 
-  <section id="how-it-works" class="py-24 px-6 bg-[#0b0e14] border-t border-white/5">
-    <div class="max-w-7xl mx-auto">
+  <section id="how-it-works" class="py-24 px-6 bg-white border-t border-gray-100">
+    <div class="max-w-[1400px] mx-auto">
       <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-white brand-font mb-4">The New Standard in B2B Trade</h2>
-        <p class="text-gray-400 max-w-2xl mx-auto">We eliminated the risk of international sourcing by placing a secure escrow vault between buyers and factories.</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 brand-font mb-4">The New Standard in B2B Trade</h2>
+        <p class="text-gray-500 max-w-2xl mx-auto font-medium">We eliminated the risk of international sourcing by placing a secure escrow vault between buyers and factories.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         
-        <div class="feature-card p-8 rounded-2xl text-center">
-          <div class="w-16 h-16 mx-auto bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-2xl flex items-center justify-center mb-6">
-            <i class="fas fa-search-location text-2xl text-[#D4AF37]"></i>
+        <div class="feature-card p-10 text-center">
+          <div class="w-20 h-20 mx-auto bg-[var(--gold)]/10 border border-[var(--gold)]/20 rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-search-location text-3xl text-[var(--gold-dark)]"></i>
           </div>
-          <h3 class="text-xl font-bold text-white mb-3">1. Discover & Negotiate</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">Browse our global ledger of verified factories. Submit an RFQ to negotiate volume pricing, custom packaging, and private labeling.</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">1. Discover & Negotiate</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-medium">Browse our global ledger of verified factories. Submit an RFQ to negotiate volume pricing, custom packaging, and private labeling.</p>
         </div>
 
-        <div class="feature-card p-8 rounded-2xl text-center relative">
-          <div class="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-[#D4AF37]/30"></div>
-          <div class="hidden md:block absolute top-1/2 -left-4 w-8 h-0.5 bg-[#D4AF37]/30"></div>
-          <div class="w-16 h-16 mx-auto bg-[#1E88E5]/10 border border-[#1E88E5]/30 rounded-2xl flex items-center justify-center mb-6">
-            <i class="fas fa-vault text-2xl text-[#1E88E5]"></i>
+        <div class="feature-card p-10 text-center relative">
+          <div class="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gray-200"></div>
+          <div class="hidden md:block absolute top-1/2 -left-4 w-8 h-0.5 bg-gray-200"></div>
+          <div class="w-20 h-20 mx-auto bg-[#f0f9ff] border border-[#bae6fd] rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-vault text-3xl text-[#0ea5e9]"></i>
           </div>
-          <h3 class="text-xl font-bold text-white mb-3">2. Fund the Escrow</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">Review the official factory quote and fund the contract. Your money is locked safely in the Muziris Vault while the factory begins production.</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">2. Fund the Escrow</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-medium">Review the official factory quote and fund the contract. Your money is locked safely in the Muziris Vault while the factory begins production.</p>
         </div>
 
-        <div class="feature-card p-8 rounded-2xl text-center">
-          <div class="w-16 h-16 mx-auto bg-[#4CAF50]/10 border border-[#4CAF50]/30 rounded-2xl flex items-center justify-center mb-6">
-            <i class="fas fa-ship text-2xl text-[#4CAF50]"></i>
+        <div class="feature-card p-10 text-center">
+          <div class="w-20 h-20 mx-auto bg-[#f0fdf4] border border-[#bbf7d0] rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-ship text-3xl text-[#10b981]"></i>
           </div>
-          <h3 class="text-xl font-bold text-white mb-3">3. Inspect & Release</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">The goods are shipped via our integrated logistics network. Funds are only released to the factory 7 days after you receive and inspect the order.</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">3. Inspect & Release</h3>
+          <p class="text-sm text-gray-500 leading-relaxed font-medium">The goods are shipped via our integrated logistics network. Funds are only released to the factory 7 days after you receive and inspect the order.</p>
         </div>
 
       </div>
     </div>
   </section>
 
-  <footer class="bg-[#05070a] border-t border-white/5 py-12 px-6">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="text-[#D4AF37] brand-font font-bold tracking-widest text-xl">MUZIRIS</div>
-      <div class="text-sm text-gray-500 text-center md:text-left">
+  <footer class="bg-[var(--void)] py-16 px-6">
+    <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="text-[var(--gold)] brand-font font-bold tracking-widest text-2xl">MUZIRIS</div>
+      <div class="text-sm text-gray-500 text-center md:text-left font-medium">
         &copy; 2026 Muziris International. All rights reserved. <br>
-        <span class="text-[10px] uppercase tracking-widest mt-2 block">Secure B2B Infrastructure</span>
+        <span class="text-[10px] uppercase tracking-widest mt-2 block text-gray-600 font-bold">Secure B2B Infrastructure</span>
       </div>
       <div class="flex gap-6 text-gray-400">
-        <a href="#" class="hover:text-[#D4AF37] transition"><i class="fab fa-linkedin text-xl"></i></a>
-        <a href="mailto:support@muziris.ca" class="hover:text-[#D4AF37] transition"><i class="fas fa-envelope text-xl"></i></a>
+        <a href="#" class="hover:text-[var(--gold)] transition"><i class="fab fa-linkedin text-2xl"></i></a>
+        <a href="mailto:support@muziris.ca" class="hover:text-[var(--gold)] transition"><i class="fas fa-envelope text-2xl"></i></a>
       </div>
     </div>
   </footer>
 
-  <div id="buyer-login-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-    <div class="bg-[#111827] border border-[#333] w-full max-w-md rounded-2xl p-8 shadow-2xl relative">
-      <button onclick="document.getElementById('buyer-login-modal').style.display='none'" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-      
-      <div class="text-center mb-8">
-        <h2 class="text-2xl font-bold text-[#D4AF37] brand-font uppercase tracking-widest mb-2">Buyer Portal</h2>
-        <p class="text-sm text-gray-400">Sign in to manage your active sourcing contracts.</p>
-      </div>
+  <div id="auth-modal" class="modal-overlay" onclick="closeModal(event, 'auth-modal')">
+      <div class="auth-content" onclick="event.stopPropagation()">
+          <div class="modal-close" onclick="closeModal(event, 'auth-modal')"><i class="fas fa-times"></i></div>
+          
+          <div class="mb-6">
+              <h2 class="text-2xl font-bold text-gray-900 brand-font mb-2">Sign in to continue</h2>
+              <p class="text-sm text-gray-500">Access exclusive wholesale pricing and secure contracts.</p>
+          </div>
 
-      <form onsubmit="event.preventDefault(); loginBuyer();" class="space-y-4">
-        <div>
-          <label class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Corporate Email</label>
-          <input type="email" id="login-email" class="w-full bg-[#0b0e14] border border-[#333] text-white rounded-lg p-4 outline-none focus:border-[#D4AF37] transition" placeholder="procurement@company.com" required>
-        </div>
-        <div>
-          <label class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Password</label>
-          <input type="password" class="w-full bg-[#0b0e14] border border-[#333] text-white rounded-lg p-4 outline-none focus:border-[#D4AF37] transition" placeholder="••••••••" required>
-        </div>
-        <button type="submit" class="w-full btn-gold py-4 rounded-lg mt-4 text-sm font-bold uppercase tracking-widest">Secure Login</button>
-      </form>
-    </div>
+          <div class="space-y-4 mb-6 text-left">
+              <div>
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Corporate Email</label>
+                  <input type="email" id="auth-email" class="premium-input py-2.5" placeholder="procurement@company.com">
+              </div>
+              <div>
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Password</label>
+                  <input type="password" id="auth-pass" class="premium-input py-2.5" placeholder="••••••••">
+              </div>
+              <div class="flex gap-3 pt-2">
+                  <button onclick="signInWithEmail()" class="flex-1 btn-solid-gold py-3 text-xs">Sign In</button>
+                  <button onclick="signUpWithEmail()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-lg text-xs uppercase tracking-widest transition">Create Account</button>
+              </div>
+          </div>
+
+          <div class="relative flex items-center py-2 mb-6">
+              <div class="flex-grow border-t border-gray-200"></div>
+              <span class="flex-shrink-0 mx-4 text-gray-400 text-[10px] uppercase tracking-widest font-bold">Or continue with</span>
+              <div class="flex-grow border-t border-gray-200"></div>
+          </div>
+
+          <div class="space-y-3">
+              <button onclick="signInWithGoogle()" class="btn-sso">
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> Google
+              </button>
+              <button onclick="signInWithMicrosoft()" class="btn-sso">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" class="w-5 h-5"> Microsoft
+              </button>
+          </div>
+          
+          <p class="text-[10px] text-gray-400 mt-6 leading-relaxed font-medium">
+              By signing in, I agree to the Muziris Free Membership Agreement and Privacy Policy.
+          </p>
+      </div>
   </div>
 
   <script>
-    // Smart UI Check: If buyer is already logged in, change the header button
-    window.onload = function() {
-      const savedEmail = localStorage.getItem('verifiedBuyerEmail');
-      if(savedEmail) {
-        document.getElementById('auth-buttons').innerHTML = `
-          <a href="buyer-dashboard.html" class="text-sm font-bold text-white hover:text-[#D4AF37] transition uppercase tracking-widest">My Dashboard</a>
-          <a href="catalog.html" class="hidden md:flex btn-gold px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest items-center gap-2">
-            Continue Sourcing <i class="fas fa-arrow-right"></i>
-          </a>
-        `;
-      }
-    };
+      // ==========================================
+      // 🟢 FIREBASE & AUTHENTICATION LOGIC
+      // ==========================================
+      // IMPORTANT: REPLACE THIS WITH YOUR FIREBASE KEYS
+      const firebaseConfig = {
+          apiKey: "AIzaSy_YOUR_API_KEY",
+          authDomain: "YOUR_PROJECT.firebaseapp.com",
+          projectId: "YOUR_PROJECT",
+          storageBucket: "YOUR_PROJECT.appspot.com",
+          messagingSenderId: "123456789",
+          appId: "1:123456789:web:abcdefg"
+      };
+      
+      if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+      const auth = firebase.auth();
+      const googleProvider = new firebase.auth.GoogleAuthProvider();
+      const msProvider = new firebase.auth.OAuthProvider('microsoft.com');
 
-    function loginBuyer() {
-      const email = document.getElementById('login-email').value;
-      if(email) {
-        // Securely store the session token
-        localStorage.setItem('verifiedBuyerEmail', email);
-        // Route them straight to the Money Room
-        window.location.href = 'buyer-dashboard.html';
+      const API_BASE_URL = "https://muziris-api.onrender.com/api";
+      let currentUser = null;
+
+      auth.onAuthStateChanged((user) => {
+          if (user) {
+              currentUser = user;
+              let displayName = user.displayName || user.email.split('@')[0];
+              
+              // 🟢 Smart UI Update: Change Login button to Dashboard
+              document.getElementById('auth-buttons').innerHTML = `
+                <a href="buyer-dashboard.html" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-sm text-gray-900">
+                    <i class="far fa-user text-lg text-black"></i> <span class="uppercase tracking-widest text-xs text-black">My Dashboard</span>
+                </a>
+                <a href="catalog.html" class="hidden md:flex btn-solid-gold px-6 py-3 rounded-lg text-xs items-center gap-2">
+                  Continue Sourcing <i class="fas fa-arrow-right"></i>
+                </a>
+              `;
+
+              // Sync to Backend
+              fetch(API_BASE_URL + '/buyer/auth', {
+                  method: 'POST',
+                  headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify({ email: user.email, name: displayName, photoUrl: user.photoURL || '' })
+              }).catch(e => console.log("DB Sync skipped"));
+
+          } else {
+              currentUser = null;
+          }
+      });
+
+      function openAuthModal() {
+          document.getElementById('auth-modal').style.display = 'flex';
       }
-    }
+
+      function closeModal(e, modalId) {
+          if(e.target.id === modalId || e.target.closest('.modal-close')) {
+              document.getElementById(modalId).style.display = 'none';
+          }
+      }
+
+      // --- Auth Methods ---
+      function signInWithGoogle() {
+          auth.signInWithPopup(googleProvider).then(() => {
+              document.getElementById('auth-modal').style.display = 'none';
+          }).catch(error => alert("Google Sign-In Error: " + error.message));
+      }
+
+      function signInWithMicrosoft() {
+          auth.signInWithPopup(msProvider).then(() => {
+              document.getElementById('auth-modal').style.display = 'none';
+          }).catch(error => alert("Microsoft Sign-In Error: " + error.message));
+      }
+
+      function signInWithEmail() {
+          const email = document.getElementById('auth-email').value;
+          const pass = document.getElementById('auth-pass').value;
+          if(!email || !pass) return alert("Please enter both email and password.");
+          
+          auth.signInWithEmailAndPassword(email, pass).then(() => {
+              document.getElementById('auth-modal').style.display = 'none';
+          }).catch(error => alert("Sign-In Error: " + error.message));
+      }
+
+      function signUpWithEmail() {
+          const email = document.getElementById('auth-email').value;
+          const pass = document.getElementById('auth-pass').value;
+          if(!email || !pass) return alert("Please enter both email and password to create an account.");
+          
+          auth.createUserWithEmailAndPassword(email, pass).then((userCredential) => {
+              document.getElementById('auth-modal').style.display = 'none';
+              alert("Account created successfully!");
+          }).catch(error => alert("Sign-Up Error: " + error.message));
+      }
   </script>
 
 </body>
