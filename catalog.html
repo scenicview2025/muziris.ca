@@ -9,6 +9,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
     <style>
         :root {
             --gold: #D4AF37;
@@ -24,43 +27,42 @@
         body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
         .brand-font { font-family: 'Cinzel', serif; }
         
-        /* Premium Layout */
         .glass-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
         
-        /* Sidebar Styling */
         .sidebar-link { display: block; padding: 10px 16px; color: var(--text-gray); font-size: 14px; font-weight: 500; transition: all 0.2s; cursor: pointer; border-radius: 8px; margin-bottom: 2px; }
         .sidebar-link:hover { background: #f3f4f6; color: var(--text-dark); }
         .sidebar-link.active { background-color: var(--void); color: var(--gold); font-weight: 700; box-shadow: 0 4px 12px rgba(11, 14, 20, 0.15); }
         .sidebar-header { font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; color: #9ca3af; padding-left: 16px; }
 
-        /* Muziris Luxury Buttons */
-        .btn-void-gold { background-color: var(--void); color: var(--gold); border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-void-gold { background-color: var(--void); color: var(--gold); border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; }
         .btn-void-gold:hover { background-color: #1a1f2e; box-shadow: 0 8px 20px rgba(11, 14, 20, 0.2); transform: translateY(-1px); }
         
-        .btn-solid-gold { background-color: #d1b046; color: #000000; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; }
+        .btn-solid-gold { background-color: #d1b046; color: #000000; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; cursor: pointer;}
         .btn-solid-gold:hover { background-color: #c2a138; transform: translateY(-1px); }
 
-        /* 🟢 NEW: Highly Optimized Product Card */
         .product-card { position: relative; transition: all 0.3s ease; background: #fff; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); overflow: hidden; display: flex; flex-direction: column; cursor: pointer;}
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0,0,0,0.08); border-color: rgba(212, 175, 55, 0.4); }
         
-        /* 🟢 NEW: Card Image Container & Zoom Effect */
         .img-container { background: #fdfdfd; position: relative; aspect-ratio: 1 / 1; border-bottom: 1px solid rgba(0,0,0,0.03); overflow: hidden; padding: 12px; }
         .img-layer { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
         .product-card:hover .img-layer.opacity-100 { transform: scale(1.08); }
         
-        /* 🟢 NEW: Verified Badge (Top Right Pill) */
         .badge-verified { position: absolute; top: 12px; right: 12px; background: #ffffff; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #111; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 6px rgba(0,0,0,0.05); z-index: 30; display: flex; align-items: center; gap: 4px; }
         .badge-verified i { color: var(--gold); font-size: 11px; }
 
-        /* Views */
         #catalog-view { display: flex; transition: opacity 0.3s; }
         #product-page-view { display: none; background: #FAFAFA; min-height: 100vh; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* RFQ MODAL STYLING */
+        /* MODALS */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(240, 240, 240, 0.9); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 16px; overflow-y: auto;}
         .rfq-content { background: #ffffff; width: 100%; max-width: 900px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); padding: 50px 60px; position: relative; animation: modalSlide 0.3s ease; margin: auto;}
+        
+        /* 🟢 NEW: AUTH MODAL STYLING (Alibaba Style) */
+        .auth-content { background: #ffffff; width: 100%; max-width: 400px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); padding: 40px; position: relative; animation: modalSlide 0.3s ease; margin: auto; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
+        .btn-google { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; background: #fff; border: 1px solid #d1d5db; color: #374151; font-weight: 600; font-size: 15px; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .btn-google:hover { background: #f9fafb; border-color: #9ca3af; }
+
         @keyframes modalSlide { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
         .modal-close { position: absolute; top: 24px; right: 24px; width: 40px; height: 40px; background: #f3f4f6; color: #6b7280; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: all 0.2s ease; }
@@ -93,12 +95,12 @@
             <div class="flex-1 max-w-2xl relative hidden md:block">
                 <div class="relative w-full">
                     <i class="fas fa-search absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="text" id="searchInput" placeholder="Search enterprise catalog..." class="w-full bg-[#f3f4f6] border border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] focus:ring-4 focus:ring-[var(--gold)]/10 text-sm font-medium rounded-full py-3 pl-12 pr-6 outline-none transition-all" onkeyup="handleSearch()">
+                    <input type="text" id="searchInput" placeholder="Search enterprise catalog..." class="w-full bg-[#f3f4f6] border border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] focus:ring-4 focus:ring-[var(--gold)]/10 text-sm font-medium rounded-full py-3 pl-12 pr-6 outline-none transition-all">
                 </div>
             </div>
 
-            <div class="flex items-center gap-6 text-gray-600 flex-shrink-0">
-                <div class="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer">
+            <div class="flex items-center gap-4 md:gap-6 text-gray-600 flex-shrink-0">
+                <div class="bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer hidden md:flex">
                     <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
                     <select id="currencySelect" onchange="updateCurrency()" class="bg-transparent text-sm font-bold text-gray-900 outline-none cursor-pointer">
                         <option value="CAD" selected>CAD</option>
@@ -107,7 +109,10 @@
                         <option value="GBP">GBP</option>
                     </select>
                 </div>
-                <a href="buyer-dashboard.html" class="hover:text-[var(--gold)] transition"><i class="far fa-user text-xl"></i></a>
+                
+                <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-sm">
+                    <i class="far fa-user text-lg"></i> <span id="auth-btn-text">Sign In</span>
+                </button>
             </div>
         </div>
     </header>
@@ -116,15 +121,12 @@
         
         <aside class="w-full md:w-56 flex-shrink-0 hidden md:block sticky top-24 h-fit">
             <h2 class="sidebar-header">Explore Categories</h2>
-            <div class="space-y-1" id="categoryNav">
-                </div>
+            <div class="space-y-1" id="categoryNav"></div>
         </aside>
 
         <div class="flex-1">
             <div class="flex justify-between items-end mb-6 pb-2 border-b border-gray-100">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900 brand-font" id="current-category-title">Global Catalog</h2>
-                </div>
+                <div><h2 class="text-2xl font-bold text-gray-900 brand-font" id="current-category-title">Global Catalog</h2></div>
                 <p class="text-xs text-gray-500 uppercase tracking-widest font-bold"><span id="product-count" class="text-[var(--gold)]">0</span> Items</p>
             </div>
 
@@ -133,8 +135,7 @@
                 <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Fetching Secure Ledger...</h3>
             </div>
 
-            <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                </div>
+            <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"></div>
             
             <div id="empty-state" class="hidden text-center py-32 bg-white rounded-2xl border border-dashed border-gray-300 mt-6">
                 <i class="fas fa-box-open text-5xl text-gray-300 mb-4"></i>
@@ -196,7 +197,7 @@
                     </div>
                 </div>
 
-                <button class="btn-void-gold py-4 text-sm shadow-lg w-full" onclick="openRFQ()">
+                <button class="btn-void-gold py-4 text-sm shadow-lg w-full" onclick="triggerRFQ()">
                     Request Official Quote
                 </button>
             </div>
@@ -213,6 +214,27 @@
         </div>
     </main>
 
+    <div id="auth-modal" class="modal-overlay" onclick="closeModal(event, 'auth-modal')">
+        <div class="auth-content" onclick="event.stopPropagation()">
+            <div class="modal-close" onclick="closeModal(event, 'auth-modal')"><i class="fas fa-times"></i></div>
+            
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 brand-font mb-2">Sign in to continue</h2>
+                <p class="text-sm text-gray-500">Access exclusive wholesale pricing, negotiate contracts, and manage sourcing.</p>
+            </div>
+
+            <button onclick="signInWithGoogle()" class="btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5">
+                Continue with Google
+            </button>
+            
+            <p class="text-[10px] text-gray-400 mt-8 leading-relaxed">
+                By signing in, I agree to the Muziris Free Membership Agreement and Privacy Policy, and to receive emails about the platform's products and services.
+            </p>
+        </div>
+    </div>
+
+
     <div id="rfq-modal" class="modal-overlay" onclick="closeModal(event, 'rfq-modal')">
         <div class="rfq-content" onclick="event.stopPropagation()">
             <div class="modal-close" onclick="closeModal(event, 'rfq-modal')"><i class="fas fa-times"></i></div>
@@ -223,7 +245,6 @@
             </div>
 
             <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-6">
-                
                 <div>
                     <span class="form-label">Sourcing Target</span>
                     <input type="text" id="rfq-product-name" class="premium-input target-box" readonly>
@@ -247,49 +268,46 @@
                     <div class="compliance-title mb-3">Compliance & Media Evidence</div>
                     <div class="flex flex-col sm:flex-row gap-5">
                         <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
-                            <input type="checkbox" id="req-certs" value="Yes" class="luxury-checkbox"> 
-                            Factory Certifications (ISO, CE, FDA)
+                            <input type="checkbox" id="req-certs" value="Yes" class="luxury-checkbox"> Factory Certifications
                         </label>
                         <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
-                            <input type="checkbox" id="req-video" value="Yes" class="luxury-checkbox"> 
-                            Raw Production Video
+                            <input type="checkbox" id="req-video" value="Yes" class="luxury-checkbox"> Production Video
                         </label>
                         <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
-                            <input type="checkbox" id="req-photos" value="Yes" class="luxury-checkbox"> 
-                            Unedited Photos
+                            <input type="checkbox" id="req-photos" value="Yes" class="luxury-checkbox"> Unedited Photos
                         </label>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <span class="form-label flex gap-1">Freight & Logistics Strategy <span class="text-red-500">*</span></span>
+                        <span class="form-label flex gap-1">Freight Strategy <span class="text-red-500">*</span></span>
                         <select id="rfq-logistics" onchange="toggleShippingAddress()" class="premium-input cursor-pointer" required>
                             <option value="">Select Routing...</option>
-                            <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF to door)</option>
-                            <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB port)</option>
+                            <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF)</option>
+                            <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB)</option>
                         </select>
                     </div>
                     <div id="destination-box" style="display:none;">
                         <span class="form-label">Final Destination Hub</span>
-                        <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON, Canada">
+                        <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <span class="form-label flex gap-1">Registered Entity Name <span class="text-red-500">*</span></span>
+                        <span class="form-label flex gap-1">Registered Entity <span class="text-red-500">*</span></span>
                         <input type="text" id="rfq-company" class="premium-input" placeholder="Company Ltd." required>
                     </div>
                     <div>
                         <span class="form-label flex gap-1">Authorized Email <span class="text-red-500">*</span></span>
-                        <input type="email" id="rfq-email" class="premium-input" placeholder="procurement@company.com" required>
+                        <input type="email" id="rfq-email" class="premium-input bg-gray-50 text-gray-500" readonly required>
                     </div>
                 </div>
 
                 <div>
                     <span class="form-label">Technical Notes / Addendums</span>
-                    <textarea id="rfq-notes" rows="2" class="premium-input" placeholder="Specify pantone colors, exact dimensions, or packaging..."></textarea>
+                    <textarea id="rfq-notes" rows="2" class="premium-input" placeholder="Specify pantone colors, dimensions..."></textarea>
                 </div>
 
                 <div class="pt-2">
@@ -305,12 +323,100 @@
     </div>
 
     <script>
+        // ==========================================
+        // 🟢 NEW: FIREBASE & AUTHENTICATION LOGIC
+        // ==========================================
+        // IMPORTANT: REPLACE THIS CONFIG WITH YOUR ACTUAL FIREBASE CONFIG DETAILS
+        const firebaseConfig = {
+            apiKey: "AIzaSy_YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdefg"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        let currentUser = null;
+        let pendingRfqTrigger = false;
+
+        // Listen to Auth State
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('auth-btn-text').innerText = user.displayName.split(' ')[0] + " (Buyer)";
+                document.getElementById('rfq-email').value = user.email; // Auto-fill RFQ email
+
+                // 🟢 Silently sync buyer to PostgreSQL Database
+                fetch(API_BASE_URL + '/buyer/auth', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email: user.email, name: user.displayName, photoUrl: user.photoURL })
+                }).catch(e => console.log("DB Sync skipped"));
+
+                // If they logged in to submit an RFQ, open it now!
+                if(pendingRfqTrigger) {
+                    pendingRfqTrigger = false;
+                    openRFQ();
+                }
+            } else {
+                currentUser = null;
+                document.getElementById('auth-btn-text').innerText = "Sign In";
+                document.getElementById('rfq-email').value = "";
+            }
+        });
+
+        function openAuthModal() {
+            if(currentUser) {
+                window.location.href = "buyer-dashboard.html"; // If logged in, go to dashboard
+            } else {
+                document.getElementById('auth-modal').style.display = 'flex';
+            }
+        }
+
+        function signInWithGoogle() {
+            auth.signInWithPopup(provider).then((result) => {
+                document.getElementById('auth-modal').style.display = 'none';
+            }).catch((error) => { console.error("Auth Error:", error); });
+        }
+
+
+        // ==========================================
+        // 🟢 NEW: BUYER BEHAVIOR TRACKING LOGIC
+        // ==========================================
+        let viewStartTime = 0;
+        let viewProductId = null;
+
+        function trackBehavior(actionType, targetId, durationSeconds = 0) {
+            fetch(API_BASE_URL + '/buyer/track', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: currentUser ? currentUser.email : 'Anonymous',
+                    actionType: actionType,
+                    targetId: targetId,
+                    duration: Math.round(durationSeconds)
+                })
+            }).catch(e => console.log("Track skip"));
+        }
+
+
+        // ==========================================
+        // STANDARD CATALOG LOGIC
+        // ==========================================
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
         let allProducts = [];
         let currentActiveId = "";
         const exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
         let activeCurrency = "CAD";
-        window.currentSlides = {}; // Stores the slider state for each card
+        window.currentSlides = {}; 
+
+        // Debounce timer for search tracking
+        let searchTimeout;
 
         window.onload = function() {
             fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
@@ -368,48 +474,47 @@
             document.getElementById('searchInput').value = ""; 
             document.getElementById('current-category-title').innerText = catName === 'All' ? 'Global Catalog' : catName;
             
+            // 🟢 TRACK CATEGORY CLICK
+            trackBehavior('click_category', catName);
+
             closeProductPage(); 
             if(catName === 'All') renderGrid(allProducts, 'All');
             else renderGrid(allProducts.filter(p => p.category === catName), catName);
         }
 
         function handleSearch() {
-            closeProductPage();
             const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            // 🟢 TRACK SEARCH (Debounced so it only fires when they stop typing for 1 sec)
+            clearTimeout(searchTimeout);
+            if(query.length > 2) {
+                searchTimeout = setTimeout(() => { trackBehavior('search', query); }, 1000);
+            }
+
+            closeProductPage();
             const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || p.id.toLowerCase().includes(query));
             renderGrid(filtered, 'Search Results');
         }
 
-        // 🟢 NEW: Slider Function Logic
         function changeSlide(pid, direction, maxIndex) {
             if (window.currentSlides[pid] === undefined) window.currentSlides[pid] = 0;
             let current = window.currentSlides[pid];
             
-            // Hide current
             document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-100', 'opacity-0');
             document.getElementById(`img-${pid}-${current}`).classList.replace('z-10', 'z-0');
             let oldDot = document.getElementById(`dot-${pid}-${current}`);
-            if(oldDot) {
-                oldDot.classList.replace('w-4', 'w-2');
-                oldDot.classList.replace('opacity-100', 'opacity-40');
-            }
+            if(oldDot) { oldDot.classList.replace('w-4', 'w-2'); oldDot.classList.replace('opacity-100', 'opacity-40'); }
 
-            // Calculate new index
             current = (current + direction + maxIndex) % maxIndex;
             window.currentSlides[pid] = current;
 
-            // Show new
             document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-0', 'opacity-100');
             document.getElementById(`img-${pid}-${current}`).classList.replace('z-0', 'z-10');
             let newDot = document.getElementById(`dot-${pid}-${current}`);
-            if(newDot) {
-                newDot.classList.replace('w-2', 'w-4');
-                newDot.classList.replace('opacity-40', 'opacity-100');
-            }
+            if(newDot) { newDot.classList.replace('w-2', 'w-4'); newDot.classList.replace('opacity-40', 'opacity-100'); }
         }
 
-        // 🟢 NEW: Advanced Render Grid
-        function renderGrid(products, title) {
+        function renderGrid(products) {
             const grid = document.getElementById('productGrid');
             const emptyState = document.getElementById('empty-state');
             grid.innerHTML = "";
@@ -422,28 +527,21 @@
                 let displayPrice = convertPrice(p.startingPriceCAD);
                 let moq = p.variants && p.variants.length > 0 ? p.variants[0].min : 'Contact';
                 
-                // Collect images for slider
                 let imgs = [p.hero, ...p.gallery].filter(Boolean);
                 if(imgs.length === 0) imgs = ['MC.png'];
 
-                // Generate Slider HTML
                 let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
-                
-                // Verified Badge (Top Right)
                 sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
 
-                // Images
                 imgs.forEach((img, i) => {
                     let activeClass = i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0';
                     sliderHtml += `<img src="${img}" class="img-layer absolute inset-0 ${activeClass}" id="img-${p.id}-${i}" loading="lazy" onerror="this.src='MC.png'">`;
                 });
 
-                // Arrows & Dots (Only if multiple images)
                 if(imgs.length > 1) {
                     sliderHtml += `
                         <button class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', -1, ${imgs.length})"><i class="fas fa-chevron-left text-[10px] text-gray-800"></i></button>
                         <button class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', 1, ${imgs.length})"><i class="fas fa-chevron-right text-[10px] text-gray-800"></i></button>
-                        
                         <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">`;
                     imgs.forEach((_, i) => {
                         let dotClass = i === 0 ? 'w-4 opacity-100' : 'w-2 opacity-40';
@@ -455,13 +553,10 @@
 
                 grid.innerHTML += `
                 <div class="product-card" onclick="openProductPage('${p.id}')">
-                    <div class="img-container">
-                        ${sliderHtml}
-                    </div>
+                    <div class="img-container">${sliderHtml}</div>
                     <div class="p-4 flex flex-col flex-1">
                         <p class="text-[9px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1 truncate">${p.category}</p>
                         <h3 class="text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2 h-10 mb-3">${p.name}</h3>
-                        
                         <div class="mt-auto">
                             <p class="text-lg md:text-xl font-extrabold text-gray-900 font-mono leading-none">$${displayPrice} <span class="text-[10px] text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
                             <p class="text-[10px] text-gray-500 font-medium mt-1">MOQ: ${moq}</p>
@@ -480,6 +575,10 @@
                 const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + productId;
                 window.history.pushState({ path: newUrl }, '', newUrl);
             }
+
+            // 🟢 START BEHAVIOR TRACKING (Stopwatch begins!)
+            viewStartTime = Date.now();
+            viewProductId = p.id;
 
             document.getElementById('catalog-view').style.display = 'none';
             document.getElementById('product-page-view').style.display = 'block';
@@ -524,6 +623,13 @@
         }
 
         function closeProductPage(updateUrl = true) {
+            // 🟢 STOP BEHAVIOR TRACKING (Stopwatch ends!)
+            if (viewStartTime > 0 && viewProductId) {
+                const timeSpentSeconds = (Date.now() - viewStartTime) / 1000;
+                trackBehavior('view_product', viewProductId, timeSpentSeconds);
+                viewStartTime = 0; // Reset
+            }
+
             document.getElementById('product-page-view').style.display = 'none';
             document.getElementById('catalog-view').style.display = 'flex';
             if (updateUrl) {
@@ -544,8 +650,19 @@
         }
 
         // ==========================================
-        // MUZIRIS ELITE RFQ LOGIC
+        // 🟢 AUTH-PROTECTED RFQ TRIGGER
         // ==========================================
+        function triggerRFQ() {
+            if (!currentUser) {
+                // If not logged in, flag that they WANT to open the RFQ, then open Auth modal
+                pendingRfqTrigger = true;
+                openAuthModal();
+            } else {
+                // Already logged in, go straight to the RFQ
+                openRFQ();
+            }
+        }
+
         function openRFQ() {
             const p = allProducts.find(x => x.id === currentActiveId);
             document.getElementById('rfq-product-id').value = p.id;
@@ -630,6 +747,9 @@
                 notes: document.getElementById('rfq-notes').value,
                 currency: activeCurrency
             };
+
+            // 🟢 TRACK RFQ SUBMISSION BEHAVIOR
+            trackBehavior('submit_rfq', rfqData.productId);
 
             fetch(API_BASE_URL + '/submit-rfq', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: rfqData }) })
             .then(res => res.json()).then(resp => {
