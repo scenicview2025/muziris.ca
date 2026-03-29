@@ -286,6 +286,13 @@
                     allProducts = data.products.reverse(); 
                     renderCategories(data.categories);
                     renderGrid(allProducts, 'All');
+                    
+                    // 🟢 NEW: Check the URL for a Product ID when the page loads
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const productId = urlParams.get('id');
+                    if (productId) {
+                        setTimeout(() => openProductPage(productId, false), 100);
+                    }
                 } else {
                     document.getElementById('productGrid').innerHTML = "<p class='col-span-full text-center text-red-500 py-10'>System Offline.</p>";
                 }
