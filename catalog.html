@@ -444,9 +444,15 @@
             });
         }
 
-        function closeProductPage() {
+        function closeProductPage(updateUrl = true) {
             document.getElementById('product-page-view').style.display = 'none';
             document.getElementById('catalog-view').style.display = 'flex';
+            
+            // 🟢 NEW: Strip the ?id= from the URL when going back to the grid
+            if (updateUrl) {
+                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.pushState({ path: cleanUrl }, '', cleanUrl);
+            }
         }
 
         function goToSupplierStore() {
