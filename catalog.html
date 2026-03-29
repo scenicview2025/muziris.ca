@@ -349,7 +349,7 @@
 
     <script>
         // ==========================================
-        // 🟢 NEW: FIREBASE & AUTHENTICATION LOGIC
+        // 🟢 UPDATED: FIREBASE & AUTHENTICATION LOGIC
         // ==========================================
         // IMPORTANT: REPLACE THIS CONFIG WITH YOUR ACTUAL FIREBASE CONFIG DETAILS
         const firebaseConfig = {
@@ -361,29 +361,29 @@
             appId: "1:123456789:web:abcdefg"
         };
         
-        // Initialize Firebase
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const auth = firebase.auth();
-        const provider = new firebase.auth.GoogleAuthProvider();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        const msProvider = new firebase.auth.OAuthProvider('microsoft.com');
 
         let currentUser = null;
         let pendingRfqTrigger = false;
 
-        // Listen to Auth State
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
-                document.getElementById('auth-btn-text').innerText = user.displayName.split(' ')[0] + " (Buyer)";
-                document.getElementById('rfq-email').value = user.email; // Auto-fill RFQ email
+                // Fallback to email prefix if they signed up via Email/Password and don't have a display name yet
+                let displayName = user.displayName || user.email.split('@')[0];
+                
+                document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0] + " (Buyer)";
+                document.getElementById('rfq-email').value = user.email;
 
-                // 🟢 Silently sync buyer to PostgreSQL Database
                 fetch(API_BASE_URL + '/buyer/auth', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email: user.email, name: user.displayName, photoUrl: user.photoURL })
+                    body: JSON.stringify({ email: user.email, name: displayName, photoUrl: user.photoURL || '' })
                 }).catch(e => console.log("DB Sync skipped"));
 
-                // If they logged in to submit an RFQ, open it now!
                 if(pendingRfqTrigger) {
                     pendingRfqTrigger = false;
                     openRFQ();
@@ -396,19 +396,43 @@
         });
 
         function openAuthModal() {
-            if(currentUser) {
-                window.location.href = "buyer-dashboard.html"; // If logged in, go to dashboard
-            } else {
-                document.getElementById('auth-modal').style.display = 'flex';
-            }
+            if(currentUser) window.location.href = "buyer-dashboard.html";
+            else document.getElementById('auth-modal').style.display = 'flex';
         }
 
+        // --- Auth Methods ---
         function signInWithGoogle() {
-            auth.signInWithPopup(provider).then((result) => {
+            auth.signInWithPopup(googleProvider).then(() => {
                 document.getElementById('auth-modal').style.display = 'none';
-            }).catch((error) => { console.error("Auth Error:", error); });
+            }).catch(error => alert("Google Sign-In Error: " + error.message));
         }
 
+        function signInWithMicrosoft() {
+            auth.signInWithPopup(msProvider).then(() => {
+                document.getElementById('auth-modal').style.display = 'none';
+            }).catch(error => alert("Microsoft Sign-In Error: " + error.message));
+        }
+
+        function signInWithEmail() {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-pass').value;
+            if(!email || !pass) return alert("Please enter both email and password.");
+            
+            auth.signInWithEmailAndPassword(email, pass).then(() => {
+                document.getElementById('auth-modal').style.display = 'none';
+            }).catch(error => alert("Sign-In Error: " + error.message));
+        }
+
+        function signUpWithEmail() {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-pass').value;
+            if(!email || !pass) return alert("Please enter both email and password to create an account.");
+            
+            auth.createUserWithEmailAndPassword(email, pass).then((userCredential) => {
+                document.getElementById('auth-modal').style.display = 'none';
+                alert("Account created successfully!");
+            }).catch(error => alert("Sign-Up Error: " + error.message));
+        }
 
         // ==========================================
         // 🟢 NEW: BUYER BEHAVIOR TRACKING LOGIC
