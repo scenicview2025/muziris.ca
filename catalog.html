@@ -36,7 +36,7 @@
         .btn-add:hover { background: #f0f0f0; transform: scale(1.05); }
 
         /* Text Details */
-        .price-line { display: flex; items-baseline; gap: 8px; margin-bottom: 4px; }
+        .price-line { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
         .price-main { font-weight: 700; font-size: 15px; color: #000; }
         .price-msrp { font-size: 12px; color: #888; text-decoration: line-through; }
         .product-title { font-size: 14px; font-weight: 500; color: #222; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
@@ -49,17 +49,22 @@
         #product-page-view { display: none; background: #fff; min-height: 100vh; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* RFQ Modal (Kept dark for contrast/focus) */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
-        .rfq-content { background: #ffffff; width: 100%; max-width: 850px; max-height: 90vh; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow-y: auto; padding: 40px; position: relative; }
-        .modal-close { position: absolute; top: 20px; right: 20px; color: #999; font-size: 24px; cursor: pointer; }
+        /* Complete RFQ Modal Restored */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11, 14, 20, 0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
+        .rfq-content { background: #ffffff; width: 100%; max-width: 850px; max-height: 90vh; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow-y: auto; padding: 40px; position: relative; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        .btn-dark { background: #111; color: #fff; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; width: 100%; text-align: center; display: block;}
+        .modal-close { position: absolute; top: 20px; right: 20px; color: #999; font-size: 24px; cursor: pointer; transition: 0.2s; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f5f5f5; }
+        .modal-close:hover { color: #111; background: #e5e5e5; }
+        
+        .btn-dark { background: #111; color: #fff; padding: 14px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; width: 100%; text-align: center; display: block; border: none; outline: none; }
         .btn-dark:hover { background: #333; }
+        .btn-dark:disabled { background: #888; cursor: not-allowed; }
         
-        /* Premium Input */
-        .premium-input { width: 100%; padding: 12px 16px; background: #fff; border: 1px solid #ddd; color: #111; border-radius: 6px; outline: none; transition: 0.3s; font-size: 14px; }
-        .premium-input:focus { border-color: #111; }
+        /* Premium Inputs */
+        .premium-input { width: 100%; padding: 12px 16px; background: #f9fafb; border: 1px solid #e5e7eb; color: #111; border-radius: 6px; outline: none; transition: 0.3s; font-size: 14px; }
+        .premium-input:focus { border-color: #111; background: #fff; }
+        .readonly-input { background: #f3f4f6; color: #6b7280; font-weight: 600; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -218,54 +223,103 @@
     <div id="rfq-modal" class="modal-overlay" onclick="closeModal(event, 'rfq-modal')">
         <div class="rfq-content" onclick="event.stopPropagation()">
             <div class="modal-close" onclick="closeModal(event, 'rfq-modal')"><i class="fas fa-times"></i></div>
+            
             <div class="text-center mb-8 border-b border-gray-100 pb-6">
-                <h2 class="text-2xl font-bold text-gray-900 uppercase tracking-widest mb-2 brand-font">Submit RFQ</h2>
-                <p class="text-sm text-gray-500">Secure volume pricing and final logistics quote.</p>
+                <h2 class="text-2xl font-bold text-gray-900 uppercase tracking-widest mb-2 brand-font">Initiate Sourcing Contract</h2>
+                <p class="text-sm text-gray-500">Specify your volume requirements and logistics to receive a final landed quote.</p>
             </div>
 
-            <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-5">
+            <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-6">
+                
                 <div>
-                    <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Product</label>
-                    <input type="text" id="rfq-product-name" class="premium-input bg-gray-50" readonly>
+                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Sourcing Target</label>
+                    <input type="text" id="rfq-product-name" class="premium-input readonly-input" readonly>
                     <input type="hidden" id="rfq-product-id">
                 </div>
 
                 <div>
-                    <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Volume & Pricing</label>
-                    <div class="border border-gray-200 rounded-lg p-4 max-h-[300px] overflow-y-auto" id="rfq-variants-container"></div>
+                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Volume Configuration & Negotiation *</label>
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl max-h-[400px] overflow-y-auto">
+                        <div class="hidden md:flex gap-4 mb-2 text-[10px] text-gray-400 uppercase tracking-widest font-bold border-b border-gray-200 pb-2">
+                            <div class="flex-[2]">Matrix Details</div>
+                            <div class="flex-1 text-center">Req. Qty</div>
+                            <div class="flex-1 text-center">Est. Total</div>
+                            <div class="flex-[1.2] text-center">Target Total</div>
+                        </div>
+                        <div id="rfq-variants-container" class="space-y-3 mt-2"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 italic mt-2">* Input desired quantity. Leave "Target Total" blank to accept standard pricing.</p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Customization</label>
-                        <select id="rfq-customization" class="premium-input"><option value="No">No (Standard)</option><option value="OEM">Yes (OEM/Logo)</option></select>
+                        <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">White Label / Customization</label>
+                        <select id="rfq-customization" class="premium-input cursor-pointer">
+                            <option value="No">No - Standard Factory Spec</option>
+                            <option value="OEM">Yes - OEM (Brand Labeling)</option>
+                            <option value="ODM">Yes - ODM (Custom Mold/Design)</option>
+                        </select>
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Sample</label>
-                        <select id="rfq-sample" class="premium-input"><option value="Yes">Request Sample</option><option value="No">Skip Sample</option></select>
+                        <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Pre-Production Sample</label>
+                        <select id="rfq-sample" class="premium-input cursor-pointer">
+                            <option value="Yes">Yes, require physical sample</option>
+                            <option value="No">No, proceed to mass production</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl">
+                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-3">Compliance & Media Evidence</label>
+                    <div class="flex flex-wrap gap-5">
+                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-black transition">
+                            <input type="checkbox" id="req-certs" value="Yes" class="w-4 h-4 rounded border-gray-300"> 
+                            Factory Certifications
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-black transition">
+                            <input type="checkbox" id="req-video" value="Yes" class="w-4 h-4 rounded border-gray-300"> 
+                            Production Video
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-black transition">
+                            <input type="checkbox" id="req-photos" value="Yes" class="w-4 h-4 rounded border-gray-300"> 
+                            Unedited Photos
+                        </label>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Logistics Routing</label>
-                    <select id="rfq-logistics" onchange="toggleShippingAddress()" class="premium-input" required>
+                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Freight & Logistics Strategy *</label>
+                    <select id="rfq-logistics" onchange="toggleShippingAddress()" class="premium-input cursor-pointer" required>
                         <option value="">Select Routing...</option>
-                        <option value="Muziris Freight">Muziris DDP (To Door)</option>
-                        <option value="Own Forwarder">My Own Forwarder</option>
+                        <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF to door)</option>
+                        <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB port)</option>
                     </select>
                 </div>
 
                 <div id="destination-box" style="display:none;">
-                    <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Final Destination</label>
-                    <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON">
+                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Final Destination Hub</label>
+                    <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON, Canada (Required for DDP quote)">
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs text-gray-500 uppercase font-bold mb-1">Company</label><input type="text" id="rfq-company" class="premium-input" required></div>
-                    <div><label class="block text-xs text-gray-500 uppercase font-bold mb-1">Email</label><input type="email" id="rfq-email" class="premium-input" required></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Registered Entity Name *</label>
+                        <input type="text" id="rfq-company" class="premium-input" placeholder="Company Ltd." required>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Authorized Email *</label>
+                        <input type="email" id="rfq-email" class="premium-input" placeholder="procurement@company.com" required>
+                    </div>
                 </div>
 
-                <button type="submit" id="btn-submit-rfq" class="btn-dark py-4 mt-4">SUBMIT REQUEST TO FACTORY</button>
+                <div>
+                    <label class="block text-[11px] text-gray-500 uppercase tracking-widest font-bold mb-2">Technical Notes / Addendums</label>
+                    <textarea id="rfq-notes" rows="3" class="premium-input" placeholder="Specify pantone colors, exact dimensions, or specialized packaging requests here..."></textarea>
+                </div>
+
+                <button type="submit" id="btn-submit-rfq" class="btn-dark py-4 uppercase tracking-[0.15em]">
+                    Submit Sourcing Request
+                </button>
             </form>
         </div>
     </div>
@@ -286,8 +340,8 @@
                     allProducts = data.products.reverse(); 
                     renderCategories(data.categories);
                     renderGrid(allProducts, 'All');
-                    
-                    // 🟢 NEW: Check the URL for a Product ID when the page loads
+
+                    // 🟢 URL ROUTING: Instantly load product if ID is in the URL
                     const urlParams = new URLSearchParams(window.location.search);
                     const productId = urlParams.get('id');
                     if (productId) {
@@ -301,12 +355,23 @@
             });
         };
 
+        // 🟢 BROWSER NAVIGATION: Listen for Back/Forward clicks
+        window.addEventListener('popstate', function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            if (productId) {
+                openProductPage(productId, false);
+            } else {
+                closeProductPage(false);
+            }
+        });
+
         function updateCurrency() {
             activeCurrency = document.getElementById('currencySelect').value;
             document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
             handleSearch(); 
             if(currentActiveId && document.getElementById('product-page-view').style.display === 'block') {
-                openProductPage(currentActiveId); // Refresh prices on full page
+                openProductPage(currentActiveId, false); 
             }
         }
 
@@ -329,7 +394,7 @@
             document.getElementById('searchInput').value = ""; 
             document.getElementById('current-category-title').innerText = catName === 'All' ? 'All Categories' : catName;
             
-            closeProductPage(); // If they are on product page, go back to catalog
+            closeProductPage(); 
             if(catName === 'All') renderGrid(allProducts, 'All');
             else renderGrid(allProducts.filter(p => p.category === catName), catName);
         }
@@ -341,9 +406,6 @@
             renderGrid(filtered, 'Search Results');
         }
 
-        // ==========================================
-        // UI RENDERING: FAIRE-STYLE CARDS
-        // ==========================================
         function renderGrid(products, title) {
             const grid = document.getElementById('productGrid');
             const emptyState = document.getElementById('empty-state');
@@ -357,8 +419,6 @@
                 let fallbackImg = p.hero ? p.hero : 'MC.png';
                 let displayPrice = convertPrice(p.startingPriceCAD);
                 let supplierName = p.companyName || "Verified Factory";
-                
-                // Mock MSRP (Show 50% markup for visual effect)
                 let msrpPrice = (parseFloat(displayPrice) * 1.5).toFixed(2);
 
                 grid.innerHTML += `
@@ -384,25 +444,23 @@
         }
 
         // ==========================================
-        // THE FULL PAGE PRODUCT VIEW
+        // URL ROUTED FULL PAGE PRODUCT VIEW
         // ==========================================
         function openProductPage(productId, updateUrl = true) {
             const p = allProducts.find(x => x.id === productId);
             if(!p) return;
             currentActiveId = p.id;
 
-            // 🟢 NEW: Update the browser URL quietly without reloading
+            // 🟢 Quietly update URL for sharing
             if (updateUrl) {
                 const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + productId;
                 window.history.pushState({ path: newUrl }, '', newUrl);
             }
 
-            // Hide Catalog, Show Product Page
             document.getElementById('catalog-view').style.display = 'none';
             document.getElementById('product-page-view').style.display = 'block';
             window.scrollTo(0,0);
 
-            // Populate Data
             let supplierName = p.companyName || "Verified Muziris Factory";
             document.getElementById('pp-breadcrumb-cat').innerText = p.category;
             document.getElementById('pp-title').innerText = p.name;
@@ -418,7 +476,6 @@
             document.getElementById('pp-srv').innerText = p.services || "Standard";
             document.getElementById('pp-pkg').innerText = p.pkg || "Export Grade Packaging";
 
-            // Images
             const mainImg = document.getElementById('pp-main-img');
             const thumbRow = document.getElementById('pp-thumbs');
             mainImg.src = p.hero || 'MC.png';
@@ -429,7 +486,6 @@
                 thumbRow.innerHTML += `<img class="w-20 h-20 object-cover border-2 rounded-md cursor-pointer transition-all bg-white ${activeClass}" src="${url}" onclick="document.getElementById('pp-main-img').src='${url}'; document.querySelectorAll('#pp-thumbs img').forEach(t=>{t.classList.remove('border-black', 'opacity-100'); t.classList.add('border-transparent', 'opacity-60')}); this.classList.remove('border-transparent', 'opacity-60'); this.classList.add('border-black', 'opacity-100');" onerror="this.style.display='none'">`;
             });
 
-            // Pricing Matrix
             const tBody = document.getElementById('pp-pricing-body');
             tBody.innerHTML = "";
             p.variants.forEach(v => {
@@ -448,7 +504,7 @@
             document.getElementById('product-page-view').style.display = 'none';
             document.getElementById('catalog-view').style.display = 'flex';
             
-            // 🟢 NEW: Strip the ?id= from the URL when going back to the grid
+            // 🟢 Clean URL when returning to catalog
             if (updateUrl) {
                 const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                 window.history.pushState({ path: cleanUrl }, '', cleanUrl);
@@ -467,12 +523,12 @@
         }
 
         // ==========================================
-        // RFQ LOGIC
+        // RESTORED FULL RFQ LOGIC
         // ==========================================
         function openRFQ() {
             const p = allProducts.find(x => x.id === currentActiveId);
             document.getElementById('rfq-product-id').value = p.id;
-            document.getElementById('rfq-product-name').value = p.name;
+            document.getElementById('rfq-product-name').value = p.name + " (" + p.id + ")";
             
             const vContainer = document.getElementById('rfq-variants-container');
             vContainer.innerHTML = ""; 
@@ -480,14 +536,22 @@
             p.variants.forEach((v) => {
                 let varName = v.type === "Standard" ? "Standard" : `${v.type}: ${v.opt}`;
                 let convertedPrice = convertPrice(v.priceCAD);
+                
                 vContainer.innerHTML += `
-                <div class="variant-rfq-row flex gap-4 items-center bg-white p-3 border-b border-gray-100 last:border-0">
-                    <div class="flex-1 text-sm">
-                        <strong class="text-gray-800">${varName}</strong>
-                        <span class="text-gray-500 text-xs block">$${convertedPrice} / ${v.unit}</span>
+                <div class="variant-rfq-row flex flex-col md:flex-row gap-4 items-center bg-white p-4 border border-gray-200 rounded-lg shadow-sm transition hover:border-gray-400">
+                    <div class="flex-[2] w-full text-sm">
+                        <strong class="text-gray-900">${varName}</strong>
+                        <span class="text-gray-500 text-xs mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
                     </div>
-                    <div class="w-24"><input type="number" min="0" class="v-qty premium-input py-1.5 text-center px-2" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Qty" oninput="updateCalculatedTotal(this)"></div>
-                    <div class="w-24 text-right font-bold text-gray-800">$<span class="v-total-display">0.00</span></div>
+                    <div class="flex-1 w-full">
+                        <input type="number" min="0" class="v-qty premium-input py-2 text-center px-2" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                    </div>
+                    <div class="flex-1 w-full text-center text-lg font-bold text-gray-900 font-mono">
+                        $<span class="v-total-display">0.00</span>
+                    </div>
+                    <div class="flex-[1.2] w-full">
+                        <input type="number" step="0.01" class="v-target premium-input py-2 text-center px-2" placeholder="Target Total">
+                    </div>
                 </div>`;
             });
             document.getElementById('rfq-modal').style.display = 'flex';
@@ -498,17 +562,6 @@
             let unitPrice = parseFloat(inputElement.getAttribute('data-buyerprice')) || 0;
             inputElement.closest('.variant-rfq-row').querySelector('.v-total-display').innerText = (qty * unitPrice).toFixed(2);
         }
-        
-        // 🟢 NEW: Make the browser's Back/Forward buttons work perfectly
-        window.addEventListener('popstate', function(event) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
-            if (productId) {
-                openProductPage(productId, false);
-            } else {
-                closeProductPage(false);
-            }
-        });
 
         function toggleShippingAddress() {
             document.getElementById('destination-box').style.display = document.getElementById('rfq-logistics').value === "Muziris Freight" ? "block" : "none";
@@ -517,23 +570,30 @@
         function submitRFQ() {
             const btn = document.getElementById('btn-submit-rfq');
             let requestedVariants = [];
+            
             document.querySelectorAll('.variant-rfq-row').forEach(row => {
                 let qtyInput = row.querySelector('.v-qty');
+                let targetInput = row.querySelector('.v-target');
                 let qty = parseInt(qtyInput.value);
+                
                 if (qty > 0) {
+                   let unitPriceBuyer = parseFloat(qtyInput.getAttribute('data-buyerprice')) || 0;
+                   let totalCurrentBuyer = (qty * unitPriceBuyer).toFixed(2);
+                   let totalTargetBuyer = targetInput.value ? parseFloat(targetInput.value).toFixed(2) : "";
+
                    requestedVariants.push({
                      variantId: qtyInput.getAttribute('data-vid'),
                      variantName: qtyInput.getAttribute('data-vname'),
-                     currentPriceBuyer: (qty * parseFloat(qtyInput.getAttribute('data-buyerprice'))).toFixed(2),
+                     currentPriceBuyer: totalCurrentBuyer,
                      quantity: qty,
-                     targetPriceBuyer: "" // Simplified for cleaner UI
+                     targetPriceBuyer: totalTargetBuyer
                    });
                 }
             });
 
-            if(requestedVariants.length === 0) return alert("Please enter a quantity.");
+            if(requestedVariants.length === 0) return alert("Please enter a quantity for at least one matrix variant.");
 
-            btn.innerText = "SENDING..."; btn.disabled = true;
+            btn.innerText = "ENCRYPTING SOURCING REQUEST..."; btn.disabled = true;
 
             const rfqData = {
                 productId: document.getElementById('rfq-product-id').value,
@@ -548,7 +608,7 @@
                 destination: document.getElementById('rfq-destination').value,
                 company: document.getElementById('rfq-company').value,
                 email: document.getElementById('rfq-email').value,
-                notes: "N/A", // Simplified
+                notes: document.getElementById('rfq-notes').value,
                 currency: activeCurrency
             };
 
@@ -556,11 +616,11 @@
             .then(res => res.json()).then(resp => {
                 if(resp.success) {
                     document.getElementById('rfq-modal').style.display = 'none';
-                    alert("✓ RFQ Submitted Successfully.");
+                    alert("✓ CONTRACT SECURED.\n\nYour RFQ has been submitted securely. An administrator will review your requirements shortly.");
                     document.getElementById('rfqForm').reset();
                 } else alert("ERROR: " + resp.error);
-                btn.innerText = "SUBMIT REQUEST TO FACTORY"; btn.disabled = false;
-            }).catch(err => { alert("CONNECTION ERROR."); btn.innerText = "SUBMIT REQUEST TO FACTORY"; btn.disabled = false; });
+                btn.innerText = "SUBMIT SOURCING REQUEST"; btn.disabled = false;
+            }).catch(err => { alert("CONNECTION ERROR."); btn.innerText = "SUBMIT SOURCING REQUEST"; btn.disabled = false; });
         }
     </script>
 </body>
