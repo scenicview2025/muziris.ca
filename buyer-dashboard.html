@@ -9,11 +9,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-  <script>
-    if (!localStorage.getItem('verifiedBuyerEmail')) {
-      window.location.replace('index.html'); // Redirect to main login
-    }
-  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 
   <style>
     :root { 
@@ -65,7 +62,7 @@
 
   <header class="sticky top-0 z-50 py-4 px-6 sm:px-10 flex justify-between items-center">
     <div>
-      <h1 class="text-2xl font-bold tracking-widest text-[#D4AF37] brand-font uppercase m-0 leading-none">Muziris</h1>
+      <h1 class="text-2xl font-bold tracking-widest text-[#D4AF37] brand-font uppercase m-0 leading-none cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
       <span class="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-bold">Procurement Portal</span>
     </div>
     <div class="flex items-center gap-6">
@@ -79,7 +76,7 @@
     <div class="flex justify-between items-end mb-8">
       <div>
         <h2 class="text-3xl font-bold text-white brand-font">Sourcing Command Center</h2>
-        <p class="text-sm text-gray-400 mt-2" id="ui-buyer-email">Logged in as: Loading...</p>
+        <p class="text-sm text-gray-400 mt-2" id="ui-buyer-email">Authenticating Secure Connection...</p>
       </div>
     </div>
 
@@ -163,28 +160,55 @@
   </div>
 
   <script>
+    // ==========================================
+    // 🟢 FIREBASE INITIALIZATION & AUTH GUARD
+    // ==========================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+        authDomain: "muziris-ac9dd.firebaseapp.com",
+        projectId: "muziris-ac9dd",
+        storageBucket: "muziris-ac9dd.firebasestorage.app",
+        messagingSenderId: "929662963272",
+        appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+    };
+    
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const auth = firebase.auth();
+
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     let currentBuyerEmail = "";
     let allBuyerRfqs = [];
     let activeRfqForModal = null;
 
-    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
-    window.addEventListener('pageshow', function(event) {
-      if (!localStorage.getItem('verifiedBuyerEmail')) window.location.replace('index.html');
+    // 🟢 The Central Brain: Watch for Login State
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // User IS logged in! Let them into the dashboard.
+            currentBuyerEmail = user.email;
+            document.getElementById('ui-buyer-email').innerHTML = `Logged in as: <strong class="text-white">${currentBuyerEmail}</strong>`;
+            fetchBuyerRfqs(); // Go get their contracts
+        } else {
+            // User IS NOT logged in! Kick them back to the front door.
+            window.location.replace('index1.html');
+        }
     });
 
-    window.onload = function() {
-      currentBuyerEmail = localStorage.getItem('verifiedBuyerEmail');
-      if (!currentBuyerEmail) { window.location.replace('index.html'); return; }
-      
-      document.getElementById('ui-buyer-email').innerText = "Logged in as: " + currentBuyerEmail;
-      fetchBuyerRfqs();
-    };
+    // 🟢 Secure Sign Out Function
+    function logoutBuyer() {
+      auth.signOut().then(() => {
+        // Firebase will trigger the onAuthStateChanged above and boot them to index1.html automatically
+      }).catch((error) => {
+        console.error("Sign out error", error);
+      });
+    }
 
+    // ==========================================
+    // RFQ FETCHING & DASHBOARD LOGIC
+    // ==========================================
     function fetchBuyerRfqs() {
       // In a real app, you'd hit an endpoint like /get-buyer-rfqs. 
-      // For this architecture, we will fetch the global RFQs and filter by this buyer's email.
-      fetch(API_BASE_URL + '/get-admin-rfqs', { // Re-using admin endpoint for architecture mockup
+      // For this architecture, we fetch the global RFQs and filter by this buyer's verified email.
+      fetch(API_BASE_URL + '/get-admin-rfqs', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ adminKey: "MUZIRIS_MASTER_KEY_2026" })
@@ -193,7 +217,7 @@
       .then(data => {
         if(data.error) throw new Error(data.error);
         
-        // Filter only RFQs belonging to this buyer
+        // Filter only RFQs belonging to this specific buyer
         allBuyerRfqs = data.filter(r => r.buyer_email && r.buyer_email.toLowerCase() === currentBuyerEmail.toLowerCase());
         renderDashboard();
       })
@@ -209,7 +233,7 @@
       let html = "";
 
       if(allBuyerRfqs.length === 0) {
-        document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-500">No active sourcing requests. Browse the catalog to start.</td></tr>`;
+        document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-10 text-gray-500">No active sourcing requests. <a href="catalog.html" class="text-[var(--gold)] hover:underline">Browse the catalog to start.</a></td></tr>`;
         return;
       }
 
@@ -344,7 +368,7 @@
       btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> PROCESSING PAYMENT...`;
       btn.disabled = true;
 
-      // Update status in backend
+      // Update status in backend (using the mock flow)
       fetch(API_BASE_URL + '/update-rfq-status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -373,11 +397,6 @@
       if(e.target.id === 'quote-modal' || e.target.closest('.modal-close')) {
         document.getElementById('quote-modal').style.display = 'none';
       }
-    }
-
-    function logoutBuyer() {
-      localStorage.removeItem('verifiedBuyerEmail');
-      window.location.replace('index.html');
     }
   </script>
 </body>
