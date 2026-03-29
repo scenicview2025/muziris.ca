@@ -498,6 +498,17 @@
             let unitPrice = parseFloat(inputElement.getAttribute('data-buyerprice')) || 0;
             inputElement.closest('.variant-rfq-row').querySelector('.v-total-display').innerText = (qty * unitPrice).toFixed(2);
         }
+        
+        // 🟢 NEW: Make the browser's Back/Forward buttons work perfectly
+        window.addEventListener('popstate', function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            if (productId) {
+                openProductPage(productId, false);
+            } else {
+                closeProductPage(false);
+            }
+        });
 
         function toggleShippingAddress() {
             document.getElementById('destination-box').style.display = document.getElementById('rfq-logistics').value === "Muziris Freight" ? "block" : "none";
