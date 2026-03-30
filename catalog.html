@@ -501,7 +501,9 @@
                 exchangeRates = { "CAD": 1.00, "USD": 0.74 };
             }
         }
-        window.onload = function() {
+        window.onload = async function() {
+            await loadLiveCurrencies(); // 🟢 ADDED: Fetch currencies first!
+
             fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
             .then(res => res.json())
             .then(data => {
