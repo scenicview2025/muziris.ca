@@ -719,6 +719,17 @@
             document.getElementById('pp-srv').innerText = p.services || "Standard";
             document.getElementById('pp-pkg').innerText = p.pkg || "Export Grade Packaging";
 
+            // 🟢 NEW: INJECT PDF BUTTON IF THE SUPPLIER UPLOADED ONE
+            const pdfContainer = document.getElementById('pp-pdf-container');
+            if (p.pdf && p.pdf.startsWith('http')) {
+                pdfContainer.innerHTML = `
+                    <a href="${p.pdf}" target="_blank" class="inline-flex items-center gap-3 px-5 py-3 bg-[#f8f9fa] hover:bg-gray-100 border border-gray-200 text-gray-800 text-xs font-bold uppercase tracking-widest rounded-lg transition shadow-sm">
+                        <i class="fas fa-file-pdf text-red-500 text-lg"></i> Download Technical Catalog
+                    </a>`;
+            } else {
+                pdfContainer.innerHTML = ''; // Keep it hidden if there is no PDF
+            }
+
             const mainImg = document.getElementById('pp-main-img');
             const thumbRow = document.getElementById('pp-thumbs');
             mainImg.src = p.hero || 'MC.png';
