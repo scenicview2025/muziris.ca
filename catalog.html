@@ -461,54 +461,99 @@
 
 
         // ==========================================
-        // STANDARD CATALOG LOGIC
+        // 🟢 PREMIUM CATALOG LOGIC & CURRENCY ENGINE
         // ==========================================
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
         let allProducts = [];
         let currentActiveId = "";
-        let exchangeRates = {}; // 🟢 CHANGED: Now empty and waiting for the database!
+        let exchangeRates = {}; // Waits for database
         let activeCurrency = "CAD";
         window.currentSlides = {}; 
-
-        // Debounce timer for search tracking
         let searchTimeout;
 
-        // 🟢 NEW: Fetch Live Currencies from your Database
+        // 🟢 FLAG MAPPER: Links standard currencies to their 2-letter flag code
+        const flagMap = {
+            "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", 
+            "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", 
+            "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae"
+        };
+
+        // 🟢 DYNAMIC CURRENCY ENGINE (WITH FLAGS)
         async function loadLiveCurrencies() {
             try {
                 const res = await fetch(API_BASE_URL + '/public-currencies');
                 const data = await res.json();
                 
                 if (data.success && data.currencies.length > 0) {
-                    const dropdown = document.getElementById('currencySelect');
-                    dropdown.innerHTML = ''; // Clear the hardcoded options
+                    const dropdownList = document.getElementById('currencyList');
+                    dropdownList.innerHTML = ''; 
                     
                     data.currencies.forEach(item => {
-                        // Save the real math multiplier to memory
                         exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
                         
-                        // Build the dropdown visually
-                        const option = document.createElement('option');
-                        option.value = item.currency;
-                        option.text = `${item.country} (${item.currency})`;
+                        const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
                         
-                        // Set USD as default (or change to CAD if you prefer)
-                        if (item.currency === 'USD') option.selected = true; 
+                        const btn = document.createElement('button');
+                        btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
+                        btn.innerHTML = `
+                            <img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200">
+                            <span class="flex-1">${item.country}</span>
+                            <span class="text-gray-400 text-xs font-bold">${item.currency}</span>
+                        `;
                         
-                        dropdown.appendChild(option);
+                        btn.onclick = () => {
+                            selectCurrency(item.currency, flagCode);
+                            updateCurrency(); // Recalculate grid prices
+                        };
+                        
+                        dropdownList.appendChild(btn);
                     });
-                    
-                    // Update active currency variable to match dropdown
-                    activeCurrency = dropdown.value;
                 }
             } catch (error) {
                 console.error("Failed to load live currencies:", error);
-                // Safety Fallback just in case the database is asleep
-                exchangeRates = { "CAD": 1.00, "USD": 0.74 };
+                exchangeRates = { "CAD": 1.00, "USD": 0.74 }; // Fallback
             }
         }
+
+        // 🟢 UI CONTROLLER FOR CUSTOM DROPDOWN
+        function selectCurrency(curr, flagCode) {
+            activeCurrency = curr; // Set the global variable
+            document.getElementById('activeCurrencyDisplay').innerHTML = `
+                <img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200">
+                <span class="text-sm font-bold text-gray-900">${curr}</span>
+            `;
+            document.getElementById('currencyMenu').classList.add('hidden');
+        }
+
+        // Open/Close menu when clicking the button
+        const currBtn = document.getElementById('currencyBtn');
+        if(currBtn) {
+            currBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('currencyMenu').classList.toggle('hidden');
+            });
+        }
+
+        // Close menu when clicking anywhere else
+        window.addEventListener('click', (e) => {
+            if(!e.target.closest('#customCurrencyDropdown')) {
+                const menu = document.getElementById('currencyMenu');
+                if(menu) menu.classList.add('hidden');
+            }
+        });
+
+        // 🟢 UPDATED: RELIES ON GLOBAL 'activeCurrency' INSTEAD OF <SELECT>
+        function updateCurrency() {
+            document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
+            handleSearch(); 
+            if(currentActiveId && document.getElementById('product-page-view').style.display === 'block') {
+                openProductPage(currentActiveId, false); 
+            }
+        }
+
+        // 🟢 LOAD EVERYTHING ON BOOT
         window.onload = async function() {
-            await loadLiveCurrencies(); // 🟢 ADDED: Fetch currencies first!
+            await loadLiveCurrencies(); // Fetch currencies FIRST
 
             fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
             .then(res => res.json())
@@ -529,23 +574,6 @@
                 document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
             });
         };
-
-        window.addEventListener('popstate', function(event) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
-            if (productId) openProductPage(productId, false);
-            else closeProductPage(false);
-        });
-
-        function updateCurrency() {
-            activeCurrency = document.getElementById('currencySelect').value;
-            document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
-            handleSearch(); 
-            if(currentActiveId && document.getElementById('product-page-view').style.display === 'block') {
-                openProductPage(currentActiveId, false); 
-            }
-        }
-
         function convertPrice(cadPrice) {
             if(!cadPrice || isNaN(cadPrice)) return "0.00";
             return (cadPrice * exchangeRates[activeCurrency]).toFixed(2);
