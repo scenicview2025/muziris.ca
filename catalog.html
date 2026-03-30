@@ -460,13 +460,47 @@
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
         let allProducts = [];
         let currentActiveId = "";
-        const exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
+        let exchangeRates = {}; // 🟢 CHANGED: Now empty and waiting for the database!
         let activeCurrency = "CAD";
         window.currentSlides = {}; 
 
         // Debounce timer for search tracking
         let searchTimeout;
 
+        // 🟢 NEW: Fetch Live Currencies from your Database
+        async function loadLiveCurrencies() {
+            try {
+                const res = await fetch(API_BASE_URL + '/public-currencies');
+                const data = await res.json();
+                
+                if (data.success && data.currencies.length > 0) {
+                    const dropdown = document.getElementById('currencySelect');
+                    dropdown.innerHTML = ''; // Clear the hardcoded options
+                    
+                    data.currencies.forEach(item => {
+                        // Save the real math multiplier to memory
+                        exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
+                        
+                        // Build the dropdown visually
+                        const option = document.createElement('option');
+                        option.value = item.currency;
+                        option.text = `${item.country} (${item.currency})`;
+                        
+                        // Set USD as default (or change to CAD if you prefer)
+                        if (item.currency === 'USD') option.selected = true; 
+                        
+                        dropdown.appendChild(option);
+                    });
+                    
+                    // Update active currency variable to match dropdown
+                    activeCurrency = dropdown.value;
+                }
+            } catch (error) {
+                console.error("Failed to load live currencies:", error);
+                // Safety Fallback just in case the database is asleep
+                exchangeRates = { "CAD": 1.00, "USD": 0.74 };
+            }
+        }
         window.onload = function() {
             fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
             .then(res => res.json())
