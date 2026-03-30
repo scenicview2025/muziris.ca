@@ -719,13 +719,29 @@
             document.getElementById('pp-srv').innerText = p.services || "Standard";
             document.getElementById('pp-pkg').innerText = p.pkg || "Export Grade Packaging";
 
-            // 🟢 NEW: INJECT CATALOG IMAGE (A+ CONTENT) IF UPLOADED
+            // 🟢 SMART CATALOG DISPLAY (Handles both Images AND PDFs inline)
             const catalogContainer = document.getElementById('pp-pdf-container');
             if (p.pdf && p.pdf.startsWith('http')) {
+                // Check if the URL is a PDF document
+                const isPdf = p.pdf.toLowerCase().includes('.pdf');
+                
+                let mediaHtml = '';
+                if (isPdf) {
+                    // Embed a scrolling PDF viewer directly on the page
+                    mediaHtml = `<iframe src="${p.pdf}#toolbar=0" class="w-full h-[600px] rounded-xl border border-gray-200 shadow-sm"></iframe>`;
+                } else {
+                    // Display as a standard A+ Image
+                    mediaHtml = `
+                        <img src="${p.pdf}" alt="Technical Specs" class="w-full h-auto rounded-xl border border-gray-200 shadow-sm object-contain" onerror="this.style.display='none'; document.getElementById('media-error-${p.id}').style.display='block';">
+                        <div id="media-error-${p.id}" style="display:none;" class="text-red-500 text-xs font-bold text-center mt-4 p-4 bg-red-50 rounded-lg border border-red-100">
+                            ⚠️ The supplier uploaded a broken image link.
+                        </div>`;
+                }
+
                 catalogContainer.innerHTML = `
                     <div class="mt-8 pt-8 border-t border-gray-100">
                         <h3 class="text-sm font-bold mb-6 uppercase tracking-widest text-gray-900 text-center">Extended Specifications</h3>
-                        <img src="${p.pdf}" alt="Technical Specs" class="w-full h-auto rounded-xl border border-gray-200 shadow-sm object-contain" onerror="this.style.display='none'">
+                        ${mediaHtml}
                     </div>`;
             } else {
                 catalogContainer.innerHTML = ''; 
