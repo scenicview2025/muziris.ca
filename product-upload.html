@@ -918,30 +918,37 @@
         let packUrl = await uploadFile(formElement.img_pack);
         let extraUrl = await uploadFile(formElement.img_extra);
         
+        // 🟢 NEW: MULTI-IMAGE CATALOG UPLOADER
         let catalogUrl = "";
-        if (formElement.catalog.files[0]) {
-           let pdfObj = await readFile(formElement.catalog.files[0]);
-           let response = await fetch(API_BASE_URL + '/upload-media', {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({
-               supplierId: supplierId,
-               fileName: pdfObj.name,
-               mimeType: pdfObj.mimeType,
-               fileData: pdfObj.data
-             })
-           });
-           
-           const pdfContentType = response.headers.get("content-type");
-           if (!pdfContentType || !pdfContentType.includes("application/json")) {
-               const pdfHtmlError = await response.text();
-               throw new Error(`PDF UPLOAD FAILED:\n` + pdfHtmlError.substring(0, 150));
-           }
-
-           let pdfRes = await response.json();
-           if(pdfRes.success) catalogUrl = pdfRes.url;
+        if (formElement.catalog.files && formElement.catalog.files.length > 0) {
+            let uploadedUrls = [];
+            
+            // Loop through every image they selected
+            for (let i = 0; i < formElement.catalog.files.length; i++) {
+                document.getElementById("btn").innerHTML = `UPLOADING A+ CONTENT (${i+1}/${formElement.catalog.files.length})...`;
+                
+                let fileObj = await compressImage(formElement.catalog.files[i]);
+                let response = await fetch(API_BASE_URL + '/upload-media', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        supplierId: supplierId,
+                        fileName: fileObj.name,
+                        mimeType: fileObj.mimeType,
+                        fileData: fileObj.data
+                    })
+                });
+                
+                let resJson = await response.json();
+                if(resJson.success) uploadedUrls.push(resJson.url);
+            }
+            
+            // Glue all the successful URLs together with a comma!
+            catalogUrl = uploadedUrls.join(',');
+        } else if (window.currentPreviewData && window.currentPreviewData.catalog_pdf) {
+            // If they are editing a product but didn't upload new catalog files, keep the old ones!
+            catalogUrl = window.currentPreviewData.catalog_pdf;
         }
-
         var variantInputs = document.getElementsByName("variantImages");
         for(var j=0; j<dataList.length; j++) {
            if(variantInputs[j] && variantInputs[j].files[0]) {
