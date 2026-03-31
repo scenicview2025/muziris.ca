@@ -300,7 +300,7 @@
               packUrl: mediaUrls[(row["Pack Img"] || "").trim()] || "",
               extraUrl: mediaUrls[(row["Extra Img"] || "").trim()] || "",
               // 🟢 NEW: Glue all Cloudinary URLs back together separated by commas!
-              catalogUrl: (row["Catalog PDF"] || "").split(',').map(f => mediaUrls[f.trim()]).filter(Boolean).join(',') || "",
+              catalogUrl: (row["A+ Images"] || "").split(',').map(f => mediaUrls[f.trim()]).filter(Boolean).join(',') || "",
               pricingMatrix: []
             };
         }
