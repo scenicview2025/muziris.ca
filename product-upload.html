@@ -335,9 +335,10 @@
             
           </div>
           
-          <label>CATALOG (PDF)</label>
+          <label>EXTENDED SPECIFICATIONS (A+ CONTENT)</label>
+          <span class="sub-label">You can select multiple images at once to stack them seamlessly.</span>
           <div id="status_catalog" style="font-size: 11px; color: #666; margin-bottom: 5px; font-weight: bold;">New Upload</div>
-          <input type="file" name="catalog" accept="application/pdf" onchange="document.getElementById('status_catalog').innerHTML='<span style=\'color:#D4AF37\'>✎ Will be replaced</span>'">
+          <input type="file" name="catalog" accept="image/*" multiple onchange="document.getElementById('status_catalog').innerHTML='<span style=\'color:#D4AF37\'>✎ ' + this.files.length + ' image(s) selected</span>'">
 
           <div class="btn-group">
             <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
