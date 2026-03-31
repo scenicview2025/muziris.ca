@@ -20,9 +20,9 @@
     .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle, rgba(11,14,20,0.7) 0%, rgba(11,14,20,0.98) 100%); z-index: 1; pointer-events: none;}
     
     /* TOP NAVIGATION */
-.top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
-.back-btn { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
-.back-btn:hover { color: #fff; }
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .back-btn { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+    .back-btn:hover { color: #fff; }
 
     .container { position: relative; z-index: 2; max-width: 800px; margin: 40px auto; padding: 40px; background: rgba(21, 25, 34, 0.95); border: 1px solid var(--gold); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
     h1 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-top: 0; }
@@ -131,7 +131,6 @@
       const verifiedId = localStorage.getItem('verifiedSupplierId');
       const verifiedCurrency = localStorage.getItem('verifiedCurrency'); 
       
-      // 🟢 SECURITY: Hard redirect if ID is missing
       if (!verifiedId) {
         window.location.replace('suppliers'); 
         return;
@@ -140,7 +139,6 @@
         window.officialCurrency = verifiedCurrency || "USD"; 
         document.getElementById('mainUI').style.display = 'block';
         
-        // Fetch master categories from Node.js
         fetch(API_BASE_URL + '/categories', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
@@ -156,7 +154,6 @@
     let mediaFiles = [];
     window.masterCategories = null; 
     
-    // Listeners for UI updates
     document.getElementById('csvInput').addEventListener('change', function(e) {
       if(e.target.files.length > 0) document.getElementById('csvLabel').innerText = "✔ " + e.target.files[0].name;
     });
@@ -192,7 +189,6 @@
       document.getElementById('alertBox').style.display = "none";
       document.getElementById('log').innerHTML = "";
 
-      // 1. READ CSV (PapaParse)
       Papa.parse(csvFile, {
         header: true,
         skipEmptyLines: true,
@@ -214,7 +210,13 @@
         if(!row["Item Group Number"]) return showError(`Missing 'Item Group Number' on CSV row ${rowNum}. Please group your variants using 1, 2, 3 etc.`);
         
         for(let col of imageColumns) {
-          if(row[col] && row[col].trim() !== "") requiredImages.add(row[col].trim());
+          if(row[col] && row[col].trim() !== "") {
+            // 🟢 NEW: Split commas so the system looks for individual files!
+            let filenames = row[col].split(',');
+            filenames.forEach(f => {
+              if (f.trim() !== "") requiredImages.add(f.trim());
+            });
+          }
         }
 
         if (window.masterCategories) {
@@ -242,7 +244,6 @@
 
       document.getElementById('submitBtn').innerText = "Uploading Media to Cloudinary...";
 
-      // 3. SECURE MEDIA UPLOAD TO NODE/CLOUDINARY
       let mediaUrls = {}; 
       for(let i=0; i<mediaFiles.length; i++) {
         let file = mediaFiles[i];
@@ -259,7 +260,7 @@
               supplierId: supId,
               fileName: file.name,
               mimeType: file.type,
-              fileData: base64Data.split(',')[1] // Strip the data uri prefix
+              fileData: base64Data.split(',')[1] 
             })
           });
           const result = await response.json();
@@ -273,7 +274,6 @@
         }
       }
 
-      // 4. GROUPING DATA FOR POSTGRESQL JSONB
       document.getElementById('submitBtn').innerText = "Mapping Database...";
       logProgress("Grouping Variants...");
 
@@ -282,7 +282,6 @@
       for(let row of csvData) {
         let groupNum = String(row["Item Group Number"]).trim();
         
-        // If this is the first time seeing this product, create the master record
         if (!productsMap[groupNum]) {
             productsMap[groupNum] = {
               supplierId: supId,
@@ -295,17 +294,17 @@
               servicesString: row["Services"] || "Standard",
               packagingDetails: row["Pkg Details"] || "",
               description: row["Description"] || "",
-              heroUrl: mediaUrls[row["Hero Img"]] || "",
-              lifeUrl: mediaUrls[row["Life Img"]] || "",
-              detailUrl: mediaUrls[row["CloseUp Img"]] || "",
-              packUrl: mediaUrls[row["Pack Img"]] || "",
-              extraUrl: mediaUrls[row["Extra Img"]] || "",
-              catalogUrl: mediaUrls[row["Catalog PDF"]] || "",
+              heroUrl: mediaUrls[(row["Hero Img"] || "").trim()] || "",
+              lifeUrl: mediaUrls[(row["Life Img"] || "").trim()] || "",
+              detailUrl: mediaUrls[(row["CloseUp Img"] || "").trim()] || "",
+              packUrl: mediaUrls[(row["Pack Img"] || "").trim()] || "",
+              extraUrl: mediaUrls[(row["Extra Img"] || "").trim()] || "",
+              // 🟢 NEW: Glue all Cloudinary URLs back together separated by commas!
+              catalogUrl: (row["Catalog PDF"] || "").split(',').map(f => mediaUrls[f.trim()]).filter(Boolean).join(',') || "",
               pricingMatrix: []
             };
         }
 
-        // Push the variant data into the pricingMatrix array
         productsMap[groupNum].pricingMatrix.push({
           type: row["Var Type"] || "Standard",
           opt: row["Var Option"] || "-",
@@ -315,14 +314,12 @@
           price: row["Price"] || "0",
           incoterms: row["Incoterms"] || "FOB",
           lead: row["Lead Time"] || "30",
-          varImg: mediaUrls[row["Variant Img"]] || ""
+          varImg: mediaUrls[(row["Variant Img"] || "").trim()] || ""
         });
       }
 
-      // Convert the map object back to an array
       let finalGroupedProducts = Object.values(productsMap);
 
-      // 5. PUSH TO NODE.JS DATABASE
       document.getElementById('submitBtn').innerText = "Finalizing Submission...";
       logProgress("Pushing to Muziris Ledger...");
 
