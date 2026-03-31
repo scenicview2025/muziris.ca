@@ -95,6 +95,7 @@
           <li><strong>No Currency Symbols:</strong> Type prices as raw numbers (e.g., <code>12.50</code>). Do not use dollar signs or euro symbols. Your currency is automatically determined by your Supplier ID.</li>
           <li><strong>No Commas in Numbers:</strong> Write quantities as <code>1500</code>, not <code>1,500</code>. (Commas break CSV code).</li>
           <li><strong>Image Linking:</strong> Because high-res images cannot fit inside a spreadsheet, simply type the exact file name (e.g., <code>front-view.jpg</code>) into the CSV image columns. Then, drag and drop the actual image file into Step 3 of the Staging Portal. The system will link them automatically.</li>
+          <li><strong><span style="color: var(--gold);">NEW:</span> Multiple Images in One Cell:</strong> If you are adding multiple images to the A+ Images column, separate the file names with a comma AND wrap the entire cell in double quotes so the CSV doesn't break. (e.g., <code>"image1.jpg, image2.jpg"</code>).</li>
         </ul>
       </div>
 
@@ -170,7 +171,7 @@
             <tr><td><strong>Hero Img</strong></td><td>The exact file name of the primary product image with a white background (e.g., <code>hero1.jpg</code>). <em>Required.</em></td></tr>
             <tr><td><strong>Life Img, CloseUp Img, Pack Img, Extra Img</strong></td><td>Exact file names of supporting lifestyle, detail, packaging, and extra images. <em>Optional but recommended.</em></td></tr>
             <tr><td><strong>Variant Img</strong></td><td>If this specific row represents a "Red" variant, put the exact file name of the red product image here.</td></tr>
-            <tr><td><strong>Catalog PDF</strong></td><td>Exact file name of a digital brochure/PDF if applicable.</td></tr>
+            <tr><td><strong>A+ Images</strong></td><td>Exact file names of your continuous A+ infographic/description images. To stack multiple images, separate them with a comma and wrap the entire cell in double quotes (e.g., <code>"desc1.jpg, desc2.jpg"</code>).</td></tr>
           </tbody>
         </table>
       </div>
@@ -269,3 +270,5 @@
       });
     }
   </script>
+</body>
+</html>
