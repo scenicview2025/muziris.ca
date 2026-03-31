@@ -729,18 +729,30 @@
                     // PDFs still require a height/scroll box because browsers can't stretch them natively
                     mediaHtml = `<iframe src="${p.pdf}#toolbar=0" class="w-full h-[800px] border-0"></iframe>`;
                 } else {
-                    // 🟢 Images are now completely seamless, flush, and natural (No borders, no scroll!)
-                    mediaHtml = `
-                        <img src="${p.pdf}" alt="Product Details" class="w-full h-auto block m-0 p-0" onerror="this.style.display='none'; document.getElementById('media-error-${p.id}').style.display='block';">
-                        <div id="media-error-${p.id}" style="display:none;" class="text-red-500 text-xs font-bold text-center mt-4 p-4 bg-red-50 rounded-lg border border-red-100">
-                            ⚠️ The supplier uploaded a broken image link.
-                        </div>`;
+                    // 🟢 Handle Multiple A+ Images (Comma-separated)
+                    if (p.pdf.includes(',')) {
+                        let urls = p.pdf.split(',');
+                        // Map through each URL and stack them flush against each other
+                        mediaHtml = urls.map((u, i) => `
+                            <img src="${u.trim()}" alt="Product Details Part ${i+1}" class="w-full h-auto block m-0 p-0" onerror="this.style.display='none'; document.getElementById('media-error-${p.id}-${i}').style.display='block';">
+                            <div id="media-error-${p.id}-${i}" style="display:none;" class="text-red-500 text-xs font-bold text-center mt-4 p-4 bg-red-50 rounded-lg border border-red-100">
+                                ⚠️ The supplier uploaded a broken image link.
+                            </div>
+                        `).join('');
+                    } else {
+                        // Handle Single Image (Legacy)
+                        mediaHtml = `
+                            <img src="${p.pdf}" alt="Product Details" class="w-full h-auto block m-0 p-0" onerror="this.style.display='none'; document.getElementById('media-error-${p.id}').style.display='block';">
+                            <div id="media-error-${p.id}" style="display:none;" class="text-red-500 text-xs font-bold text-center mt-4 p-4 bg-red-50 rounded-lg border border-red-100">
+                                ⚠️ The supplier uploaded a broken image link.
+                            </div>`;
+                    }
                 }
 
                 catalogContainer.innerHTML = `
                     <div class="mt-8 pt-8 border-t border-gray-100">
                         <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-gray-900">Product Details</h3>
-                        <div class="w-full overflow-hidden bg-white">
+                        <div class="w-full overflow-hidden bg-white flex flex-col">
                             ${mediaHtml}
                         </div>
                     </div>`;
