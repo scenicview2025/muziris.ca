@@ -412,13 +412,16 @@
         };
         
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        
+        // 🟢 PROPERLY INITIALIZED FIRESTORE HERE:
+        const db = firebase.firestore(); 
+        
         const auth = firebase.auth();
         const googleProvider = new firebase.auth.GoogleAuthProvider();
         const msProvider = new firebase.auth.OAuthProvider('microsoft.com');
 
         let currentUser = null;
         let pendingRfqTrigger = false;
-
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
