@@ -727,6 +727,22 @@ let cardClass = p.status === 'PAUSED' ? 'product-card opacity-60' : 'product-car
             document.getElementById('pp-srv').innerText = p.services || "Standard";
             document.getElementById('pp-pkg').innerText = p.pkg || "Export Grade Packaging";
 
+            // 🟢 NEW: Disable the RFQ button if the product is Paused!
+const rfqBtn = document.getElementById('main-rfq-btn');
+if (p.status === 'PAUSED') {
+    rfqBtn.innerHTML = '<i class="fas fa-pause-circle mr-2"></i> Currently Unavailable';
+    rfqBtn.style.backgroundColor = '#e5e7eb';
+    rfqBtn.style.color = '#6b7280';
+    rfqBtn.style.cursor = 'not-allowed';
+    rfqBtn.onclick = null; // Turns off the click ability entirely!
+} else {
+    rfqBtn.innerHTML = 'Request Official Quote';
+    rfqBtn.style.backgroundColor = 'var(--void)';
+    rfqBtn.style.color = 'var(--gold)';
+    rfqBtn.style.cursor = 'pointer';
+    rfqBtn.onclick = triggerRFQ; // Turns the click ability back on!
+}
+
             // 🟢 SEAMLESS ALIBABA-STYLE A+ CONTENT DISPLAY
             const catalogContainer = document.getElementById('pp-pdf-container');
             if (p.pdf && p.pdf.startsWith('http')) {
