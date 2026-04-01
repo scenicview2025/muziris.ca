@@ -805,7 +805,7 @@ if (p.status === 'PAUSED') {
                 <tr class="hover:bg-gray-50 transition">
                     <td class="py-3 px-4">${varName}</td>
                     <td class="py-3 px-4 text-gray-500">${v.min} - ${v.max} ${v.unit}</td>
-                    <td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)]">${currencySymbols[activeCurrency]}${convertedPrice}</td>
+                    <td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)]">${currencySymbols[activeCurrency] || '$'}${convertedPrice}</td>
                 </tr>`;
             });
         }
