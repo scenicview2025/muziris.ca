@@ -162,6 +162,7 @@
         };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
         const supplierId = localStorage.getItem('verifiedSupplierId');
         let currentActiveChatId = null;
