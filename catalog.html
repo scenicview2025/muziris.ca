@@ -1020,10 +1020,37 @@ if (p.status === 'PAUSED') {
                 openAuthModal();
                 return;
             }
+            
             const p = allProducts.find(x => x.id === currentActiveId);
+            const supplierId = p.supplierId;
+            const buyerEmail = currentUser.email;
+            
             document.getElementById('chat-supplier-name').innerText = p.companyName || "Verified Muziris Factory";
             document.getElementById('live-chat-window').style.display = 'flex';
-            addChatMessage("System", "Connection established. The supplier typically replies within 24 hours.", "system");
+            
+            // 1. Create the unique room ID
+            const chatId = btoa(buyerEmail + "_" + supplierId);
+
+            // 2. Clear old chat history in the window
+            const history = document.getElementById('chat-history');
+            history.innerHTML = '<div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>';
+            
+            // 3. Start listening to Firebase for live updates
+            db.collection('chats').doc(chatId).collection('messages')
+              .orderBy('timestamp', 'asc')
+              .onSnapshot(snapshot => {
+                  history.innerHTML = ""; // Clear so we don't duplicate
+                  
+                  if (snapshot.empty) {
+                      addChatMessage("System", "Connection established. The supplier typically replies within 24 hours.", "system");
+                  } else {
+                      snapshot.forEach(doc => {
+                          const msg = doc.data();
+                          const type = msg.sender === 'buyer' ? 'buyer' : 'supplier';
+                          addChatMessage(msg.sender === 'buyer' ? "You" : "Factory", msg.text, type);
+                      });
+                  }
+              });
         }
 
         async function sendSupplierMessage() {
