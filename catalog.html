@@ -580,7 +580,14 @@
         };
         function convertPrice(cadPrice) {
             if(!cadPrice || isNaN(cadPrice)) return "0.00";
-            return (cadPrice * exchangeRates[activeCurrency]).toFixed(2);
+            
+            // If the market is CAD, or the rate is missing, just return the raw CAD price
+            if (activeCurrency === "CAD" || !exchangeRates[activeCurrency]) {
+                return parseFloat(cadPrice).toFixed(2);
+            }
+            
+            // 🟢 FIXED: We DIVIDE the CAD price by the foreign rate instead of multiplying
+            return (cadPrice / exchangeRates[activeCurrency]).toFixed(2);
         }
 
         function renderCategories(catObj) {
