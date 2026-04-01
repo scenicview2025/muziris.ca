@@ -58,7 +58,7 @@
     .brand-logo img { width: 100%; height: 100%; object-fit: cover; display: none; }
     .brand-details { flex: 1; }
     .brand-name { font-family: 'Cinzel', serif; font-size: 32px; color: #fff; margin: 0 0 5px 0; }
-    .brand-id { font-size: 13px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-weight: bold; display: none; /* hidden because it's in topbar now */ }
+    .brand-id { font-size: 13px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-weight: bold; display: none; }
     .brand-desc { margin-top: 15px; font-size: 14px; color: #aaa; line-height: 1.6; max-width: 800px; }
     
     .edit-profile-btn { background: rgba(212, 175, 55, 0.1); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; transition: 0.3s; align-self: center; text-decoration: none;}
@@ -77,7 +77,7 @@
     .finance-currency { font-size: 14px; color: var(--gold); margin-left: 5px; font-family: 'Lato', sans-serif; font-weight: normal; letter-spacing: 0;}
     .finance-sub { font-size: 12px; color: #aaa; margin-top: 8px; }
 
-    /* WIDGETS (Alerts & RFQs) */
+    /* WIDGETS */
     .alerts-widget { background: rgba(255, 82, 82, 0.05); border: 1px solid rgba(255, 82, 82, 0.3); border-radius: 12px; padding: 25px; display: none; margin-bottom: 20px;}
     .rfq-widget { background: rgba(30, 136, 229, 0.05); border: 1px solid rgba(30, 136, 229, 0.3); border-radius: 12px; padding: 25px; display: none; margin-bottom: 20px;}
     .alerts-title { color: var(--alert); font-family: 'Cinzel', serif; margin-top: 0; font-size: 18px; display: flex; align-items: center; gap: 10px; }
@@ -184,21 +184,19 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // 🟢 SECURITY: Check if user is logged in
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.replace('suppliers'); // 🟢 CHANGED
+        window.location.replace('suppliers');
       }
     });
 
-    // 🟢 LOGOUT FUNCTION
     window.logoutSupplier = function() {
       signOut(auth).then(() => {
         localStorage.removeItem('verifiedSupplierId');
         localStorage.removeItem('verifiedCompany');
         localStorage.removeItem('verifiedCurrency');
         
-        window.location.replace('suppliers'); // 🟢 CHANGED
+        window.location.replace('suppliers');
       }).catch((error) => {
         alert("Error logging out.");
       });
@@ -248,6 +246,9 @@
 
         <div style="display:flex; flex-direction:column; gap:10px;">
           <button class="btn-gold" id="insight-edit-btn" style="width:100%;">✎ Edit Product Data</button>
+          
+          <button id="insight-pause-btn" style="background:#151922; border:1px solid #555; color:#aaa; padding:12px; border-radius:4px; font-weight:bold; font-size:12px; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:0.3s; display:none;">⏸ Pause Product</button>
+          
           <button id="insight-delete-btn" style="background:transparent; border:1px solid #ff5252; color:#ff5252; padding:12px; border-radius:4px; font-weight:bold; font-size:12px; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:0.3s;">Delete from Ledger</button>
         </div>
       </div>
@@ -387,7 +388,6 @@
   <script>
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
 
-    // 🟢 MOBILE MENU TOGGLE LOGIC
     window.toggleMobileMenu = function() {
       const sidebar = document.querySelector('.sidebar');
       const overlay = document.getElementById('mobile-overlay');
@@ -401,13 +401,10 @@
       }
     };
     
-    // Global Storage for Modal Math
     window.supplierInventory = [];
     window.supplierRfqs = [];
 
-    // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
     window.addEventListener('pageshow', function(event) {
-      // If the page is loaded from cache OR they don't have an ID, kick them out immediately
       if (!localStorage.getItem('verifiedSupplierId')) {
         window.location.replace('suppliers');
       }
@@ -418,7 +415,6 @@
       const savedCompany = localStorage.getItem('verifiedCompany') || 'New Supplier';
       const savedCurrency = localStorage.getItem('verifiedCurrency') || 'USD';
       
-      // Update Topbar
       document.getElementById('display-company').innerText = savedCompany;
       document.getElementById('display-id').innerText = "ID: " + (savedId || 'UNKNOWN');
 
@@ -428,7 +424,6 @@
       }
 
       try {
-        // Update Brand Details
         document.getElementById('ui-company-name').innerText = savedCompany;
         document.getElementById('ui-logo-placeholder').innerText = savedCompany.substring(0,1).toUpperCase();
         document.getElementById('ui-catalog-title').innerText = savedCompany + " Active Catalog";
@@ -447,35 +442,18 @@
         console.log("Minor UI load error bypassed:", e);
       }
 
-      // Initialize the Tour
       initTour(savedId);
     };
 
-    // --- 🟢 GUIDED TOUR LOGIC (ID-Based Memory) ---
+    // --- GUIDED TOUR LOGIC ---
     let currentStepIndex = 0;
     let activeHighlightElement = null;
 
     const tourData = [
-      {
-        targetId: 'tour-step-1',
-        title: 'Brand Identity',
-        text: 'First, complete your public profile. A professional logo and bio builds immense trust with international buyers.'
-      },
-      {
-        targetId: 'tour-step-2',
-        title: 'Financial Escrow Wallet',
-        text: 'Muziris protects your payments. Track your available earnings and monitor funds currently secured in escrow for active production.'
-      },
-      {
-        targetId: 'tour-step-3',
-        title: 'Launchpad Tools',
-        text: 'Use the Launchpad to upload single products, utilize the Mass CSV Engine for bulk uploads, and review analytics.'
-      },
-      {
-        targetId: 'tour-step-4',
-        title: 'Active Catalog',
-        text: 'Your products will appear here. Click on any item to view its performance insights, edit pricing, or resolve issues.'
-      }
+      { targetId: 'tour-step-1', title: 'Brand Identity', text: 'First, complete your public profile. A professional logo and bio builds immense trust with international buyers.' },
+      { targetId: 'tour-step-2', title: 'Financial Escrow Wallet', text: 'Muziris protects your payments. Track your available earnings and monitor funds currently secured in escrow for active production.' },
+      { targetId: 'tour-step-3', title: 'Launchpad Tools', text: 'Use the Launchpad to upload single products, utilize the Mass CSV Engine for bulk uploads, and review analytics.' },
+      { targetId: 'tour-step-4', title: 'Active Catalog', text: 'Your products will appear here. Click on any item to view its performance insights, edit pricing, or resolve issues.' }
     ];
 
     function initTour(supplierId) {
@@ -491,18 +469,12 @@
     function startTour() {
       document.getElementById('tour-overlay').style.display = 'block';
       document.getElementById('tour-tooltip').style.display = 'block';
-      // 🟢 FIX: Removed the overflow hidden lock so mobile users can swipe freely!
       showTourStep(0);
     }
 
     function showTourStep(index) {
-      if (activeHighlightElement) {
-        activeHighlightElement.classList.remove('tour-highlight');
-      }
-      if (index >= tourData.length) {
-        endTour();
-        return;
-      }
+      if (activeHighlightElement) activeHighlightElement.classList.remove('tour-highlight');
+      if (index >= tourData.length) { endTour(); return; }
       const step = tourData[index];
       const targetElement = document.getElementById(step.targetId);
       if (!targetElement) { nextTourStep(); return; }
@@ -514,71 +486,41 @@
       document.getElementById('tour-title').innerText = step.title;
       document.getElementById('tour-text').innerText = step.text;
 
-      // 🟢 THE ULTIMATE FIX: Anchor to the dashboard body directly
       const tooltip = document.getElementById('tour-tooltip');
       const dashBody = document.querySelector('.dashboard-body');
       
-      // Ensure the dashboard body can anchor absolute elements safely
       dashBody.style.position = 'relative';
-      
-      // Move tooltip safely inside the standard block element
-      if (tooltip.parentElement !== dashBody) {
-        dashBody.appendChild(tooltip);
-      }
+      if (tooltip.parentElement !== dashBody) dashBody.appendChild(tooltip);
 
-      // Calculate exact pixel position relative to the dashboard body ONLY
-      let topPos = 0;
-      let leftPos = 0;
-      let el = targetElement;
-      
+      let topPos = 0; let leftPos = 0; let el = targetElement;
       while (el && el !== dashBody) {
-        topPos += el.offsetTop;
-        leftPos += el.offsetLeft;
-        el = el.offsetParent;
+        topPos += el.offsetTop; leftPos += el.offsetLeft; el = el.offsetParent;
       }
 
       let finalTop = topPos + targetElement.offsetHeight + 20;
       let finalLeft = leftPos + 20;
 
-      // Prevent tooltip from overflowing the right side of the screen
-      if (finalLeft + 350 > dashBody.clientWidth) {
-        finalLeft = dashBody.clientWidth - 360;
-      }
+      if (finalLeft + 350 > dashBody.clientWidth) finalLeft = dashBody.clientWidth - 360;
 
-      // Apply the flawless coordinates
       tooltip.style.top = finalTop + 'px';
       tooltip.style.left = finalLeft + 'px';
 
-      // 🟢 THE MOBILE FIX: Scroll to center the tooltip itself on the screen
       const scrollContainer = document.querySelector('.main-content');
-      scrollContainer.scrollTo({
-        top: finalTop - (scrollContainer.clientHeight / 2) + 50,
-        behavior: 'smooth'
-      });
+      scrollContainer.scrollTo({ top: finalTop - (scrollContainer.clientHeight / 2) + 50, behavior: 'smooth' });
 
-      if (index === tourData.length - 1) {
-        document.getElementById('tour-next-btn').innerText = "Finish Tour ✓";
-      }
+      if (index === tourData.length - 1) document.getElementById('tour-next-btn').innerText = "Finish Tour ✓";
     }
-    function nextTourStep() {
-      currentStepIndex++;
-      showTourStep(currentStepIndex);
-    }
-
+    
+    function nextTourStep() { currentStepIndex++; showTourStep(currentStepIndex); }
     function endTour() {
       document.getElementById('tour-overlay').style.display = 'none';
       document.getElementById('tour-tooltip').style.display = 'none';
-      if (activeHighlightElement) {
-        activeHighlightElement.classList.remove('tour-highlight');
-      }
-      
+      if (activeHighlightElement) activeHighlightElement.classList.remove('tour-highlight');
       const savedId = localStorage.getItem('verifiedSupplierId');
-      if(savedId) {
-         localStorage.setItem('muzirisTourCount_' + savedId, '2');
-      }
+      if(savedId) localStorage.setItem('muzirisTourCount_' + savedId, '2');
     }
 
-    // --- CATALOG SHELF & PRODUCT INSIGHT MODAL ---
+    // --- 🟢 CATALOG SHELF & PRODUCT INSIGHT MODAL ---
     function renderCatalogShelf(items) {
       const shelf = document.getElementById('catalog-shelf');
       if(!items || items.length === 0) {
@@ -589,10 +531,13 @@
       let html = '';
       items.forEach(item => {
         let img = item.hero_img || 'MC.png';
+        // 🟢 NEW: Added color logic for "PAUSED" status
         let statusColor = item.status === 'LIVE' || item.status === 'ACTIVE' ? 'var(--success)' : 
-                          item.status === 'NEEDS FIX' ? 'var(--alert)' : 'var(--bronze)';
+                          item.status === 'NEEDS FIX' ? 'var(--alert)' : 
+                          item.status === 'PAUSED' ? '#888' : 'var(--bronze)';
         let statusBg = item.status === 'LIVE' || item.status === 'ACTIVE' ? 'rgba(76,175,80,0.1)' : 
-                       item.status === 'NEEDS FIX' ? 'rgba(255,82,82,0.1)' : 'rgba(184,146,37,0.1)';
+                       item.status === 'NEEDS FIX' ? 'rgba(255,82,82,0.1)' : 
+                       item.status === 'PAUSED' ? 'rgba(255,255,255,0.05)' : 'rgba(184,146,37,0.1)';
         
         html += `
           <div class="catalog-card" onclick="openProductInsight('${item.product_id}')">
@@ -625,8 +570,10 @@
       document.getElementById('insight-name').innerText = item.product_name;
       document.getElementById('insight-cat').innerText = item.main_category + " › " + item.sub_category;
       
+      // 🟢 NEW: Added color logic for "PAUSED" status badge
       let statusColor = item.status === 'LIVE' || item.status === 'ACTIVE' ? 'var(--success)' : 
-                        item.status === 'NEEDS FIX' ? 'var(--alert)' : 'var(--bronze)';
+                        item.status === 'NEEDS FIX' ? 'var(--alert)' : 
+                        item.status === 'PAUSED' ? '#888' : 'var(--bronze)';
       document.getElementById('insight-status-badge').innerHTML = `<span style="color:${statusColor};">● ${item.status}</span>`;
 
       if(item.status === 'NEEDS FIX' && item.admin_comments) {
@@ -642,6 +589,26 @@
       document.getElementById('insight-edit-btn').onclick = () => window.location.href = `product-upload?edit=${item.product_id}`;
       document.getElementById('insight-delete-btn').onclick = () => deleteProductDashboard(item.product_id);
 
+      // 🟢 NEW: Logic to configure the Pause/Resume Button dynamically
+      let pauseBtn = document.getElementById('insight-pause-btn');
+      if (item.status === 'LIVE' || item.status === 'ACTIVE' || item.status === 'PAUSED') {
+          pauseBtn.style.display = 'block';
+          if (item.status === 'PAUSED') {
+              pauseBtn.innerText = "▶ Resume Product";
+              pauseBtn.style.color = "var(--success)";
+              pauseBtn.style.borderColor = "var(--success)";
+          } else {
+              pauseBtn.innerText = "⏸ Pause Product";
+              pauseBtn.style.color = "#aaa";
+              pauseBtn.style.borderColor = "#555";
+          }
+          // Set the click action to toggle to the OPPOSITE state
+          pauseBtn.onclick = () => toggleProductDashboard(item.product_id, item.status === 'PAUSED' ? 'ACTIVE' : 'PAUSED');
+      } else {
+          // Hide button if product is still pending QC or rejected
+          pauseBtn.style.display = 'none'; 
+      }
+
       document.getElementById('insight-modal').style.display = 'flex';
     }
 
@@ -649,6 +616,33 @@
       document.getElementById('insight-modal').style.display = 'none';
     }
     
+    // 🟢 NEW: Server Call to Pause/Resume a Product
+    function toggleProductDashboard(productId, newStatus) {
+      if(confirm(`Are you sure you want to change this product to ${newStatus}?`)) {
+          var id = localStorage.getItem('verifiedSupplierId');
+          document.getElementById('insight-pause-btn').innerText = "Updating...";
+          
+          fetch(API_BASE_URL + '/toggle-product-status', {
+             method: 'POST',
+             headers: {'Content-Type': 'application/json'},
+             body: JSON.stringify({ supplierId: id, productId: productId, status: newStatus })
+          })
+          .then(res => res.json())
+          .then(res => {
+              if(res.success) {
+                  closeInsight();
+                  fetchDashboardStats(id); 
+              } else {
+                  alert("Could not update product: " + res.error);
+                  closeInsight();
+              }
+          }).catch(e => {
+             alert("Network error.");
+             closeInsight();
+          });
+      }
+    }
+
     function deleteProductDashboard(productId) {
       if(confirm("🚨 WARNING: This will permanently delete this product from the Global Ledger. Proceed?")) {
           var id = localStorage.getItem('verifiedSupplierId');
