@@ -1129,27 +1129,69 @@ if (p.status === 'PAUSED') {
             }
         }
 
-        // UI message renderer
+        // UI message renderer (UPDATED FOR IMAGES)
         function addChatMessage(sender, text, type) {
             const history = document.getElementById('chat-history');
             const msgDiv = document.createElement('div');
 
+            let styleStr = "";
             if (type === 'system') {
-                msgDiv.style.cssText =
-                    "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600;";
+                styleStr = "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600;";
             } else if (type === 'buyer') {
-                msgDiv.style.cssText =
-                    "align-self:flex-end; background:#f3f4f6; color:#111; padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:80%;";
+                styleStr = "align-self:flex-end; background:#f3f4f6; color:#111; padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:80%;";
             } else {
-                msgDiv.style.cssText =
-                    "align-self:flex-start; background:var(--void); color:#fff; padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:80%;";
+                styleStr = "align-self:flex-start; background:var(--void); color:#fff; padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:80%;";
             }
+            msgDiv.style.cssText = styleStr;
 
-            msgDiv.innerText = text;
+            // Check if the text is actually an image URL
+            if (text.startsWith('https://firebasestorage')) {
+                msgDiv.innerHTML = `<a href="${text}" target="_blank"><img src="${text}" style="max-width: 100%; border-radius: 8px; cursor: pointer;"></a>`;
+            } else {
+                msgDiv.innerText = text;
+            }
+            
             history.appendChild(msgDiv);
             history.scrollTop = history.scrollHeight;
         }
+
+        // 🟢 NEW: FILE UPLOAD LOGIC
+        async function uploadChatFile(event) {
+            const file = event.target.files[0];
+            if (!file || !currentUser) return;
+
+            const p = allProducts.find(x => x.id === currentActiveId);
+            const chatId = btoa(currentUser.email + "_" + p.supplierId);
+            
+            // Show temporary loading message
+            addChatMessage("System", "Uploading file...", "system");
+
+            try {
+                const storageRef = storage.ref(`chat_attachments/${chatId}/${Date.now()}_${file.name}`);
+                await storageRef.put(file);
+                const fileUrl = await storageRef.getDownloadURL();
+
+                // Save to Firestore as a normal message, but the text is the URL
+                await db.collection('chats').doc(chatId).collection('messages').add({
+                    sender: "buyer",
+                    text: fileUrl,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    productId: currentActiveId,
+                    productName: p.name
+                });
+
+                await db.collection('chats').doc(chatId).set({
+                    buyerEmail: currentUser.email,
+                    supplierId: p.supplierId,
+                    lastMessage: "📎 Sent an attachment",
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                    unreadBySupplier: true
+                }, { merge: true });
+
+            } catch (error) {
+                console.error(error);
+                alert("File upload failed.");
+            }
+        }
     </script>
 </body>
-
-
