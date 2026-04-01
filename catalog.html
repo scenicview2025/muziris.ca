@@ -681,7 +681,7 @@ let cardClass = p.status === 'PAUSED' ? 'product-card opacity-60' : 'product-car
                 sliderHtml += `</div>`;
 
                 grid.innerHTML += `
-                <div class="product-card" onclick="openProductPage('${p.id}')">
+                <div class="${cardClass}" onclick="openProductPage('${p.id}')">
                     <div class="img-container">${sliderHtml}</div>
                     <div class="p-4 flex flex-col flex-1">
                         <p class="text-[9px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1 truncate">${p.category}</p>
