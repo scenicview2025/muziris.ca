@@ -192,10 +192,14 @@
                       const isUnread = chat.unreadBySupplier ? 'display:block;' : 'display:none;';
                       const activeClass = currentActiveChatId === doc.id ? 'active' : '';
 
+                      // 🟢 NEW: Mask the buyer's email to protect platform integrity!
+                      let safeName = chat.buyerEmail ? chat.buyerEmail.split('@')[0] : "UNKNOWN";
+                      let maskedBuyer = "Buyer: " + safeName.substring(0, 3).toUpperCase() + "***";
+
                       listContainer.innerHTML += `
-                          <div class="chat-item ${activeClass}" onclick="openChat('${doc.id}', '${chat.buyerEmail}', '${chat.productId || 'General Inquiry'}')">
+                          <div class="chat-item ${activeClass}" onclick="openChat('${doc.id}', '${maskedBuyer}', '${chat.productId || 'General Inquiry'}')">
                               <div class="unread-dot" style="${isUnread}"></div>
-                              <div class="chat-item-buyer">${chat.buyerEmail}</div>
+                              <div class="chat-item-buyer"><i class="fas fa-user-secret" style="margin-right:5px; color:#888;"></i> ${maskedBuyer}</div>
                               <div class="chat-item-product"><i class="fas fa-box" style="margin-right:5px;"></i> ${chat.productId || 'Inquiry'}</div>
                               <div class="chat-item-preview">${chat.lastMessage || 'No messages yet.'}</div>
                           </div>
