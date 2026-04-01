@@ -1042,15 +1042,33 @@ if (p.status === 'PAUSED') {
             // 3. Start listening to Firebase for live updates
             db.collection('chats').doc(chatId).collection('messages')
               .orderBy('timestamp', 'asc')
-              .onSnapshot(snapshot => {
-                  history.innerHTML = ""; // Clear so we don't duplicate
+              .onSnapshot(async snapshot => {
+                  history.innerHTML = ""; 
                   
                   if (snapshot.empty) {
-                      addChatMessage("System", "Connection established. The supplier typically replies within 24 hours.", "system");
+                      // 🟢 NEW: Auto-inject context message so the supplier knows the product
+                      const contextText = `OFFICIAL INQUIRY: Buyer is interested in "${p.name}" (ID: ${p.id}).`;
+                      
+                      await db.collection('chats').doc(chatId).collection('messages').add({
+                          sender: "system",
+                          text: contextText,
+                          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                      });
+
+                      // Update the main chat doc so it shows up in supplier inbox immediately
+                      await db.collection('chats').doc(chatId).set({
+                          buyerEmail: buyerEmail,
+                          supplierId: supplierId,
+                          lastMessage: contextText,
+                          lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                          productId: p.id,
+                          unreadBySupplier: true
+                      }, { merge: true });
+
                   } else {
                       snapshot.forEach(doc => {
                           const msg = doc.data();
-                          const type = msg.sender === 'buyer' ? 'buyer' : 'supplier';
+                          const type = msg.sender === 'buyer' ? 'buyer' : (msg.sender === 'system' ? 'system' : 'supplier');
                           addChatMessage(msg.sender === 'buyer' ? "You" : "Factory", msg.text, type);
                       });
                   }
