@@ -493,6 +493,7 @@
                     
                     data.currencies.forEach(item => {
                         exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
+                        currencySymbols[item.currency] = item.symbol || '$'; // 🟢 NEW: Save the symbol!
                         
                         const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
                         
