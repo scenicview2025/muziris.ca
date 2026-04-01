@@ -1015,42 +1015,127 @@ if (p.status === 'PAUSED') {
                 openAuthModal();
                 return;
             }
+            
             const p = allProducts.find(x => x.id === currentActiveId);
+            const supplierId = p.supplierId;
+            const buyerEmail = currentUser.email;
+            
             document.getElementById('chat-supplier-name').innerText = p.companyName || "Verified Muziris Factory";
             document.getElementById('live-chat-window').style.display = 'flex';
-            addChatMessage("System", "Connection established. The supplier typically replies within 24 hours.", "system");
+            
+            // 1. Create the unique room ID
+            const chatId = btoa(buyerEmail + "_" + supplierId);
+
+            // 2. Clear old chat history in the window
+            const history = document.getElementById('chat-history');
+            history.innerHTML = '<div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>';
+            
+            // 3. Start listening to Firebase for live updates
+            db.collection('chats').doc(chatId).collection('messages')
+              .orderBy('timestamp', 'asc')
+              .onSnapshot(snapshot => {
+                  history.innerHTML = ""; // Clear so we don't duplicate
+                  
+                  if (snapshot.empty) {
+                      addChatMessage("System", "Connection established. The supplier typically replies within 24 hours.", "system");
+                  } else {
+                      snapshot.forEach(doc => {
+                          const msg = doc.data();
+                          const type = msg.sender === 'buyer' ? 'buyer' : 'supplier';
+                          addChatMessage(msg.sender === 'buyer' ? "You" : "Factory", msg.text, type);
+                      });
+                  }
+              });
         }
 
-        function sendSupplierMessage() {
+        async function sendSupplierMessage() {
             const input = document.getElementById('chat-input');
             let rawText = input.value.trim();
-            if (!rawText) return;
+            if (!rawText || !currentUser) return;
 
-            // 🛡️ ANTI-LEAKAGE FILTER
+            // Get product + supplier info
+            const p = allProducts.find(x => x.id === currentActiveId);
+            const supplierId = p.supplierId;
+            const buyerEmail = currentUser.email;
+
+            // Unique chat room ID
+            const chatId = btoa(buyerEmail + "_" + supplierId);
+
+            // 🛡️ ANTI‑LEAKAGE FILTER
             let safeText = rawText;
-            safeText = safeText.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/g, "[EMAIL REDACTED]");
-            safeText = safeText.replace(/\b\d{7,15}\b/g, "[PHONE REDACTED]");
-            safeText = safeText.replace(/whatsapp|wechat|skype|telegram/gi, "[APP REDACTED]");
+            let securityTriggered = false;
 
-            if (safeText !== rawText) {
-                addChatMessage("System", "⚠️ Security Alert: Sharing direct contact details violates ToS.", "system");
+            const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/g;
+            const phoneRegex = /\b\d{7,15}\b/g;
+            const appRegex = /whatsapp|wechat|skype|telegram/gi;
+
+            if (emailRegex.test(rawText) || phoneRegex.test(rawText) || appRegex.test(rawText)) {
+                securityTriggered = true;
+                safeText = safeText.replace(emailRegex, "[EMAIL REDACTED]");
+                safeText = safeText.replace(phoneRegex, "[PHONE REDACTED]");
+                safeText = safeText.replace(appRegex, "[APP REDACTED]");
             }
 
+            // UI update immediately (fast UX)
             addChatMessage("You", safeText, "buyer");
-            input.value = "";
+
+            // Prepare Firestore message
+            const messageData = {
+                sender: "buyer",
+                text: safeText,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                productId: currentActiveId,
+                productName: p.name
+            };
+
+            try {
+                // Save message to Firestore
+                await db.collection('chats')
+                    .doc(chatId)
+                    .collection('messages')
+                    .add(messageData);
+
+                // Update chat summary for supplier inbox
+                await db.collection('chats')
+                    .doc(chatId)
+                    .set({
+                        buyerEmail: buyerEmail,
+                        supplierId: supplierId,
+                        lastMessage: safeText,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                        securityFlag: securityTriggered,
+                        unreadBySupplier: true
+                    }, { merge: true });
+
+                // Show system warning if needed
+                if (securityTriggered) {
+                    addChatMessage("System", "⚠️ Security Alert: Sharing direct contact details violates ToS.", "system");
+                }
+
+                input.value = "";
+
+            } catch (error) {
+                console.error("Chat Error:", error);
+                alert("Message failed to send. Check your connection.");
+            }
         }
 
+        // UI message renderer
         function addChatMessage(sender, text, type) {
             const history = document.getElementById('chat-history');
             const msgDiv = document.createElement('div');
-            
+
             if (type === 'system') {
-                msgDiv.style.cssText = "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600;";
+                msgDiv.style.cssText =
+                    "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600;";
             } else if (type === 'buyer') {
-                msgDiv.style.cssText = "align-self:flex-end; background:#f3f4f6; color:#111; padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:80%;";
+                msgDiv.style.cssText =
+                    "align-self:flex-end; background:#f3f4f6; color:#111; padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:80%;";
             } else {
-                msgDiv.style.cssText = "align-self:flex-start; background:var(--void); color:#fff; padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:80%;";
+                msgDiv.style.cssText =
+                    "align-self:flex-start; background:var(--void); color:#fff; padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:80%;";
             }
+
             msgDiv.innerText = text;
             history.appendChild(msgDiv);
             history.scrollTop = history.scrollHeight;
