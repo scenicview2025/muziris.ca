@@ -375,6 +375,26 @@
         </div>
     </div>
 
+    <div id="live-chat-window" style="display:none; position:fixed; bottom:20px; right:20px; width:360px; height:500px; background:#fff; border-radius:12px; box-shadow:0 15px 35px rgba(0,0,0,0.2); z-index:9999; flex-direction:column; border:1px solid var(--border-light); overflow:hidden; font-family:'Inter', sans-serif;">
+        <div style="background:var(--void); padding:15px; color:var(--gold); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <div style="font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase;">Secure Connection</div>
+                <div id="chat-supplier-name" style="font-size:14px; font-weight:bold; color:#fff;">Factory Name</div>
+            </div>
+            <i class="fas fa-times" style="cursor:pointer; color:#888; font-size:18px;" onclick="document.getElementById('live-chat-window').style.display='none'"></i>
+        </div>
+        <div style="background:var(--gold-light); padding:8px 12px; font-size:10px; color:var(--gold-dark); font-weight:700; text-align:center; border-bottom:1px solid var(--gold-border);">
+            <i class="fas fa-shield-alt"></i> Payments & escrow are protected when negotiating via Muziris.
+        </div>
+        <div id="chat-history" style="flex:1; padding:15px; background:#fafafa; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+            <div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>
+        </div>
+        <div style="padding:15px; background:#fff; border-top:1px solid var(--border-light); display:flex; gap:10px;">
+            <input type="text" id="chat-input" placeholder="Type a message..." style="flex:1; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; outline:none; font-size:13px;" onkeypress="if(event.key === 'Enter') sendSupplierMessage()">
+            <button onclick="sendSupplierMessage()" style="background:var(--void); color:var(--gold); border:none; padding:0 15px; border-radius:8px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
 
     <script>
         // ==========================================
