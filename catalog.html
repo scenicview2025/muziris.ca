@@ -652,8 +652,16 @@
                 if(imgs.length === 0) imgs = ['MC.png'];
 
                 let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
-                sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
 
+// 🟢 NEW: Check if the product is paused and change the badge!
+if (p.status === 'PAUSED') {
+    sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
+} else {
+    sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
+}
+
+// 🟢 NEW: Slightly fade the card if it's paused
+let cardClass = p.status === 'PAUSED' ? 'product-card opacity-60' : 'product-card';
                 imgs.forEach((img, i) => {
                     let activeClass = i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0';
                     sliderHtml += `<img src="${img}" class="img-layer absolute inset-0 ${activeClass}" id="img-${p.id}-${i}" loading="lazy" onerror="this.src='MC.png'">`;
