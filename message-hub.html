@@ -306,6 +306,38 @@
             alert("This will open the Official RFQ Generation Form (Phase 3).");
         }
 
+        // 🟢 SUPPLIER FILE UPLOAD LOGIC
+        async function uploadSupplierFile(event) {
+            const file = event.target.files[0];
+            if (!file || !currentActiveChatId) return;
+
+            // Show temporary loading indicator in UI
+            const msgContainer = document.getElementById('messages-container');
+            msgContainer.innerHTML += `<div class="msg msg-system">Uploading attachment...</div>`;
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+
+            try {
+                const storageRef = storage.ref(`chat_attachments/${currentActiveChatId}/${Date.now()}_${file.name}`);
+                await storageRef.put(file);
+                const fileUrl = await storageRef.getDownloadURL();
+
+                await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                    sender: "supplier",
+                    text: fileUrl,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                await db.collection('chats').doc(currentActiveChatId).set({
+                    lastMessage: "Factory: 📎 Sent an attachment",
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                }, { merge: true });
+
+            } catch (error) {
+                console.error(error);
+                alert("File upload failed.");
+            }
+        }
+
         // Start listening when page loads
         window.onload = loadChatList;
 
