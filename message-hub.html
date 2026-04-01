@@ -138,7 +138,12 @@
                     <div class="messages-area" id="messages-container">
                         </div>
 
-                    <div class="input-area">
+                    <div class="input-area" style="align-items: center;">
+                        <label for="supplier-file-upload" style="cursor:pointer; color:#888; font-size:20px; padding:10px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
+                            <i class="fas fa-paperclip"></i>
+                        </label>
+                        <input type="file" id="supplier-file-upload" style="display:none;" accept="image/*,video/*" onchange="uploadSupplierFile(event)">
+                        
                         <input type="text" id="reply-input" class="chat-input" placeholder="Type your reply to the buyer..." onkeypress="if(event.key === 'Enter') sendReply()">
                         <button class="send-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i></button>
                     </div>
