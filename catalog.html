@@ -950,12 +950,18 @@ if (p.status === 'PAUSED') {
             .then(res => res.json()).then(resp => {
                 if(resp.success) {
                     document.getElementById('rfq-modal').style.display = 'none';
-                    alert("✓ CONTRACT SECURED.\n\nYour Sourcing Request has been verified and encrypted. Our team will contact you shortly.");
+                    
+                    // 🟢 FIXED: Opens the beautiful custom modal instead of the ugly browser alert
+                    document.getElementById('success-modal').style.display = 'flex';
+                    
                     document.getElementById('rfqForm').reset();
                 } else alert("ERROR: " + resp.error);
                 btn.innerHTML = "SUBMIT SOURCING REQUEST"; btn.disabled = false;
-            }).catch(err => { alert("CONNECTION ERROR."); btn.innerHTML = "SUBMIT SOURCING REQUEST"; btn.disabled = false; });
+            }).catch(err => { 
+                alert("CONNECTION ERROR."); 
+                btn.innerHTML = "SUBMIT SOURCING REQUEST"; 
+                btn.disabled = false; 
+            });
         }
     </script>
 </body>
-</html>
