@@ -721,7 +721,7 @@ let cardClass = p.status === 'PAUSED' ? 'product-card opacity-60' : 'product-car
             document.getElementById('pp-card-sup-name').innerText = supplierName;
             document.getElementById('pp-supplier-link').setAttribute('data-sid', p.supplierId);
             
-            document.getElementById('pp-price').innerText = currencySymbols[activeCurrency] + convertPrice(p.startingPriceCAD);
+            document.getElementById('pp-price').innerText = (currencySymbols[activeCurrency] || '$') + convertPrice(p.startingPriceCAD);
             document.getElementById('pp-desc').innerText = p.desc || "Standard enterprise configuration.";
             document.getElementById('pp-id').innerText = p.id;
             document.getElementById('pp-terms').innerText = p.incoterms || "FOB";
