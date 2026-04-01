@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muziris | Negotiation Hub</title>
+    <link rel="icon" type="image/png" href="MC.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        if (!localStorage.getItem('verifiedSupplierId')) {
+            window.location.replace('suppliers');
+        }
+    </script>
+
+    <style>
+        :root { 
+            --gold: #D4AF37; 
+            --gold-dark: #b89225; 
+            --void: #0b0e14; 
+            --slate: #151922; 
+            --mist: #e0e0e0; 
+            --alert: #ff5252; 
+        }
+        body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); display: flex; height: 100vh; overflow: hidden; }
+        
+        /* SIDEBAR (Matches Dashboard) */
+        .sidebar { width: 250px; background-color: var(--slate); border-right: 1px solid #333; display: flex; flex-direction: column; z-index: 100; flex-shrink: 0;}
+        .logo-container { padding: 30px 20px; text-align: center; border-bottom: 1px solid #333; }
+        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 28px; text-decoration: none; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+        
+        .nav-links { flex: 1; padding: 20px 0; overflow-y: auto;}
+        .nav-link { display: block; padding: 15px 25px; color: #aaa; text-decoration: none; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; border-left: 3px solid transparent; }
+        .nav-link:hover, .nav-link.active { background: rgba(212, 175, 55, 0.05); color: #fff; border-left-color: var(--gold); }
+        
+        .logout-btn { padding: 20px; text-align: center; border-top: 1px solid #333; }
+        .logout-btn button { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+        .logout-btn button:hover { background: var(--alert); color: #fff; }
+
+        /* MAIN LAYOUT */
+        .main-content { flex: 1; display: flex; flex-direction: column; background: var(--void); }
+        .topbar { padding: 20px 40px; border-bottom: 1px solid #333; background: rgba(11, 14, 20, 0.95); display: flex; justify-content: space-between; align-items: center; }
+        .page-title { font-family: 'Cinzel', serif; font-size: 20px; color: #fff; margin: 0; }
+
+        /* SPLIT INBOX VIEW */
+        .inbox-container { flex: 1; display: flex; overflow: hidden; }
+        
+        /* LEFT: CHAT LIST */
+        .chat-list-panel { width: 350px; background: var(--slate); border-right: 1px solid #333; display: flex; flex-direction: column; }
+        .chat-list-header { padding: 20px; border-bottom: 1px solid #333; font-weight: bold; color: var(--gold); font-family: 'Cinzel', serif; text-transform: uppercase; letter-spacing: 1px; }
+        .chat-list { flex: 1; overflow-y: auto; }
+        
+        .chat-item { padding: 20px; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; position: relative; }
+        .chat-item:hover { background: rgba(255,255,255,0.02); }
+        .chat-item.active { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); }
+        .chat-item-buyer { font-size: 14px; color: #fff; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-item-product { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .chat-item-preview { font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .unread-dot { position: absolute; top: 20px; right: 20px; width: 10px; height: 10px; background: var(--alert); border-radius: 50%; display: none; }
+
+        /* RIGHT: CHAT WINDOW */
+        .chat-window-panel { flex: 1; display: flex; flex-direction: column; background: var(--void); }
+        .chat-window-header { padding: 20px; background: var(--slate); border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .chat-active-buyer { font-size: 16px; color: #fff; font-weight: bold; }
+        .chat-active-product { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+        
+        #empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #555; }
+        #empty-state i { font-size: 48px; margin-bottom: 15px; color: #333; }
+        
+        #active-chat-area { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+        .messages-area { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        
+        .msg { max-width: 70%; padding: 12px 18px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
+        .msg-buyer { background: #222; color: #eee; align-self: flex-start; border-bottom-left-radius: 0; }
+        .msg-supplier { background: var(--gold); color: #000; align-self: flex-end; border-bottom-right-radius: 0; font-weight: bold; }
+        .msg-system { background: rgba(255, 82, 82, 0.1); color: var(--alert); border: 1px solid rgba(255,82,82,0.3); align-self: center; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; padding: 6px 12px; }
+
+        .input-area { padding: 20px; background: var(--slate); border-top: 1px solid #333; display: flex; gap: 15px; }
+        .chat-input { flex: 1; background: var(--void); border: 1px solid #444; color: #fff; padding: 15px; border-radius: 8px; outline: none; font-family: 'Lato', sans-serif; font-size: 14px; transition: 0.3s; }
+        .chat-input:focus { border-color: var(--gold); }
+        .send-btn { background: var(--gold); color: #000; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
+        .send-btn:hover { background: var(--gold-dark); transform: translateY(-1px); }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-container">
+            <a href="supplier-dashboard.html" class="logo">Muziris</a>
+        </div>
+        <div class="nav-links">
+            <a href="supplier-dashboard.html" class="nav-link">Dashboard</a>
+            <a href="product-upload.html" class="nav-link">Single Upload</a>
+            <a href="bulk-upload.html" class="nav-link">Mass Import</a>
+            <a href="message-hub.html" class="nav-link active">Negotiation Hub</a>
+        </div>
+        <div class="logout-btn">
+            <button onclick="localStorage.clear(); window.location.href='suppliers.html'">Secure Logout</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="topbar">
+            <h1 class="page-title">Negotiation Hub</h1>
+            <div style="color:var(--gold); font-size:12px; letter-spacing:1px;"><i class="fas fa-shield-alt"></i> Escrow Protected</div>
+        </div>
+
+        <div class="inbox-container">
+            
+            <div class="chat-list-panel">
+                <div class="chat-list-header">Active Conversations</div>
+                <div class="chat-list" id="chat-list-container">
+                    <div style="padding:20px; color:#555; text-align:center; font-size:13px;">Loading incoming requests...</div>
+                </div>
+            </div>
+
+            <div class="chat-window-panel">
+                <div id="empty-state">
+                    <i class="far fa-comments"></i>
+                    <div>Select a conversation to begin negotiating.</div>
+                </div>
+
+                <div id="active-chat-area">
+                    <div class="chat-window-header">
+                        <div>
+                            <div class="chat-active-buyer" id="header-buyer-email">Buyer@Email.com</div>
+                            <div class="chat-active-product" id="header-product-id">Product Inquiry</div>
+                        </div>
+                        <button onclick="triggerOfficialQuote()" style="background:transparent; border:1px solid var(--gold); color:var(--gold); padding:8px 15px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">Send Official Quote</button>
+                    </div>
+                    
+                    <div class="messages-area" id="messages-container">
+                        </div>
+
+                    <div class="input-area">
+                        <input type="text" id="reply-input" class="chat-input" placeholder="Type your reply to the buyer..." onkeypress="if(event.key === 'Enter') sendReply()">
+                        <button class="send-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🟢 FIREBASE INIT
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+            authDomain: "muziris-ac9dd.firebaseapp.com",
+            projectId: "muziris-ac9dd",
+            storageBucket: "muziris-ac9dd.firebasestorage.app",
+            messagingSenderId: "929662963272",
+            appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.firestore();
+
+        const supplierId = localStorage.getItem('verifiedSupplierId');
+        let currentActiveChatId = null;
+        let unsubscribeMessages = null;
+
+        // 🟢 1. LOAD THE CHAT LIST (LEFT PANEL)
+        function loadChatList() {
+            db.collection('chats')
+              .where('supplierId', '==', supplierId)
+              .orderBy('lastUpdated', 'desc')
+              .onSnapshot(snapshot => {
+                  const listContainer = document.getElementById('chat-list-container');
+                  listContainer.innerHTML = "";
+
+                  if (snapshot.empty) {
+                      listContainer.innerHTML = '<div style="padding:20px; color:#555; text-align:center; font-size:13px;">No active conversations yet.</div>';
+                      return;
+                  }
+
+                  snapshot.forEach(doc => {
+                      const chat = doc.data();
+                      const isUnread = chat.unreadBySupplier ? 'display:block;' : 'display:none;';
+                      const activeClass = currentActiveChatId === doc.id ? 'active' : '';
+
+                      listContainer.innerHTML += `
+                          <div class="chat-item ${activeClass}" onclick="openChat('${doc.id}', '${chat.buyerEmail}', '${chat.productId || 'General Inquiry'}')">
+                              <div class="unread-dot" style="${isUnread}"></div>
+                              <div class="chat-item-buyer">${chat.buyerEmail}</div>
+                              <div class="chat-item-product"><i class="fas fa-box" style="margin-right:5px;"></i> ${chat.productId || 'Inquiry'}</div>
+                              <div class="chat-item-preview">${chat.lastMessage || 'No messages yet.'}</div>
+                          </div>
+                      `;
+                  });
+              });
+        }
+
+        // 🟢 2. OPEN A SPECIFIC CHAT (RIGHT PANEL)
+        function openChat(chatId, buyerEmail, productId) {
+            currentActiveChatId = chatId;
+            
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('active-chat-area').style.display = 'flex';
+            
+            document.getElementById('header-buyer-email').innerText = buyerEmail;
+            document.getElementById('header-product-id').innerText = productId;
+
+            // Highlight active in list visually
+            loadChatList(); 
+
+            // Mark as read in Firestore
+            db.collection('chats').doc(chatId).update({ unreadBySupplier: false });
+
+            // Stop listening to old chat if switching
+            if (unsubscribeMessages) unsubscribeMessages();
+
+            // Listen to this chat's messages
+            unsubscribeMessages = db.collection('chats').doc(chatId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot(snapshot => {
+                    const msgContainer = document.getElementById('messages-container');
+                    msgContainer.innerHTML = "";
+                    
+                    snapshot.forEach(doc => {
+                        const msg = doc.data();
+                        const type = msg.sender === 'supplier' ? 'supplier' : (msg.sender === 'system' ? 'system' : 'buyer');
+                        
+                        msgContainer.innerHTML += `
+                            <div class="msg msg-${type}">
+                                ${msg.text}
+                            </div>
+                        `;
+                    });
+                    // Auto scroll to bottom
+                    msgContainer.scrollTop = msgContainer.scrollHeight;
+                });
+        }
+
+        // 🟢 3. SUPPLIER SENDS A REPLY
+        async function sendReply() {
+            const input = document.getElementById('reply-input');
+            const rawText = input.value.trim();
+            if (!rawText || !currentActiveChatId) return;
+
+            // 🛡️ ANTI-LEAKAGE FILTER (Double Protection on Supplier Side)
+            let safeText = rawText;
+            let securityTriggered = false;
+            
+            const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/g;
+            const phoneRegex = /\b\d{7,15}\b/g;
+            const appRegex = /whatsapp|wechat|skype|telegram/gi;
+
+            if (emailRegex.test(rawText) || phoneRegex.test(rawText) || appRegex.test(rawText)) {
+                securityTriggered = true;
+                safeText = safeText.replace(emailRegex, "[EMAIL REDACTED]");
+                safeText = safeText.replace(phoneRegex, "[PHONE REDACTED]");
+                safeText = safeText.replace(appRegex, "[APP REDACTED]");
+            }
+
+            const messageData = {
+                sender: "supplier",
+                text: safeText,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                input.value = ""; // Clear input immediately
+                
+                await db.collection('chats').doc(currentActiveChatId).collection('messages').add(messageData);
+                
+                await db.collection('chats').doc(currentActiveChatId).set({
+                    lastMessage: "Factory: " + safeText,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                    securityFlag: securityTriggered
+                }, { merge: true });
+
+                if (securityTriggered) {
+                    await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                        sender: "system",
+                        text: "⚠️ Warning: The factory attempted to share contact details. Escrow protection is void if transactions occur off-platform.",
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+
+            } catch (error) {
+                alert("Failed to send message.");
+                console.error(error);
+            }
+        }
+
+        function triggerOfficialQuote() {
+            alert("This will open the Official RFQ Generation Form (Phase 3).");
+        }
+
+        // Start listening when page loads
+        window.onload = loadChatList;
+
+    </script>
+</body>
+</html>
