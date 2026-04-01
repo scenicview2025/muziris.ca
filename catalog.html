@@ -390,7 +390,12 @@
         <div id="chat-history" style="flex:1; padding:15px; background:#fafafa; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
             <div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>
         </div>
-        <div style="padding:15px; background:#fff; border-top:1px solid var(--border-light); display:flex; gap:10px;">
+        <div style="padding:15px; background:#fff; border-top:1px solid var(--border-light); display:flex; gap:10px; align-items:center;">
+            <label for="chat-file-upload" style="cursor:pointer; color:#888; font-size:18px; padding:5px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
+                <i class="fas fa-paperclip"></i>
+            </label>
+            <input type="file" id="chat-file-upload" style="display:none;" accept="image/*,video/*" onchange="uploadChatFile(event)">
+            
             <input type="text" id="chat-input" placeholder="Type a message..." style="flex:1; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; outline:none; font-size:13px;" onkeypress="if(event.key === 'Enter') sendSupplierMessage()">
             <button onclick="sendSupplierMessage()" style="background:var(--void); color:var(--gold); border:none; padding:0 15px; border-radius:8px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
         </div>
