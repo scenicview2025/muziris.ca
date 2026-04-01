@@ -1004,5 +1004,55 @@ if (p.status === 'PAUSED') {
                 btn.disabled = false; 
             });
         }
+
+        // ==========================================
+        // 🟢 NEW: LIVE CHAT & ANTI-LEAKAGE LOGIC
+        // ==========================================
+        function openSupplierChat() {
+            if (!currentUser) {
+                alert("Please Sign In to message the supplier.");
+                openAuthModal();
+                return;
+            }
+            const p = allProducts.find(x => x.id === currentActiveId);
+            document.getElementById('chat-supplier-name').innerText = p.companyName || "Verified Muziris Factory";
+            document.getElementById('live-chat-window').style.display = 'flex';
+            addChatMessage("System", "Connection established. The supplier typically replies within 24 hours.", "system");
+        }
+
+        function sendSupplierMessage() {
+            const input = document.getElementById('chat-input');
+            let rawText = input.value.trim();
+            if (!rawText) return;
+
+            // 🛡️ ANTI-LEAKAGE FILTER
+            let safeText = rawText;
+            safeText = safeText.replace(/[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/g, "[EMAIL REDACTED]");
+            safeText = safeText.replace(/\b\d{7,15}\b/g, "[PHONE REDACTED]");
+            safeText = safeText.replace(/whatsapp|wechat|skype|telegram/gi, "[APP REDACTED]");
+
+            if (safeText !== rawText) {
+                addChatMessage("System", "⚠️ Security Alert: Sharing direct contact details violates ToS.", "system");
+            }
+
+            addChatMessage("You", safeText, "buyer");
+            input.value = "";
+        }
+
+        function addChatMessage(sender, text, type) {
+            const history = document.getElementById('chat-history');
+            const msgDiv = document.createElement('div');
+            
+            if (type === 'system') {
+                msgDiv.style.cssText = "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600;";
+            } else if (type === 'buyer') {
+                msgDiv.style.cssText = "align-self:flex-end; background:#f3f4f6; color:#111; padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:80%;";
+            } else {
+                msgDiv.style.cssText = "align-self:flex-start; background:var(--void); color:#fff; padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:80%;";
+            }
+            msgDiv.innerText = text;
+            history.appendChild(msgDiv);
+            history.scrollTop = history.scrollHeight;
+        }
     </script>
 </body>
