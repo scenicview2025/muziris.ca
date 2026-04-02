@@ -410,13 +410,12 @@
                     "<strong>🧠 Sales Tactic: Scarcity Injection</strong><br>Politely mention that raw material costs (like aluminum/steel) are shifting next week. Offer to lock in today's price if they execute the RFQ by Friday."
                 ];
                 
-                // Pick a random strategy for now (can hook up to real LLM later)
                 const randomTactic = tactics[Math.floor(Math.random() * tactics.length)];
                 
                 typing.style.display = 'none';
                 resultBox.innerHTML = randomTactic + `<br><br><button onclick="document.getElementById('ai-result').style.display='none'; document.querySelector('.ai-btn').style.display='block';" style="background:transparent; border:none; color:var(--ai-glow); text-decoration:underline; cursor:pointer; font-size:10px;">Dismiss Advice</button>`;
                 resultBox.style.display = 'block';
-            }, 1500); // 1.5 second "thinking" delay
+            }, 1500); 
         }
 
         // --- LIVE CURRENCY & REVERSE MARKUP CALCULATOR ---
@@ -468,8 +467,6 @@
             
             updateCalc();
         }
-            } catch(e) { console.error("Calculator Sync Error", e); }
-        }
 
         // MATH 1: Buyer Target -> What Supplier Gets
         function calcReverse() {
@@ -478,11 +475,8 @@
             const buyCurr = document.getElementById('calc-buy-curr').value;
             if(!liveRates[supCurr] || !ask) { document.getElementById('calc-sup-get').innerText = "0.00 " + supCurr; return; }
 
-            // 1. Convert Buyer Ask to Base CAD (Since CAD is our root conversion metric)
             let askCAD = ask / liveRates[buyCurr];
-            // 2. Strip the Muziris Markup (Reverse Math)
             let baseCAD = askCAD / (1 + (currentMarkup / 100));
-            // 3. Convert Base CAD to Supplier's Currency
             let supGet = baseCAD * liveRates[supCurr];
 
             document.getElementById('calc-sup-get').innerText = supGet.toFixed(2) + " " + supCurr;
@@ -495,11 +489,8 @@
             const buyCurr = document.getElementById('calc-buy-curr').value;
             if(!liveRates[supCurr] || !offer) { document.getElementById('calc-buy-pay').innerText = "0.00 " + buyCurr; return; }
 
-            // 1. Convert Supplier Offer to Base CAD
             let baseCAD = offer / liveRates[supCurr];
-            // 2. Add the Muziris Markup (Forward Math)
             let finalCAD = baseCAD * (1 + (currentMarkup / 100));
-            // 3. Convert to Buyer's Currency
             let buyPay = finalCAD * liveRates[buyCurr];
 
             document.getElementById('calc-buy-pay').innerText = buyPay.toFixed(2) + " " + buyCurr;
@@ -507,6 +498,7 @@
 
         function updateCalc() { calcReverse(); calcForward(); }
 
+        // --- RFQ & LOGISTICS TOOLS ---
         function copyRfqLink() {
             if (!currentActiveChatId || !currentProductId) return alert("Please open a product chat first.");
             const link = `${window.location.origin}/rfq-hub.html?action=new&product=${currentProductId}&supplier=${supplierId}`;
@@ -527,7 +519,9 @@
             document.getElementById('reply-input').focus();
         }
 
+        // Start listening when page loads
         window.onload = loadChatList;
+
     </script>
 </body>
 </html>
