@@ -172,24 +172,27 @@
             </div>
             
             <div class="tool-box">
-                <h4 class="tool-title"><i class="fas fa-calculator"></i> Price & Markup Calc</h4>
-                <div class="tool-desc">Enter your base price to automatically add the platform markup and convert to the buyer's requested currency.</div>
+                <h4 class="tool-title"><i class="fas fa-calculator"></i> Reverse Markup Calc</h4>
+                <div class="tool-desc">Calculate reverse asking prices and forward offers using live global exchange rates.</div>
+                
                 <div class="tool-row">
-                    <select id="calc-sup-curr" class="tool-input">
-                        <option value="USD">My Curr: USD</option>
-                        <option value="CAD">My Curr: CAD</option>
-                        <option value="EUR">My Curr: EUR</option>
-                        <option value="GBP">My Curr: GBP</option>
-                    </select>
-                    <select id="calc-buy-curr" class="tool-input">
-                        <option value="CAD">Buyer: CAD</option>
-                        <option value="USD">Buyer: USD</option>
-                        <option value="EUR">Buyer: EUR</option>
-                    </select>
+                    <select id="calc-sup-curr" class="tool-input" onchange="updateCalc()"><option value="">Loading...</option></select>
+                    <select id="calc-buy-curr" class="tool-input" onchange="updateCalc()"><option value="">Loading...</option></select>
                 </div>
-                <input type="number" id="calc-base" class="tool-input" placeholder="Your Base Price (e.g., 12.50)">
-                <button class="tool-btn" onclick="calculateQuote()">Calculate Target Price</button>
-                <div id="calc-result" class="tool-result">0.00</div>
+
+                <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #333;">
+                    <label style="font-size:10px; color:#888; text-transform:uppercase; font-weight:bold;">1. Buyer's Target Price</label>
+                    <input type="number" id="calc-buyer-ask" class="tool-input" placeholder="e.g. 20.00" onkeyup="calcReverse()" style="margin-bottom:5px; margin-top:5px;">
+                    <div style="font-size:11px; color:#aaa;">You will receive: <strong id="calc-sup-get" style="color:var(--alert); font-size:14px;">0.00</strong></div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 4px; border: 1px solid #333;">
+                    <label style="font-size:10px; color:#888; text-transform:uppercase; font-weight:bold;">2. Your Counter Offer</label>
+                    <input type="number" id="calc-sup-offer" class="tool-input" placeholder="Your Base Price" onkeyup="calcForward()" style="margin-bottom:5px; margin-top:5px;">
+                    <div style="font-size:11px; color:#aaa;">Buyer will see: <strong id="calc-buy-pay" style="color:var(--success); font-size:14px;">0.00</strong></div>
+                </div>
+                
+                <div id="calc-markup-display" style="font-size:10px; color:var(--gold); text-align:center; margin-top:15px; text-transform:uppercase; font-weight:bold;">Platform Markup: Syncing...</div>
             </div>
 
             <div class="tool-box">
