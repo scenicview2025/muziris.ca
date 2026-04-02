@@ -4,176 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muziris | Negotiation Hub</title>
-    <link rel="icon" type="image/png" href="MC.png">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
     <script>
-        if (!localStorage.getItem('verifiedSupplierId')) {
-            window.location.replace('suppliers');
-        }
+        const supplierId = localStorage.getItem('verifiedSupplierId');
+        if (!supplierId) window.location.replace('suppliers.html');
     </script>
 
     <style>
         :root { 
             --gold: #D4AF37; 
-            --gold-dark: #b89225; 
             --void: #0b0e14; 
             --slate: #151922; 
             --mist: #e0e0e0; 
-            --alert: #ff5252; 
+            --alert: #ff5252;
+            --success: #4CAF50;
+            --border: #2a2f3a;
+            --ai-glow: #00e5ff;
         }
-        body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); display: flex; height: 100vh; overflow: hidden; }
+        body { margin: 0; font-family: 'Lato', sans-serif; background: var(--void); color: var(--mist); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* SIDEBAR (Matches Dashboard) */
-        .sidebar { width: 250px; background-color: var(--slate); border-right: 1px solid #333; display: flex; flex-direction: column; z-index: 100; flex-shrink: 0;}
-        .logo-container { padding: 30px 20px; text-align: center; border-bottom: 1px solid #333; }
-        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 28px; text-decoration: none; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
-        
-        .nav-links { flex: 1; padding: 20px 0; overflow-y: auto;}
-        .nav-link { display: block; padding: 15px 25px; color: #aaa; text-decoration: none; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; border-left: 3px solid transparent; }
-        .nav-link:hover, .nav-link.active { background: rgba(212, 175, 55, 0.05); color: #fff; border-left-color: var(--gold); }
-        
-        .logout-btn { padding: 20px; text-align: center; border-top: 1px solid #333; }
-        .logout-btn button { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
-        .logout-btn button:hover { background: var(--alert); color: #fff; }
+        /* TOP NAV */
+        .top-nav { height: 60px; background: var(--slate); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
+        .back-btn { color: var(--gold); text-decoration: none; font-weight: bold; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; transition: 0.3s; }
+        .back-btn:hover { color: #fff; }
+        .hub-title { font-family: 'Cinzel', serif; font-size: 20px; color: #fff; letter-spacing: 2px; text-transform: uppercase; }
+        .escrow-badge { background: rgba(212,175,55,0.1); border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* MAIN LAYOUT */
-        .main-content { flex: 1; display: flex; flex-direction: column; background: var(--void); }
-        .topbar { padding: 20px 40px; border-bottom: 1px solid #333; background: rgba(11, 14, 20, 0.95); display: flex; justify-content: space-between; align-items: center; }
-        .page-title { font-family: 'Cinzel', serif; font-size: 20px; color: #fff; margin: 0; }
+        /* 3-COLUMN LAYOUT */
+        .main-layout { flex: 1; display: flex; overflow: hidden; }
 
-        /* SPLIT INBOX VIEW */
-        .inbox-container { flex: 1; display: flex; overflow: hidden; }
-        
-        /* LEFT: CHAT LIST */
-        .chat-list-panel { width: 350px; background: var(--slate); border-right: 1px solid #333; display: flex; flex-direction: column; }
-        .chat-list-header { padding: 20px; border-bottom: 1px solid #333; font-weight: bold; color: var(--gold); font-family: 'Cinzel', serif; text-transform: uppercase; letter-spacing: 1px; }
+        /* COLUMN 1: CHAT LIST */
+        .chat-list-panel { width: 320px; background: #0b0e14; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        .panel-header { padding: 20px; font-family: 'Cinzel', serif; color: var(--gold); border-bottom: 1px solid var(--border); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
         .chat-list { flex: 1; overflow-y: auto; }
-        
-        .chat-item { padding: 20px; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; position: relative; }
-        .chat-item:hover { background: rgba(255,255,255,0.02); }
-        .chat-item.active { background: rgba(212,175,55,0.1); border-left: 4px solid var(--gold); }
-        .chat-item-buyer { font-size: 14px; color: #fff; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .chat-item-product { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .chat-item-preview { font-size: 13px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .unread-dot { position: absolute; top: 20px; right: 20px; width: 10px; height: 10px; background: var(--alert); border-radius: 50%; display: none; }
+        .chat-item { padding: 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.3s; position: relative; }
+        .chat-item:hover, .chat-item.active { background: var(--slate); border-left: 3px solid var(--gold); }
+        .unread-dot { position: absolute; top: 20px; right: 20px; width: 8px; height: 8px; background: var(--alert); border-radius: 50%; }
+        .chat-buyer { font-size: 14px; color: #fff; font-weight: bold; margin-bottom: 5px; }
+        .chat-product { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .chat-preview { font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* RIGHT: CHAT WINDOW */
-        .chat-window-panel { flex: 1; display: flex; flex-direction: column; background: var(--void); }
-        .chat-window-header { padding: 20px; background: var(--slate); border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .chat-active-buyer { font-size: 16px; color: #fff; font-weight: bold; }
-        .chat-active-product { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
-        
-        #empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #555; }
-        #empty-state i { font-size: 48px; margin-bottom: 15px; color: #333; }
-        
-        #active-chat-area { display: none; flex-direction: column; flex: 1; overflow: hidden; }
-        .messages-area { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        
+        /* COLUMN 2: ACTIVE CHAT */
+        .chat-window { flex: 1; display: flex; flex-direction: column; background: var(--void); position: relative; }
+        .chat-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #555; background: var(--void); z-index: 10; }
+        .chat-header { padding: 20px 30px; background: var(--slate); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .messages-container { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .msg { max-width: 70%; padding: 12px 18px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
-        .msg-buyer { background: #222; color: #eee; align-self: flex-start; border-bottom-left-radius: 0; }
-        .msg-supplier { background: var(--gold); color: #000; align-self: flex-end; border-bottom-right-radius: 0; font-weight: bold; }
-        .msg-system { background: rgba(255, 82, 82, 0.1); color: var(--alert); border: 1px solid rgba(255,82,82,0.3); align-self: center; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; padding: 6px 12px; }
-
-        .input-area { padding: 20px; background: var(--slate); border-top: 1px solid #333; display: flex; gap: 15px; }
-        .chat-input { flex: 1; background: var(--void); border: 1px solid #444; color: #fff; padding: 15px; border-radius: 8px; outline: none; font-family: 'Lato', sans-serif; font-size: 14px; transition: 0.3s; }
+        .msg-buyer { align-self: flex-start; background: var(--slate); color: #fff; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
+        .msg-supplier { align-self: flex-end; background: rgba(212,175,55,0.1); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); border-bottom-right-radius: 2px; }
+        .msg-system { align-self: center; background: rgba(255,82,82,0.1); color: var(--alert); border: 1px solid rgba(255,82,82,0.3); font-size: 11px; font-weight: bold; padding: 8px 15px; text-align: center; max-width: 90%; }
+        
+        .input-area { padding: 20px 30px; background: var(--slate); border-top: 1px solid var(--border); display: flex; gap: 15px; align-items: center; }
+        .chat-input { flex: 1; background: #0b0e14; border: 1px solid #333; color: #fff; padding: 15px 20px; border-radius: 6px; outline: none; font-family: 'Lato', sans-serif; font-size: 14px; }
         .chat-input:focus { border-color: var(--gold); }
-        .send-btn { background: var(--gold); color: #000; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
-        .send-btn:hover { background: var(--gold-dark); transform: translateY(-1px); }
+        .send-btn { background: var(--gold); color: #000; border: none; padding: 0 25px; height: 50px; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; transition: 0.3s; }
+        .send-btn:hover { background: #fff; }
 
+        /* COLUMN 3: TOOLS PANEL */
+        .tools-panel { width: 340px; background: var(--slate); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+        .tool-box { padding: 25px; border-bottom: 1px solid var(--border); }
+        .tool-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px; }
+        
+        .tool-input { width: 100%; background: #0b0e14; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px; margin-bottom: 10px; box-sizing: border-box; font-family: 'Lato', sans-serif; }
+        .tool-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .tool-btn { width: 100%; background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .tool-btn:hover { background: var(--gold); color: #000; }
+        .tool-result { background: #0b0e14; padding: 15px; border-radius: 4px; text-align: center; color: var(--success); font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; margin-top: 10px; border: 1px dashed #333; }
+        .tool-desc { font-size: 11px; color: #888; margin-bottom: 15px; line-height: 1.4; }
+
+        /* AI BOT STYLING */
+        .ai-box { position: relative; overflow: hidden; }
+        .ai-box::before { content: ''; position: absolute; top:0; left:0; width:3px; height:100%; background: var(--ai-glow); box-shadow: 0 0 10px var(--ai-glow); }
+        .ai-title { color: var(--ai-glow); }
+        .ai-btn { border-color: var(--ai-glow); color: var(--ai-glow); }
+        .ai-btn:hover { background: var(--ai-glow); color: #000; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
+        .ai-result { background: rgba(0, 229, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.2); padding: 15px; border-radius: 6px; font-size: 12px; color: #fff; line-height: 1.5; margin-top: 15px; display: none; }
+        .ai-typing { font-style: italic; color: var(--ai-glow); font-size: 11px; display: none; margin-top: 10px; }
+
+        /* SCROLLBARS */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="logo-container">
-            <a href="supplier-dashboard.html" class="logo">Muziris</a>
-        </div>
-        <div class="nav-links">
-            <a href="supplier-dashboard.html" class="nav-link">Dashboard</a>
-            <a href="product-upload.html" class="nav-link">Single Upload</a>
-            <a href="bulk-upload.html" class="nav-link">Mass Import</a>
-            <a href="message-hub.html" class="nav-link active">Negotiation Hub</a>
-        </div>
-        <div class="logout-btn">
-            <button onclick="localStorage.clear(); window.location.href='suppliers.html'">Secure Logout</button>
-        </div>
+    <script>
+        // ==========================================
+        // 🟢 FIREBASE CONFIGURATION
+        // ==========================================
+        const firebaseConfig = {
+          apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+          authDomain: "muziris-ac9dd.firebaseapp.com",
+          projectId: "muziris-ac9dd",
+          storageBucket: "muziris-ac9dd.firebasestorage.app",
+          messagingSenderId: "929662963272",
+          appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+        };
+        
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        
+        let currentActiveChatId = null;
+        let unsubscribeMessages = null;
+        let currentProductId = null;
+    </script>
+
+    <div class="top-nav">
+        <a href="supplier-dashboard.html" class="back-btn"><i class="fas fa-arrow-left" style="margin-right:8px;"></i> Back to Dashboard</a>
+        <div class="hub-title">Negotiation Hub</div>
+        <div class="escrow-badge"><i class="fas fa-shield-alt"></i> Escrow Protected</div>
     </div>
 
-    <div class="main-content">
-        <div class="topbar">
-            <h1 class="page-title">Negotiation Hub</h1>
-            <div style="color:var(--gold); font-size:12px; letter-spacing:1px;"><i class="fas fa-shield-alt"></i> Escrow Protected</div>
+    <div class="main-layout">
+        
+        <div class="chat-list-panel">
+            <div class="panel-header">Active Conversations</div>
+            <div class="chat-list" id="chat-list-container">
+                <div style="padding:30px; text-align:center; color:#555; font-size:12px;">Loading inbox...</div>
+            </div>
         </div>
 
-        <div class="inbox-container">
+        <div class="chat-window">
+            <div id="chat-empty-state" class="chat-empty">
+                <i class="far fa-comments" style="font-size:48px; margin-bottom:15px; color:#333;"></i>
+                <div>Select a conversation from the left to begin negotiating.</div>
+            </div>
+
+            <div class="chat-header" id="chat-header" style="visibility:hidden;">
+                <div>
+                    <h3 id="chat-header-buyer" style="margin:0 0 5px 0; color:#fff;">Buyer ID</h3>
+                    <div id="chat-header-product" style="font-size:11px; color:var(--gold); letter-spacing:1px; text-transform:uppercase;">Product ID</div>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messages-container"></div>
+
+            <div class="input-area" id="input-area" style="visibility:hidden;">
+                <label for="supplier-file-upload" style="cursor:pointer; color:#888; font-size:20px; padding:10px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
+                    <i class="fas fa-paperclip"></i>
+                </label>
+                <input type="file" id="supplier-file-upload" style="display:none;" accept="image/*,video/*,application/pdf" onchange="uploadSupplierFile(event)">
+                
+                <input type="text" id="reply-input" class="chat-input" placeholder="Type your secure reply..." onkeypress="if(event.key === 'Enter') sendReply()">
+                <button class="send-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i></button>
+            </div>
+        </div>
+
+        <div class="tools-panel" id="tools-panel" style="opacity:0.5; pointer-events:none; transition:0.3s;">
+            <div class="panel-header" style="border-bottom:none; padding-bottom:0;">Negotiation Tools</div>
+
+            <div class="tool-box ai-box">
+                <h4 class="tool-title ai-title"><i class="fas fa-robot"></i> AI Sales Coach</h4>
+                <div class="tool-desc">Let our AI analyze this conversation and generate psychological sales tactics to help you close the deal.</div>
+                <button class="tool-btn ai-btn" onclick="analyzeChatWithAI()">Analyze Conversation</button>
+                <div id="ai-typing" class="ai-typing">Analyzing buyer sentiment...</div>
+                <div id="ai-result" class="ai-result"></div>
+            </div>
             
-            <div class="chat-list-panel">
-                <div class="chat-list-header">Active Conversations</div>
-                <div class="chat-list" id="chat-list-container">
-                    <div style="padding:20px; color:#555; text-align:center; font-size:13px;">Loading incoming requests...</div>
+            <div class="tool-box">
+                <h4 class="tool-title"><i class="fas fa-calculator"></i> Price & Markup Calc</h4>
+                <div class="tool-desc">Enter your base price to automatically add the platform markup and convert to the buyer's requested currency.</div>
+                <div class="tool-row">
+                    <select id="calc-sup-curr" class="tool-input">
+                        <option value="USD">My Curr: USD</option>
+                        <option value="CAD">My Curr: CAD</option>
+                        <option value="EUR">My Curr: EUR</option>
+                        <option value="GBP">My Curr: GBP</option>
+                    </select>
+                    <select id="calc-buy-curr" class="tool-input">
+                        <option value="CAD">Buyer: CAD</option>
+                        <option value="USD">Buyer: USD</option>
+                        <option value="EUR">Buyer: EUR</option>
+                    </select>
                 </div>
+                <input type="number" id="calc-base" class="tool-input" placeholder="Your Base Price (e.g., 12.50)">
+                <button class="tool-btn" onclick="calculateQuote()">Calculate Target Price</button>
+                <div id="calc-result" class="tool-result">0.00</div>
             </div>
 
-            <div class="chat-window-panel">
-                <div id="empty-state">
-                    <i class="far fa-comments"></i>
-                    <div>Select a conversation to begin negotiating.</div>
-                </div>
-
-                <div id="active-chat-area">
-                    <div class="chat-window-header">
-                        <div>
-                            <div class="chat-active-buyer" id="header-buyer-email">Buyer@Email.com</div>
-                            <div class="chat-active-product" id="header-product-id">Product Inquiry</div>
-                        </div>
-                        <button onclick="triggerOfficialQuote()" style="background:transparent; border:1px solid var(--gold); color:var(--gold); padding:8px 15px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">Send Official Quote</button>
-                    </div>
-                    
-                    <div class="messages-area" id="messages-container">
-                        </div>
-
-                    <div class="input-area" style="align-items: center;">
-                        <label for="supplier-file-upload" style="cursor:pointer; color:#888; font-size:20px; padding:10px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
-                            <i class="fas fa-paperclip"></i>
-                        </label>
-                        <input type="file" id="supplier-file-upload" style="display:none;" accept="image/*,video/*" onchange="uploadSupplierFile(event)">
-                        
-                        <input type="text" id="reply-input" class="chat-input" placeholder="Type your reply to the buyer..." onkeypress="if(event.key === 'Enter') sendReply()">
-                        <button class="send-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i></button>
-                    </div>
-                </div>
+            <div class="tool-box">
+                <h4 class="tool-title"><i class="fas fa-file-contract"></i> Official RFQ Contract</h4>
+                <div class="tool-desc">Once terms are agreed, generate an official RFQ link for the buyer to submit payment into Escrow.</div>
+                <button class="tool-btn" onclick="copyRfqLink()" style="background:rgba(212,175,55,0.1);">Generate & Copy Link</button>
             </div>
 
+            <div class="tool-box">
+                <h4 class="tool-title"><i class="fas fa-truck-loading"></i> Quick Logistics</h4>
+                <div class="tool-desc">Instantly format and drop shipping dimensions into the chat for freight calculations.</div>
+                <div class="tool-row">
+                    <input type="text" id="log-weight" class="tool-input" placeholder="Total Weight (kg)">
+                    <input type="text" id="log-cbm" class="tool-input" placeholder="Volume (CBM)">
+                </div>
+                <input type="text" id="log-origin" class="tool-input" placeholder="Origin Postal/ZIP Code">
+                <button class="tool-btn" onclick="injectLogistics()">Drop into Chat</button>
+            </div>
         </div>
+
     </div>
 
     <script>
         // ==========================================
-        // 🟢 FIREBASE INIT
+        // 🟢 1. LOAD CHAT LIST & MASK BUYER ID
         // ==========================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
-            authDomain: "muziris-ac9dd.firebaseapp.com",
-            projectId: "muziris-ac9dd",
-            storageBucket: "muziris-ac9dd.firebasestorage.app",
-            messagingSenderId: "929662963272",
-            appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
-        };
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        const supplierId = localStorage.getItem('verifiedSupplierId');
-        let currentActiveChatId = null;
-        let unsubscribeMessages = null;
-
-        // 🟢 1. LOAD THE CHAT LIST (LEFT PANEL)
         function loadChatList() {
             db.collection('chats')
               .where('supplierId', '==', supplierId)
@@ -183,7 +225,7 @@
                   listContainer.innerHTML = "";
 
                   if (snapshot.empty) {
-                      listContainer.innerHTML = '<div style="padding:20px; color:#555; text-align:center; font-size:13px;">No active conversations yet.</div>';
+                      listContainer.innerHTML = '<div style="padding:30px; color:#555; text-align:center; font-size:13px;">No active conversations yet.</div>';
                       return;
                   }
 
@@ -192,42 +234,56 @@
                       const isUnread = chat.unreadBySupplier ? 'display:block;' : 'display:none;';
                       const activeClass = currentActiveChatId === doc.id ? 'active' : '';
 
-                      // 🟢 NEW: Mask the buyer's email to protect platform integrity!
+                      // SECURE MASKING: Hide raw email
                       let safeName = chat.buyerEmail ? chat.buyerEmail.split('@')[0] : "UNKNOWN";
                       let maskedBuyer = "Buyer: " + safeName.substring(0, 3).toUpperCase() + "***";
 
                       listContainer.innerHTML += `
                           <div class="chat-item ${activeClass}" onclick="openChat('${doc.id}', '${maskedBuyer}', '${chat.productId || 'General Inquiry'}')">
                               <div class="unread-dot" style="${isUnread}"></div>
-                              <div class="chat-item-buyer"><i class="fas fa-user-secret" style="margin-right:5px; color:#888;"></i> ${maskedBuyer}</div>
-                              <div class="chat-item-product"><i class="fas fa-box" style="margin-right:5px;"></i> ${chat.productId || 'Inquiry'}</div>
-                              <div class="chat-item-preview">${chat.lastMessage || 'No messages yet.'}</div>
+                              <div class="chat-buyer"><i class="fas fa-user-secret" style="margin-right:5px; color:#888;"></i> ${maskedBuyer}</div>
+                              <div class="chat-product"><i class="fas fa-box" style="margin-right:5px;"></i> ${chat.productId || 'Inquiry'}</div>
+                              <div class="chat-preview">${chat.lastMessage || 'No messages yet.'}</div>
                           </div>
                       `;
                   });
+              }, (error) => {
+                  console.error("Firestore Error:", error);
+                  if (error.message.includes("requires an index")) {
+                      document.getElementById('chat-list-container').innerHTML = `<div style="padding:20px; color:var(--alert); text-align:center; font-size:12px; font-weight:bold;">⚠️ Database Index Required.<br>Check console for Firebase link.</div>`;
+                  }
               });
         }
 
-        // 🟢 2. OPEN A SPECIFIC CHAT (RIGHT PANEL)
-        function openChat(chatId, buyerEmail, productId) {
+        // ==========================================
+        // 🟢 2. OPEN SPECIFIC CHAT
+        // ==========================================
+        function openChat(chatId, buyerName, productId) {
             currentActiveChatId = chatId;
+            currentProductId = productId; 
             
-            document.getElementById('empty-state').style.display = 'none';
-            document.getElementById('active-chat-area').style.display = 'flex';
+            // Reset AI Tool State
+            document.getElementById('ai-result').style.display = 'none';
+            document.getElementById('ai-typing').style.display = 'none';
+
+            // Update UI State
+            document.getElementById('chat-empty-state').style.display = 'none';
+            document.getElementById('chat-header').style.visibility = 'visible';
+            document.getElementById('input-area').style.visibility = 'visible';
             
-            document.getElementById('header-buyer-email').innerText = buyerEmail;
-            document.getElementById('header-product-id').innerText = productId;
+            // Enable Tools Panel
+            const tools = document.getElementById('tools-panel');
+            tools.style.opacity = '1';
+            tools.style.pointerEvents = 'auto';
+            
+            // Update Headers
+            document.getElementById('chat-header-buyer').innerText = buyerName;
+            document.getElementById('chat-header-product').innerText = productId !== 'General Inquiry' ? `Product Ref: ${productId}` : 'General Inquiry';
 
-            // Highlight active in list visually
-            loadChatList(); 
-
-            // Mark as read in Firestore
             db.collection('chats').doc(chatId).update({ unreadBySupplier: false });
 
-            // Stop listening to old chat if switching
             if (unsubscribeMessages) unsubscribeMessages();
 
-            // Listen to this chat's messages
             unsubscribeMessages = db.collection('chats').doc(chatId).collection('messages')
                 .orderBy('timestamp', 'asc')
                 .onSnapshot(snapshot => {
@@ -236,18 +292,16 @@
                     
                     snapshot.forEach(doc => {
                         const msg = doc.data();
-                        // 🟢 Group system-context under the 'system' style
                         const type = msg.sender === 'supplier' ? 'supplier' : (msg.sender === 'system' || msg.sender === 'system-context' ? 'system' : 'buyer');
                         
                         let content = msg.text;
 
-                        // 🟢 Format the automated product inquiry with a link for the Supplier
                         if (msg.sender === 'system-context') {
-                            const productId = msg.text.split('(ID: ')[1]?.replace(').', '') || '';
+                            const pId = msg.text.split('(ID: ')[1]?.replace(').', '') || '';
                             content = `
                                 <div style="border-left: 3px solid var(--gold); padding-left: 10px;">
                                     <i class="fas fa-robot" style="margin-right:5px; color:var(--gold);"></i> ${msg.text}<br>
-                                    <button onclick="window.open('product-upload.html?edit=${productId}', '_blank')" style="margin-top:10px; background:var(--gold); color:#000; border:none; padding:6px 12px; border-radius:4px; font-size:10px; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">
+                                    <button onclick="window.open('product-upload.html?edit=${pId}', '_blank')" style="margin-top:10px; background:var(--gold); color:#000; border:none; padding:6px 12px; border-radius:4px; font-size:10px; font-weight:bold; cursor:pointer; text-transform:uppercase;">
                                         Manage This Product
                                     </button>
                                 </div>
@@ -263,41 +317,34 @@
                             </div>
                         `;
                     });
-                    // Auto scroll to bottom
                     msgContainer.scrollTop = msgContainer.scrollHeight;
                 });
         }
-        // 🟢 3. SUPPLIER SENDS A REPLY
+
+        // ==========================================
+        // 🟢 3. SEND MESSAGE & UPLOAD LOGIC
+        // ==========================================
         async function sendReply() {
             const input = document.getElementById('reply-input');
             const rawText = input.value.trim();
             if (!rawText || !currentActiveChatId) return;
 
-            // 🛡️ ANTI-LEAKAGE FILTER (Double Protection on Supplier Side)
             let safeText = rawText;
             let securityTriggered = false;
-            
             const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/g;
             const phoneRegex = /\b\d{7,15}\b/g;
             const appRegex = /whatsapp|wechat|skype|telegram/gi;
 
             if (emailRegex.test(rawText) || phoneRegex.test(rawText) || appRegex.test(rawText)) {
                 securityTriggered = true;
-                safeText = safeText.replace(emailRegex, "[EMAIL REDACTED]");
-                safeText = safeText.replace(phoneRegex, "[PHONE REDACTED]");
-                safeText = safeText.replace(appRegex, "[APP REDACTED]");
+                safeText = safeText.replace(emailRegex, "[EMAIL REDACTED]").replace(phoneRegex, "[PHONE REDACTED]").replace(appRegex, "[APP REDACTED]");
             }
 
-            const messageData = {
-                sender: "supplier",
-                text: safeText,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
             try {
-                input.value = ""; // Clear input immediately
-                
-                await db.collection('chats').doc(currentActiveChatId).collection('messages').add(messageData);
+                input.value = ""; 
+                await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                    sender: "supplier", text: safeText, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
                 
                 await db.collection('chats').doc(currentActiveChatId).set({
                     lastMessage: "Factory: " + safeText,
@@ -307,28 +354,15 @@
 
                 if (securityTriggered) {
                     await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
-                        sender: "system",
-                        text: "⚠️ Warning: The factory attempted to share contact details. Escrow protection is void if transactions occur off-platform.",
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        sender: "system", text: "⚠️ Warning: The factory attempted to share contact details. Escrow protection is void if transactions occur off-platform.", timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 }
-
-            } catch (error) {
-                alert("Failed to send message.");
-                console.error(error);
-            }
+            } catch (error) { console.error(error); alert("Failed to send."); }
         }
 
-        function triggerOfficialQuote() {
-            alert("This will open the Official RFQ Generation Form (Phase 3).");
-        }
-
-        // 🟢 SUPPLIER FILE UPLOAD LOGIC
         async function uploadSupplierFile(event) {
             const file = event.target.files[0];
             if (!file || !currentActiveChatId) return;
-
-            // Show temporary loading indicator in UI
             const msgContainer = document.getElementById('messages-container');
             msgContainer.innerHTML += `<div class="msg msg-system">Uploading attachment...</div>`;
             msgContainer.scrollTop = msgContainer.scrollHeight;
@@ -339,25 +373,83 @@
                 const fileUrl = await storageRef.getDownloadURL();
 
                 await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
-                    sender: "supplier",
-                    text: fileUrl,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    sender: "supplier", text: fileUrl, timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                
                 await db.collection('chats').doc(currentActiveChatId).set({
-                    lastMessage: "Factory: 📎 Sent an attachment",
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastMessage: "Factory: 📎 Sent an attachment", lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
-
-            } catch (error) {
-                console.error(error);
-                alert("File upload failed.");
-            }
+            } catch (error) { console.error(error); alert("Upload failed."); }
         }
 
-        // Start listening when page loads
-        window.onload = loadChatList;
+        // ==========================================
+        // 🟢 4. RIGHT PANEL TOOLS LOGIC
+        // ==========================================
+        
+        // --- AI SALES COACH ---
+        function analyzeChatWithAI() {
+            if (!currentActiveChatId) return;
+            const btn = document.querySelector('.ai-btn');
+            const typing = document.getElementById('ai-typing');
+            const resultBox = document.getElementById('ai-result');
+            
+            btn.style.display = 'none';
+            typing.style.display = 'block';
+            resultBox.style.display = 'none';
 
+            // Simulate AI reading the chat history and calculating a strategy
+            setTimeout(() => {
+                const tactics = [
+                    "<strong>🧠 Psychological Trigger: Risk Reversal</strong><br>The buyer is evaluating risk. Offer to send a sample unit or a CAD drawing before requiring a deposit. This drops their barrier to entry.",
+                    "<strong>🧠 Psychological Trigger: Reciprocity</strong><br>Give them unexpected value. Provide a free assessment of their shipping dimensions to save them freight costs. They will feel obligated to close with you.",
+                    "<strong>🧠 Sales Tactic: The 'Puppy Dog' Close</strong><br>Don't push the full order yet. Focus on getting them to agree to a small test order with low MOQ. Once they see the quality, the big contract is guaranteed.",
+                    "<strong>🧠 Sales Tactic: Scarcity Injection</strong><br>Politely mention that raw material costs (like aluminum/steel) are shifting next week. Offer to lock in today's price if they execute the RFQ by Friday."
+                ];
+                
+                // Pick a random strategy for now (can hook up to real LLM later)
+                const randomTactic = tactics[Math.floor(Math.random() * tactics.length)];
+                
+                typing.style.display = 'none';
+                resultBox.innerHTML = randomTactic + `<br><br><button onclick="document.getElementById('ai-result').style.display='none'; document.querySelector('.ai-btn').style.display='block';" style="background:transparent; border:none; color:var(--ai-glow); text-decoration:underline; cursor:pointer; font-size:10px;">Dismiss Advice</button>`;
+                resultBox.style.display = 'block';
+            }, 1500); // 1.5 second "thinking" delay
+        }
+
+        function calculateQuote() {
+            const base = parseFloat(document.getElementById('calc-base').value);
+            const supCurr = document.getElementById('calc-sup-curr').value;
+            const buyCurr = document.getElementById('calc-buy-curr').value;
+            
+            const ratesToUSD = { USD: 1, CAD: 0.74, EUR: 1.08, GBP: 1.26 }; 
+            if (!base) return alert("Enter a base price.");
+
+            let baseUSD = base * ratesToUSD[supCurr];
+            let markedUpUSD = baseUSD * 1.10; // 10% Markup
+            let finalPrice = markedUpUSD / ratesToUSD[buyCurr];
+
+            document.getElementById('calc-result').innerText = finalPrice.toFixed(2) + " " + buyCurr;
+        }
+
+        function copyRfqLink() {
+            if (!currentActiveChatId || !currentProductId) return alert("Please open a product chat first.");
+            const link = `${window.location.origin}/rfq-hub.html?action=new&product=${currentProductId}&supplier=${supplierId}`;
+            navigator.clipboard.writeText(link);
+            
+            document.getElementById('reply-input').value = `Please review and confirm the Official RFQ here: ${link}`;
+            document.getElementById('reply-input').focus();
+        }
+
+        function injectLogistics() {
+            const w = document.getElementById('log-weight').value;
+            const c = document.getElementById('log-cbm').value;
+            const o = document.getElementById('log-origin').value;
+            if(!w || !c) return alert("Weight and Volume are required.");
+            
+            const msg = `📦 LOGISTICS UPDATE:\n- Total Est. Weight: ${w} kg\n- Total Volume: ${c} CBM\n- Origin Dispatch: ${o || 'Factory'}\n\nPlease confirm if you require us to arrange freight based on these metrics.`;
+            document.getElementById('reply-input').value = msg;
+            document.getElementById('reply-input').focus();
+        }
+
+        window.onload = loadChatList;
     </script>
 </body>
 </html>
