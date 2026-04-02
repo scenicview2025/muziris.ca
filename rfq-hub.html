@@ -234,11 +234,23 @@
         let monthYear = d.toLocaleString('default', { month: 'short', year: 'numeric' });
         chartData[monthYear] = (chartData[monthYear] || 0) + 1;
 
-        // Table Row Generation
+        // Table Row Generation & Two-Phase Logic
         let statusClass = "status-pending";
-        if (['Pending Freight', 'Quote Sent'].includes(rfq.status)) statusClass = "status-process";
-        if (isWon) statusClass = "status-won";
-        if (rfq.status === 'Cancelled') statusClass = "status-lost";
+        let actionBtn = `<button onclick="openRfq('${rfq.rfq_id}', '${rfq.status}')" class="btn-view">View</button>`;
+
+        if (['Pending Freight', 'Quote Sent', 'Pending Freight Payment'].includes(rfq.status)) {
+            statusClass = "status-process";
+        } else if (isWon) {
+            statusClass = "status-won";
+        } else if (rfq.status === 'Cancelled') {
+            statusClass = "status-lost";
+        }
+
+        // 🟢 NEW: Phase 2 Logistics Trigger for Supplier
+        if (rfq.status === 'In Production') {
+            statusClass = "status-process";
+            actionBtn = `<button onclick="requestFreightPickup('${rfq.rfq_id}')" class="btn-view" style="background:var(--blue); color:#fff; border-color:var(--blue); font-weight:bold;">📦 Request Freight Pickup</button>`;
+        }
 
         let dateStr = d.toLocaleDateString();
 
@@ -250,9 +262,7 @@
             <td>${rfq.buyer_company}</td>
             <td>${rfq.destination}</td>
             <td><span class="status-badge ${statusClass}">${rfq.status}</span></td>
-            <td>
-              <button onclick="openRfq('${rfq.rfq_id}', '${rfq.status}')" class="btn-view">View</button>
-            </td>
+            <td>${actionBtn}</td>
           </tr>
         `;
       });
