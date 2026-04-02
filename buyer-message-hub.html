@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muziris | Buyer Message Hub</title>
+    <link rel="icon" type="image/png" href="MC.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
+    <style>
+        :root { 
+            --gold: #D4AF37; 
+            --void: #0b0e14; 
+            --slate: #151922; 
+            --border: #2a2f3a;
+            --blue: #0ea5e9;
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #FAFAFA; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* TOP NAV */
+        .top-nav { height: 65px; background: #fff; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); z-index: 10; }
+        .back-btn { color: #4b5563; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .back-btn:hover { color: var(--gold); }
+        .hub-title { font-family: 'Cinzel', serif; font-size: 20px; color: #111827; font-weight: bold; }
+        
+        /* 2-COLUMN LAYOUT */
+        .main-layout { flex: 1; display: flex; overflow: hidden; }
+
+        /* INBOX PANEL */
+        .chat-list-panel { width: 350px; background: #fff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; z-index: 5; }
+        .panel-header { padding: 20px; font-weight: 700; color: #111827; border-bottom: 1px solid #e5e7eb; font-size: 15px; display: flex; justify-content: space-between; align-items: center; background: #f9fafb; }
+        .chat-list { flex: 1; overflow-y: auto; }
+        .chat-item { padding: 20px; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: 0.2s; position: relative; }
+        .chat-item:hover { background: #f9fafb; }
+        .chat-item.active { background: #f0f9ff; border-left: 4px solid var(--blue); }
+        
+        .chat-supplier { font-size: 14px; color: #111827; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;}
+        .chat-product { font-size: 11px; color: #6b7280; margin-bottom: 8px; font-weight: 500; }
+        .chat-preview { font-size: 13px; color: #9ca3af; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* CHAT WINDOW */
+        .chat-window { flex: 1; display: flex; flex-direction: column; background: #f3f4f6; position: relative; }
+        .chat-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #9ca3af; background: #f9fafb; z-index: 10; }
+        
+        .chat-header { padding: 20px 30px; background: #fff; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .header-sup-name { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+        .header-prod-id { font-size: 12px; color: var(--gold); font-weight: 600; }
+
+        .messages-container { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 70%; padding: 12px 18px; border-radius: 12px; font-size: 14px; line-height: 1.5; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .msg-buyer { align-self: flex-end; background: var(--blue); color: #fff; border-bottom-right-radius: 2px; }
+        .msg-supplier { align-self: flex-start; background: #fff; color: #111827; border: 1px solid #e5e7eb; border-bottom-left-radius: 2px; }
+        .msg-system { align-self: center; background: #fffbeb; color: #d97706; border: 1px solid #fde68a; font-size: 11px; font-weight: 600; padding: 8px 16px; border-radius: 20px; text-align: center; }
+        
+        .input-area { padding: 20px 30px; background: #fff; border-top: 1px solid #e5e7eb; display: flex; gap: 15px; align-items: center; }
+        .chat-input { flex: 1; background: #f3f4f6; border: 1px solid #e5e7eb; color: #111827; padding: 15px 20px; border-radius: 8px; outline: none; font-family: 'Inter', sans-serif; font-size: 14px; transition: 0.2s; }
+        .chat-input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1); }
+        
+        .send-btn { background: var(--blue); color: #fff; border: none; padding: 0 25px; height: 50px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px;}
+        .send-btn:hover { background: #0284c7; }
+        .attach-btn { color: #9ca3af; font-size: 20px; cursor: pointer; transition: 0.2s; padding: 10px; }
+        .attach-btn:hover { color: var(--blue); }
+
+        /* SCROLLBARS */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+    </style>
+</head>
+<body>
+
+    <script>
+        // 🟢 FIREBASE CONFIGURATION
+        const firebaseConfig = {
+          apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+          authDomain: "muziris-ac9dd.firebaseapp.com",
+          projectId: "muziris-ac9dd",
+          storageBucket: "muziris-ac9dd.firebasestorage.app",
+          messagingSenderId: "929662963272",
+          appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+        };
+        
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        
+        let currentBuyerEmail = null;
+        let currentActiveChatId = null;
+        let unsubscribeMessages = null;
+    </script>
+
+    <div class="top-nav">
+        <a href="buyer-dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        <div class="hub-title">Message Hub</div>
+        <div class="flex items-center gap-2 text-sm font-bold text-gray-600">
+            <i class="fas fa-shield-alt text-[var(--gold)]"></i> Protected Negotiation
+        </div>
+    </div>
+
+    <div class="main-layout">
+        
+        <div class="chat-list-panel">
+            <div class="panel-header">
+                Messages
+                <i class="far fa-edit text-gray-400 cursor-pointer hover:text-blue-500" title="Start new chat from Catalog"></i>
+            </div>
+            <div class="chat-list" id="chat-list-container">
+                <div style="padding:30px; text-align:center; color:#9ca3af; font-size:13px;">Authenticating...</div>
+            </div>
+        </div>
+
+        <div class="chat-window">
+            <div id="chat-empty-state" class="chat-empty">
+                <i class="far fa-comments" style="font-size:48px; margin-bottom:15px; color:#d1d5db;"></i>
+                <div style="font-weight:500;">Select a conversation to continue negotiating.</div>
+            </div>
+
+            <div class="chat-header" id="chat-header" style="visibility:hidden;">
+                <div>
+                    <div class="header-sup-name" id="chat-header-supplier">Factory</div>
+                    <div class="header-prod-id" id="chat-header-product">Product ID</div>
+                </div>
+                <button onclick="viewProductCatalog()" style="background:#fff; border:1px solid #e5e7eb; padding:8px 16px; border-radius:6px; font-size:12px; font-weight:600; color:#4b5563; cursor:pointer; transition:0.2s;" onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)';" onmouseout="this.style.borderColor='#e5e7eb'; this.style.color='#4b5563';">
+                    View Catalog Page
+                </button>
+            </div>
+
+            <div class="messages-container" id="messages-container"></div>
+
+            <div class="input-area" id="input-area" style="visibility:hidden;">
+                <label for="buyer-file-upload" class="attach-btn">
+                    <i class="fas fa-paperclip"></i>
+                </label>
+                <input type="file" id="buyer-file-upload" style="display:none;" accept="image/*,application/pdf" onchange="uploadBuyerFile(event)">
+                
+                <input type="text" id="reply-input" class="chat-input" placeholder="Type a message to the supplier..." onkeypress="if(event.key === 'Enter') sendReply()">
+                <button class="send-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 🟢 1. AUTH GUARD
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentBuyerEmail = user.email;
+                loadChatList(); 
+            } else {
+                window.location.replace('index1.html');
+            }
+        });
+
+        // 🟢 2. LOAD INBOX LIST
+        function loadChatList() {
+            db.collection('chats')
+              .where('buyerEmail', '==', currentBuyerEmail)
+              .orderBy('lastUpdated', 'desc')
+              .onSnapshot(snapshot => {
+                  const listContainer = document.getElementById('chat-list-container');
+                  listContainer.innerHTML = "";
+
+                  if (snapshot.empty) {
+                      listContainer.innerHTML = '<div style="padding:30px; color:#9ca3af; text-align:center; font-size:13px; line-height:1.6;">No messages yet.<br><a href="catalog.html" style="color:var(--blue); text-decoration:none; font-weight:600;">Browse Catalog to start a chat</a></div>';
+                      return;
+                  }
+
+                  snapshot.forEach(doc => {
+                      const chat = doc.data();
+                      const activeClass = currentActiveChatId === doc.id ? 'active' : '';
+
+                      listContainer.innerHTML += `
+                          <div class="chat-item ${activeClass}" onclick="openChat('${doc.id}', '${chat.supplierId}', '${chat.productId || 'General'}')">
+                              <div class="chat-supplier"><i class="fas fa-industry text-gray-400"></i> Supplier: ${chat.supplierId}</div>
+                              <div class="chat-product">Product: ${chat.productId || 'Inquiry'}</div>
+                              <div class="chat-preview">${chat.lastMessage || 'No messages yet.'}</div>
+                          </div>
+                      `;
+                  });
+              }, (error) => {
+                  console.error("Firestore Error:", error);
+                  document.getElementById('chat-list-container').innerHTML = `<div style="padding:20px; color:var(--alert); text-align:center; font-size:12px;">Error loading chats.</div>`;
+              });
+        }
+
+        // 🟢 3. OPEN SPECIFIC CHAT
+        function openChat(chatId, supplierId, productId) {
+            currentActiveChatId = chatId;
+            
+            document.getElementById('chat-empty-state').style.display = 'none';
+            document.getElementById('chat-header').style.visibility = 'visible';
+            document.getElementById('input-area').style.visibility = 'visible';
+            
+            document.getElementById('chat-header-supplier').innerText = `Verified Supplier (${supplierId})`;
+            document.getElementById('chat-header-product').innerText = `Ref: ${productId}`;
+
+            // Highlight active in list visually
+            const items = document.querySelectorAll('.chat-item');
+            items.forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (unsubscribeMessages) unsubscribeMessages();
+
+            unsubscribeMessages = db.collection('chats').doc(chatId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot(snapshot => {
+                    const msgContainer = document.getElementById('messages-container');
+                    msgContainer.innerHTML = "";
+                    
+                    snapshot.forEach(doc => {
+                        const msg = doc.data();
+                        
+                        // BUYER SIDE LOGIC: Hide the "system-context" injection that was meant only for the supplier
+                        if (msg.sender === 'system-context') return; 
+
+                        const type = msg.sender === 'buyer' ? 'buyer' : (msg.sender === 'system' ? 'system' : 'supplier');
+                        let content = msg.text;
+
+                        // Render Images
+                        if (msg.text && msg.text.startsWith('https://firebasestorage')) {
+                            content = `<a href="${msg.text}" target="_blank"><img src="${msg.text}" style="max-width: 250px; border-radius: 8px; cursor: pointer;"></a>`;
+                        }
+
+                        msgContainer.innerHTML += `
+                            <div class="msg msg-${type}">
+                                ${content}
+                            </div>
+                        `;
+                    });
+                    msgContainer.scrollTop = msgContainer.scrollHeight;
+                });
+        }
+
+        // 🟢 4. SEND MESSAGE
+        async function sendReply() {
+            const input = document.getElementById('reply-input');
+            const rawText = input.value.trim();
+            if (!rawText || !currentActiveChatId) return;
+
+            // Anti-Leakage Filter for Buyers too!
+            let safeText = rawText;
+            let securityTriggered = false;
+            const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/g;
+            const phoneRegex = /\b\d{7,15}\b/g;
+
+            if (emailRegex.test(rawText) || phoneRegex.test(rawText)) {
+                securityTriggered = true;
+                safeText = safeText.replace(emailRegex, "[EMAIL REDACTED]").replace(phoneRegex, "[PHONE REDACTED]");
+            }
+
+            try {
+                input.value = ""; 
+                await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                    sender: "buyer", text: safeText, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                await db.collection('chats').doc(currentActiveChatId).set({
+                    lastMessage: "You: " + safeText,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                    unreadBySupplier: true // Flags the supplier's inbox
+                }, { merge: true });
+
+                if (securityTriggered) {
+                    await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                        sender: "system", text: "⚠️ Security Notice: Sharing direct contact details violates Muziris Escrow protection.", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            } catch (error) { console.error(error); alert("Failed to send."); }
+        }
+
+        // 🟢 5. UPLOAD FILE
+        async function uploadBuyerFile(event) {
+            const file = event.target.files[0];
+            if (!file || !currentActiveChatId) return;
+            
+            const msgContainer = document.getElementById('messages-container');
+            msgContainer.innerHTML += `<div class="msg msg-system">Uploading attachment...</div>`;
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+
+            try {
+                const storageRef = storage.ref(`chat_attachments/${currentActiveChatId}/${Date.now()}_${file.name}`);
+                await storageRef.put(file);
+                const fileUrl = await storageRef.getDownloadURL();
+
+                await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                    sender: "buyer", text: fileUrl, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await db.collection('chats').doc(currentActiveChatId).set({
+                    lastMessage: "You: 📎 Sent an attachment", 
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                    unreadBySupplier: true
+                }, { merge: true });
+            } catch (error) { console.error(error); alert("Upload failed."); }
+        }
+
+        function viewProductCatalog() {
+            alert("This will navigate back to the global catalog page for this specific item.");
+        }
+
+    </script>
+</body>
+</html>
