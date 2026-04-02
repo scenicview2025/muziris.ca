@@ -435,39 +435,47 @@
                 if(data.success) {
                     liveRates = data.rates;
                     currentMarkup = data.markup;
+                    
+                    // 🟢 NEW: Grab the exact currencies
+                    const supCur = data.supplierCurrency || 'USD';
+                    const buyCur = 'CAD'; // Platform base currency for North American buyers
+                    
+                    document.getElementById('calc-markup-display').innerText = `Muziris Category Markup: ${currentMarkup}%`;
+                    
+                    const supSel = document.getElementById('calc-sup-curr');
+                    const buySel = document.getElementById('calc-buy-curr');
+                    
+                    // 🟢 NEW: Lock the dropdowns and dim them out!
+                    supSel.innerHTML = `<option value="${supCur}">My Curr: ${supCur}</option>`;
+                    buySel.innerHTML = `<option value="${buyCur}">Buyer: ${buyCur}</option>`;
+                    
+                    supSel.disabled = true;
+                    buySel.disabled = true;
+                    supSel.style.opacity = '0.6';
+                    buySel.style.opacity = '0.6';
+                    supSel.style.cursor = 'not-allowed';
+                    buySel.style.cursor = 'not-allowed';
+
                 } else {
                     throw new Error("API returned false");
                 }
             } catch(e) { 
                 console.error("Calculator Sync Error (Using Fallback Rates):", e); 
-                // 2. FALLBACK SAFETY NET: If server is asleep or fails, use these standard rates
-                liveRates = { USD: 1, CAD: 1.35, EUR: 0.92, GBP: 0.78, INR: 83.5, AUD: 1.52 };
+                liveRates = { USD: 1, CAD: 1.35, EUR: 0.92, GBP: 0.78, INR: 83.5, AUD: 1.52, AED: 3.67 };
                 currentMarkup = 20;
-            }
-
-            // 3. Update the UI
-            document.getElementById('calc-markup-display').innerText = `Muziris Category Markup: ${currentMarkup}%`;
-            
-            const supSel = document.getElementById('calc-sup-curr');
-            const buySel = document.getElementById('calc-buy-curr');
-            
-            if(supSel.options.length <= 1) { // Only fill if empty or stuck on 'Loading...'
-                supSel.innerHTML = ''; 
-                buySel.innerHTML = '';
                 
-                Object.keys(liveRates).sort().forEach(c => {
-                    supSel.innerHTML += `<option value="${c}">My Curr: ${c}</option>`;
-                    buySel.innerHTML += `<option value="${c}">Buyer: ${c}</option>`;
-                });
+                const supSel = document.getElementById('calc-sup-curr');
+                const buySel = document.getElementById('calc-buy-curr');
                 
-                // Set smart defaults
-                supSel.value = 'USD'; 
-                if(buySel.querySelector('option[value="CAD"]')) buySel.value = 'CAD'; 
+                // Lock fallbacks just in case
+                supSel.innerHTML = `<option value="USD">My Curr: USD</option>`;
+                buySel.innerHTML = `<option value="CAD">Buyer: CAD</option>`;
+                supSel.disabled = true; 
+                buySel.disabled = true;
             }
             
             updateCalc();
         }
-
         // MATH 1: Buyer Target -> What Supplier Gets (REVERSE MATH)
         function calcReverse() {
             const ask = parseFloat(document.getElementById('calc-buyer-ask').value) || 0;
