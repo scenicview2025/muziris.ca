@@ -1046,16 +1046,15 @@ if (p.status === 'PAUSED') {
                   history.innerHTML = ""; 
                   
                   if (snapshot.empty) {
-                      // 🟢 NEW: Auto-inject context message so the supplier knows the product
+                      // 🟢 CHANGED: sender is now "system-context"
                       const contextText = `OFFICIAL INQUIRY: Buyer is interested in "${p.name}" (ID: ${p.id}).`;
                       
                       await db.collection('chats').doc(chatId).collection('messages').add({
-                          sender: "system",
+                          sender: "system-context", 
                           text: contextText,
                           timestamp: firebase.firestore.FieldValue.serverTimestamp()
                       });
 
-                      // Update the main chat doc so it shows up in supplier inbox immediately
                       await db.collection('chats').doc(chatId).set({
                           buyerEmail: buyerEmail,
                           supplierId: supplierId,
@@ -1068,6 +1067,10 @@ if (p.status === 'PAUSED') {
                   } else {
                       snapshot.forEach(doc => {
                           const msg = doc.data();
+                          
+                          // 🟢 ADDED: If the sender is "system-context", skip rendering it for the buyer
+                          if (msg.sender === 'system-context') return;
+
                           const type = msg.sender === 'buyer' ? 'buyer' : (msg.sender === 'system' ? 'system' : 'supplier');
                           addChatMessage(msg.sender === 'buyer' ? "You" : "Factory", msg.text, type);
                       });
