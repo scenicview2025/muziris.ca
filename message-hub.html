@@ -425,31 +425,49 @@
 
         async function loadCalcData(productId) {
             try {
-                const res = await fetch('/api/negotiation-data', {
+                // 1. Point DIRECTLY to your live Render server
+                const res = await fetch('https://muziris-api.onrender.com/api/negotiation-data', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ productId })
                 });
                 const data = await res.json();
+                
                 if(data.success) {
                     liveRates = data.rates;
                     currentMarkup = data.markup;
-                    document.getElementById('calc-markup-display').innerText = `Muziris Category Markup: ${currentMarkup}%`;
-                    
-                    // Populate dropdowns automatically from your DB
-                    const supSel = document.getElementById('calc-sup-curr');
-                    const buySel = document.getElementById('calc-buy-curr');
-                    if(supSel.options.length <= 1) { // Only fill if empty
-                        supSel.innerHTML = ''; buySel.innerHTML = '';
-                        Object.keys(liveRates).sort().forEach(c => {
-                            supSel.innerHTML += `<option value="${c}">My Curr: ${c}</option>`;
-                            buySel.innerHTML += `<option value="${c}">Buyer: ${c}</option>`;
-                        });
-                        // Set smart defaults
-                        supSel.value = 'USD'; buySel.value = 'CAD'; 
-                    }
-                    updateCalc();
+                } else {
+                    throw new Error("API returned false");
                 }
+            } catch(e) { 
+                console.error("Calculator Sync Error (Using Fallback Rates):", e); 
+                // 2. FALLBACK SAFETY NET: If server is asleep or fails, use these standard rates
+                liveRates = { USD: 1, CAD: 1.35, EUR: 0.92, GBP: 0.78, INR: 83.5, AUD: 1.52 };
+                currentMarkup = 20;
+            }
+
+            // 3. Update the UI
+            document.getElementById('calc-markup-display').innerText = `Muziris Category Markup: ${currentMarkup}%`;
+            
+            const supSel = document.getElementById('calc-sup-curr');
+            const buySel = document.getElementById('calc-buy-curr');
+            
+            if(supSel.options.length <= 1) { // Only fill if empty or stuck on 'Loading...'
+                supSel.innerHTML = ''; 
+                buySel.innerHTML = '';
+                
+                Object.keys(liveRates).sort().forEach(c => {
+                    supSel.innerHTML += `<option value="${c}">My Curr: ${c}</option>`;
+                    buySel.innerHTML += `<option value="${c}">Buyer: ${c}</option>`;
+                });
+                
+                // Set smart defaults
+                supSel.value = 'USD'; 
+                if(buySel.querySelector('option[value="CAD"]')) buySel.value = 'CAD'; 
+            }
+            
+            updateCalc();
+        }
             } catch(e) { console.error("Calculator Sync Error", e); }
         }
 
