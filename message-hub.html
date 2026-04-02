@@ -315,8 +315,8 @@
                             content = `
                                 <div style="border-left: 3px solid var(--gold); padding-left: 10px;">
                                     <i class="fas fa-robot" style="margin-right:5px; color:var(--gold);"></i> ${msg.text}<br>
-                                    <button onclick="window.open('product-upload.html?edit=${pId}', '_blank')" style="margin-top:10px; background:var(--gold); color:#000; border:none; padding:6px 12px; border-radius:4px; font-size:10px; font-weight:bold; cursor:pointer; text-transform:uppercase;">
-                                        Manage This Product
+                                    <button onclick="openProductPreview('${pId}')" style="margin-top:10px; background:var(--gold); color:#000; border:none; padding:6px 12px; border-radius:4px; font-size:10px; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                    👁️ View Product Details
                                     </button>
                                 </div>
                             `;
