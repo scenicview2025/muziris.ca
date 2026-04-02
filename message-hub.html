@@ -236,11 +236,24 @@
                     
                     snapshot.forEach(doc => {
                         const msg = doc.data();
-                        const type = msg.sender === 'supplier' ? 'supplier' : (msg.sender === 'system' ? 'system' : 'buyer');
+                        // 🟢 Group system-context under the 'system' style
+                        const type = msg.sender === 'supplier' ? 'supplier' : (msg.sender === 'system' || msg.sender === 'system-context' ? 'system' : 'buyer');
                         
-                        // 🟢 Check if the message is a photo/video URL
                         let content = msg.text;
-                        if (msg.text && msg.text.startsWith('https://firebasestorage')) {
+
+                        // 🟢 Format the automated product inquiry with a link for the Supplier
+                        if (msg.sender === 'system-context') {
+                            const productId = msg.text.split('(ID: ')[1]?.replace(').', '') || '';
+                            content = `
+                                <div style="border-left: 3px solid var(--gold); padding-left: 10px;">
+                                    <i class="fas fa-robot" style="margin-right:5px; color:var(--gold);"></i> ${msg.text}<br>
+                                    <button onclick="window.open('product-upload.html?edit=${productId}', '_blank')" style="margin-top:10px; background:var(--gold); color:#000; border:none; padding:6px 12px; border-radius:4px; font-size:10px; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">
+                                        Manage This Product
+                                    </button>
+                                </div>
+                            `;
+                        }
+                        else if (msg.text && msg.text.startsWith('https://firebasestorage')) {
                             content = `<a href="${msg.text}" target="_blank"><img src="${msg.text}" style="max-width: 100%; border-radius: 8px; cursor: pointer; border: 1px solid #333;"></a>`;
                         }
 
