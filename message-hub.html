@@ -468,34 +468,53 @@
             updateCalc();
         }
 
-        // MATH 1: Buyer Target -> What Supplier Gets
+        // MATH 1: Buyer Target -> What Supplier Gets (REVERSE MATH)
         function calcReverse() {
             const ask = parseFloat(document.getElementById('calc-buyer-ask').value) || 0;
             const supCurr = document.getElementById('calc-sup-curr').value;
             const buyCurr = document.getElementById('calc-buy-curr').value;
-            if(!liveRates[supCurr] || !ask) { document.getElementById('calc-sup-get').innerText = "0.00 " + supCurr; return; }
+            
+            // Check if rates exist before calculating
+            if(!liveRates[supCurr] || !liveRates[buyCurr] || !ask) { 
+                document.getElementById('calc-sup-get').innerText = "0.00 " + supCurr; 
+                return; 
+            }
 
-            let askCAD = ask / liveRates[buyCurr];
+            // 1. Convert Buyer Ask to Base CAD (Multiply)
+            let askCAD = ask * liveRates[buyCurr];
+            
+            // 2. Strip the Muziris Platform Markup (Divide by 1.XX)
             let baseCAD = askCAD / (1 + (currentMarkup / 100));
-            let supGet = baseCAD * liveRates[supCurr];
+            
+            // 3. Convert Base CAD to Supplier's Currency (Divide)
+            let supGet = baseCAD / liveRates[supCurr];
 
             document.getElementById('calc-sup-get').innerText = supGet.toFixed(2) + " " + supCurr;
         }
 
-        // MATH 2: Supplier Offer -> What Buyer Pays
+        // MATH 2: Supplier Offer -> What Buyer Pays (FORWARD MATH)
         function calcForward() {
             const offer = parseFloat(document.getElementById('calc-sup-offer').value) || 0;
             const supCurr = document.getElementById('calc-sup-curr').value;
             const buyCurr = document.getElementById('calc-buy-curr').value;
-            if(!liveRates[supCurr] || !offer) { document.getElementById('calc-buy-pay').innerText = "0.00 " + buyCurr; return; }
+            
+            // Check if rates exist before calculating
+            if(!liveRates[supCurr] || !liveRates[buyCurr] || !offer) { 
+                document.getElementById('calc-buy-pay').innerText = "0.00 " + buyCurr; 
+                return; 
+            }
 
-            let baseCAD = offer / liveRates[supCurr];
+            // 1. Convert Supplier Offer to Base CAD (Multiply)
+            let baseCAD = offer * liveRates[supCurr];
+            
+            // 2. Add the Muziris Platform Markup (Multiply by 1.XX)
             let finalCAD = baseCAD * (1 + (currentMarkup / 100));
-            let buyPay = finalCAD * liveRates[buyCurr];
+            
+            // 3. Convert final CAD to Buyer's Currency (Divide)
+            let buyPay = finalCAD / liveRates[buyCurr];
 
             document.getElementById('calc-buy-pay').innerText = buyPay.toFixed(2) + " " + buyCurr;
         }
-
         function updateCalc() { calcReverse(); calcForward(); }
 
         // --- RFQ & LOGISTICS TOOLS ---
