@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muziris | Corporate Settings</title>
+  <title>Muziris | Enterprise Settings</title>
   <link rel="icon" type="image/png" href="MC.png">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -31,7 +31,7 @@
     .brand-font { font-family: 'Cinzel', serif; }
     
     /* SIDEBAR */
-    .sidebar { width: 260px; background-color: var(--slate); border-right: 1px solid var(--border-light); display: flex; flex-direction: column; z-index: 100; box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+    .sidebar { width: 260px; background-color: var(--slate); border-right: 1px solid var(--border-light); display: flex; flex-direction: column; z-index: 100; box-shadow: 2px 0 10px rgba(0,0,0,0.02); flex-shrink: 0;}
     .logo-container { padding: 30px 24px; text-align: left; border-bottom: 1px solid var(--border-light); }
     .logo { font-family: 'Cinzel', serif; color: var(--text-dark); font-size: 24px; text-decoration: none; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
     
@@ -50,7 +50,18 @@
     .topbar { padding: 20px 40px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.95); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     .welcome-text { font-size: 18px; font-weight: 700; color: var(--text-dark); margin: 0; }
     
-    .dashboard-body { padding: 40px; max-width: 1000px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+    .dashboard-body { padding: 30px 40px; max-width: 1000px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+
+    /* TAB NAVIGATION */
+    .tab-nav { display: flex; gap: 10px; border-bottom: 1px solid var(--border-light); margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
+    .tab-btn { background: transparent; border: none; color: var(--text-gray); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 10px 15px; cursor: pointer; transition: 0.3s; border-bottom: 3px solid transparent; white-space: nowrap;}
+    .tab-btn:hover { color: var(--text-dark); }
+    .tab-btn.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
+
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* SETTINGS PANELS */
     .settings-card { background: var(--slate); border: 1px solid var(--border-light); border-radius: 16px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
@@ -66,6 +77,9 @@
     .btn-save { background: var(--gold); color: #000; border: none; padding: 16px 24px; border-radius: 8px; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(212,175,55,0.2); width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; }
     .btn-save:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(212,175,55,0.3); }
     
+    .btn-outline { background: transparent; color: var(--text-dark); border: 1px solid var(--border-light); padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+    .btn-outline:hover { background: #f9fafb; border-color: #d1d5db; }
+
     /* MOBILE NAVIGATION */
     .mobile-nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; backdrop-filter: blur(2px); }
     .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--text-dark); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; }
@@ -103,7 +117,7 @@
     <div class="topbar">
       <div style="display: flex; align-items: center; gap: 15px;">
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-        <h1 class="welcome-text">Corporate Settings</h1>
+        <h1 class="welcome-text">Enterprise Settings</h1>
       </div>
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-full bg-[var(--gold)]/20 text-[var(--gold-dark)] flex items-center justify-center font-bold border border-[var(--gold)]/30"><i class="far fa-user"></i></div>
@@ -113,66 +127,162 @@
 
     <div class="dashboard-body">
       
-      <form id="settingsForm" onsubmit="event.preventDefault(); saveSettings();">
-        
-        <div class="settings-card">
-          <div class="settings-header">
-            <i class="fas fa-building text-[var(--gold)] text-xl"></i>
-            <h2>Corporate Identity & Compliance</h2>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="form-group">
-              <label class="form-label">Company Legal Name</label>
-              <input type="text" id="set-company" class="form-input" placeholder="e.g. Acme Procurement Ltd.">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Corporate Tax ID / EIN / Business #</label>
-              <input type="text" id="set-tax" class="form-input" placeholder="Required for Customs Clearance">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Authorized Signatory Name</label>
-              <input type="text" id="set-name" class="form-input" placeholder="Full Name">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Account Login Email (Uneditable)</label>
-              <input type="email" id="set-email" class="form-input" disabled>
-            </div>
-          </div>
-        </div>
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-profile')"><i class="fas fa-building mr-2"></i> Profile & Logistics</button>
+        <button class="tab-btn" onclick="switchTab('tab-team')"><i class="fas fa-users mr-2"></i> Team & Approvals</button>
+        <button class="tab-btn" onclick="switchTab('tab-compliance')"><i class="fas fa-file-contract mr-2"></i> Compliance Vault</button>
+        <button class="tab-btn" onclick="switchTab('tab-preferences')"><i class="fas fa-sliders-h mr-2"></i> Preferences</button>
+        <button class="tab-btn" onclick="switchTab('tab-integrations')"><i class="fas fa-network-wired mr-2"></i> ERP Integrations</button>
+      </div>
 
+      <div id="tab-profile" class="tab-content active">
+        <form id="settingsForm" onsubmit="event.preventDefault(); saveSettings();">
+          
+          <div class="settings-card">
+            <div class="settings-header">
+              <i class="fas fa-building text-[var(--gold)] text-xl"></i>
+              <h2>Corporate Identity</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="form-group">
+                <label class="form-label">Company Legal Name</label>
+                <input type="text" id="set-company" class="form-input" placeholder="e.g. Acme Procurement Ltd.">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Corporate Tax ID / EIN / Business #</label>
+                <input type="text" id="set-tax" class="form-input" placeholder="Required for Customs Clearance">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Authorized Signatory Name</label>
+                <input type="text" id="set-name" class="form-input" placeholder="Full Name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Account Login Email (Uneditable)</label>
+                <input type="email" id="set-email" class="form-input" disabled>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="settings-header">
+              <i class="fas fa-warehouse text-[var(--blue)] text-xl"></i>
+              <h2>Logistics & Receiving Hub</h2>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Default Receiving Address</label>
+              <input type="text" id="set-address" class="form-input" placeholder="Street Address, City, State/Province, Zip Code, Country">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="form-group">
+                <label class="form-label">Preferred Logistics Terms</label>
+                <select id="set-incoterm" class="form-input cursor-pointer">
+                  <option value="DDP">DDP (Muziris Freight - Preferred)</option>
+                  <option value="CIF">CIF (Cost, Insurance, Freight)</option>
+                  <option value="FOB">FOB (Own Forwarder)</option>
+                  <option value="EXW">EXW (Ex Works)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Receiving Contact Phone #</label>
+                <input type="text" id="set-phone" class="form-input" placeholder="+1 (555) 000-0000">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-save" id="btn-save">
+            <i class="fas fa-shield-check"></i> Save Corporate Profile
+          </button>
+        </form>
+      </div>
+
+      <div id="tab-team" class="tab-content">
         <div class="settings-card">
-          <div class="settings-header">
-            <i class="fas fa-warehouse text-[var(--blue)] text-xl"></i>
-            <h2>Logistics & Receiving Hub</h2>
+          <div class="settings-header flex justify-between w-full">
+            <div class="flex items-center gap-2">
+              <i class="fas fa-users text-[var(--gold)] text-xl"></i>
+              <h2>User Roles & Seats</h2>
+            </div>
+            <button class="btn-outline text-xs"><i class="fas fa-plus"></i> Invite User</button>
+          </div>
+          
+          <div class="border border-gray-200 rounded-lg overflow-hidden mb-6">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-widest">
+                <tr><th class="py-3 px-4">User</th><th class="py-3 px-4">Role</th><th class="py-3 px-4 text-right">Status</th></tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr>
+                  <td class="py-4 px-4 font-bold" id="team-owner-email">owner@company.com</td>
+                  <td class="py-4 px-4"><span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded">Admin</span></td>
+                  <td class="py-4 px-4 text-right text-green-500 font-bold text-xs">Active</td>
+                </tr>
+                <tr>
+                  <td class="py-4 px-4 font-medium text-gray-600">procurement@company.com</td>
+                  <td class="py-4 px-4"><span class="bg-gray-100 text-gray-800 text-[10px] font-bold px-2 py-1 rounded">Buyer</span></td>
+                  <td class="py-4 px-4 text-right text-amber-500 font-bold text-xs">Pending</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="settings-header mt-8">
+            <i class="fas fa-stamp text-[var(--gold)] text-xl"></i>
+            <h2>Approval Workflows</h2>
           </div>
           <div class="form-group">
-            <label class="form-label">Default Receiving Address</label>
-            <input type="text" id="set-address" class="form-input" placeholder="Street Address, City, State/Province, Zip Code, Country">
-            <p class="text-xs text-gray-400 mt-2">This will automatically pre-fill when you request official quotes.</p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="form-group">
-              <label class="form-label">Preferred Logistics Terms</label>
-              <select id="set-incoterm" class="form-input cursor-pointer">
-                <option value="DDP">DDP (Muziris Freight - Preferred)</option>
-                <option value="CIF">CIF (Cost, Insurance, Freight)</option>
-                <option value="FOB">FOB (Own Forwarder)</option>
-                <option value="EXW">EXW (Ex Works)</option>
+            <label class="form-label">Require Admin Signature for RFQs over:</label>
+            <div class="flex gap-4">
+              <input type="number" class="form-input" placeholder="e.g. 10000" value="10000">
+              <select class="form-input w-32 cursor-pointer">
+                <option>USD</option>
+                <option>CAD</option>
               </select>
             </div>
-            <div class="form-group">
-              <label class="form-label">Receiving Contact Phone #</label>
-              <input type="text" id="set-phone" class="form-input" placeholder="+1 (555) 000-0000">
+            <p class="text-xs text-gray-400 mt-2">Buyers can negotiate, but an Admin must digitally sign the final escrow contract.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-compliance" class="tab-content">
+        <div class="settings-card">
+          <div class="settings-header">
+            <i class="fas fa-file-invoice text-[var(--gold)] text-xl"></i>
+            <h2>Tax & Legal Documents</h2>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="border border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition cursor-pointer">
+              <i class="fas fa-file-pdf text-3xl text-gray-400 mb-3"></i>
+              <h3 class="font-bold text-gray-800 text-sm">Tax Exemption / VAT Certificate</h3>
+              <p class="text-xs text-gray-500 mt-1">Upload W-9 or EU VAT for customs.</p>
+              <button class="mt-4 btn-outline text-xs">Browse File</button>
+            </div>
+
+            <div class="border border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition cursor-pointer">
+              <i class="fas fa-file-signature text-3xl text-gray-400 mb-3"></i>
+              <h3 class="font-bold text-gray-800 text-sm">Standard Corporate NDA</h3>
+              <p class="text-xs text-gray-500 mt-1">Suppliers must sign before viewing custom designs.</p>
+              <button class="mt-4 btn-outline text-xs">Browse File</button>
             </div>
           </div>
         </div>
+      </div>
 
+      <div id="tab-preferences" class="tab-content">
         <div class="settings-card">
           <div class="settings-header">
-            <i class="fas fa-university text-[var(--success)] text-xl"></i>
-            <h2>Financial & Escrow Vault Preferences</h2>
+            <i class="fas fa-globe text-[var(--gold)] text-xl"></i>
+            <h2>Localization & Financials</h2>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="form-group">
+              <label class="form-label">Measurement System</label>
+              <select class="form-input cursor-pointer">
+                <option>Metric (KG, CM, CBM)</option>
+                <option>Imperial (LBS, Inches, CFT)</option>
+              </select>
+            </div>
             <div class="form-group">
               <label class="form-label">Default Platform Currency</label>
               <select id="set-currency" class="form-input cursor-pointer">
@@ -182,26 +292,64 @@
                 <option value="GBP">GBP (British Pound)</option>
               </select>
             </div>
+          </div>
+
+          <div class="settings-header mt-8">
+            <i class="fas fa-university text-[var(--gold)] text-xl"></i>
+            <h2>Escrow Refund Routing</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="form-group">
-              <label class="form-label">Receiving Bank Name (For Escrow Refunds)</label>
+              <label class="form-label">Receiving Bank Name</label>
               <input type="text" id="set-bank" class="form-input" placeholder="e.g. Royal Bank of Canada">
             </div>
-            <div class="form-group md:col-span-2">
-              <label class="form-label">Account Number / IBAN (For Escrow Refunds)</label>
-              <input type="text" id="set-account" class="form-input" placeholder="Strictly used for returning cancelled escrow funds">
+            <div class="form-group">
+              <label class="form-label">Account Number / IBAN</label>
+              <input type="text" id="set-account" class="form-input" placeholder="Used only for returning cancelled funds">
             </div>
           </div>
         </div>
+      </div>
 
-        <button type="submit" class="btn-save" id="btn-save">
-          <i class="fas fa-shield-check"></i> Save Corporate Profile
-        </button>
+      <div id="tab-integrations" class="tab-content">
+        <div class="settings-card">
+          <div class="settings-header">
+            <i class="fas fa-network-wired text-[var(--gold)] text-xl"></i>
+            <h2>System & ERP Integrations</h2>
+          </div>
+          
+          <div class="form-group mb-6">
+            <label class="form-label">Invoice Auto-Forwarding Email</label>
+            <input type="email" class="form-input" placeholder="accounts-payable@company.com">
+            <p class="text-xs text-gray-400 mt-2">Funded escrow receipts will automatically BCC this address.</p>
+          </div>
 
-      </form>
+          <div class="bg-gray-900 rounded-xl p-6 text-gray-300 mt-8">
+            <h3 class="text-white font-bold mb-2 flex items-center gap-2"><i class="fas fa-code text-[var(--gold)]"></i> Muziris API Webhooks</h3>
+            <p class="text-xs mb-4">Generate an API key to automatically sync contract statuses with SAP, Oracle, or NetSuite.</p>
+            <div class="flex gap-4">
+              <input type="text" class="form-input bg-black border-gray-700 text-gray-500 font-mono text-xs" value="sk_test_••••••••••••••••••••" disabled>
+              <button class="btn-outline text-white border-gray-600 hover:border-gray-400 hover:bg-gray-800 whitespace-nowrap">Generate Key</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script>
+    // ==========================================
+    // 🟢 UI TAB SWITCHER
+    // ==========================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
     // ==========================================
     // 🟢 FIREBASE INITIALIZATION & AUTH GUARD
     // ==========================================
@@ -220,7 +368,6 @@
 
     let currentBuyerEmail = "";
 
-    // Mobile Menu
     function toggleMobileMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('mobile-overlay');
@@ -228,15 +375,14 @@
       overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
     }
 
-    // Auth Listener
     auth.onAuthStateChanged((user) => {
         if (user) {
             currentBuyerEmail = user.email;
             let displayName = user.displayName || user.email.split('@')[0];
             document.getElementById('ui-buyer-email').innerText = displayName;
             document.getElementById('set-email').value = user.email;
+            document.getElementById('team-owner-email').innerText = user.email;
             
-            // Load their saved settings
             loadSettings();
         } else {
             window.location.replace('index1.html');
@@ -304,7 +450,6 @@
             btn.style.backgroundColor = "var(--success)";
             btn.style.color = "#fff";
             
-            // Revert button styling after 3 seconds
             setTimeout(() => {
                 btn.innerHTML = `<i class="fas fa-shield-check"></i> Save Corporate Profile`;
                 btn.style.backgroundColor = "var(--gold)";
