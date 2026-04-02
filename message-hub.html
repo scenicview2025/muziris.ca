@@ -559,5 +559,78 @@
         window.onload = loadChatList;
 
     </script>
+<div id="productPreviewModal" class="product-modal">
+        <div class="product-modal-content" id="productPreviewDetails">
+            </div>
+    </div>
+
+    <script>
+        // 🟢 NEW: FETCH AND DISPLAY PRODUCT DETAILS IN A MODAL
+        async function openProductPreview(productId) {
+            const modal = document.getElementById('productPreviewModal');
+            const content = document.getElementById('productPreviewDetails');
+            
+            // Show loading state
+            modal.style.display = 'flex';
+            content.innerHTML = '<div style="padding:50px; color:#888; text-align:center; width:100%;">Loading product data...</div>';
+
+            try {
+                const res = await fetch('https://muziris-api.onrender.com/api/get-product-details', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ supplierId: supplierId, productId: productId })
+                });
+                const product = await res.json();
+
+                if(product && product.product_id) {
+                    // Extract base price safely
+                    let priceDisplay = "N/A";
+                    try {
+                        let matrix = typeof product.pricing_matrix === 'string' ? JSON.parse(product.pricing_matrix) : product.pricing_matrix;
+                        if(matrix && matrix.length > 0) {
+                            priceDisplay = `${product.currency} ${matrix[0].supplierPriceRaw || matrix[0].price || 0}`;
+                        }
+                    } catch(e){}
+
+                    content.innerHTML = `
+                        <div class="product-modal-left">
+                            <div class="product-badge">● ${product.status || 'ACTIVE'}</div>
+                            <img src="${product.hero_img || 'https://via.placeholder.com/300'}" style="max-width:100%; max-height:400px; object-fit:contain; drop-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+                        </div>
+                        <div class="product-modal-right">
+                            <div class="product-modal-close" onclick="document.getElementById('productPreviewModal').style.display='none'">×</div>
+                            <h2 style="margin-top:0; font-family:'Cinzel', serif; color:#fff; font-size:24px; padding-right:30px;">${product.product_name}</h2>
+                            <div style="color:var(--gold); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:20px;">
+                                ${product.main_category} &rsaquo; ${product.sub_category}
+                            </div>
+                            
+                            <p style="color:#aaa; font-size:13px; line-height:1.6; margin-bottom:30px;">
+                                ${product.description || 'No description provided.'}
+                            </p>
+
+                            <div style="display:flex; gap:15px; margin-bottom:25px;">
+                                <div style="background:#0b0e14; border:1px solid #333; padding:15px; border-radius:6px; flex:1; text-align:center;">
+                                    <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:5px;">Starting Price</div>
+                                    <div style="font-size:20px; color:var(--gold); font-weight:bold;">${priceDisplay}</div>
+                                </div>
+                                <div style="background:#0b0e14; border:1px solid #333; padding:15px; border-radius:6px; flex:1; text-align:center;">
+                                    <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:5px;">Packaging</div>
+                                    <div style="font-size:14px; color:#fff; font-weight:bold;">${product.packaging || 'Standard'}</div>
+                                </div>
+                            </div>
+
+                            <button onclick="window.open('product-upload.html?edit=${product.product_id}', '_blank')" style="width:100%; background:transparent; color:var(--gold); border:1px solid var(--gold); padding:12px; border-radius:4px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:0.3s;" onmouseover="this.style.background='var(--gold)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
+                                ✏️ Edit Full Product Data
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    content.innerHTML = '<div style="padding:50px; color:var(--alert); text-align:center; width:100%;">Product not found in database.</div>';
+                }
+            } catch (e) {
+                content.innerHTML = '<div style="padding:50px; color:var(--alert); text-align:center; width:100%;">Error loading details. Ensure server is connected.</div>';
+            }
+        }
+    </script>
 </body>
 </html>
