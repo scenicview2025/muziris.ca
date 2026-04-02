@@ -389,6 +389,31 @@
         alert("This RFQ is currently: " + status + "\n\nYou have already submitted your portion of the contract. Awaiting next steps.");
       }
     }
+
+    // 🟢 NEW: Trigger Phase 2 Logistics
+    function requestFreightPickup(rfqId) {
+      if(confirm("Are the goods 100% manufactured, packed, and ready for freight pickup? \n\nClicking OK will notify Muziris Logistics to generate the final freight invoice for the buyer.")) {
+        
+        event.target.innerText = "Processing...";
+        event.target.disabled = true;
+
+        fetch(API_BASE_URL + '/update-rfq-status/' + rfqId, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Pending Freight' })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if(data.success) {
+            alert("✓ Logistics Team Notified!\n\nMuziris will calculate the live freight rate and bill the buyer. Once the buyer pays the freight, you will receive the dispatch documents.");
+            fetchAnalytics(localStorage.getItem('verifiedSupplierId')); // Refresh the table
+          } else {
+            alert("Error: " + data.error);
+          }
+        })
+        .catch(err => alert("Network Error."));
+      }
+    }
   </script>
 </body>
 </html>
