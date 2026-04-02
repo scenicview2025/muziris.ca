@@ -419,20 +419,75 @@
             }, 1500); // 1.5 second "thinking" delay
         }
 
-        function calculateQuote() {
-            const base = parseFloat(document.getElementById('calc-base').value);
+        // --- LIVE CURRENCY & REVERSE MARKUP CALCULATOR ---
+        let liveRates = {};
+        let currentMarkup = 20; // Default
+
+        async function loadCalcData(productId) {
+            try {
+                const res = await fetch('/api/negotiation-data', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ productId })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    liveRates = data.rates;
+                    currentMarkup = data.markup;
+                    document.getElementById('calc-markup-display').innerText = `Muziris Category Markup: ${currentMarkup}%`;
+                    
+                    // Populate dropdowns automatically from your DB
+                    const supSel = document.getElementById('calc-sup-curr');
+                    const buySel = document.getElementById('calc-buy-curr');
+                    if(supSel.options.length <= 1) { // Only fill if empty
+                        supSel.innerHTML = ''; buySel.innerHTML = '';
+                        Object.keys(liveRates).sort().forEach(c => {
+                            supSel.innerHTML += `<option value="${c}">My Curr: ${c}</option>`;
+                            buySel.innerHTML += `<option value="${c}">Buyer: ${c}</option>`;
+                        });
+                        // Set smart defaults
+                        supSel.value = 'USD'; buySel.value = 'CAD'; 
+                    }
+                    updateCalc();
+                }
+            } catch(e) { console.error("Calculator Sync Error", e); }
+        }
+
+        // MATH 1: Buyer Target -> What Supplier Gets
+        function calcReverse() {
+            const ask = parseFloat(document.getElementById('calc-buyer-ask').value) || 0;
             const supCurr = document.getElementById('calc-sup-curr').value;
             const buyCurr = document.getElementById('calc-buy-curr').value;
-            
-            const ratesToUSD = { USD: 1, CAD: 0.74, EUR: 1.08, GBP: 1.26 }; 
-            if (!base) return alert("Enter a base price.");
+            if(!liveRates[supCurr] || !ask) { document.getElementById('calc-sup-get').innerText = "0.00 " + supCurr; return; }
 
-            let baseUSD = base * ratesToUSD[supCurr];
-            let markedUpUSD = baseUSD * 1.10; // 10% Markup
-            let finalPrice = markedUpUSD / ratesToUSD[buyCurr];
+            // 1. Convert Buyer Ask to Base CAD (Since CAD is our root conversion metric)
+            let askCAD = ask / liveRates[buyCurr];
+            // 2. Strip the Muziris Markup (Reverse Math)
+            let baseCAD = askCAD / (1 + (currentMarkup / 100));
+            // 3. Convert Base CAD to Supplier's Currency
+            let supGet = baseCAD * liveRates[supCurr];
 
-            document.getElementById('calc-result').innerText = finalPrice.toFixed(2) + " " + buyCurr;
+            document.getElementById('calc-sup-get').innerText = supGet.toFixed(2) + " " + supCurr;
         }
+
+        // MATH 2: Supplier Offer -> What Buyer Pays
+        function calcForward() {
+            const offer = parseFloat(document.getElementById('calc-sup-offer').value) || 0;
+            const supCurr = document.getElementById('calc-sup-curr').value;
+            const buyCurr = document.getElementById('calc-buy-curr').value;
+            if(!liveRates[supCurr] || !offer) { document.getElementById('calc-buy-pay').innerText = "0.00 " + buyCurr; return; }
+
+            // 1. Convert Supplier Offer to Base CAD
+            let baseCAD = offer / liveRates[supCurr];
+            // 2. Add the Muziris Markup (Forward Math)
+            let finalCAD = baseCAD * (1 + (currentMarkup / 100));
+            // 3. Convert to Buyer's Currency
+            let buyPay = finalCAD * liveRates[buyCurr];
+
+            document.getElementById('calc-buy-pay').innerText = buyPay.toFixed(2) + " " + buyCurr;
+        }
+
+        function updateCalc() { calcReverse(); calcForward(); }
 
         function copyRfqLink() {
             if (!currentActiveChatId || !currentProductId) return alert("Please open a product chat first.");
