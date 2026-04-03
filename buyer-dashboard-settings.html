@@ -391,33 +391,89 @@
 
     function logoutBuyer() { auth.signOut().catch((error) => console.error("Sign out error", error)); }
 
+   const API_BASE_URL = "https://muziris-api.onrender.com/api"; // Your actual backend
+
     // ==========================================
-    // 🟢 LOAD SETTINGS FROM FIRESTORE
+    // 🟢 LOAD SETTINGS FROM POSTGRESQL
     // ==========================================
     function loadSettings() {
         if (!currentBuyerEmail) return;
 
-        db.collection('buyers').doc(currentBuyerEmail).get().then((doc) => {
-            if (doc.exists) {
-                const data = doc.data();
-                
-                if(data.companyName) document.getElementById('set-company').value = data.companyName;
-                if(data.taxId) document.getElementById('set-tax').value = data.taxId;
-                if(data.contactName) document.getElementById('set-name').value = data.contactName;
-                
-                if(data.defaultAddress) document.getElementById('set-address').value = data.defaultAddress;
-                if(data.defaultIncoterm) document.getElementById('set-incoterm').value = data.defaultIncoterm;
-                if(data.phone) document.getElementById('set-phone').value = data.phone;
-
-                if(data.defaultCurrency) document.getElementById('set-currency').value = data.defaultCurrency;
-                if(data.refundBank) document.getElementById('set-bank').value = data.refundBank;
-                if(data.refundAccount) document.getElementById('set-account').value = data.refundAccount;
+        fetch(API_BASE_URL + '/buyer/settings/get', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: currentBuyerEmail })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.settings) {
+                const s = data.settings;
+                if(s.company_name) document.getElementById('set-company').value = s.company_name;
+                if(s.tax_id) document.getElementById('set-tax').value = s.tax_id;
+                if(s.contact_person) document.getElementById('set-name').value = s.contact_person;
+                if(s.default_address) document.getElementById('set-address').value = s.default_address;
+                if(s.default_incoterm) document.getElementById('set-incoterm').value = s.default_incoterm;
+                if(s.phone) document.getElementById('set-phone').value = s.phone;
+                if(s.default_currency) document.getElementById('set-currency').value = s.default_currency;
+                if(s.refund_bank) document.getElementById('set-bank').value = s.refund_bank;
+                if(s.refund_account) document.getElementById('set-account').value = s.refund_account;
             }
-        }).catch((error) => {
-            console.error("Error loading settings:", error);
-        });
+        })
+        .catch(err => console.error("Error loading settings:", err));
     }
 
+    // ==========================================
+    // 🟢 SAVE SETTINGS TO POSTGRESQL
+    // ==========================================
+    function saveSettings() {
+        if (!currentBuyerEmail) return;
+
+        const btn = document.getElementById('btn-save');
+        btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Saving...`;
+        btn.disabled = true;
+
+        const payload = {
+            email: currentBuyerEmail,
+            companyName: document.getElementById('set-company').value,
+            taxId: document.getElementById('set-tax').value,
+            contactName: document.getElementById('set-name').value,
+            defaultAddress: document.getElementById('set-address').value,
+            defaultIncoterm: document.getElementById('set-incoterm').value,
+            phone: document.getElementById('set-phone').value,
+            defaultCurrency: document.getElementById('set-currency').value,
+            refundBank: document.getElementById('set-bank').value,
+            refundAccount: document.getElementById('set-account').value
+        };
+
+        fetch(API_BASE_URL + '/buyer/settings/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                btn.innerHTML = `<i class="fas fa-check"></i> Profile Saved Successfully`;
+                btn.style.backgroundColor = "var(--success)";
+                btn.style.color = "#fff";
+                
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fas fa-shield-check"></i> Save Corporate Profile`;
+                    btn.style.backgroundColor = "var(--gold)";
+                    btn.style.color = "#000";
+                    btn.disabled = false;
+                }, 3000);
+            } else {
+                throw new Error(data.error);
+            }
+        })
+        .catch((error) => {
+            console.error("Error saving settings:", error);
+            alert("Failed to save settings to Muziris Ledger.");
+            btn.innerHTML = `<i class="fas fa-shield-check"></i> Save Corporate Profile`;
+            btn.disabled = false;
+        });
+    }
     // ==========================================
     // 🟢 SAVE SETTINGS TO FIRESTORE
     // ==========================================
