@@ -211,14 +211,21 @@
             </div>
 
             <div class="tool-box">
-                <h4 class="tool-title"><i class="fas fa-truck-loading"></i> Quick Logistics</h4>
-                <div class="tool-desc">Instantly format and drop shipping dimensions into the chat for freight calculations.</div>
+                <h4 class="tool-title"><i class="fas fa-truck-loading"></i> Live Freight Estimator</h4>
+                <div class="tool-desc">Ping global logistics APIs to drop an instant estimated freight quote into the chat.</div>
+                
                 <div class="tool-row">
-                    <input type="text" id="log-weight" class="tool-input" placeholder="Total Weight (kg)">
-                    <input type="text" id="log-cbm" class="tool-input" placeholder="Volume (CBM)">
+                    <input type="number" id="log-weight" class="tool-input" placeholder="Gross Weight (kg)">
+                    <input type="number" id="log-cbm" class="tool-input" placeholder="Volume (CBM)">
                 </div>
-                <input type="text" id="log-origin" class="tool-input" placeholder="Origin Postal/ZIP Code">
-                <button class="tool-btn" onclick="injectLogistics()">Drop into Chat</button>
+                <div class="tool-row">
+                    <input type="text" id="log-origin" class="tool-input" placeholder="Origin Port/City" value="Mumbai, IN">
+                    <input type="text" id="log-dest" class="tool-input" placeholder="Dest. Port/City">
+                </div>
+                
+                <button class="tool-btn" id="btn-logistics" onclick="estimateAndInjectLogistics()" style="border-color: var(--blue); color: var(--blue);">
+                    <i class="fas fa-satellite-dish"></i> Ping Freight API
+                </button>
             </div>
         </div>
 
