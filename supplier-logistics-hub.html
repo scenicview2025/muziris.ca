@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muziris | Export Manifest (SLI)</title>
+    <link rel="icon" type="image/png" href="MC.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root { --gold: #D4AF37; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --success: #4CAF50;}
+        body { margin: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); }
+        .topbar { padding: 20px 40px; border-bottom: 1px solid #333; background: rgba(11, 14, 20, 0.95); position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between;}
+        .card { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 30px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .input-dark { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; outline: none; transition: 0.3s;}
+        .input-dark:focus { border-color: var(--gold); }
+        .label-text { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold;}
+        .btn-gold { background: var(--gold); color: #000; border: none; padding: 15px 30px; border-radius: 4px; font-weight: bold; text-transform: uppercase; cursor: pointer; width: 100%; transition: 0.3s;}
+        .btn-gold:hover { background: #b89225; }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <h1 style="font-family:'Cinzel', serif; color:var(--gold); margin:0;">Export Manifest (SLI)</h1>
+        <div style="color:#888; font-size:12px; display:flex; align-items:center; gap:10px;">
+            <a href="supplier-dashboard.html" style="color:var(--gold); text-decoration:none;">&larr; Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
+        <h2 style="color:#fff; margin-bottom: 5px;">Shipping Instructions</h2>
+        <p style="color:#888; margin-bottom: 30px;">Complete this manifest to trigger Muziris Logistics. We will generate your Bill of Lading.</p>
+
+        <form id="sliForm" onsubmit="event.preventDefault(); submitSupplierManifest();">
+            
+            <div class="card">
+                <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">1. Exporter Compliance (India)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div>
+                        <label class="label-text">GSTIN Number</label>
+                        <input type="text" id="sup-gstin" class="input-dark" placeholder="Your 15-digit GSTIN" required>
+                    </div>
+                    <div>
+                        <label class="label-text">IEC (Import Export Code)</label>
+                        <input type="text" id="sup-iec" class="input-dark" placeholder="Your 10-digit IEC" required>
+                    </div>
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="label-text">Exact Factory Pickup Address</label>
+                        <textarea id="sup-pickup" class="input-dark" rows="2" placeholder="Full address for the truck driver" required></textarea>
+                    </div>
+                    <div>
+                        <label class="label-text">Cargo Ready Date</label>
+                        <input type="date" id="sup-ready" class="input-dark" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">2. Cargo & Dimensions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                    <div>
+                        <label class="label-text">Total Cartons / Packages</label>
+                        <input type="number" id="cargo-qty" class="input-dark" placeholder="e.g. 50" required>
+                    </div>
+                    <div>
+                        <label class="label-text">Total Gross Weight (KG)</label>
+                        <input type="number" id="cargo-weight" class="input-dark" step="0.1" placeholder="e.g. 450.5" required>
+                    </div>
+                    <div>
+                        <label class="label-text">Total Volume (CBM)</label>
+                        <input type="number" id="cargo-cbm" class="input-dark" step="0.01" placeholder="e.g. 2.45" required>
+                    </div>
+                    <div>
+                        <label class="label-text">Packaging Type</label>
+                        <select id="cargo-pack" class="input-dark">
+                            <option>Loose Cartons</option>
+                            <option>Wooden Pallets</option>
+                            <option>Plastic Pallets</option>
+                            <option>Wooden Crates</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-4 mt-6 col-span-2">
+                        <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-gray-400">
+                            <input type="checkbox" id="cargo-stackable" checked class="w-4 h-4 accent-[var(--gold)]">
+                            Cargo is Stackable
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">3. Export Document Vault</h3>
+                <p class="text-sm text-gray-400 mb-4">You must upload your final Commercial Invoice and Packing List for Indian Customs clearance.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button type="button" class="border border-dashed border-[#444] p-6 rounded text-center text-xs font-bold text-[#888] hover:bg-[#222] transition" onclick="alert('Upload Trigger')">
+                        <i class="fas fa-file-invoice mb-2 text-2xl"></i><br>UPLOAD COMMERCIAL INVOICE
+                    </button>
+                    <button type="button" class="border border-dashed border-[#444] p-6 rounded text-center text-xs font-bold text-[#888] hover:bg-[#222] transition" onclick="alert('Upload Trigger')">
+                        <i class="fas fa-box-open mb-2 text-2xl"></i><br>UPLOAD PACKING LIST
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-gold" id="btn-submit">Sign Manifest & Request Pickup</button>
+
+        </form>
+    </div>
+
+    <script>
+        const API_BASE_URL = "https://muziris-api.onrender.com/api";
+        const urlParams = new URLSearchParams(window.location.search);
+        const rfqId = urlParams.get('rfq'); // Pulls RFQ from the URL
+        const supplierId = localStorage.getItem('verifiedSupplierId');
+
+        function submitSupplierManifest() {
+            if(!rfqId || !supplierId) return alert("Missing secure routing data. Please launch this page from your Dashboard.");
+
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = "Submitting to Customs Ledger...";
+            btn.disabled = true;
+
+            const payload = {
+                rfqId: rfqId,
+                supplierId: supplierId,
+                gstin: document.getElementById('sup-gstin').value,
+                iec: document.getElementById('sup-iec').value,
+                pickupAddress: document.getElementById('sup-pickup').value,
+                readyDate: document.getElementById('sup-ready').value,
+                qty: document.getElementById('cargo-qty').value,
+                weight: document.getElementById('cargo-weight').value,
+                cbm: document.getElementById('cargo-cbm').value,
+                packType: document.getElementById('cargo-pack').value,
+                stackable: document.getElementById('cargo-stackable').checked
+            };
+
+            fetch(API_BASE_URL + '/supplier/logistics/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    alert("✓ MANIFEST SUBMITTED\n\nMuziris Logistics has been notified. Your designated forwarder will contact you shortly regarding the pickup.");
+                    window.location.href = "supplier-dashboard.html";
+                } else {
+                    alert("Error: " + data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = "Sign Manifest & Request Pickup";
+                }
+            }).catch(e => {
+                alert("Network Error.");
+                btn.disabled = false;
+                btn.innerHTML = "Sign Manifest & Request Pickup";
+            });
+        }
+    </script>
+</body>
+</html>
