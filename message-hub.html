@@ -560,15 +560,6 @@
 
             if(!weight || !cbm || !dest) return alert("Weight, Volume, and Destination are required to generate a live quote.");
             
-            async function estimateAndInjectLogistics() {
-            const weight = parseFloat(document.getElementById('log-weight').value);
-            const cbm = parseFloat(document.getElementById('log-cbm').value);
-            const origin = document.getElementById('log-origin').value || 'Factory';
-            const dest = document.getElementById('log-dest').value || 'Destination';
-            const btn = document.getElementById('btn-logistics');
-
-            if(!weight || !cbm || !dest) return alert("Weight, Volume, and Destination are required to generate a live quote.");
-            
             // 1. UI Loading State
             btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Connecting to Carriers...`;
             btn.disabled = true;
