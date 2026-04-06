@@ -123,6 +123,9 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
         
+        // 🟢 DEFINE THE BACKEND API URL HERE
+        const API_BASE_URL = "https://muziris-api.onrender.com/api";
+        
         let currentActiveChatId = null;
         let unsubscribeMessages = null;
         let currentProductId = null;
