@@ -776,11 +776,17 @@
 
         let activeRfqCount = 0;
         let pendingRfqs = [];
+        let readyToShipRfqs = []; // 🟢 NEW ARRAY FOR DISPATCH
 
         data.forEach(rfq => {
           if (rfq.status !== 'Completed' && rfq.status !== 'Cancelled') activeRfqCount++;
+          
           if (rfq.status === 'Pending Supplier' || rfq.status === 'Supplier Clarification') {
               pendingRfqs.push(rfq);
+          }
+          // 🟢 NEW: If funds are locked, supplier needs to ship!
+          if (rfq.status === 'In Production') {
+              readyToShipRfqs.push(rfq);
           }
         });
 
