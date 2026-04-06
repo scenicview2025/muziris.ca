@@ -792,6 +792,7 @@
 
         if(document.getElementById('metric-rfq')) document.getElementById('metric-rfq').innerText = activeRfqCount;
 
+        // 1. SHOW QUOTING ALERTS
         if (pendingRfqs.length > 0) {
           document.getElementById('rfqWidget').style.display = 'block';
           let rfqHtml = '';
@@ -810,10 +811,36 @@
             `;
           });
           document.getElementById('rfqContainer').innerHTML = rfqHtml;
+        } else {
+          // Clear it out if there are no pending quotes
+          document.getElementById('rfqContainer').innerHTML = '';
         }
-      })
+
+        // 🟢 2. SHOW READY TO SHIP / DISPATCH ALERTS (NEW!)
+        if (readyToShipRfqs.length > 0) {
+          // Ensure the widget container is visible
+          document.getElementById('rfqWidget').style.display = 'block'; 
+          
+          let dispatchHtml = '';
+          readyToShipRfqs.forEach(rfq => {
+            dispatchHtml += `
+              <div class="alert-item" style="border-left: 4px solid var(--success);">
+                <div>
+                  <div class="alert-item-name">${rfq.product_name} (ID: ${rfq.rfq_id})</div>
+                  <div class="alert-item-msg"><strong style="color:var(--success);">Escrow Funded:</strong> Time to dispatch. Provide your export documents to book the truck.</div>
+                </div>
+                <button onclick="window.location.href='supplier-logistics-hub.html?rfq=${rfq.rfq_id}'" class="rfq-btn" style="background:var(--success);">Create Export Manifest</button>
+              </div>
+            `;
+          });
+          
+          // Append the dispatch alerts below any existing quote alerts
+          document.getElementById('rfqContainer').innerHTML += dispatchHtml; 
+        }
+
+      }) // End of the .then(data => { ... }) block
       .catch(console.error);
-    }
+    } // End of fetchRfqData function
 
     function openLogistics(rfqId) {
       localStorage.setItem('currentActionRfq', rfqId);
