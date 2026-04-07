@@ -3,89 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muziris | Private Showroom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Muziris | Premium Catalogue</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --gold: #D4AF37; --void: #0b0e14; --slate: #151922; --border: #2a2f3a; --success: #4CAF50; }
-        body { margin: 0; font-family: 'Lato', sans-serif; background: var(--void); color: #fff; line-height: 1.6; }
+        :root { 
+            --gold: #D4AF37; 
+            --void: #080a0f; 
+            --slate: #151922; 
+            --mist: #e0e0e0;
+        }
         
-        header { padding: 40px 20px; text-align: center; background: var(--slate); border-bottom: 1px solid var(--border); }
-        .logo { font-family: 'Cinzel', serif; font-size: 28px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px; }
-        .supplier-name { font-size: 14px; color: #888; text-transform: uppercase; letter-spacing: 2px; }
+        body { 
+            margin: 0; 
+            font-family: 'Lato', sans-serif; 
+            background: var(--void); 
+            color: var(--mist); 
+            line-height: 1.6; 
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* 📖 EDITORIAL HEADER */
+        header { 
+            padding: 60px 20px 40px; 
+            text-align: center; 
+            background: linear-gradient(to bottom, var(--slate) 0%, var(--void) 100%);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+        }
+        .logo { 
+            font-family: 'Cinzel', serif; 
+            font-size: 36px; 
+            color: var(--gold); 
+            letter-spacing: 6px; 
+            text-transform: uppercase; 
+            margin-bottom: 10px; 
+        }
+        .supplier-name { 
+            font-size: 12px; 
+            color: #888; 
+            text-transform: uppercase; 
+            letter-spacing: 4px; 
+        }
 
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        /* 📋 CATALOGUE LAYOUT */
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
         
-        .instruction-bar { background: rgba(212,175,55,0.1); border: 1px solid var(--gold); padding: 15px; border-radius: 8px; margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between; }
-        .instruction-text { font-size: 14px; color: var(--gold); font-weight: bold; }
+        .toolbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #222; 
+            padding-bottom: 20px; 
+            margin-bottom: 40px; 
+        }
+        .instruction { font-size: 13px; color: #aaa; letter-spacing: 1px; }
+        .currency-badge { 
+            font-family: 'Cinzel', serif;
+            font-size: 14px; 
+            color: var(--gold); 
+            border: 1px solid var(--gold); 
+            padding: 8px 20px; 
+            border-radius: 2px;
+            letter-spacing: 1px;
+        }
 
-        /* PRODUCT GRID */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-        .card { background: var(--slate); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative; }
-        .card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* ✨ THE LOOKBOOK GRID */
+        .catalogue-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 50px 30px; 
+        }
         
-        .card-img { width: 100%; height: 220px; background: #fff; position: relative; }
-        .card-img img { width: 100%; height: 100%; object-fit: contain; }
+        .product-item { group; cursor: pointer; }
         
-        .card-body { padding: 20px; }
-        .p-id { font-family: 'Courier New', monospace; font-size: 11px; color: var(--gold); background: rgba(212,175,55,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
-        .p-name { font-size: 18px; font-weight: bold; margin-bottom: 10px; display: block; color: #fff; }
-        .p-desc { font-size: 13px; color: #aaa; margin-bottom: 20px; height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        /* Image Frame */
+        .img-frame { 
+            position: relative; 
+            width: 100%; 
+            aspect-ratio: 4 / 5; /* Magazine portrait style */
+            background: #ffffff; /* White background makes product pop */
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .img-frame img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.7s ease;
+        }
         
-        .p-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #222; padding-top: 15px; }
-        .p-price { font-size: 20px; font-weight: bold; color: var(--gold); }
-        .p-price span { font-size: 12px; color: #666; margin-right: 5px; }
+        /* The Hover Overlay */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(11, 14, 20, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(2px);
+        }
         
-        .copy-btn { background: var(--gold); color: #000; border: none; padding: 8px 15px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        /* Hover Animations */
+        .product-item:hover .overlay { opacity: 1; }
+        .product-item:hover .img-frame img { transform: scale(1.05); }
+        
+        /* ID Badge */
+        .id-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.8);
+            color: var(--gold);
+            padding: 5px 10px;
+            font-size: 10px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            border: 1px solid var(--gold);
+            z-index: 2;
+        }
+
+        /* Action Button */
+        .copy-btn { 
+            background: var(--gold); 
+            color: #000; 
+            border: none; 
+            padding: 15px 30px; 
+            font-family: 'Cinzel', serif;
+            font-size: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+        .product-item:hover .copy-btn { transform: translateY(0); }
         .copy-btn:hover { background: #fff; }
 
-        /* LOADING & EMPTY */
-        #loading { text-align: center; padding: 100px; color: #555; }
-        #empty { display: none; text-align: center; padding: 100px; color: #555; }
+        /* Typography Below Image */
+        .info-panel { padding-top: 20px; text-align: center; }
+        .p-cat { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .p-name { font-family: 'Cinzel', serif; font-size: 18px; color: #fff; margin: 0 0 10px 0; font-weight: normal; letter-spacing: 1px; }
+        .p-price { font-size: 16px; color: var(--gold); font-weight: bold; letter-spacing: 1px; }
+        .p-price span { font-size: 11px; color: #888; margin-right: 5px; font-weight: normal; }
+
+        /* Status States */
+        #loading, #empty { text-align: center; padding: 100px 20px; color: #666; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+        #empty { display: none; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">Muziris</div>
-        <div class="supplier-name" id="display-supplier-name">Verified Partner Showroom</div>
+        <div class="supplier-name" id="display-supplier-name">Verified Partner Catalogue</div>
     </header>
 
     <div class="container">
-        <div class="instruction-bar">
-            <div class="instruction-text">
-                <i class="fas fa-info-circle"></i> Private Catalog: Found something? Copy the Product ID and paste it into your chat.
-            </div>
-            <div id="currency-badge" style="font-size: 12px; font-weight: bold; background: #000; padding: 5px 12px; border-radius: 20px; border: 1px solid #333;">
-                Pricing in CAD
-            </div>
+        <div class="toolbar">
+            <div class="instruction"><i class="fas fa-info-circle" style="color:var(--gold); margin-right:8px;"></i> Hover over an item to copy its Product ID for your chat.</div>
+            <div class="currency-badge" id="currency-badge">CAD</div>
         </div>
 
-        <div id="loading"><i class="fas fa-circle-notch fa-spin"></i> Synchronizing private inventory...</div>
+        <div id="loading"><i class="fas fa-circle-notch fa-spin" style="margin-right:10px; color:var(--gold);"></i> Curating Collection...</div>
         
         <div id="empty">
-            <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 20px;"></i>
-            <h3>No other public items found for this partner.</h3>
+            <i class="fas fa-gem" style="font-size: 32px; margin-bottom: 20px; color:#333;"></i><br>
+            This partner currently has no other public items in their collection.
         </div>
 
-        <div class="grid" id="product-grid"></div>
+        <div class="catalogue-grid" id="product-grid"></div>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const supplierId = urlParams.get('supplier');
-        // Check for the new buyCur parameter we just created
         const buyerCurrency = urlParams.get('buyCur') || 'CAD'; 
         
         const API_BASE = "https://muziris-api.onrender.com/api";
 
         async function initShowroom() {
             if (!supplierId) {
-                document.getElementById('loading').innerHTML = "Invalid Catalog Link.";
+                document.getElementById('loading').innerHTML = "Invalid Collection Link.";
                 return;
             }
 
-            document.getElementById('currency-badge').innerText = `Displaying in ${buyerCurrency}`;
+            document.getElementById('currency-badge').innerText = `PRICING IN ${buyerCurrency}`;
 
             try {
                 // 1. Fetch the entire live public catalog
@@ -107,7 +217,7 @@
                 renderProducts(products, exchangeRate);
             } catch (e) {
                 console.error(e);
-                document.getElementById('loading').innerHTML = "Error loading showroom. Please try again later.";
+                document.getElementById('loading').innerHTML = "Error loading collection. Please try again later.";
             }
         }
 
@@ -122,31 +232,35 @@
             }
 
             if (products[0].companyName) {
-                document.getElementById('display-supplier-name').innerText = products[0].companyName + " | Showroom";
+                document.getElementById('display-supplier-name').innerText = "Collection by " + products[0].companyName;
             }
 
             products.forEach(p => {
-                // startingPriceCAD comes beautifully pre-calculated from your backend!
                 let priceInCAD = p.startingPriceCAD || 0; 
                 let convertedPrice = (priceInCAD * rate).toFixed(2);
 
-                // If startingPrice is 0 (meaning variants aren't set up right), hide it
-                let priceDisplay = priceInCAD > 0 ? `<span>${buyerCurrency}</span>${convertedPrice}` : `<span style="font-size:12px;">Contact for Quote</span>`;
+                let priceDisplay = priceInCAD > 0 ? `<span>${buyerCurrency}</span> ${convertedPrice}` : `<span style="font-size:11px;">CONTACT FOR QUOTE</span>`;
 
                 grid.innerHTML += `
-                    <div class="card">
-                        <div class="card-img">
+                    <div class="product-item">
+                        <div class="img-frame">
+                            <div class="id-badge">${p.id}</div>
                             <img src="${p.hero || 'https://via.placeholder.com/300'}" alt="${p.name}">
-                        </div>
-                        <div class="card-body">
-                            <div class="p-id">ID: ${p.id}</div>
-                            <span class="p-name">${p.name}</span>
-                            <p class="p-desc">${p.category} &rsaquo; ${p.subCategory}</p>
                             
-                            <div class="p-footer">
-                                <div class="p-price">${priceDisplay}</div>
-                                <button class="copy-btn" onclick="copyId('${p.id}')">Copy ID</button>
+                            <div class="overlay">
+                                <button class="copy-btn" onclick="copyId('${p.id}')">
+                                    <i class="far fa-copy" style="margin-right: 8px;"></i> Copy ID
+                                </button>
+                                <div style="color:#aaa; font-size:11px; margin-top:15px; letter-spacing:1px; max-width:80%; text-align:center;">
+                                    Paste this ID into the chat to request a quote.
+                                </div>
                             </div>
+                        </div>
+                        
+                        <div class="info-panel">
+                            <div class="p-cat">${p.category} &rsaquo; ${p.subCategory}</div>
+                            <h3 class="p-name">${p.name}</h3>
+                            <div class="p-price">${priceDisplay}</div>
                         </div>
                     </div>
                 `;
@@ -155,7 +269,7 @@
 
         function copyId(id) {
             navigator.clipboard.writeText(id);
-            alert(`Product ID ${id} copied!\nPaste this into the chat to ask the supplier for a quote.`);
+            alert(`Item ID [ ${id} ] copied to clipboard.\n\nReturn to the Negotiation Hub and paste this ID into the chat!`);
         }
 
         window.onload = initShowroom;
