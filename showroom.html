@@ -74,7 +74,8 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const supplierId = urlParams.get('supplier');
-        const buyerCurrency = urlParams.get('currency') || 'CAD';
+        // Check for the new buyCur parameter we just created
+        const buyerCurrency = urlParams.get('buyCur') || 'CAD'; 
         
         const API_BASE = "https://muziris-api.onrender.com/api";
 
@@ -87,27 +88,20 @@
             document.getElementById('currency-badge').innerText = `Displaying in ${buyerCurrency}`;
 
             try {
-                // 1. Fetch live products for this supplier
-                const res = await fetch(`${API_BASE}/get-inventory`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: supplierId })
-                });
-                const allItems = await res.json();
+                // 1. Fetch the entire live public catalog
+                const res = await fetch(`${API_BASE}/public-catalog`, { method: 'POST' });
+                const data = await res.json();
 
-                // 2. Filter for ONLY Live/Active items
-                const products = allItems.filter(p => p.status === 'ACTIVE' || p.status === 'LIVE');
+                // 2. Filter out ONLY the products that belong to this specific supplier
+                const products = data.products.filter(p => p.supplierId === supplierId);
 
-                // 3. Fetch Exchange Rate (to convert from CAD to Buyer Currency)
+                // 3. Fetch Live Exchange Rates
                 const rateRes = await fetch(`${API_BASE}/negotiation-data`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ productId: products[0]?.product_id || '' })
+                    body: JSON.stringify({ productId: products.length > 0 ? products[0].id : '' })
                 });
                 const rateData = await rateRes.json();
-                
-                // Shippo/Muziris Logic: Everything in DB is relative to CAD
-                // We need the rate of 1 CAD in Buyer Currency
                 const exchangeRate = rateData.rates[buyerCurrency] || 1;
 
                 renderProducts(products, exchangeRate);
@@ -127,31 +121,31 @@
                 return;
             }
 
-            // Set Supplier Name if first product exists
-            if (products[0].company_name) {
-                document.getElementById('display-supplier-name').innerText = products[0].company_name + " | Showroom";
+            if (products[0].companyName) {
+                document.getElementById('display-supplier-name').innerText = products[0].companyName + " | Showroom";
             }
 
             products.forEach(p => {
-                // Determine starting price (stored as finalMuzirisPriceCad in the database)
-                // Note: The /get-inventory route returns raw rows. We need to convert from CAD.
-                // We assume the DB stores the starting price in a specific field or in the matrix.
+                // startingPriceCAD comes beautifully pre-calculated from your backend!
                 let priceInCAD = p.startingPriceCAD || 0; 
                 let convertedPrice = (priceInCAD * rate).toFixed(2);
+
+                // If startingPrice is 0 (meaning variants aren't set up right), hide it
+                let priceDisplay = priceInCAD > 0 ? `<span>${buyerCurrency}</span>${convertedPrice}` : `<span style="font-size:12px;">Contact for Quote</span>`;
 
                 grid.innerHTML += `
                     <div class="card">
                         <div class="card-img">
-                            <img src="${p.hero_img || 'https://via.placeholder.com/300'}" alt="${p.product_name}">
+                            <img src="${p.hero || 'https://via.placeholder.com/300'}" alt="${p.name}">
                         </div>
                         <div class="card-body">
-                            <div class="p-id">ID: ${p.product_id}</div>
-                            <span class="p-name">${p.product_name}</span>
-                            <p class="p-desc">${p.main_category} &rsaquo; ${p.sub_category}</p>
+                            <div class="p-id">ID: ${p.id}</div>
+                            <span class="p-name">${p.name}</span>
+                            <p class="p-desc">${p.category} &rsaquo; ${p.subCategory}</p>
                             
                             <div class="p-footer">
-                                <div class="p-price"><span>${buyerCurrency}</span>${convertedPrice}</div>
-                                <button class="copy-btn" onclick="copyId('${p.product_id}')">Copy ID</button>
+                                <div class="p-price">${priceDisplay}</div>
+                                <button class="copy-btn" onclick="copyId('${p.id}')">Copy ID</button>
                             </div>
                         </div>
                     </div>
