@@ -3,183 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muziris | Premium Catalogue</title>
+    <title>Muziris | Official Catalogue</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root { 
             --gold: #D4AF37; 
-            --void: #080a0f; 
-            --slate: #151922; 
-            --mist: #e0e0e0;
+            --dark: #111111;
+            --grey: #555555;
+            --light-grey: #f9f9f9;
+            --border: #eeeeee;
         }
         
         body { 
             margin: 0; 
             font-family: 'Lato', sans-serif; 
-            background: var(--void); 
-            color: var(--mist); 
+            background: #ffffff; 
+            color: var(--dark); 
             line-height: 1.6; 
             -webkit-font-smoothing: antialiased;
         }
         
         /* 📖 EDITORIAL HEADER */
         header { 
-            padding: 60px 20px 40px; 
+            padding: 50px 20px 30px; 
             text-align: center; 
-            background: linear-gradient(to bottom, var(--slate) 0%, var(--void) 100%);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+            background: #ffffff;
+            border-bottom: 2px solid var(--gold); 
         }
         .logo { 
             font-family: 'Cinzel', serif; 
-            font-size: 36px; 
-            color: var(--gold); 
-            letter-spacing: 6px; 
+            font-size: 42px; 
+            color: var(--dark); 
+            letter-spacing: 8px; 
             text-transform: uppercase; 
             margin-bottom: 10px; 
         }
         .supplier-name { 
-            font-size: 12px; 
-            color: #888; 
+            font-size: 14px; 
+            color: var(--grey); 
             text-transform: uppercase; 
             letter-spacing: 4px; 
         }
 
-        /* 📋 CATALOGUE LAYOUT */
-        .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
         
+        /* 🛠️ ACTION TOOLBAR */
         .toolbar { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-bottom: 1px solid #222; 
-            padding-bottom: 20px; 
-            margin-bottom: 40px; 
-        }
-        .instruction { font-size: 13px; color: #aaa; letter-spacing: 1px; }
-        .currency-badge { 
-            font-family: 'Cinzel', serif;
-            font-size: 14px; 
-            color: var(--gold); 
-            border: 1px solid var(--gold); 
-            padding: 8px 20px; 
-            border-radius: 2px;
-            letter-spacing: 1px;
-        }
-
-        /* ✨ THE LOOKBOOK GRID */
-        .catalogue-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-            gap: 50px 30px; 
-        }
-        
-        .product-item { group; cursor: pointer; }
-        
-        /* Image Frame */
-        .img-frame { 
-            position: relative; 
-            width: 100%; 
-            aspect-ratio: 4 / 5; /* Magazine portrait style */
-            background: #ffffff; /* White background makes product pop */
-            overflow: hidden;
+            background: var(--light-grey);
+            border: 1px solid var(--border); 
+            padding: 15px 25px; 
             border-radius: 4px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 60px; 
         }
-        .img-frame img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            padding: 20px;
-            box-sizing: border-box;
-            transition: transform 0.7s ease;
-        }
-        
-        /* The Hover Overlay */
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(11, 14, 20, 0.85);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            backdrop-filter: blur(2px);
-        }
-        
-        /* Hover Animations */
-        .product-item:hover .overlay { opacity: 1; }
-        .product-item:hover .img-frame img { transform: scale(1.05); }
-        
-        /* ID Badge */
-        .id-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(0,0,0,0.8);
-            color: var(--gold);
-            padding: 5px 10px;
-            font-size: 10px;
-            font-family: 'Courier New', monospace;
+        .toolbar-group { display: flex; gap: 15px; }
+        .action-btn {
+            background: #ffffff;
+            border: 1px solid #ccc;
+            color: var(--dark);
+            padding: 10px 20px;
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
             letter-spacing: 1px;
-            border: 1px solid var(--gold);
-            z-index: 2;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        .action-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .btn-primary { background: var(--gold); color: #fff; border-color: var(--gold); }
+        .btn-primary:hover { background: var(--dark); border-color: var(--dark); color: #fff; }
+        
+        .currency-badge { font-weight: bold; color: var(--grey); font-size: 14px; }
 
-        /* Action Button */
-        .copy-btn { 
-            background: var(--gold); 
-            color: #000; 
-            border: none; 
-            padding: 15px 30px; 
-            font-family: 'Cinzel', serif;
-            font-size: 12px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            letter-spacing: 2px;
-            transform: translateY(20px);
-            transition: all 0.4s ease;
+        /* ✨ ALTERNATING EDITORIAL LAYOUT */
+        .catalogue-list { display: flex; flex-direction: column; gap: 80px; }
+        
+        .product-row { 
+            display: flex; 
+            align-items: center; 
+            gap: 60px; 
+            padding-bottom: 80px;
+            border-bottom: 1px solid var(--border);
         }
-        .product-item:hover .copy-btn { transform: translateY(0); }
-        .copy-btn:hover { background: #fff; }
-
-        /* Typography Below Image */
-        .info-panel { padding-top: 20px; text-align: center; }
-        .p-cat { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
-        .p-name { font-family: 'Cinzel', serif; font-size: 18px; color: #fff; margin: 0 0 10px 0; font-weight: normal; letter-spacing: 1px; }
-        .p-price { font-size: 16px; color: var(--gold); font-weight: bold; letter-spacing: 1px; }
-        .p-price span { font-size: 11px; color: #888; margin-right: 5px; font-weight: normal; }
+        
+        /* Magic CSS to make every 2nd row flip directions! */
+        .product-row:nth-child(even) { flex-direction: row-reverse; }
+        
+        .product-image { 
+            flex: 1; 
+            text-align: center; 
+            background: #fff;
+            padding: 20px;
+        }
+        .product-image img { 
+            max-width: 100%; 
+            max-height: 450px; 
+            object-fit: contain; 
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.05));
+        }
+        
+        .product-details { flex: 1; }
+        .p-cat { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; font-weight: bold; }
+        .p-name { font-family: 'Cinzel', serif; font-size: 28px; color: var(--dark); margin: 0 0 15px 0; line-height: 1.2; }
+        .p-desc { font-size: 14px; color: var(--grey); margin-bottom: 30px; line-height: 1.8; }
+        
+        .p-id-box { 
+            display: inline-block;
+            background: var(--light-grey); 
+            border: 1px dashed #ccc; 
+            padding: 8px 15px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 13px; 
+            color: var(--dark);
+            margin-bottom: 25px;
+        }
+        
+        .p-price-box { display: flex; align-items: center; gap: 20px; }
+        .p-price { font-size: 24px; color: var(--dark); font-weight: bold; }
+        .p-price span { font-size: 14px; color: var(--grey); font-weight: normal; margin-right: 5px; }
 
         /* Status States */
-        #loading, #empty { text-align: center; padding: 100px 20px; color: #666; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+        #loading, #empty { text-align: center; padding: 100px 20px; color: var(--grey); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
         #empty { display: none; }
+
+        /* 🖨️ PDF PRINT STYLES (Triggers when user hits Download PDF) */
+        @media print {
+            body { background: #fff; -webkit-print-color-adjust: exact; }
+            .no-print { display: none !important; } /* Hides buttons on the PDF */
+            .container { padding: 0; max-width: 100%; }
+            .product-row { 
+                page-break-inside: avoid; /* Prevents splitting a product across two pages */
+                border-bottom: 1px solid #ddd; 
+                padding-bottom: 40px; 
+                margin-bottom: 40px; 
+                gap: 30px;
+            }
+            .product-image img { max-height: 350px; box-shadow: none; filter: none; }
+            header { padding: 30px 0; border-bottom: 2px solid var(--gold); margin-bottom: 40px; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">Muziris</div>
-        <div class="supplier-name" id="display-supplier-name">Verified Partner Catalogue</div>
+        <div class="supplier-name" id="display-supplier-name">Official Product Catalogue</div>
     </header>
 
     <div class="container">
-        <div class="toolbar">
-            <div class="instruction"><i class="fas fa-info-circle" style="color:var(--gold); margin-right:8px;"></i> Hover over an item to copy its Product ID for your chat.</div>
+        
+        <div class="toolbar no-print">
             <div class="currency-badge" id="currency-badge">CAD</div>
+            <div class="toolbar-group">
+                <button class="action-btn" onclick="shareCatalogue()">
+                    <i class="fas fa-link"></i> Copy Link
+                </button>
+                <button class="action-btn btn-primary" onclick="downloadPDF()">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
         </div>
 
-        <div id="loading"><i class="fas fa-circle-notch fa-spin" style="margin-right:10px; color:var(--gold);"></i> Curating Collection...</div>
+        <div id="loading"><i class="fas fa-circle-notch fa-spin" style="margin-right:10px; color:var(--gold);"></i> Generating Document...</div>
         
         <div id="empty">
-            <i class="fas fa-gem" style="font-size: 32px; margin-bottom: 20px; color:#333;"></i><br>
-            This partner currently has no other public items in their collection.
+            <i class="fas fa-box-open" style="font-size: 32px; margin-bottom: 20px; color:#ccc;"></i><br>
+            This catalogue currently has no public items.
         </div>
 
-        <div class="catalogue-grid" id="product-grid"></div>
+        <div class="catalogue-list" id="product-grid"></div>
     </div>
 
     <script>
@@ -191,21 +192,17 @@
 
         async function initShowroom() {
             if (!supplierId) {
-                document.getElementById('loading').innerHTML = "Invalid Collection Link.";
+                document.getElementById('loading').innerHTML = "Invalid Document Link.";
                 return;
             }
 
-            document.getElementById('currency-badge').innerText = `PRICING IN ${buyerCurrency}`;
+            document.getElementById('currency-badge').innerText = `PRICING: ${buyerCurrency}`;
 
             try {
-                // 1. Fetch the entire live public catalog
                 const res = await fetch(`${API_BASE}/public-catalog`, { method: 'POST' });
                 const data = await res.json();
-
-                // 2. Filter out ONLY the products that belong to this specific supplier
                 const products = data.products.filter(p => p.supplierId === supplierId);
 
-                // 3. Fetch Live Exchange Rates
                 const rateRes = await fetch(`${API_BASE}/negotiation-data`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -217,7 +214,7 @@
                 renderProducts(products, exchangeRate);
             } catch (e) {
                 console.error(e);
-                document.getElementById('loading').innerHTML = "Error loading collection. Please try again later.";
+                document.getElementById('loading').innerHTML = "Error loading document. Please try again.";
             }
         }
 
@@ -232,35 +229,33 @@
             }
 
             if (products[0].companyName) {
-                document.getElementById('display-supplier-name').innerText = "Collection by " + products[0].companyName;
+                document.getElementById('display-supplier-name').innerText = products[0].companyName + " | Catalogue";
+                document.title = `${products[0].companyName} - Muziris Catalogue`;
             }
 
             products.forEach(p => {
                 let priceInCAD = p.startingPriceCAD || 0; 
                 let convertedPrice = (priceInCAD * rate).toFixed(2);
-
-                let priceDisplay = priceInCAD > 0 ? `<span>${buyerCurrency}</span> ${convertedPrice}` : `<span style="font-size:11px;">CONTACT FOR QUOTE</span>`;
+                let priceDisplay = priceInCAD > 0 ? `<span>${buyerCurrency}</span>${convertedPrice}` : `<span style="font-size:14px;">Contact for Quote</span>`;
 
                 grid.innerHTML += `
-                    <div class="product-item">
-                        <div class="img-frame">
-                            <div class="id-badge">${p.id}</div>
-                            <img src="${p.hero || 'https://via.placeholder.com/300'}" alt="${p.name}">
-                            
-                            <div class="overlay">
-                                <button class="copy-btn" onclick="copyId('${p.id}')">
-                                    <i class="far fa-copy" style="margin-right: 8px;"></i> Copy ID
-                                </button>
-                                <div style="color:#aaa; font-size:11px; margin-top:15px; letter-spacing:1px; max-width:80%; text-align:center;">
-                                    Paste this ID into the chat to request a quote.
-                                </div>
-                            </div>
+                    <div class="product-row">
+                        <div class="product-image">
+                            <img src="${p.hero || 'https://via.placeholder.com/400'}" alt="${p.name}">
                         </div>
                         
-                        <div class="info-panel">
+                        <div class="product-details">
                             <div class="p-cat">${p.category} &rsaquo; ${p.subCategory}</div>
-                            <h3 class="p-name">${p.name}</h3>
-                            <div class="p-price">${priceDisplay}</div>
+                            <h2 class="p-name">${p.name}</h2>
+                            <div class="p-id-box"><i class="fas fa-barcode" style="color:var(--gold); margin-right:5px;"></i> REF: ${p.id}</div>
+                            <p class="p-desc">${p.desc || 'Premium grade wholesale manufacturing. Contact supplier via Muziris for detailed specifications, MOQs, and lead times.'}</p>
+                            
+                            <div class="p-price-box">
+                                <div class="p-price">${priceDisplay}</div>
+                                <button class="action-btn no-print" style="margin-left:auto;" onclick="copyId('${p.id}')">
+                                    <i class="far fa-copy"></i> Copy ID
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -269,7 +264,18 @@
 
         function copyId(id) {
             navigator.clipboard.writeText(id);
-            alert(`Item ID [ ${id} ] copied to clipboard.\n\nReturn to the Negotiation Hub and paste this ID into the chat!`);
+            alert(`Product ID [ ${id} ] copied!\n\nPaste this into your Muziris chat to request a quote.`);
+        }
+
+        function shareCatalogue() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Catalogue link copied to clipboard!");
+        }
+
+        function downloadPDF() {
+            // This triggers the browser's native print-to-pdf dialog
+            // The @media print CSS automatically formats it beautifully!
+            window.print();
         }
 
         window.onload = initShowroom;
