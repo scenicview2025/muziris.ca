@@ -556,21 +556,17 @@
         function shareCatalogLink() {
             if (!currentActiveChatId) return alert("Please open a conversation first.");
             
-            // We grab the buyer's currency directly from the calculator tool!
-            const buyCurr = document.getElementById('calc-buy-curr').value || 'USD';
+            const buyCurr = document.getElementById('calc-buy-curr').value || 'CAD';
             
-            // Generate the secure link
-            const link = `${window.location.origin}/showroom.html?supplier=${supplierId}&currency=${buyCurr}`;
+            // FIX: Changed &currency to &buyCur to stop the browser from making the ¤ symbol!
+            const link = `${window.location.origin}/showroom.html?supplier=${supplierId}&buyCur=${buyCurr}`;
             
-            // Format a highly professional message
             const msg = `🏢 **PRIVATE SHOWROOM ACCESS**\n\nWe manufacture several other items that might fit your sourcing needs. You can browse our full verified catalog here:\n👉 ${link}\n\nIf you see something you like, just reply with the **Product ID** and I will calculate a custom quote for you!`;
             
-            // Drop it into the input box
             const replyBox = document.getElementById('reply-input');
             replyBox.value = msg;
             replyBox.focus();
         }
-
         function copyRfqLink() {
             if (!currentActiveChatId || !currentProductId) return alert("Please open a product chat first.");
             const link = `${window.location.origin}/rfq-hub.html?action=new&product=${currentProductId}&supplier=${supplierId}`;
