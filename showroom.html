@@ -10,7 +10,8 @@
     <style>
         :root { 
             --gold: #D4AF37; 
-            --dark: #111111;
+            --dark: #0b0e14;
+            --slate: #151922;
             --grey: #555555;
             --light-grey: #f9f9f9;
             --border: #eeeeee;
@@ -23,60 +24,132 @@
             color: var(--dark); 
             line-height: 1.6; 
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
         
-        /* 📖 EDITORIAL HEADER */
-        header { 
-            padding: 50px 20px 30px; 
-            text-align: center; 
-            background: #ffffff;
-            border-bottom: 2px solid var(--gold); 
+        /* 📖 PAGE 1: THE COVER PAGE */
+        .cover-page {
+            height: 100vh;
+            min-height: 800px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px 20px;
+            box-sizing: border-box;
+            background: linear-gradient(rgba(11, 14, 20, 0.85), rgba(11, 14, 20, 0.95)), 
+                        url('https://images.unsplash.com/photo-1586528116311-ad8ed7c80d70?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+            color: #ffffff;
+            text-align: center;
         }
-        .logo { 
-            font-family: 'Cinzel', serif; 
-            font-size: 42px; 
-            color: var(--dark); 
-            letter-spacing: 8px; 
-            text-transform: uppercase; 
-            margin-bottom: 10px; 
+        .cover-brand {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            color: var(--gold);
+            letter-spacing: 10px;
+            text-transform: uppercase;
         }
-        .supplier-name { 
-            font-size: 14px; 
-            color: var(--grey); 
-            text-transform: uppercase; 
-            letter-spacing: 4px; 
+        .cover-center {
+            margin-top: -10vh; /* Visually centers it better */
+        }
+        .cover-supplier-name {
+            font-family: 'Cinzel', serif;
+            font-size: 64px;
+            line-height: 1.1;
+            margin: 0 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .cover-subtitle {
+            font-size: 16px;
+            color: #aaa;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 15px 0;
+            display: inline-block;
+        }
+        .scroll-indicator {
+            color: var(--gold);
+            font-size: 24px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
         }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-        
-        /* 🛠️ ACTION TOOLBAR */
-        .toolbar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+        /* 🛡️ PAGE 2: THE MUZIRIS ADVANTAGE */
+        .value-prop-page {
+            padding: 120px 20px;
             background: var(--light-grey);
-            border: 1px solid var(--border); 
-            padding: 15px 25px; 
+            text-align: center;
+        }
+        .vp-title {
+            font-family: 'Cinzel', serif;
+            font-size: 36px;
+            color: var(--dark);
+            margin: 0 0 15px 0;
+        }
+        .vp-subtitle {
+            font-size: 16px;
+            color: var(--grey);
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+        .vp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .vp-card {
+            background: #ffffff;
+            padding: 50px 30px;
+            border: 1px solid var(--border);
             border-radius: 4px;
-            margin-bottom: 60px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            transition: 0.3s;
+        }
+        .vp-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .vp-icon {
+            font-size: 40px;
+            color: var(--gold);
+            margin-bottom: 25px;
+        }
+        .vp-card h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            margin: 0 0 15px 0;
+            color: var(--dark);
+        }
+        .vp-card p {
+            font-size: 14px;
+            color: var(--grey);
+            margin: 0;
+            line-height: 1.8;
+        }
+
+        /* 📦 PAGE 3: THE CATALOGUE */
+        .catalogue-section { max-width: 1000px; margin: 0 auto; padding: 80px 20px; }
+        
+        .toolbar { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: #ffffff; border: 1px solid var(--border); 
+            padding: 15px 25px; border-radius: 4px; margin-bottom: 60px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
         }
         .toolbar-group { display: flex; gap: 15px; }
         .action-btn {
-            background: #ffffff;
-            border: 1px solid #ccc;
-            color: var(--dark);
-            padding: 10px 20px;
-            font-family: 'Lato', sans-serif;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: #ffffff; border: 1px solid #ccc; color: var(--dark);
+            padding: 10px 20px; font-family: 'Lato', sans-serif; font-size: 12px;
+            font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; border-radius: 4px; transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
         }
         .action-btn:hover { border-color: var(--gold); color: var(--gold); }
         .btn-primary { background: var(--gold); color: #fff; border-color: var(--gold); }
@@ -84,32 +157,16 @@
         
         .currency-badge { font-weight: bold; color: var(--grey); font-size: 14px; }
 
-        /* ✨ ALTERNATING EDITORIAL LAYOUT */
+        /* Editorial Layout */
         .catalogue-list { display: flex; flex-direction: column; gap: 80px; }
-        
         .product-row { 
-            display: flex; 
-            align-items: center; 
-            gap: 60px; 
-            padding-bottom: 80px;
-            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 60px; 
+            padding-bottom: 80px; border-bottom: 1px solid var(--border);
         }
-        
-        /* Magic CSS to make every 2nd row flip directions! */
         .product-row:nth-child(even) { flex-direction: row-reverse; }
         
-        .product-image { 
-            flex: 1; 
-            text-align: center; 
-            background: #fff;
-            padding: 20px;
-        }
-        .product-image img { 
-            max-width: 100%; 
-            max-height: 450px; 
-            object-fit: contain; 
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.05));
-        }
+        .product-image { flex: 1; text-align: center; background: #fff; padding: 20px; }
+        .product-image img { max-width: 100%; max-height: 450px; object-fit: contain; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.05)); }
         
         .product-details { flex: 1; }
         .p-cat { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; font-weight: bold; }
@@ -117,49 +174,82 @@
         .p-desc { font-size: 14px; color: var(--grey); margin-bottom: 30px; line-height: 1.8; }
         
         .p-id-box { 
-            display: inline-block;
-            background: var(--light-grey); 
-            border: 1px dashed #ccc; 
-            padding: 8px 15px; 
-            font-family: 'Courier New', monospace; 
-            font-size: 13px; 
-            color: var(--dark);
-            margin-bottom: 25px;
+            display: inline-block; background: var(--light-grey); border: 1px dashed #ccc; 
+            padding: 8px 15px; font-family: 'Courier New', monospace; font-size: 13px; 
+            color: var(--dark); margin-bottom: 25px;
         }
         
         .p-price-box { display: flex; align-items: center; gap: 20px; }
         .p-price { font-size: 24px; color: var(--dark); font-weight: bold; }
         .p-price span { font-size: 14px; color: var(--grey); font-weight: normal; margin-right: 5px; }
 
-        /* Status States */
         #loading, #empty { text-align: center; padding: 100px 20px; color: var(--grey); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
         #empty { display: none; }
 
-        /* 🖨️ PDF PRINT STYLES (Triggers when user hits Download PDF) */
+        /* 🖨️ PDF PRINT STYLES (Generates a perfect multi-page brochure) */
         @media print {
-            body { background: #fff; -webkit-print-color-adjust: exact; }
-            .no-print { display: none !important; } /* Hides buttons on the PDF */
-            .container { padding: 0; max-width: 100%; }
+            body { background: #fff; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .no-print { display: none !important; }
+            
+            /* Force Cover Page to be exactly Page 1 */
+            .cover-page { height: 100vh; page-break-after: always; padding: 40px !important; }
+            .cover-supplier-name { color: #000 !important; text-shadow: none; font-size: 48px; }
+            .cover-subtitle { color: #555 !important; border-color: #ccc !important; }
+            
+            /* Force Value Prop to be exactly Page 2 */
+            .value-prop-page { height: 100vh; page-break-after: always; background: #fff; padding: 40px 0 !important; }
+            .vp-card { border: none; box-shadow: none; padding: 20px 10px; }
+            
+            /* Products format nicely on Page 3 onwards */
+            .catalogue-section { padding: 0; max-width: 100%; }
             .product-row { 
-                page-break-inside: avoid; /* Prevents splitting a product across two pages */
+                page-break-inside: avoid; 
                 border-bottom: 1px solid #ddd; 
-                padding-bottom: 40px; 
-                margin-bottom: 40px; 
-                gap: 30px;
+                padding-bottom: 40px; margin-bottom: 40px; gap: 30px;
             }
             .product-image img { max-height: 350px; box-shadow: none; filter: none; }
-            header { padding: 30px 0; border-bottom: 2px solid var(--gold); margin-bottom: 40px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">Muziris</div>
-        <div class="supplier-name" id="display-supplier-name">Official Product Catalogue</div>
-    </header>
+    <div class="cover-page">
+        <div class="cover-brand">MUZIRIS</div>
+        
+        <div class="cover-center">
+            <h1 class="cover-supplier-name" id="display-supplier-name">Official Catalogue</h1>
+            <div class="cover-subtitle">Verified Global Partner Collection</div>
+        </div>
 
-    <div class="container">
+        <div class="scroll-indicator no-print">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+
+    <div class="value-prop-page">
+        <h2 class="vp-title">The Muziris Standard</h2>
+        <p class="vp-subtitle">Sourcing global manufacturing without the friction. Trading internationally without the risk.</p>
+        
+        <div class="vp-grid">
+            <div class="vp-card">
+                <i class="fas fa-shield-alt vp-icon"></i>
+                <h3>Vault Escrow Protection</h3>
+                <p>Your capital is secure. Funds are held in the Muziris Vault and are only released to the manufacturer once your cargo clears inspection and is handed over to the freight forwarder.</p>
+            </div>
+            <div class="vp-card">
+                <i class="fas fa-check-double vp-icon"></i>
+                <h3>Verified Manufacturers</h3>
+                <p>Every supplier in our network undergoes rigorous legal and financial vetting. We eliminate middlemen so you can trade directly with Tier-1 global factories.</p>
+            </div>
+            <div class="vp-card">
+                <i class="fas fa-ship vp-icon"></i>
+                <h3>Global Logistics</h3>
+                <p>From factory floor to your warehouse door. Muziris handles live freight quoting, customs compliance, and master Bill of Lading generation directly through the platform.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="catalogue-section">
         
         <div class="toolbar no-print">
             <div class="currency-badge" id="currency-badge">CAD</div>
@@ -168,19 +258,20 @@
                     <i class="fas fa-link"></i> Copy Link
                 </button>
                 <button class="action-btn btn-primary" onclick="downloadPDF()">
-                    <i class="fas fa-file-pdf"></i> Download PDF
+                    <i class="fas fa-file-pdf"></i> Download PDF Brochure
                 </button>
             </div>
         </div>
 
-        <div id="loading"><i class="fas fa-circle-notch fa-spin" style="margin-right:10px; color:var(--gold);"></i> Generating Document...</div>
+        <div id="loading"><i class="fas fa-circle-notch fa-spin" style="margin-right:10px; color:var(--gold);"></i> Synchronizing Digital Catalogue...</div>
         
         <div id="empty">
             <i class="fas fa-box-open" style="font-size: 32px; margin-bottom: 20px; color:#ccc;"></i><br>
-            This catalogue currently has no public items.
+            This partner currently has no public items in their collection.
         </div>
 
         <div class="catalogue-list" id="product-grid"></div>
+        
     </div>
 
     <script>
@@ -228,8 +319,9 @@
                 return;
             }
 
+            // DYNAMICALLY INJECT SUPPLIER NAME INTO THE COVER PAGE
             if (products[0].companyName) {
-                document.getElementById('display-supplier-name').innerText = products[0].companyName + " | Catalogue";
+                document.getElementById('display-supplier-name').innerText = products[0].companyName;
                 document.title = `${products[0].companyName} - Muziris Catalogue`;
             }
 
@@ -273,8 +365,6 @@
         }
 
         function downloadPDF() {
-            // This triggers the browser's native print-to-pdf dialog
-            // The @media print CSS automatically formats it beautifully!
             window.print();
         }
 
