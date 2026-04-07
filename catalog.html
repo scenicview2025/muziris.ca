@@ -1176,7 +1176,10 @@ if (p.status === 'PAUSED') {
             if (text.startsWith('https://firebasestorage')) {
                 msgDiv.innerHTML = `<a href="${text}" target="_blank"><img src="${text}" style="max-width: 100%; border-radius: 8px; cursor: pointer;"></a>`;
             } else {
-                msgDiv.innerText = text;
+                // 🟢 NEW: Detect URLs for the buyer and make them clickable!
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                let formattedText = text.replace(urlRegex, '<a href="$1" target="_blank" style="color: var(--gold-dark); text-decoration: underline; font-weight: bold;">$1</a>');
+                msgDiv.innerHTML = formattedText.replace(/\n/g, '<br>');
             }
             
             history.appendChild(msgDiv);
