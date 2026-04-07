@@ -668,6 +668,19 @@
             document.getElementById('reply-input').focus();
         }
 
+        // 🟢 Instantly drop the Escrow explanation link
+        function shareEscrowLink() {
+            if (!currentActiveChatId) return alert("Please open a conversation first.");
+            
+            const link = `${window.location.origin}/buyer-protection.html`;
+            
+            const msgText = `🛡️ **SECURE PAYMENTS VIA MUZIRIS**\n\nI understand your hesitation with international wire transfers. That is exactly why we use Muziris! \n\nYou do not pay us directly. Your funds are held in the **Muziris Escrow Vault** and are completely frozen for a 7-day inspection period after your cargo arrives.\n\nYou can read exactly how your capital is protected here:\n👉 ${link}`;
+            
+            const replyBox = document.getElementById('reply-input');
+            replyBox.value = msgText;
+            replyBox.focus();
+        }
+
         async function estimateAndInjectLogistics() {
             const weight = parseFloat(document.getElementById('log-weight').value);
             const cbm = parseFloat(document.getElementById('log-cbm').value);
