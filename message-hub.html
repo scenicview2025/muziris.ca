@@ -208,9 +208,19 @@
             </div>
 
             <div class="tool-box">
-                <h4 class="tool-title"><i class="fas fa-store"></i> Share Private Catalog</h4>
-                <div class="tool-desc">Send the buyer a secure link to your full product showroom. They can browse and reply with a Product ID.</div>
-                <button class="tool-btn" onclick="shareCatalogLink()" style="background:rgba(212,175,55,0.1); border-color: var(--gold);">🔗 Drop Catalog Link</button>
+                <h4 class="tool-title"><i class="fas fa-search"></i> Curated Line Sheet</h4>
+                <div class="tool-desc">Search your inventory to view details, or check multiple boxes to generate a custom catalog just for this buyer.</div>
+                
+                <input type="text" id="product-search-input" class="tool-input" placeholder="Search by ID or Name..." onkeyup="filterSupplierProducts()">
+                
+                <div id="supplier-inventory-list" style="max-height: 160px; overflow-y: auto; margin-bottom: 15px; border: 1px solid #333; border-radius: 4px; background: #080a0f; padding: 5px;">
+                    <div style="color:#666; font-size:11px; text-align:center; padding:10px;">Type to load inventory...</div>
+                </div>
+
+                <div class="tool-row">
+                    <button class="tool-btn" onclick="shareCatalogLink('full')" style="border-color: #555; color: #aaa;">Full Catalog</button>
+                    <button class="tool-btn" onclick="shareCatalogLink('custom')" style="background:rgba(212,175,55,0.1); border-color: var(--gold);">🔗 Send Selected</button>
+                </div>
             </div>
 
             <div class="tool-box">
