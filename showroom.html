@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muziris | Private Showroom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --gold: #D4AF37; --void: #0b0e14; --slate: #151922; --border: #2a2f3a; --success: #4CAF50; }
+        body { margin: 0; font-family: 'Lato', sans-serif; background: var(--void); color: #fff; line-height: 1.6; }
+        
+        header { padding: 40px 20px; text-align: center; background: var(--slate); border-bottom: 1px solid var(--border); }
+        .logo { font-family: 'Cinzel', serif; font-size: 28px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px; }
+        .supplier-name { font-size: 14px; color: #888; text-transform: uppercase; letter-spacing: 2px; }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        .instruction-bar { background: rgba(212,175,55,0.1); border: 1px solid var(--gold); padding: 15px; border-radius: 8px; margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between; }
+        .instruction-text { font-size: 14px; color: var(--gold); font-weight: bold; }
+
+        /* PRODUCT GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .card { background: var(--slate); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative; }
+        .card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        .card-img { width: 100%; height: 220px; background: #fff; position: relative; }
+        .card-img img { width: 100%; height: 100%; object-fit: contain; }
+        
+        .card-body { padding: 20px; }
+        .p-id { font-family: 'Courier New', monospace; font-size: 11px; color: var(--gold); background: rgba(212,175,55,0.1); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
+        .p-name { font-size: 18px; font-weight: bold; margin-bottom: 10px; display: block; color: #fff; }
+        .p-desc { font-size: 13px; color: #aaa; margin-bottom: 20px; height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        
+        .p-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #222; padding-top: 15px; }
+        .p-price { font-size: 20px; font-weight: bold; color: var(--gold); }
+        .p-price span { font-size: 12px; color: #666; margin-right: 5px; }
+        
+        .copy-btn { background: var(--gold); color: #000; border: none; padding: 8px 15px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .copy-btn:hover { background: #fff; }
+
+        /* LOADING & EMPTY */
+        #loading { text-align: center; padding: 100px; color: #555; }
+        #empty { display: none; text-align: center; padding: 100px; color: #555; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Muziris</div>
+        <div class="supplier-name" id="display-supplier-name">Verified Partner Showroom</div>
+    </header>
+
+    <div class="container">
+        <div class="instruction-bar">
+            <div class="instruction-text">
+                <i class="fas fa-info-circle"></i> Private Catalog: Found something? Copy the Product ID and paste it into your chat.
+            </div>
+            <div id="currency-badge" style="font-size: 12px; font-weight: bold; background: #000; padding: 5px 12px; border-radius: 20px; border: 1px solid #333;">
+                Pricing in CAD
+            </div>
+        </div>
+
+        <div id="loading"><i class="fas fa-circle-notch fa-spin"></i> Synchronizing private inventory...</div>
+        
+        <div id="empty">
+            <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 20px;"></i>
+            <h3>No other public items found for this partner.</h3>
+        </div>
+
+        <div class="grid" id="product-grid"></div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const supplierId = urlParams.get('supplier');
+        const buyerCurrency = urlParams.get('currency') || 'CAD';
+        
+        const API_BASE = "https://muziris-api.onrender.com/api";
+
+        async function initShowroom() {
+            if (!supplierId) {
+                document.getElementById('loading').innerHTML = "Invalid Catalog Link.";
+                return;
+            }
+
+            document.getElementById('currency-badge').innerText = `Displaying in ${buyerCurrency}`;
+
+            try {
+                // 1. Fetch live products for this supplier
+                const res = await fetch(`${API_BASE}/get-inventory`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: supplierId })
+                });
+                const allItems = await res.json();
+
+                // 2. Filter for ONLY Live/Active items
+                const products = allItems.filter(p => p.status === 'ACTIVE' || p.status === 'LIVE');
+
+                // 3. Fetch Exchange Rate (to convert from CAD to Buyer Currency)
+                const rateRes = await fetch(`${API_BASE}/negotiation-data`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId: products[0]?.product_id || '' })
+                });
+                const rateData = await rateRes.json();
+                
+                // Shippo/Muziris Logic: Everything in DB is relative to CAD
+                // We need the rate of 1 CAD in Buyer Currency
+                const exchangeRate = rateData.rates[buyerCurrency] || 1;
+
+                renderProducts(products, exchangeRate);
+            } catch (e) {
+                console.error(e);
+                document.getElementById('loading').innerHTML = "Error loading showroom. Please try again later.";
+            }
+        }
+
+        function renderProducts(products, rate) {
+            const grid = document.getElementById('product-grid');
+            const loading = document.getElementById('loading');
+            loading.style.display = 'none';
+
+            if (products.length === 0) {
+                document.getElementById('empty').style.display = 'block';
+                return;
+            }
+
+            // Set Supplier Name if first product exists
+            if (products[0].company_name) {
+                document.getElementById('display-supplier-name').innerText = products[0].company_name + " | Showroom";
+            }
+
+            products.forEach(p => {
+                // Determine starting price (stored as finalMuzirisPriceCad in the database)
+                // Note: The /get-inventory route returns raw rows. We need to convert from CAD.
+                // We assume the DB stores the starting price in a specific field or in the matrix.
+                let priceInCAD = p.startingPriceCAD || 0; 
+                let convertedPrice = (priceInCAD * rate).toFixed(2);
+
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="card-img">
+                            <img src="${p.hero_img || 'https://via.placeholder.com/300'}" alt="${p.product_name}">
+                        </div>
+                        <div class="card-body">
+                            <div class="p-id">ID: ${p.product_id}</div>
+                            <span class="p-name">${p.product_name}</span>
+                            <p class="p-desc">${p.main_category} &rsaquo; ${p.sub_category}</p>
+                            
+                            <div class="p-footer">
+                                <div class="p-price"><span>${buyerCurrency}</span>${convertedPrice}</div>
+                                <button class="copy-btn" onclick="copyId('${p.product_id}')">Copy ID</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function copyId(id) {
+            navigator.clipboard.writeText(id);
+            alert(`Product ID ${id} copied!\nPaste this into the chat to ask the supplier for a quote.`);
+        }
+
+        window.onload = initShowroom;
+    </script>
+</body>
+</html>
