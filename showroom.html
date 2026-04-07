@@ -295,7 +295,20 @@
             try {
                 const res = await fetch(`${API_BASE}/public-catalog`, { method: 'POST' });
                 const data = await res.json();
-                const products = data.products.filter(p => p.supplierId === supplierId);
+                // Filter for this supplier
+                let products = data.products.filter(p => p.supplierId === supplierId);
+
+                // 🟢 NEW: CHECK FOR CUSTOM LINE SHEET ITEMS!
+                const specificItems = urlParams.get('items'); 
+                if (specificItems) {
+                    const itemArray = specificItems.split(','); // Splits "MUZ-1,MUZ-2" into an array
+                    products = products.filter(p => itemArray.includes(p.id)); // Hides everything else!
+                    
+                    // Change the title to make the buyer feel special
+                    document.getElementById('display-supplier-name').innerText = "Curated Collection";
+                } else if (products[0] && products[0].companyName) {
+                    document.getElementById('display-supplier-name').innerText = products[0].companyName;
+                }
 
                 const rateRes = await fetch(`${API_BASE}/negotiation-data`, {
                     method: 'POST',
