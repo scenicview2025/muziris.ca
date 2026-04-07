@@ -707,7 +707,10 @@
         }
 
         // Start listening when page loads
-        window.onload = loadChatList;
+        window.onload = () => {
+            loadChatList();
+            loadSupplierInventoryForSearch(); // 🟢 Loads the products for the search tool instantly!
+        };
     </script>
 <div id="productPreviewModal" class="product-modal">
         <div class="product-modal-content" id="productPreviewDetails">
