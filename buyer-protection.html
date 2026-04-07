@@ -21,6 +21,24 @@
     
     body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--white); color: var(--text-dark); overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; }
     
+    /* 🟢 ANIMATED DIGITAL FLOW (LIGHT THEME OPTIMIZED) */
+    .process-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none; }
+    .flow-line { position: absolute; width: 2px; height: 100vh; background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.4), transparent); animation: flowDown 10s infinite linear; opacity: 0; }
+    
+    /* We add a subtle glowing blur to the lines so they pop on white */
+    .flow-line::after { content: ''; position: absolute; top: 20%; height: 60%; width: 100%; background: var(--gold); filter: blur(4px); opacity: 0.3; }
+    
+    .line-1 { left: 15%; animation-delay: 0s; animation-duration: 8s; }
+    .line-2 { left: 50%; animation-delay: 2s; animation-duration: 12s; }
+    .line-3 { left: 85%; animation-delay: 5s; animation-duration: 10s; }
+    
+    @keyframes flowDown {
+      0% { transform: translateY(-100%); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(100%); opacity: 0; }
+    }
+
     /* Subtle technical grid to anchor the design */
     .grid-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;
@@ -31,7 +49,7 @@
     }
 
     /* NAVIGATION */
-    .top-nav { position: relative; z-index: 10; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--white); }
+    .top-nav { position: relative; z-index: 10; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
     .brand { font-family: 'Cinzel', serif; color: var(--text-dark); font-size: 22px; text-decoration: none; letter-spacing: 3px; font-weight: bold; text-transform: uppercase; }
     .nav-links a { color: var(--text-gray); text-decoration: none; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; margin-left: 25px; }
     .nav-links a:hover { color: var(--text-dark); }
@@ -42,18 +60,19 @@
     .hero-badge i { font-size: 12px; }
     
     .hero h1 { font-family: 'Cinzel', serif; color: var(--text-dark); font-size: 48px; margin-bottom: 15px; letter-spacing: 1px; line-height: 1.1; }
+    .hero h1 span { background: linear-gradient(135deg, var(--bronze) 0%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .hero p { font-size: 18px; color: var(--text-gray); max-width: 700px; margin: 0 auto 40px; }
 
     /* CONTENT WRAPPER */
     .content-wrapper { position: relative; z-index: 2; max-width: 1000px; margin: 0 auto; padding: 0 5% 80px; }
 
     /* TIMELINE STEPS */
-    .step-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 40px; margin-bottom: 30px; display: flex; gap: 40px; align-items: center; transition: all 0.3s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .step-card:hover { transform: translateX(5px); border-color: rgba(212, 175, 55, 0.4); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+    .step-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 40px; margin-bottom: 30px; display: flex; gap: 40px; align-items: center; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative; overflow: hidden; }
+    .step-card:hover { transform: translateX(5px); border-color: rgba(212, 175, 55, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
     
-    .step-icon { width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; font-size: 36px; color: var(--gold); background: var(--off-white); border-radius: 50%; border: 1px dashed rgba(212, 175, 55, 0.3); flex-shrink: 0; }
+    .step-icon { width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; font-size: 36px; color: var(--gold); background: var(--off-white); border-radius: 50%; border: 1px dashed rgba(212, 175, 55, 0.3); flex-shrink: 0; z-index: 2; }
     
-    .step-content { flex: 1; }
+    .step-content { flex: 1; z-index: 2; }
     .step-content h3 { font-family: 'Cinzel', serif; color: var(--text-dark); font-size: 22px; margin-top: 0; margin-bottom: 12px; letter-spacing: 1px; }
     .step-content p { color: var(--text-gray); font-size: 15px; margin: 0; line-height: 1.7; }
     
@@ -88,14 +107,18 @@
 </head>
 <body>
 
+  <div class="process-bg">
+    <div class="flow-line line-1"></div>
+    <div class="flow-line line-2"></div>
+    <div class="flow-line line-3"></div>
+  </div>
   <div class="grid-overlay"></div>
 
   <div class="top-nav">
     <a href="/" class="brand">Muziris</a>
     <div class="nav-links">
       <a href="catalog.html">Global Catalog</a>
-      <a href="https://muziris.ca/how-it-works.html">Supplier Network</a>
-    </div>
+      </div>
   </div>
 
   <div class="hero">
@@ -134,7 +157,7 @@
       </div>
     </div>
 
-    <div class="step-card" style="border-color: rgba(76, 175, 80, 0.3); background: var(--off-white); box-shadow: 0 10px 25px rgba(76, 175, 80, 0.03);">
+    <div class="step-card" style="border-color: rgba(76, 175, 80, 0.3); background: var(--off-white); box-shadow: 0 10px 25px rgba(76, 175, 80, 0.05);">
       <div class="step-icon" style="color: var(--success); border-color: rgba(76, 175, 80, 0.3); background: var(--white);"><i class="fas fa-search"></i></div>
       <div class="step-content">
         <h3>4. The 7-Day Inspection Hold</h3>
