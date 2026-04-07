@@ -562,19 +562,88 @@
 
         // --- RFQ & LOGISTICS TOOLS ---
         
-        // 🟢 NEW: SHARE CATALOG FUNCTION
-        function shareCatalogLink() {
+        // ==========================================
+        // 🟢 CURATED LINE SHEET LOGIC
+        // ==========================================
+        let supplierInventoryCache = []; // Stores the products so search is instant
+
+        // 1. Fetch products from the database invisibly in the background
+        async function loadSupplierInventoryForSearch() {
+            try {
+                const res = await fetch(API_BASE_URL + '/public-catalog', { method: 'POST' });
+                const data = await res.json();
+                // Save only THIS supplier's items into the cache
+                supplierInventoryCache = data.products.filter(p => p.supplierId === supplierId);
+                renderInventoryList(supplierInventoryCache);
+            } catch(e) {
+                console.error("Error loading inventory for search", e);
+            }
+        }
+
+        // 2. Draw the list with checkboxes and view buttons
+        function renderInventoryList(products) {
+            const container = document.getElementById('supplier-inventory-list');
+            if(products.length === 0) {
+                container.innerHTML = '<div style="color:#666; font-size:11px; text-align:center; padding:10px;">No public items found.</div>';
+                return;
+            }
+            
+            let html = '';
+            products.forEach(p => {
+                // Shorten name if it's too long
+                let shortName = p.name.length > 25 ? p.name.substring(0, 25) + '...' : p.name;
+                
+                html += `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #1a1e26;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <input type="checkbox" class="cat-checkbox" value="${p.id}" id="chk-${p.id}" style="cursor:pointer;">
+                        <label for="chk-${p.id}" style="font-size:11px; color:#fff; cursor:pointer; line-height:1.4;">
+                            <strong style="color:var(--gold);">${p.id}</strong><br>
+                            ${shortName}
+                        </label>
+                    </div>
+                    <button onclick="openProductPreview('${p.id}')" style="background:transparent; border:none; color:#888; cursor:pointer; transition:0.3s;" onmouseover="this.style.color='var(--ai-glow)'" onmouseout="this.style.color='#888'" title="View Details">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // 3. Search Bar Filter (Fires every time you type a letter)
+        function filterSupplierProducts() {
+            const query = document.getElementById('product-search-input').value.toLowerCase();
+            const filtered = supplierInventoryCache.filter(p => 
+                p.id.toLowerCase().includes(query) || 
+                p.name.toLowerCase().includes(query)
+            );
+            renderInventoryList(filtered);
+        }
+
+        // 4. Generate the Smart Link (Full vs Custom)
+        function shareCatalogLink(mode) {
             if (!currentActiveChatId) return alert("Please open a conversation first.");
             
             const buyCurr = document.getElementById('calc-buy-curr').value || 'CAD';
+            let link = `${window.location.origin}/showroom.html?supplier=${supplierId}&buyCur=${buyCurr}`;
             
-            // FIX: Changed &currency to &buyCur to stop the browser from making the ¤ symbol!
-            const link = `${window.location.origin}/showroom.html?supplier=${supplierId}&buyCur=${buyCurr}`;
+            // If they clicked "Send Selected", grab the checked boxes!
+            if (mode === 'custom') {
+                const checkboxes = document.querySelectorAll('.cat-checkbox:checked');
+                if (checkboxes.length === 0) {
+                    return alert("Please check at least one product box to send a custom selection.");
+                }
+                // Turn checked boxes into a string like "MUZ-1,MUZ-2"
+                const selectedIds = Array.from(checkboxes).map(cb => cb.value).join(',');
+                link += `&items=${selectedIds}`; // Add it to the URL!
+            }
             
-            const msg = `🏢 **PRIVATE SHOWROOM ACCESS**\n\nWe manufacture several other items that might fit your sourcing needs. You can browse our full verified catalog here:\n👉 ${link}\n\nIf you see something you like, just reply with the **Product ID** and I will calculate a custom quote for you!`;
+            const msgText = mode === 'custom' 
+                ? `🏢 **CURATED LINE SHEET**\n\nI have hand-selected a few specific items from our collection that match your requirements. You can review the details and pricing here:\n👉 ${link}`
+                : `🏢 **OFFICIAL CATALOGUE**\n\nYou can browse our full verified collection here:\n👉 ${link}`;
             
             const replyBox = document.getElementById('reply-input');
-            replyBox.value = msg;
+            replyBox.value = msgText;
             replyBox.focus();
         }
         function copyRfqLink() {
