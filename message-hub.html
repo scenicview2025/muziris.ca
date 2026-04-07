@@ -668,13 +668,13 @@
             document.getElementById('reply-input').focus();
         }
 
-        // 🟢 Instantly drop the Escrow explanation link
+        // 🟢 Instantly drop the Escrow explanation link (Factory Persona)
         function shareEscrowLink() {
             if (!currentActiveChatId) return alert("Please open a conversation first.");
             
             const link = `${window.location.origin}/buyer-protection.html`;
             
-            const msgText = `🛡️ **SECURE PAYMENTS VIA MUZIRIS**\n\nI understand your hesitation with international wire transfers. That is exactly why we use Muziris! \n\nYou do not pay us directly. Your funds are held in the **Muziris Escrow Vault** and are completely frozen for a 7-day inspection period after your cargo arrives.\n\nYou can read exactly how your capital is protected here:\n👉 ${link}`;
+            const msgText = `🛡️ **SECURE PAYMENTS**\n\nI completely understand your hesitation with sending international wire transfers—we hear that a lot from our new clients. That is actually why our factory handles all of our transactions through Muziris.\n\nYou don't have to wire any money directly to us overseas. Your payment is held in their North American Escrow Vault, and they will not release the funds to our factory until your cargo arrives and you have had a full 7 days to inspect the quality.\n\nYou can check out exactly how they protect your deposit here:\n👉 ${link}`;
             
             const replyBox = document.getElementById('reply-input');
             replyBox.value = msgText;
