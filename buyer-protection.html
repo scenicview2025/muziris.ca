@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Buyer Protection & Escrow</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --bronze: #b89225; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+      --success: #4CAF50;
+    }
+    
+    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); overflow-x: hidden; line-height: 1.6; }
+    
+    /* 🟢 DIGITAL FLOW BACKGROUND */
+    .process-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; background: var(--void); overflow: hidden; }
+    .flow-line { position: absolute; width: 1px; height: 100vh; background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.4), transparent); animation: flowDown 10s infinite linear; opacity: 0; }
+    .line-1 { left: 15%; animation-delay: 0s; animation-duration: 8s; }
+    .line-2 { left: 50%; animation-delay: 2s; animation-duration: 12s; }
+    .line-3 { left: 85%; animation-delay: 5s; animation-duration: 10s; }
+    
+    @keyframes flowDown {
+      0% { transform: translateY(-100%); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(100%); opacity: 0; }
+    }
+
+    .grid-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    }
+
+    /* NAVIGATION */
+    .top-nav { position: relative; z-index: 10; padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(11,14,20,0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; text-decoration: none; letter-spacing: 3px; font-weight: bold; text-transform: uppercase; }
+    .nav-links a { color: #aaa; text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; margin-left: 30px; }
+    .nav-links a:hover { color: #fff; }
+
+    /* HERO SECTION */
+    .hero { position: relative; z-index: 2; padding: 120px 5% 80px; text-align: center; max-width: 900px; margin: 0 auto; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.3); color: var(--success); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 25px; }
+    .hero h1 { font-family: 'Cinzel', serif; color: #fff; font-size: 52px; margin-bottom: 20px; letter-spacing: 2px; line-height: 1.1; }
+    .hero h1 span { background: linear-gradient(135deg, #D4AF37 0%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 19px; color: #aaa; max-width: 700px; margin: 0 auto 40px; }
+
+    /* CONTENT WRAPPER */
+    .content-wrapper { position: relative; z-index: 2; max-width: 1000px; margin: 0 auto; padding: 0 5% 100px; }
+
+    /* TIMELINE STEPS */
+    .step-card { background: rgba(21, 25, 34, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-top: 1px solid rgba(212, 175, 55, 0.3); border-radius: 12px; padding: 45px; margin-bottom: 35px; display: flex; gap: 40px; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s, box-shadow 0.4s; }
+    .step-card:hover { transform: translateX(10px); border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(212, 175, 55, 0.05); }
+    
+    .step-icon { width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; font-size: 40px; color: var(--gold); background: rgba(212, 175, 55, 0.05); border-radius: 50%; border: 1px dashed rgba(212, 175, 55, 0.3); flex-shrink: 0; }
+    
+    .step-content { flex: 1; }
+    .step-content h3 { font-family: 'Cinzel', serif; color: #fff; font-size: 24px; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; }
+    .step-content p { color: #ccc; font-size: 16px; margin: 0; line-height: 1.7; }
+    
+    /* HIGHLIGHT BOX */
+    .highlight-box { margin-top: 25px; padding: 18px 25px; background: rgba(8, 10, 15, 0.8); border-left: 3px solid var(--success); border-radius: 0 6px 6px 0; display: inline-block; border-top: 1px solid rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02); }
+    .highlight-box.gold-highlight { border-left-color: var(--gold); }
+    .highlight-box span { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 5px; font-weight: bold; }
+    .highlight-box.gold-highlight span { color: var(--gold); }
+    .highlight-box p { font-size: 14px; color: #aaa; margin: 0; }
+
+    /* CALL TO ACTION */
+    .cta-section { text-align: center; padding: 80px 0 40px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .cta-section h2 { font-family: 'Cinzel', serif; color: #fff; font-size: 36px; margin-bottom: 20px; }
+    .gold-btn { display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; padding: 18px 45px; border-radius: 4px; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; transition: transform 0.3s, box-shadow 0.3s; }
+    .gold-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(212,175,55,0.4); }
+
+    @media (max-width: 768px) {
+      .step-card { flex-direction: column; gap: 20px; text-align: center; padding: 35px 25px; }
+      .step-card:hover { transform: translateY(-10px); }
+      .highlight-box { text-align: left; }
+      .nav-links { display: none; }
+      .hero h1 { font-size: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="process-bg">
+    <div class="flow-line line-1"></div>
+    <div class="flow-line line-2"></div>
+    <div class="flow-line line-3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <div class="top-nav">
+    <a href="/" class="brand">Muziris</a>
+    <div class="nav-links">
+      <a href="catalog.html">Global Catalog</a>
+      <a href="how-it-works.html">Supplier Network</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-badge"><i class="fas fa-shield-check"></i> Fiduciary Escrow Active</div>
+    <h1>The Future of <br><span>Risk-Free Sourcing</span></h1>
+    <p>We eliminate the risk of international wire transfers. With the Muziris Vault, your capital never reaches the factory until your cargo clears inspection.</p>
+  </div>
+
+  <div class="content-wrapper">
+
+    <div class="step-card">
+      <div class="step-icon"><i class="fas fa-handshake"></i></div>
+      <div class="step-content">
+        <h3>1. Connect & Negotiate</h3>
+        <p>Browse the Muziris global catalog and negotiate directly with Tier-1 manufacturers. Once you agree on volume, customizations, and pricing, the factory will issue an Official RFQ (Request for Quotation) through our secure platform.</p>
+        <div class="highlight-box gold-highlight">
+          <span><i class="fas fa-check-double"></i> Vetted Manufacturers Only</span>
+          <p style="color: var(--success);">Every factory in our network has undergone strict legal, financial, and capacity verification. No middlemen. No trading companies.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-icon"><i class="fas fa-vault"></i></div>
+      <div class="step-content">
+        <h3>2. The Muziris Escrow Vault</h3>
+        <p>When you accept the quote, you do <strong>not</strong> send money overseas to a foreign bank account. Instead, your funds are deposited into the North American Muziris Escrow Vault. The factory is notified that the funds are secured, giving them the guarantee needed to begin production.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-icon"><i class="fas fa-ship"></i></div>
+      <div class="step-content">
+        <h3>3. Production & Managed Logistics</h3>
+        <p>The factory manufactures your order to spec. Once completed, Muziris integrated logistics partners handle the factory pickup, port customs, and ocean/air freight routing. You track the shipment live via your buyer dashboard.</p>
+      </div>
+    </div>
+
+    <div class="step-card" style="border-color: rgba(76, 175, 80, 0.4); box-shadow: 0 10px 30px rgba(76, 175, 80, 0.1);">
+      <div class="step-icon" style="color: var(--success); border-color: rgba(76, 175, 80, 0.3); background: rgba(76, 175, 80, 0.05);"><i class="fas fa-search"></i></div>
+      <div class="step-content">
+        <h3>4. The 7-Day Inspection Hold</h3>
+        <p>Your cargo arrives at your destination. <strong>The clock starts now.</strong> You have 7 full days to inspect the goods, verify the quality, and ensure the order perfectly matches the negotiated contract. During this time, your funds remain firmly locked in the Muziris Vault.</p>
+        <div class="highlight-box" style="border-left-color: var(--success);">
+          <span style="color: var(--success);"><i class="fas fa-shield-alt"></i> Total Buyer Leverage</span>
+          <p>If the goods are defective or incorrect, the funds are frozen, and Muziris steps in to mediate the dispute or issue a refund.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-icon"><i class="fas fa-file-signature"></i></div>
+      <div class="step-content">
+        <h3>5. Final Payout Release</h3>
+        <p>Only after you click "Approve Cargo" in your dashboard (or after the 7-day window expires without a dispute), does the smart contract execute. The Muziris Vault finally wires the funds to the overseas factory.</p>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h2>Ready to source without the stress?</h2>
+      <p style="color: #aaa; margin-bottom: 30px;">Return to your chat to finalize your order, securely.</p>
+      <a href="catalog.html" class="gold-btn">Browse Catalog</a>
+    </div>
+
+  </div>
+
+</body>
+</html>
