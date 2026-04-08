@@ -217,7 +217,20 @@
             </div>
 
             <div class="tool-box">
-                <h4 class="tool-title"><i class="fas fa-search"></i> Catalog & RFQ Invite</h4>
+                <h4 class="tool-title">
+                    <div><i class="fas fa-search" style="margin-right:8px;"></i> Catalog & RFQ Invite</div>
+                    
+                    <div class="info-tooltip">
+                        <i class="fas fa-info-circle" style="font-size: 16px;"></i>
+                        <div class="tooltip-text">
+                            <div style="color:#fff; font-weight:bold; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px; font-family:'Cinzel', serif; letter-spacing:1px; text-transform:uppercase;">The Muziris Workflow</div>
+                            <div class="tooltip-step"><strong>1. When to use:</strong> Use this tool <em>after</em> you and the buyer have agreed on pricing and terms in the chat.</div>
+                            <div class="tooltip-step"><strong>2. Send Link:</strong> Click 'Send Selected' to drop a smart catalog link to the buyer.</div>
+                            <div class="tooltip-step"><strong>3. Buyer RFQ:</strong> The buyer uses the link to submit an Official RFQ.</div>
+                            <div class="tooltip-step"><strong>4. Quote & Payment:</strong> You receive their RFQ in your Main Dashboard. You review it, issue the Official Quote, and the buyer funds the Escrow to start production.</div>
+                        </div>
+                    </div>
+                </h4>
                 <div class="tool-desc">Send the buyer a catalog link with instructions to submit their Official RFQ.</div>
                 
                 <input type="text" id="product-search-input" class="tool-input" placeholder="Search by ID or Name..." onkeyup="filterSupplierProducts()">
