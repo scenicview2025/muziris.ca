@@ -385,12 +385,12 @@
         } else if (isPhase2Action) {
           statusBadge = `<span class="status-badge status-action" style="background:#e0f2fe; color:#0ea5e9; border-color:#7dd3fc;">Fund Logistics</span>`;
           actionBtn = `<button class="btn-gold" style="background:#0ea5e9; color:#fff;" onclick="openQuoteModal('${rfq.rfq_id}', 2)">Pay Freight</button>`;
-        } else if (isEscrow) {
+       } else if (isEscrow) {
           statusBadge = `<span class="status-badge status-escrow">${rfq.status}</span>`;
-          actionBtn = `<button class="btn-outline" onclick="alert('Tracking ID will be available once goods reach the port.')">Track Status</button>`;
+          actionBtn = `<button class="btn-outline" onclick="window.location.href='buyer-tracking.html?id=${rfq.rfq_id}'">Track Status</button>`;
         } else if (isCompleted) {
           statusBadge = `<span class="status-badge status-shipped">Delivered</span>`;
-          actionBtn = `<button class="btn-outline">View Receipt</button>`;
+          actionBtn = `<button class="btn-outline" onclick="window.location.href='buyer-tracking.html?id=${rfq.rfq_id}'">View Receipt</button>`;
         }
 
         tableHtml += `
