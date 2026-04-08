@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Order Tracking</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --gold-dark: #b89225; 
+      --void: #0b0e14; 
+      --slate: #ffffff; 
+      --mist: #f3f4f6; 
+      --text-dark: #111827;
+      --text-gray: #6b7280;
+      --border-light: #e5e7eb;
+      --success: #10b981;
+      --blue: #0ea5e9;
+      --alert: #ef4444;
+    }
+    
+    body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #FAFAFA; color: var(--text-dark); display: flex; height: 100vh; -webkit-font-smoothing: antialiased; }
+    .brand-font { font-family: 'Cinzel', serif; }
+    
+    /* SIDEBAR */
+    .sidebar { width: 260px; background-color: var(--slate); border-right: 1px solid var(--border-light); display: flex; flex-direction: column; z-index: 100; box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+    .logo-container { padding: 30px 24px; text-align: left; border-bottom: 1px solid var(--border-light); }
+    .logo { font-family: 'Cinzel', serif; color: var(--text-dark); font-size: 24px; text-decoration: none; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    
+    .nav-links { flex: 1; padding: 24px 12px; overflow-y: auto;}
+    .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--text-gray); text-decoration: none; font-size: 13px; font-weight: 600; transition: 0.3s; border-radius: 8px; margin-bottom: 4px; }
+    .nav-link i { font-size: 16px; width: 20px; text-align: center; }
+    .nav-link:hover { background: #f9fafb; color: var(--text-dark); }
+    .nav-link.active { background: var(--void); color: var(--gold); box-shadow: 0 4px 10px rgba(11, 14, 20, 0.1); }
+    
+    .logout-btn { padding: 20px; border-top: 1px solid var(--border-light); }
+    .logout-btn button { background: #fff; border: 1px solid var(--border-light); color: var(--text-gray); padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; font-size: 13px; }
+    .logout-btn button:hover { background: #fee2e2; color: var(--alert); border-color: #fca5a5; }
+
+    /* MAIN CONTENT */
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
+    
+    .topbar { padding: 20px 40px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.95); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .welcome-text { font-size: 18px; font-weight: 700; color: var(--text-dark); margin: 0; }
+    
+    .dashboard-body { padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+
+    /* 🟢 ORDER DETAILS VIEW & TIMELINE */
+    .stepper-container { background: #fff; border: 1px solid var(--border-light); border-radius: 16px; padding: 40px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .stepper { display: flex; justify-content: space-between; position: relative; }
+    .stepper::before { content: ''; position: absolute; top: 20px; left: 0; width: 100%; height: 2px; background: var(--border-light); z-index: 1; }
+    .step-line-fill { position: absolute; top: 20px; left: 0; height: 2px; background: var(--gold); z-index: 1; transition: width 0.5s ease; }
+    
+    .step { position: relative; z-index: 2; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; }
+    .step-icon { width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 2px solid var(--border-light); display: flex; justify-content: center; align-items: center; font-size: 16px; color: var(--text-gray); margin-bottom: 15px; transition: 0.3s; }
+    .step.active .step-icon { border-color: var(--gold); background: var(--void); color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+    .step.completed .step-icon { border-color: var(--success); background: var(--success); color: #fff; }
+    
+    .step-title { font-size: 12px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; }
+    .step.active .step-title { color: var(--text-dark); }
+    .step.completed .step-title { color: var(--success); }
+
+    .details-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+    .detail-card { background: #fff; border: 1px solid var(--border-light); border-radius: 16px; padding: 30px; }
+    .detail-header { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+    /* MOBILE NAVIGATION */
+    .mobile-nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; backdrop-filter: blur(2px); }
+    .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--text-dark); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; }
+    @media (max-width: 900px) {
+      .sidebar { position: fixed; left: -260px; height: 100%; transition: 0.3s; }
+      .sidebar.open { left: 0; }
+      .mobile-menu-btn { display: block; }
+      .topbar { padding: 15px 20px; }
+      .dashboard-body { padding: 20px; }
+      .details-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+      <a href="index1.html" class="logo">Muziris</a>
+    </div>
+    <div class="nav-links">
+      <a href="buyer-dashboard.html" class="nav-link"><i class="fas fa-layer-group"></i> Dashboard</a>
+      <a href="buyer-message-hub.html" class="nav-link"><i class="fas fa-comments"></i> Messages</a>
+      <a href="catalog.html" class="nav-link"><i class="fas fa-store"></i> Global Catalog</a>
+      <a href="#" class="nav-link active"><i class="fas fa-map-marked-alt"></i> Order Tracking</a>
+      <a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+    <div class="logout-btn">
+      <button onclick="logoutBuyer()"><i class="fas fa-sign-out-alt mr-2"></i> Sign Out</button>
+    </div>
+  </div>
+
+  <div class="mobile-nav-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
+
+  <div class="main-content">
+    
+    <div class="topbar">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+        <h1 class="welcome-text">Order Tracking</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-[var(--gold)]/20 text-[var(--gold-dark)] flex items-center justify-center font-bold border border-[var(--gold)]/30"><i class="far fa-user"></i></div>
+        <span class="text-sm font-bold text-gray-700 hidden sm:block" id="ui-buyer-email">Authenticating...</span>
+      </div>
+    </div>
+
+    <div class="dashboard-body">
+        
+        <div id="loader" class="text-center py-20">
+            <i class="fas fa-circle-notch fa-spin text-3xl text-[var(--gold)] mb-4"></i>
+            <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Fetching Shipping Ledger...</h3>
+        </div>
+
+        <div id="tracking-content" style="display: none;">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="window.location.href='buyer-dashboard.html'" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-gray-400 transition shadow-sm">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 brand-font m-0" id="detail-title">Loading...</h2>
+                    <div class="text-sm text-gray-500 font-mono font-bold mt-1" id="detail-id">REF: Loading...</div>
+                </div>
+            </div>
+
+            <div class="stepper-container">
+                <div class="stepper">
+                    <div class="step-line-fill" id="stepper-progress" style="width: 0%;"></div>
+                    
+                    <div class="step" id="step-1">
+                        <div class="step-icon"><i class="fas fa-file-signature"></i></div>
+                        <div class="step-title">Contract Signed</div>
+                    </div>
+                    <div class="step" id="step-2">
+                        <div class="step-icon"><i class="fas fa-cogs"></i></div>
+                        <div class="step-title">In Production</div>
+                    </div>
+                    <div class="step" id="step-3">
+                        <div class="step-icon"><i class="fas fa-ship"></i></div>
+                        <div class="step-title">In Transit</div>
+                    </div>
+                    <div class="step" id="step-4">
+                        <div class="step-icon"><i class="fas fa-box-open"></i></div>
+                        <div class="step-title">Delivered</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                
+                <div class="detail-card">
+                    <div class="detail-header"><i class="fas fa-receipt text-[var(--gold)]"></i> Official Invoice Receipt</div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-5 mb-6 border border-gray-100 flex justify-between items-center">
+                        <div>
+                            <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Muziris Escrow Status</div>
+                            <div class="text-sm font-bold text-[var(--success)]"><i class="fas fa-shield-check"></i> Funds Securely Locked</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Total Paid</div>
+                            <div class="text-xl font-bold text-[var(--gold-dark)] font-mono" id="detail-total">$0.00</div>
+                        </div>
+                    </div>
+
+                    <h4 class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-4 border-b border-gray-100 pb-2">Line Items</h4>
+                    <div id="detail-line-items" class="space-y-3 mb-6">
+                        </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-header"><i class="fas fa-map-marked-alt text-[var(--blue)]"></i> Logistics & Tracking</div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Destination</div>
+                            <div class="text-sm font-bold text-gray-900" id="detail-destination">Loading...</div>
+                        </div>
+                        
+                        <div>
+                            <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Carrier Strategy</div>
+                            <div class="text-sm font-bold text-gray-900" id="detail-logistics">Loading...</div>
+                        </div>
+
+                        <div class="bg-[#f0f9ff] border border-[#bae6fd] p-5 rounded-xl mt-4">
+                            <div class="text-[10px] text-[var(--blue)] uppercase tracking-widest font-bold mb-2"><i class="fas fa-satellite-dish mr-1"></i> Tracking Status</div>
+                            <div class="font-mono text-sm font-bold text-gray-900" id="detail-tracking">Awaiting Dispatch...</div>
+                            <p class="text-xs text-gray-500 mt-2">Tracking codes will populate automatically once the factory hands the cargo to the freight forwarder.</p>
+                        </div>
+
+                        <button class="w-full mt-4 py-3 bg-white border border-gray-200 text-gray-600 font-bold text-xs uppercase tracking-widest rounded-lg hover:bg-gray-50 transition shadow-sm" onclick="alert('Please contact your assigned Muziris Concierge or message the factory in the Hub.')">
+                            <i class="far fa-life-ring mr-2"></i> Request Support
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 🟢 FIREBASE INITIALIZATION & AUTH GUARD
+    // ==========================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+        authDomain: "muziris-ac9dd.firebaseapp.com",
+        projectId: "muziris-ac9dd",
+        storageBucket: "muziris-ac9dd.firebasestorage.app",
+        messagingSenderId: "929662963272",
+        appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+    };
+    
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const auth = firebase.auth();
+
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    const urlParams = new URLSearchParams(window.location.search);
+    const rfqIdToLoad = urlParams.get('id');
+
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('mobile-overlay');
+      sidebar.classList.toggle('open');
+      overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+    }
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            let displayName = user.displayName || user.email.split('@')[0];
+            document.getElementById('ui-buyer-email').innerText = displayName;
+            
+            if (rfqIdToLoad) {
+                fetchRfqDetails(rfqIdToLoad, user.email);
+            } else {
+                window.location.replace('buyer-dashboard.html'); // Bounce back if no ID
+            }
+        } else {
+            window.location.replace('index1.html');
+        }
+    });
+
+    function logoutBuyer() { auth.signOut().catch((error) => console.error("Sign out error", error)); }
+
+    function fetchRfqDetails(rfqId, buyerEmail) {
+        fetch(API_BASE_URL + '/get-admin-rfqs', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ adminKey: "MUZIRIS_MASTER_KEY_2026" })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.error) throw new Error(data.error);
+            
+            // Find the specific RFQ ensuring it belongs to this buyer
+            const rfq = data.find(r => r.rfq_id === rfqId && r.buyer_email.toLowerCase() === buyerEmail.toLowerCase());
+            
+            if (rfq) {
+                populateTrackingPage(rfq);
+            } else {
+                document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold'>Order not found or unauthorized access.</div>";
+            }
+        })
+        .catch(err => {
+            document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold'>Database Connection Failed.</div>";
+        });
+    }
+
+    function populateTrackingPage(rfq) {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('tracking-content').style.display = 'block';
+
+        // Populate Headers
+        document.getElementById('detail-title').innerText = rfq.product_name;
+        document.getElementById('detail-id').innerText = `REF: ${rfq.rfq_id} | SUP: ${rfq.supplier_id}`;
+        
+        // Populate Logistics
+        document.getElementById('detail-destination').innerText = rfq.destination || "EXW (No Destination Provided)";
+        document.getElementById('detail-logistics').innerText = rfq.logistics || "Buyer Managed Forwarder";
+        
+        if (rfq.status === 'Shipped' || rfq.status === 'Completed') {
+            document.getElementById('detail-tracking').innerText = rfq.tracking_number || "DISPATCHED (Awaiting Carrier Sync)";
+            document.getElementById('detail-tracking').style.color = "var(--success)";
+        } else {
+            document.getElementById('detail-tracking').innerText = "Awaiting Cargo Dispatch...";
+            document.getElementById('detail-tracking').style.color = "var(--text-dark)";
+        }
+
+        // Populate Timeline Logic
+        const s1 = document.getElementById('step-1');
+        const s2 = document.getElementById('step-2');
+        const s3 = document.getElementById('step-3');
+        const s4 = document.getElementById('step-4');
+        const bar = document.getElementById('stepper-progress');
+
+        if (rfq.status === 'Funded Escrow') {
+            s1.classList.add('completed'); s2.classList.add('active'); bar.style.width = '33%';
+        } else if (rfq.status === 'In Production') {
+            s1.classList.add('completed'); s2.classList.add('active'); bar.style.width = '33%';
+        } else if (rfq.status === 'Pending Freight Payment') {
+            s1.classList.add('completed'); s2.classList.add('completed'); s3.classList.add('active'); bar.style.width = '66%';
+        } else if (rfq.status === 'Shipped') {
+            s1.classList.add('completed'); s2.classList.add('completed'); s3.classList.add('active'); bar.style.width = '66%';
+        } else if (rfq.status === 'Completed') {
+            s1.classList.add('completed'); s2.classList.add('completed'); s3.classList.add('completed'); s4.classList.add('completed'); bar.style.width = '100%';
+        }
+
+        // Populate Financials
+        let q = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
+        let curr = rfq.currency || "USD";
+        let itemsHtml = "";
+        let total = 0;
+
+        if (q && q.finalQuoteItems) {
+            q.finalQuoteItems.forEach(item => {
+                let itemTotal = parseFloat(item.supplierTotalRaw || 0);
+                total += itemTotal;
+                itemsHtml += `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
+                        <div>
+                            <div class="text-sm font-bold text-gray-900">${item.variantName}</div>
+                            <div class="text-xs text-gray-500">Qty: ${item.quantity}</div>
+                        </div>
+                        <div class="font-mono font-bold text-gray-700">$${itemTotal.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+        }
+        
+        // Add extra fees to receipt if they exist
+        if (q && q.extraFees) {
+            let custFee = parseFloat(q.extraFees.customizationFee || 0);
+            if (custFee > 0) { total += custFee; itemsHtml += `<div class="flex justify-between items-center py-2"><div class="text-sm font-bold text-gray-700">Customization Fee</div><div class="font-mono font-bold text-gray-700">$${custFee.toFixed(2)}</div></div>`; }
+        }
+
+        // Add platform fee
+        let platformFee = total * 0.025;
+        total += platformFee;
+        itemsHtml += `<div class="flex justify-between items-center py-2"><div class="text-sm font-bold text-gray-500">Muziris Escrow Fee (2.5%)</div><div class="font-mono font-bold text-gray-500">$${platformFee.toFixed(2)}</div></div>`;
+
+        // Add freight if funded
+        if (q && q.freightData && (rfq.status === 'Shipped' || rfq.status === 'Completed')) {
+            let f = parseFloat(q.freightData.finalFreightBuyer || 0);
+            total += f;
+            itemsHtml += `<div class="flex justify-between items-center py-2"><div class="text-sm font-bold text-[var(--blue)]">Logistics Dispatch</div><div class="font-mono font-bold text-[var(--blue)]">$${f.toFixed(2)}</div></div>`;
+        }
+
+        document.getElementById('detail-line-items').innerHTML = itemsHtml || "<div class='text-sm text-gray-500'>Itemized data unavailable.</div>";
+        document.getElementById('detail-total').innerText = `$${total.toFixed(2)} ${curr}`;
+    }
+  </script>
+</body>
+</html>
