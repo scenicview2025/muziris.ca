@@ -232,9 +232,12 @@
             </div>
 
             <div class="tool-box">
-                <h4 class="tool-title"><i class="fas fa-file-contract"></i> Official RFQ Contract</h4>
-                <div class="tool-desc">Once terms are agreed, generate an official RFQ link for the buyer to submit payment into Escrow.</div>
-                <button class="tool-btn" onclick="copyRfqLink()" style="background:rgba(212,175,55,0.1);">Generate & Copy Link</button>
+                <h4 class="tool-title"><i class="fas fa-file-signature"></i> Draft Official RFQ</h4>
+                <div class="tool-desc">Lock in the negotiated price and generate a secure checkout link for the buyer to enter their shipping details.</div>
+                
+                <input type="number" step="0.01" id="rfq-agreed-price" class="tool-input" placeholder="Agreed Unit Price (e.g. 12.50)">
+                
+                <button class="tool-btn" onclick="copyRfqLink()" style="background:rgba(212,175,55,0.1); border-color: var(--gold);">Generate & Drop Link</button>
             </div>
 
             <div class="tool-box">
