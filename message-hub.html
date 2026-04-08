@@ -653,69 +653,7 @@
             replyBox.value = msgText;
             replyBox.focus();
         }
-        // 🟢 POPULATE THE PRODUCT DROPDOWN FOR RFQS
-        function populateRfqDropdown(activeProductId) {
-            const select = document.getElementById('rfq-draft-product');
-            let options = '<option value="">Select Negotiated Product...</option>';
-            
-            // supplierInventoryCache is already loaded from the search tool!
-            supplierInventoryCache.forEach(p => {
-                let selected = (p.id === activeProductId) ? 'selected' : '';
-                options += `<option value="${p.id}" ${selected}>${p.id} - ${p.name.substring(0,25)}</option>`;
-            });
-            
-            select.innerHTML = options;
-            previewDraftRfq(); // Run the preview math
-        }
-
-        // 🟢 LIVE MATH PREVIEW (Supplier Currency -> Buyer Currency + Markup)
-        function previewDraftRfq() {
-            const basePrice = parseFloat(document.getElementById('rfq-base-price').value) || 0;
-            const setupFee = parseFloat(document.getElementById('rfq-setup-fee').value) || 0;
-            
-            const supCurr = document.getElementById('calc-sup-curr').value || 'USD';
-            const buyCurr = document.getElementById('calc-buy-curr').value || 'CAD';
-            
-            if(!liveRates[supCurr] || !liveRates[buyCurr]) return;
-
-            // 1. Convert Unit Price & Add Markup
-            let baseCAD = basePrice * liveRates[supCurr];
-            let finalCAD = baseCAD * (1 + (currentMarkup / 100));
-            let buyUnitPay = finalCAD / liveRates[buyCurr];
-
-            // 2. Convert Setup Fee & Add Markup
-            let setupCAD = setupFee * liveRates[supCurr];
-            let finalSetupCAD = setupCAD * (1 + (currentMarkup / 100));
-            let buySetupPay = finalSetupCAD / liveRates[buyCurr];
-
-            document.getElementById('preview-unit-price').innerText = buyUnitPay.toFixed(2) + ' ' + buyCurr;
-            document.getElementById('preview-setup-fee').innerText = buySetupPay.toFixed(2) + ' ' + buyCurr;
-        }
-
-        // 🟢 GENERATE THE COMPLEX SMART LINK
-        function copyRfqLink() {
-            if (!currentActiveChatId) return alert("Please open a conversation first.");
-            
-            const prodId = document.getElementById('rfq-draft-product').value;
-            const basePrice = document.getElementById('rfq-base-price').value;
-            const setupFee = document.getElementById('rfq-setup-fee').value || 0;
-
-            if (!prodId) return alert("Please select the specific product from the dropdown.");
-            if (!basePrice) return alert("Please enter your agreed Base Unit Price.");
-
-            const supCurr = document.getElementById('calc-sup-curr').value || 'USD';
-            const buyCurr = document.getElementById('calc-buy-curr').value || 'CAD';
-
-            // We pass the RAW SUPPLIER DATA into the URL. The checkout page will handle the rest securely.
-            // bp = Base Price, sf = Setup Fee, sc = Supplier Currency, bc = Buyer Currency, mk = Markup
-            const link = `${window.location.origin}/rfq-checkout.html?product=${prodId}&supplier=${supplierId}&bp=${basePrice}&sf=${setupFee}&sc=${supCurr}&bc=${buyCurr}&mk=${currentMarkup}`;
-            
-            const msgText = `🤝 **OFFICIAL CONTRACT DRAFTED**\n\nI have prepared the official checkout for product [ ${prodId} ]. Our agreed pricing and any required customization fees have been locked in.\n\nPlease click the secure link below to review the itemized totals, enter your destination logistics, and fund the escrow vault:\n👉 ${link}`;
-            
-            const replyBox = document.getElementById('reply-input');
-            replyBox.value = msgText;
-            replyBox.focus();
-        }
+        
 
         // 🟢 Instantly drop the Escrow explanation link (Factory Persona)
         function shareEscrowLink() {
