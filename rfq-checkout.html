@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Secure RFQ Checkout</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --gold-dark: #b89225; 
+      --text-dark: #111827;
+      --text-gray: #6b7280;
+      --border: #e5e7eb;
+      --success: #10b981;
+    }
+    
+    body { background-color: #f9fafb; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .brand-font { font-family: 'Cinzel', serif; }
+
+    .checkout-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 400px; gap: 40px; }
+    
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .input-label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-gray); margin-bottom: 8px; }
+    .premium-input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s; }
+    .premium-input:focus { border-color: var(--gold); ring: 3px rgba(212, 175, 55, 0.1); }
+    
+    .summary-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+    .summary-row.total { border-bottom: none; border-top: 2px solid var(--gold); margin-top: 15px; padding-top: 20px; font-weight: 800; font-size: 18px; }
+
+    @media (max-width: 900px) {
+      .checkout-container { grid-template-columns: 1fr; margin: 20px auto; }
+      .order-summary-card { order: -1; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="bg-white border-b border-gray-100 py-6">
+    <div class="max-w-[1100px] mx-auto px-6 flex justify-between items-center">
+      <div class="brand-font text-2xl font-bold tracking-widest text-black uppercase">Muziris</div>
+      <div class="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+        <i class="fas fa-lock"></i> 256-bit Secure Sourcing SSL
+      </div>
+    </div>
+  </header>
+
+  <div class="checkout-container">
+    
+    <div class="space-y-6">
+      <div class="card">
+        <h2 class="brand-font text-xl font-bold mb-6">Contract Specifications</h2>
+        
+        <form id="checkoutForm" onsubmit="event.preventDefault(); submitPrivateRFQ();">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <label class="input-label">Agreed Unit Price</label>
+              <div class="premium-input bg-gray-50 font-bold text-gray-500 flex justify-between">
+                <span id="display-unit-price">$0.00</span>
+                <span id="display-currency" class="text-[10px] mt-1">CAD</span>
+              </div>
+            </div>
+            <div>
+              <label class="input-label">Order Quantity <span class="text-red-500">*</span></label>
+              <input type="number" id="rfq-qty" class="premium-input font-bold" placeholder="Enter amount" required oninput="calculateTotals()">
+            </div>
+          </div>
+
+          <h3 class="text-sm font-bold uppercase tracking-widest border-b pb-2 mb-6">Logistics & Entity</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="input-label">Freight Strategy</label>
+              <select id="rfq-logistics" class="premium-input cursor-pointer" required>
+                <option value="Muziris Managed">Muziris Managed (DDP/CIF)</option>
+                <option value="Own Forwarder">I have my own forwarder (EXW/FOB)</option>
+              </select>
+            </div>
+            <div>
+              <label class="input-label">Destination Hub (City, Port)</label>
+              <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, CA" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <label class="input-label">Company Legal Name</label>
+              <input type="text" id="rfq-company" class="premium-input" placeholder="Enter registered business name" required>
+            </div>
+            <div>
+              <label class="input-label">Contact Email</label>
+              <input type="email" id="rfq-email" class="premium-input bg-gray-50" readonly>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 p-6 rounded-xl mb-8">
+            <h4 class="text-amber-800 font-bold text-xs uppercase tracking-widest mb-2">Escrow Agreement</h4>
+            <p class="text-xs text-amber-900/70 leading-relaxed mb-4">By submitting this RFQ, you agree to deposit the manufacturing funds into the Muziris Escrow Vault. Funds will be held securely and only released to the factory 7 days after cargo delivery.</p>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" required class="w-4 h-4 accent-amber-600">
+              <span class="text-xs font-bold text-amber-900">I digitally sign and accept the Muziris Smart Contract Terms.</span>
+            </label>
+          </div>
+
+          <button type="submit" id="submit-btn" class="w-full bg-black text-[var(--gold)] font-bold py-4 rounded-xl uppercase tracking-widest hover:bg-gray-900 transition shadow-lg">
+            Finalize & Submit Contract
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="order-summary-card">
+      <div class="card sticky top-10">
+        <h3 class="brand-font text-lg font-bold mb-6">Order Summary</h3>
+        
+        <div class="flex items-center gap-4 mb-8 p-4 bg-gray-50 rounded-lg">
+          <div class="w-16 h-16 bg-white border border-gray-200 rounded flex items-center justify-center overflow-hidden">
+            <img id="product-img" src="MC.png" class="max-w-full max-h-full object-contain">
+          </div>
+          <div>
+            <div id="product-name" class="text-sm font-bold truncate w-40">Loading Product...</div>
+            <div id="product-id" class="text-[10px] text-gray-400 font-mono">ID: ...</div>
+          </div>
+        </div>
+
+        <div id="summary-details">
+          <div class="summary-row">
+            <span class="text-gray-500">Manufacturing Subtotal</span>
+            <span id="sum-subtotal" class="font-bold">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span class="text-gray-500">Platform Escrow Fee (2.5%)</span>
+            <span id="sum-fee" class="font-bold">$0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total to Fund Escrow</span>
+            <span id="sum-total" class="text-[var(--gold-dark)]">$0.00</span>
+          </div>
+        </div>
+
+        <div class="mt-8 space-y-4">
+          <div class="flex items-start gap-3">
+            <i class="fas fa-shield-check text-[var(--success)] mt-1"></i>
+            <p class="text-[10px] text-gray-500 leading-normal"><strong>Protected Payment:</strong> Your money stays in the Muziris Vault until you approve the shipment quality.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <i class="fas fa-truck text-blue-500 mt-1"></i>
+            <p class="text-[10px] text-gray-500 leading-normal"><strong>Freight Note:</strong> Logistics costs will be invoiced separately once production is finished and cargo volume is verified.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 🟢 INITIALIZE DATA FROM URL
+    const params = new URLSearchParams(window.location.search);
+    const prodId = params.get('product');
+    const supId = params.get('supplier');
+    const agreedPrice = parseFloat(params.get('price')) || 0;
+    const curr = params.get('currency') || 'CAD';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+      authDomain: "muziris-ac9dd.firebaseapp.com",
+      projectId: "muziris-ac9dd",
+      storageBucket: "muziris-ac9dd.firebasestorage.app",
+      messagingSenderId: "929662963272",
+      appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+    };
+    
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const auth = firebase.auth();
+
+    // Set UI initially
+    document.getElementById('display-unit-price').innerText = agreedPrice.toFixed(2);
+    document.getElementById('display-currency').innerText = curr;
+    document.getElementById('product-id').innerText = "ID: " + prodId;
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            document.getElementById('rfq-email').value = user.email;
+            fetchProductInfo();
+        } else {
+            // Force login if they are checkout out!
+            window.location.href = "catalog.html?auth=required";
+        }
+    });
+
+    async function fetchProductInfo() {
+        try {
+            const res = await fetch('https://muziris-api.onrender.com/api/get-product-details', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId: prodId })
+            });
+            const data = await res.json();
+            document.getElementById('product-name').innerText = data.product_name;
+            document.getElementById('product-img').src = data.hero_img || 'MC.png';
+        } catch(e) { console.error("Could not fetch product info"); }
+    }
+
+    function calculateTotals() {
+        const qty = parseInt(document.getElementById('rfq-qty').value) || 0;
+        const subtotal = qty * agreedPrice;
+        const fee = subtotal * 0.025;
+        const total = subtotal + fee;
+
+        document.getElementById('sum-subtotal').innerText = subtotal.toLocaleString(undefined, {style: 'currency', currency: curr});
+        document.getElementById('sum-fee').innerText = fee.toLocaleString(undefined, {style: 'currency', currency: curr});
+        document.getElementById('sum-total').innerText = total.toLocaleString(undefined, {style: 'currency', currency: curr});
+    }
+
+    async function submitPrivateRFQ() {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Securing Contract...';
+
+        const payload = {
+            productId: prodId,
+            supplierId: supId,
+            unitPrice: agreedPrice,
+            quantity: document.getElementById('rfq-qty').value,
+            logistics: document.getElementById('rfq-logistics').value,
+            destination: document.getElementById('rfq-destination').value,
+            company: document.getElementById('rfq-company').value,
+            buyerEmail: document.getElementById('rfq-email').value,
+            currency: curr,
+            isPrivateNegotiated: true // Flag for admin to know this was a custom deal
+        };
+
+        try {
+            const res = await fetch('https://muziris-api.onrender.com/api/submit-rfq', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: payload })
+            });
+            const data = await res.json();
+            if(data.success) {
+                alert("SUCCESS! Your negotiated contract has been submitted. You can track its status in your Buyer Dashboard.");
+                window.location.href = 'buyer-dashboard.html';
+            } else {
+                throw new Error(data.error);
+            }
+        } catch(e) {
+            alert("Error submitting contract: " + e.message);
+            btn.disabled = false;
+            btn.innerText = "Finalize & Submit Contract";
+        }
+    }
+  </script>
+</body>
+</html>
