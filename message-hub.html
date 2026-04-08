@@ -662,13 +662,24 @@
             replyBox.value = msgText;
             replyBox.focus();
         }
+        // 🟢 UPGRADED: Generates a Custom Checkout Link with the Negotiated Price
         function copyRfqLink() {
             if (!currentActiveChatId || !currentProductId) return alert("Please open a product chat first.");
-            const link = `${window.location.origin}/rfq-hub.html?action=new&product=${currentProductId}&supplier=${supplierId}`;
-            navigator.clipboard.writeText(link);
             
-            document.getElementById('reply-input').value = `Please review and confirm the Official RFQ here: ${link}`;
-            document.getElementById('reply-input').focus();
+            const agreedPrice = document.getElementById('rfq-agreed-price').value;
+            if (!agreedPrice) return alert("Please enter the Agreed Unit Price before generating the link.");
+
+            // Grab the buyer's currency from the calculator tool so the link is in their native currency!
+            const buyCurr = document.getElementById('calc-buy-curr').value || 'CAD';
+            
+            // Build the Smart Link
+            const link = `${window.location.origin}/rfq-checkout.html?product=${currentProductId}&supplier=${supplierId}&price=${agreedPrice}&currency=${buyCurr}`;
+            
+            const msgText = `🤝 **OFFICIAL CONTRACT DRAFTED**\n\nI have locked in our agreed price of ${buyCurr} ${agreedPrice} per unit. \n\nPlease click the secure link below to enter your logistics requirements, destination, and company details so our team can finalize the contract:\n👉 ${link}`;
+            
+            const replyBox = document.getElementById('reply-input');
+            replyBox.value = msgText;
+            replyBox.focus();
         }
 
         // 🟢 Instantly drop the Escrow explanation link (Factory Persona)
