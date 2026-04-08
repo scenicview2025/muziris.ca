@@ -627,27 +627,30 @@
             renderInventoryList(filtered);
         }
 
-        // 4. Generate the Smart Link (Full vs Custom)
+        // 🟢 INSTRUCT BUYER TO SUBMIT RFQ VIA CATALOG
         function shareCatalogLink(mode) {
             if (!currentActiveChatId) return alert("Please open a conversation first.");
             
             const buyCurr = document.getElementById('calc-buy-curr').value || 'CAD';
             let link = `${window.location.origin}/showroom.html?supplier=${supplierId}&buyCur=${buyCurr}`;
             
-            // If they clicked "Send Selected", grab the checked boxes!
             if (mode === 'custom') {
                 const checkboxes = document.querySelectorAll('.cat-checkbox:checked');
                 if (checkboxes.length === 0) {
                     return alert("Please check at least one product box to send a custom selection.");
                 }
-                // Turn checked boxes into a string like "MUZ-1,MUZ-2"
                 const selectedIds = Array.from(checkboxes).map(cb => cb.value).join(',');
-                link += `&items=${selectedIds}`; // Add it to the URL!
+                link += `&items=${selectedIds}`;
             }
             
-            const msgText = mode === 'custom' 
-                ? `🏢 **CURATED LINE SHEET**\n\nI have hand-selected a few specific items from our collection that match your requirements. You can review the details and pricing here:\n👉 ${link}`
-                : `🏢 **OFFICIAL CATALOGUE**\n\nYou can browse our full verified collection here:\n👉 ${link}`;
+            // 🟢 The Smart Instructional Message
+            const msgText = `🤝 **NEXT STEP: OFFICIAL RFQ**\n\nI have prepared your catalog link. To move forward with our agreed terms, please follow these steps:\n\n` +
+                            `1. Click the link below and find your required product(s).\n` +
+                            `2. Click **"View in Marketplace"**.\n` +
+                            `3. Click **"Request Official Quote"**.\n` +
+                            `4. Enter your exact quantities, note any customizations we discussed, and choose your logistics strategy.\n\n` +
+                            `Once we receive your official RFQ in our portal, we will issue the final quotation for your approval and payment so we can begin production!\n\n` +
+                            `👉 ${link}`;
             
             const replyBox = document.getElementById('reply-input');
             replyBox.value = msgText;
