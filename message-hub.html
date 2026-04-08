@@ -233,13 +233,35 @@
 
             <div class="tool-box">
                 <h4 class="tool-title"><i class="fas fa-file-signature"></i> Draft Official RFQ</h4>
-                <div class="tool-desc">Lock in the negotiated price and generate a secure checkout link for the buyer to enter their shipping details.</div>
+                <div class="tool-desc">Enter YOUR base price. We will automatically calculate the markup and convert it for the buyer.</div>
                 
-                <input type="number" step="0.01" id="rfq-agreed-price" class="tool-input" placeholder="Agreed Unit Price (e.g. 12.50)">
+                <select id="rfq-draft-product" class="tool-input mb-2" onchange="previewDraftRfq()">
+                    <option value="">Loading Products...</option>
+                </select>
+                
+                <div class="tool-row" style="margin-top: 10px;">
+                    <div style="flex: 1;">
+                        <label style="font-size:9px; color:#888; text-transform:uppercase;">Unit Price (Your Curr)</label>
+                        <input type="number" step="0.01" id="rfq-base-price" class="tool-input" placeholder="e.g. 12.50" onkeyup="previewDraftRfq()">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size:9px; color:#888; text-transform:uppercase;">Setup/Logo Fee (Opt)</label>
+                        <input type="number" step="0.01" id="rfq-setup-fee" class="tool-input" placeholder="e.g. 150.00" onkeyup="previewDraftRfq()">
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #333;">
+                    <div style="font-size:10px; color:#888; text-transform:uppercase; font-weight:bold; margin-bottom:5px;">Buyer Checkout Preview</div>
+                    <div style="font-size:11px; color:#aaa; display:flex; justify-content:space-between;">
+                        <span>Unit Rate:</span> <strong id="preview-unit-price" style="color:var(--success);">0.00</strong>
+                    </div>
+                    <div style="font-size:11px; color:#aaa; display:flex; justify-content:space-between; margin-top:4px;">
+                        <span>Setup Fee:</span> <strong id="preview-setup-fee" style="color:var(--success);">0.00</strong>
+                    </div>
+                </div>
                 
                 <button class="tool-btn" onclick="copyRfqLink()" style="background:rgba(212,175,55,0.1); border-color: var(--gold);">Generate & Drop Link</button>
             </div>
-
             <div class="tool-box">
                 <h4 class="tool-title"><i class="fas fa-truck-loading"></i> Live Freight Estimator</h4>
                 <div class="tool-desc">Ping global logistics APIs to drop an instant estimated freight quote into the chat.</div>
