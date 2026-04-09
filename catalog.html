@@ -57,7 +57,9 @@
 
         /* MODALS */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(240, 240, 240, 0.9); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 16px; overflow-y: auto;}
+        .rfq-content { background: #ffffff; width: 100%; max-width: 900px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); padding: 50px 60px; position: relative; animation: modalSlide 0.3s ease; margin: auto;}
         
+        /* 🟢 UPDATED: AUTH MODAL STYLING */
         .auth-content { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); padding: 40px; position: relative; animation: modalSlide 0.3s ease; margin: auto; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
         .btn-sso { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; background: #fff; border: 1px solid #d1d5db; color: #374151; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .btn-sso:hover { background: #f9fafb; border-color: #9ca3af; }
@@ -69,6 +71,20 @@
 
         .premium-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid var(--border-light); color: var(--text-dark); border-radius: 8px; outline: none; transition: all 0.2s; font-size: 14px; font-weight: 500; }
         .premium-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
+        .target-box { background: var(--gold-light); border: 1px solid var(--gold-border); color: var(--gold-dark); font-weight: 600; font-size: 15px; cursor: not-allowed; }
+        
+        .matrix-container { border: 1px solid var(--border-light); border-radius: 12px; padding: 24px; background: #ffffff; }
+        .matrix-header { display: flex; font-size: 10px; color: #9ca3af; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-light); padding-bottom: 16px; margin-bottom: 20px;}
+        .matrix-row { display: flex; align-items: center; gap: 24px; padding: 16px; background: #ffffff; border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 12px; }
+        .matrix-input { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; font-weight: 500; }
+        
+        .compliance-box { border: 1px solid var(--gold-border); border-radius: 12px; padding: 24px; background: var(--gold-light); }
+        .compliance-title { color: var(--gold-dark); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+        .form-label { display: block; font-size: 11px; color: #6b7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+        
+        .luxury-checkbox { width: 18px; height: 18px; border: 2px solid #d1d5db; border-radius: 4px; appearance: none; outline: none; cursor: pointer; position: relative; transition: 0.2s; background: #fff; margin-top: 2px;}
+        .luxury-checkbox:checked { background-color: var(--gold); border-color: var(--gold); }
+        .luxury-checkbox:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
     </style>
 </head>
 <body>
@@ -97,7 +113,7 @@
                     
                     <div id="currencyMenu" class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
                         <div class="py-2 max-h-72 overflow-y-auto" id="currencyList">
-                        </div>
+                            </div>
                     </div>
                 </div>
                 
@@ -257,6 +273,94 @@
     </div>
 
 
+    <div id="rfq-modal" class="modal-overlay" onclick="closeModal(event, 'rfq-modal')">
+        <div class="rfq-content" onclick="event.stopPropagation()">
+            <div class="modal-close" onclick="closeModal(event, 'rfq-modal')"><i class="fas fa-times"></i></div>
+            
+            <div class="text-center mb-8 border-b border-gray-100 pb-6">
+                <h2 class="text-2xl font-bold text-gray-900 uppercase tracking-[0.1em] mb-2 brand-font">Initiate Sourcing Contract</h2>
+                <p class="text-sm text-gray-500 font-medium">Specify your volume requirements and logistics to receive a final landed quote.</p>
+            </div>
+
+            <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-6">
+                <div>
+                    <span class="form-label">Sourcing Target</span>
+                    <input type="text" id="rfq-product-name" class="premium-input target-box" readonly>
+                    <input type="hidden" id="rfq-product-id">
+                </div>
+
+                <div>
+                    <span class="form-label flex items-center gap-1">Volume Configuration & Negotiation <span class="text-red-500">*</span></span>
+                    <div class="matrix-container">
+                        <div class="matrix-header hidden md:flex">
+                            <div class="flex-[2]">Matrix Details</div>
+                            <div class="flex-1 text-center">Req. Qty</div>
+                            <div class="flex-1 text-center">Est. Total</div>
+                            <div class="flex-[1.2] text-center">Target Total</div>
+                        </div>
+                        <div id="rfq-variants-container"></div>
+                    </div>
+                </div>
+
+                <div class="compliance-box p-5">
+                    <div class="compliance-title mb-3">Compliance & Media Evidence</div>
+                    <div class="flex flex-col sm:flex-row gap-5">
+                        <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-certs" value="Yes" class="luxury-checkbox"> Factory Certifications
+                        </label>
+                        <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-video" value="Yes" class="luxury-checkbox"> Production Video
+                        </label>
+                        <label class="flex items-start gap-2 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-photos" value="Yes" class="luxury-checkbox"> Unedited Photos
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <span class="form-label flex gap-1">Freight Strategy <span class="text-red-500">*</span></span>
+                        <select id="rfq-logistics" onchange="toggleShippingAddress()" class="premium-input cursor-pointer" required>
+                            <option value="">Select Routing...</option>
+                            <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF)</option>
+                            <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB)</option>
+                        </select>
+                    </div>
+                    <div id="destination-box" style="display:none;">
+                        <span class="form-label">Final Destination Hub</span>
+                        <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <span class="form-label flex gap-1">Registered Entity <span class="text-red-500">*</span></span>
+                        <input type="text" id="rfq-company" class="premium-input" placeholder="Company Ltd." required>
+                    </div>
+                    <div>
+                        <span class="form-label flex gap-1">Authorized Email <span class="text-red-500">*</span></span>
+                        <input type="email" id="rfq-email" class="premium-input bg-gray-50 text-gray-500" readonly required>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="form-label">Technical Notes / Addendums</span>
+                    <textarea id="rfq-notes" rows="2" class="premium-input" placeholder="Specify pantone colors, dimensions..."></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" id="btn-submit-rfq" class="btn-solid-gold py-4 w-full">
+                        Submit Sourcing Request
+                    </button>
+                    <div class="text-center text-[10px] text-gray-400 mt-3 tracking-[0.1em] uppercase font-bold flex items-center justify-center gap-1.5">
+                        <i class="fas fa-lock text-gray-400"></i> Secured by Muziris Enterprise Architecture
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <div id="success-modal" class="modal-overlay" onclick="closeModal(event, 'success-modal')">
         <div class="auth-content text-center" onclick="event.stopPropagation()">
             <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -338,8 +442,7 @@
                 let displayName = user.displayName || user.email.split('@')[0];
                 
                 document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0] + " (Buyer)";
-                
-                // Note: rfq-email no longer exists in this file, so we skip setting it
+                document.getElementById('rfq-email').value = user.email;
 
                 fetch(API_BASE_URL + '/buyer/auth', {
                     method: 'POST',
@@ -354,6 +457,7 @@
             } else {
                 currentUser = null;
                 document.getElementById('auth-btn-text').innerText = "Sign In";
+                document.getElementById('rfq-email').value = "";
             }
         });
 
@@ -532,7 +636,6 @@
                 document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
             });
         };
-        
         function convertPrice(cadPrice) {
             if(!cadPrice || isNaN(cadPrice)) return "0.00";
             
@@ -617,15 +720,15 @@
 
                 let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
 
-                // 🟢 NEW: Check if the product is paused and change the badge!
-                if (p.status === 'PAUSED') {
-                    sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
-                } else {
-                    sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
-                }
+// 🟢 NEW: Check if the product is paused and change the badge!
+if (p.status === 'PAUSED') {
+    sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
+} else {
+    sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
+}
 
-                // 🟢 NEW: Slightly fade the card if it's paused
-                let cardClass = p.status === 'PAUSED' ? 'product-card opacity-60' : 'product-card';
+// 🟢 NEW: Slightly fade the card if it's paused
+let cardClass = p.status === 'PAUSED' ? 'product-card opacity-60' : 'product-card';
                 imgs.forEach((img, i) => {
                     let activeClass = i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0';
                     sliderHtml += `<img src="${img}" class="img-layer absolute inset-0 ${activeClass}" id="img-${p.id}-${i}" loading="lazy" onerror="this.src='MC.png'">`;
@@ -692,20 +795,20 @@
             document.getElementById('pp-pkg').innerText = p.pkg || "Export Grade Packaging";
 
             // 🟢 NEW: Disable the RFQ button if the product is Paused!
-            const rfqBtn = document.getElementById('main-rfq-btn');
-            if (p.status === 'PAUSED') {
-                rfqBtn.innerHTML = '<i class="fas fa-pause-circle mr-2"></i> Currently Unavailable';
-                rfqBtn.style.backgroundColor = '#e5e7eb';
-                rfqBtn.style.color = '#6b7280';
-                rfqBtn.style.cursor = 'not-allowed';
-                rfqBtn.onclick = null; // Turns off the click ability entirely!
-            } else {
-                rfqBtn.innerHTML = 'Request Official Quote';
-                rfqBtn.style.backgroundColor = 'var(--void)';
-                rfqBtn.style.color = 'var(--gold)';
-                rfqBtn.style.cursor = 'pointer';
-                rfqBtn.onclick = triggerRFQ; // Turns the click ability back on!
-            }
+const rfqBtn = document.getElementById('main-rfq-btn');
+if (p.status === 'PAUSED') {
+    rfqBtn.innerHTML = '<i class="fas fa-pause-circle mr-2"></i> Currently Unavailable';
+    rfqBtn.style.backgroundColor = '#e5e7eb';
+    rfqBtn.style.color = '#6b7280';
+    rfqBtn.style.cursor = 'not-allowed';
+    rfqBtn.onclick = null; // Turns off the click ability entirely!
+} else {
+    rfqBtn.innerHTML = 'Request Official Quote';
+    rfqBtn.style.backgroundColor = 'var(--void)';
+    rfqBtn.style.color = 'var(--gold)';
+    rfqBtn.style.cursor = 'pointer';
+    rfqBtn.onclick = triggerRFQ; // Turns the click ability back on!
+}
 
             // 🟢 SEAMLESS ALIBABA-STYLE A+ CONTENT DISPLAY
             const catalogContainer = document.getElementById('pp-pdf-container');
@@ -800,7 +903,7 @@
         }
 
         // ==========================================
-        // 🟢 AUTH-PROTECTED RFQ TRIGGER & REDIRECT
+        // 🟢 AUTH-PROTECTED RFQ TRIGGER
         // ==========================================
         function triggerRFQ() {
             if (!currentUser) {
@@ -808,20 +911,115 @@
                 pendingRfqTrigger = true;
                 openAuthModal();
             } else {
-                // Already logged in, go straight to the new RFQ page
+                // Already logged in, go straight to the RFQ
                 openRFQ();
             }
         }
 
         function openRFQ() {
             const p = allProducts.find(x => x.id === currentActiveId);
-            if (!p) return;
+            document.getElementById('rfq-product-id').value = p.id;
+            document.getElementById('rfq-product-name').value = p.name + " (" + p.id + ")";
             
-            // Save the active currency to localStorage so the next page knows what to display
-            localStorage.setItem('muziris_active_currency', activeCurrency);
+            const vContainer = document.getElementById('rfq-variants-container');
+            vContainer.innerHTML = ""; 
             
-            // Redirect to the new dedicated RFQ page with the product ID in the URL
-            window.location.href = `rfq.html?id=${p.id}`;
+            p.variants.forEach((v) => {
+                let varName = v.type === "Standard" ? "Standard" : `${v.type}: ${v.opt}`;
+                let convertedPrice = convertPrice(v.priceCAD);
+                
+                vContainer.innerHTML += `
+                <div class="matrix-row flex-col md:flex-row">
+                    <div class="flex-[2] w-full text-sm">
+                        <strong class="text-gray-900 font-bold">${varName}</strong>
+                        <span class="text-gray-500 text-[11px] mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                    </div>
+                    <div class="flex-1 w-full text-center text-base font-bold font-mono text-[var(--gold-dark)]">
+                        <span class="v-total-display">0.00</span>
+                    </div>
+                    <div class="flex-[1.2] w-full">
+                        <input type="number" step="0.01" class="v-target premium-input matrix-input py-2" placeholder="Target Total">
+                    </div>
+                </div>`;
+            });
+            document.getElementById('rfq-modal').style.display = 'flex';
+        }
+
+        function updateCalculatedTotal(inputElement) {
+            let qty = parseInt(inputElement.value) || 0;
+            let unitPrice = parseFloat(inputElement.getAttribute('data-buyerprice')) || 0;
+            inputElement.closest('.matrix-row').querySelector('.v-total-display').innerText = (qty * unitPrice).toFixed(2);
+        }
+
+        function toggleShippingAddress() {
+            document.getElementById('destination-box').style.display = document.getElementById('rfq-logistics').value === "Muziris Freight" ? "block" : "none";
+        }
+
+        function submitRFQ() {
+            const btn = document.getElementById('btn-submit-rfq');
+            let requestedVariants = [];
+            
+            document.querySelectorAll('.matrix-row').forEach(row => {
+                let qtyInput = row.querySelector('.v-qty');
+                let targetInput = row.querySelector('.v-target');
+                let qty = parseInt(qtyInput.value);
+                
+                if (qty > 0) {
+                   let unitPriceBuyer = parseFloat(qtyInput.getAttribute('data-buyerprice')) || 0;
+                   requestedVariants.push({
+                     variantId: qtyInput.getAttribute('data-vid'),
+                     variantName: qtyInput.getAttribute('data-vname'),
+                     currentPriceBuyer: (qty * unitPriceBuyer).toFixed(2),
+                     quantity: qty,
+                     targetPriceBuyer: targetInput.value ? parseFloat(targetInput.value).toFixed(2) : ""
+                   });
+                }
+            });
+
+            if(requestedVariants.length === 0) return alert("Please enter a quantity for at least one matrix variant.");
+
+            btn.innerHTML = "<i class='fas fa-circle-notch fa-spin mr-2'></i> ENCRYPTING CONTRACT..."; 
+            btn.disabled = true;
+
+            const rfqData = {
+                productId: document.getElementById('rfq-product-id').value,
+                productName: document.getElementById('rfq-product-name').value,
+                requestedVariants: requestedVariants, 
+                customization: "N/A", 
+                sample: "N/A",
+                reqCerts: document.getElementById('req-certs').checked ? "Yes" : "No",
+                reqVideo: document.getElementById('req-video').checked ? "Yes" : "No",
+                reqPhotos: document.getElementById('req-photos').checked ? "Yes" : "No",
+                logistics: document.getElementById('rfq-logistics').value,
+                destination: document.getElementById('rfq-destination').value,
+                company: document.getElementById('rfq-company').value,
+                email: document.getElementById('rfq-email').value,
+                notes: document.getElementById('rfq-notes').value,
+                currency: activeCurrency
+            };
+
+            // 🟢 TRACK RFQ SUBMISSION BEHAVIOR
+            trackBehavior('submit_rfq', rfqData.productId);
+
+            fetch(API_BASE_URL + '/submit-rfq', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: rfqData }) })
+            .then(res => res.json()).then(resp => {
+                if(resp.success) {
+                    document.getElementById('rfq-modal').style.display = 'none';
+                    
+                    // 🟢 FIXED: Opens the beautiful custom modal instead of the ugly browser alert
+                    document.getElementById('success-modal').style.display = 'flex';
+                    
+                    document.getElementById('rfqForm').reset();
+                } else alert("ERROR: " + resp.error);
+                btn.innerHTML = "SUBMIT SOURCING REQUEST"; btn.disabled = false;
+            }).catch(err => { 
+                alert("CONNECTION ERROR."); 
+                btn.innerHTML = "SUBMIT SOURCING REQUEST"; 
+                btn.disabled = false; 
+            });
         }
 
         // ==========================================
@@ -1028,4 +1226,4 @@
         }
     </script>
 </body>
-</html>
+
