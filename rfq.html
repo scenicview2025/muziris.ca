@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muziris | Secure Sourcing Contract</title>
+    <link rel="icon" type="image/png" href="MC.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-dark: #b89225;
+            --gold-light: #fcf9f2;
+            --gold-border: #e8d5a5;
+            --void: #0b0e14;
+            --text-dark: #111827;
+            --border-light: #e5e7eb;
+        }
+
+        body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .brand-font { font-family: 'Cinzel', serif; }
+        .glass-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
+        
+        .btn-solid-gold { background-color: #d1b046; color: #000000; border-radius: 8px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; cursor: pointer;}
+        .btn-solid-gold:hover { background-color: #c2a138; transform: translateY(-1px); }
+        .btn-void-gold { background-color: var(--void); color: var(--gold); border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+        .premium-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid var(--border-light); color: var(--text-dark); border-radius: 8px; outline: none; transition: all 0.2s; font-size: 14px; font-weight: 500; }
+        .premium-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
+        .target-box { background: var(--gold-light); border: 1px solid var(--gold-border); color: var(--gold-dark); font-weight: 600; font-size: 15px; cursor: not-allowed; }
+        
+        .matrix-container { border: 1px solid var(--border-light); border-radius: 12px; padding: 24px; background: #ffffff; }
+        .matrix-header { display: flex; font-size: 10px; color: #9ca3af; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-light); padding-bottom: 16px; margin-bottom: 20px;}
+        .matrix-row { display: flex; align-items: center; gap: 24px; padding: 16px; background: #ffffff; border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 12px; }
+        .matrix-input { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center; font-weight: 500; }
+        
+        .compliance-box { border: 1px solid var(--gold-border); border-radius: 12px; padding: 24px; background: var(--gold-light); }
+        .compliance-title { color: var(--gold-dark); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+        .form-label { display: block; font-size: 11px; color: #6b7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+        
+        .luxury-checkbox { width: 18px; height: 18px; border: 2px solid #d1d5db; border-radius: 4px; appearance: none; outline: none; cursor: pointer; position: relative; transition: 0.2s; background: #fff; margin-top: 2px;}
+        .luxury-checkbox:checked { background-color: var(--gold); border-color: var(--gold); }
+        .luxury-checkbox:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(240, 240, 240, 0.9); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 40px 16px;}
+        .auth-content { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); padding: 40px; position: relative; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <header class="glass-header">
+        <div class="max-w-[1000px] mx-auto px-6 h-20 flex items-center justify-between gap-8">
+            <h1 class="text-2xl font-bold tracking-widest text-black brand-font uppercase cursor-pointer flex-shrink-0" onclick="window.location.href='catalog.html'">Muziris</h1>
+            <button onclick="window.location.href='catalog.html'" class="text-sm font-bold text-gray-500 hover:text-[var(--gold)] transition flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to Catalog
+            </button>
+        </div>
+    </header>
+
+    <div id="loader" class="text-center py-32">
+        <i class="fas fa-circle-notch fa-spin text-4xl text-[var(--gold)] mb-4"></i>
+        <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Building Secure Contract...</h3>
+    </div>
+
+    <main id="rfq-container" class="max-w-[1000px] mx-auto px-4 md:px-6 py-12 hidden">
+        
+        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-8 md:p-12">
+            <div class="text-center mb-10 border-b border-gray-100 pb-8">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-[var(--gold)] mb-4 border border-gray-100 shadow-sm">
+                    <i class="fas fa-file-contract text-xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 uppercase tracking-[0.1em] mb-3 brand-font">Initiate Sourcing Contract</h2>
+                <p class="text-sm text-gray-500 font-medium">Specify your volume requirements and logistics to receive a final landed quote.</p>
+            </div>
+
+            <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-8">
+                <div>
+                    <span class="form-label">Sourcing Target</span>
+                    <input type="text" id="rfq-product-name" class="premium-input target-box" readonly>
+                    <input type="hidden" id="rfq-product-id">
+                </div>
+
+                <div>
+                    <span class="form-label flex items-center gap-1">Volume Configuration & Negotiation <span class="text-red-500">*</span></span>
+                    <div class="matrix-container">
+                        <div class="matrix-header hidden md:flex">
+                            <div class="flex-[2]">Matrix Details</div>
+                            <div class="flex-1 text-center">Req. Qty</div>
+                            <div class="flex-1 text-center">Est. Total</div>
+                            <div class="flex-[1.2] text-center">Target Total <span class="text-[9px] text-gray-400 lowercase normal-case">(Optional)</span></div>
+                        </div>
+                        <div id="rfq-variants-container"></div>
+                    </div>
+                </div>
+
+                <div class="compliance-box p-6">
+                    <div class="compliance-title mb-4">Compliance & Media Evidence</div>
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <label class="flex items-center gap-3 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-certs" value="Yes" class="luxury-checkbox"> Request Factory Certifications
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-video" value="Yes" class="luxury-checkbox"> Request Production Video
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer text-xs font-bold text-gray-700 hover:text-black">
+                            <input type="checkbox" id="req-photos" value="Yes" class="luxury-checkbox"> Request Unedited Photos
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <span class="form-label flex gap-1">Freight Strategy <span class="text-red-500">*</span></span>
+                        <select id="rfq-logistics" onchange="toggleShippingAddress()" class="premium-input cursor-pointer" required>
+                            <option value="">Select Routing...</option>
+                            <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF)</option>
+                            <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB)</option>
+                        </select>
+                    </div>
+                    <div id="destination-box" style="display:none;">
+                        <span class="form-label">Final Destination Hub</span>
+                        <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <span class="form-label flex gap-1">Registered Entity <span class="text-red-500">*</span></span>
+                        <input type="text" id="rfq-company" class="premium-input" placeholder="Company Ltd." required>
+                    </div>
+                    <div>
+                        <span class="form-label flex gap-1">Authorized Email <span class="text-red-500">*</span></span>
+                        <input type="email" id="rfq-email" class="premium-input bg-gray-50 text-gray-500" readonly required>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="form-label">Technical Notes / Addendums / Customizations</span>
+                    <textarea id="rfq-notes" rows="3" class="premium-input" placeholder="Specify pantone colors, dimensions, sample requests, or custom branding requirements..."></textarea>
+                </div>
+
+                <div class="pt-6 border-t border-gray-100">
+                    <button type="submit" id="btn-submit-rfq" class="btn-solid-gold py-4 w-full text-base">
+                        Submit Sourcing Request
+                    </button>
+                    <div class="text-center text-[10px] text-gray-400 mt-4 tracking-[0.1em] uppercase font-bold flex items-center justify-center gap-1.5">
+                        <i class="fas fa-lock text-gray-400"></i> Secured by Muziris Enterprise Architecture
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div id="success-modal" class="modal-overlay" onclick="window.location.href='catalog.html'">
+        <div class="auth-content text-center" onclick="event.stopPropagation()">
+            <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-100">
+                <i class="fas fa-check text-3xl text-green-500"></i>
+            </div>
+            <h2 class="text-xl font-bold text-gray-900 brand-font mb-3 uppercase tracking-[0.1em]">Contract Initiated</h2>
+            <p class="text-sm text-gray-500 mb-8 leading-relaxed">
+                Your sourcing request has been securely transmitted. The factory will review your matrix and contact you shortly with a finalized quotation.
+            </p>
+            <button onclick="window.location.href='catalog.html'" class="btn-void-gold w-full py-4 text-sm">
+                Return to Catalog
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🟢 FIREBASE CONFIG (SAME AS CATALOG)
+        // ==========================================
+        const firebaseConfig = {
+          apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+          authDomain: "muziris-ac9dd.firebaseapp.com",
+          projectId: "muziris-ac9dd",
+          storageBucket: "muziris-ac9dd.firebasestorage.app",
+          messagingSenderId: "929662963272",
+          appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+        };
+        
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const auth = firebase.auth();
+        
+        const API_BASE_URL = "https://muziris-api.onrender.com/api";
+        let targetProduct = null;
+        let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
+        let exchangeRates = {};
+
+        // 1. Check Auth State First
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('rfq-email').value = user.email;
+                initRFQ(); // User is logged in, build the page
+            } else {
+                // Kick them back to the catalog to sign in
+                alert("Security block: You must be signed in to view this contract.");
+                window.location.href = "catalog.html";
+            }
+        });
+
+        // 2. Fetch data and build the matrix
+        async function initRFQ() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            
+            if(!productId) {
+                alert("Invalid contract link.");
+                window.location.href = "catalog.html";
+                return;
+            }
+
+            try {
+                // Fetch Currencies to do the math locally
+                const currRes = await fetch(API_BASE_URL + '/public-currencies');
+                const currData = await currRes.json();
+                if(currData.success) {
+                    currData.currencies.forEach(item => {
+                        exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
+                    });
+                }
+
+                // Fetch Product Data
+                const prodRes = await fetch(API_BASE_URL + '/public-catalog', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({}) 
+                });
+                const prodData = await prodRes.json();
+                
+                targetProduct = prodData.products.find(p => p.id === productId);
+                
+                if(!targetProduct) {
+                    alert("Product no longer available.");
+                    window.location.href = "catalog.html";
+                    return;
+                }
+
+                buildForm();
+
+            } catch (e) {
+                console.error(e);
+                alert("Network error. Please try again.");
+                window.location.href = "catalog.html";
+            }
+        }
+
+        // 3. Render the UI
+        function convertPrice(cadPrice) {
+            if(!cadPrice || isNaN(cadPrice)) return "0.00";
+            if (activeCurrency === "CAD" || !exchangeRates[activeCurrency]) {
+                return parseFloat(cadPrice).toFixed(2);
+            }
+            return (cadPrice / exchangeRates[activeCurrency]).toFixed(2);
+        }
+
+        function buildForm() {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('rfq-container').style.display = 'block';
+
+            document.getElementById('rfq-product-id').value = targetProduct.id;
+            document.getElementById('rfq-product-name').value = targetProduct.name + " (" + targetProduct.id + ")";
+            
+            const vContainer = document.getElementById('rfq-variants-container');
+            vContainer.innerHTML = ""; 
+            
+            targetProduct.variants.forEach((v) => {
+                let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
+                let convertedPrice = convertPrice(v.priceCAD);
+                
+                vContainer.innerHTML += `
+                <div class="matrix-row flex-col md:flex-row">
+                    <div class="flex-[2] w-full text-sm">
+                        <strong class="text-gray-900 font-bold">${varName}</strong>
+                        <span class="text-gray-500 text-[11px] mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                    </div>
+                    <div class="flex-1 w-full text-center text-base font-bold font-mono text-[var(--gold-dark)]">
+                        <span class="v-total-display">0.00</span>
+                    </div>
+                    <div class="flex-[1.2] w-full">
+                        <input type="number" step="0.01" class="v-target premium-input matrix-input py-2" placeholder="Target Total">
+                    </div>
+                </div>`;
+            });
+        }
+
+        // 4. Form Logic Handlers
+        function updateCalculatedTotal(inputElement) {
+            let qty = parseInt(inputElement.value) || 0;
+            let unitPrice = parseFloat(inputElement.getAttribute('data-buyerprice')) || 0;
+            inputElement.closest('.matrix-row').querySelector('.v-total-display').innerText = (qty * unitPrice).toFixed(2);
+        }
+
+        function toggleShippingAddress() {
+            document.getElementById('destination-box').style.display = document.getElementById('rfq-logistics').value === "Muziris Freight" ? "block" : "none";
+        }
+
+        // 5. Submit Pipeline
+        function submitRFQ() {
+            const btn = document.getElementById('btn-submit-rfq');
+            let requestedVariants = [];
+            
+            document.querySelectorAll('.matrix-row').forEach(row => {
+                let qtyInput = row.querySelector('.v-qty');
+                let targetInput = row.querySelector('.v-target');
+                let qty = parseInt(qtyInput.value);
+                
+                if (qty > 0) {
+                   let unitPriceBuyer = parseFloat(qtyInput.getAttribute('data-buyerprice')) || 0;
+                   requestedVariants.push({
+                     variantId: qtyInput.getAttribute('data-vid'),
+                     variantName: qtyInput.getAttribute('data-vname'),
+                     currentPriceBuyer: (qty * unitPriceBuyer).toFixed(2),
+                     quantity: qty,
+                     targetPriceBuyer: targetInput.value ? parseFloat(targetInput.value).toFixed(2) : ""
+                   });
+                }
+            });
+
+            if(requestedVariants.length === 0) return alert("Please enter a quantity for at least one matrix variant.");
+
+            btn.innerHTML = "<i class='fas fa-circle-notch fa-spin mr-2'></i> TRANSMITTING..."; 
+            btn.disabled = true;
+
+            const rfqData = {
+                productId: document.getElementById('rfq-product-id').value,
+                productName: document.getElementById('rfq-product-name').value,
+                requestedVariants: requestedVariants, 
+                customization: "N/A", // Replaced by the notes field logically based on our previous discussion
+                sample: "N/A",        // Replaced by the notes field logically based on our previous discussion
+                reqCerts: document.getElementById('req-certs').checked ? "Yes" : "No",
+                reqVideo: document.getElementById('req-video').checked ? "Yes" : "No",
+                reqPhotos: document.getElementById('req-photos').checked ? "Yes" : "No",
+                logistics: document.getElementById('rfq-logistics').value,
+                destination: document.getElementById('rfq-destination').value,
+                company: document.getElementById('rfq-company').value,
+                email: document.getElementById('rfq-email').value,
+                notes: document.getElementById('rfq-notes').value,
+                currency: activeCurrency
+            };
+
+            // Background telemetry
+            fetch(API_BASE_URL + '/buyer/track', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email: rfqData.email, actionType: 'submit_rfq', targetId: rfqData.productId, duration: 0 })
+            }).catch(() => {});
+
+            fetch(API_BASE_URL + '/submit-rfq', { 
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: rfqData }) 
+            })
+            .then(res => res.json())
+            .then(resp => {
+                if(resp.success) {
+                    document.getElementById('success-modal').style.display = 'flex';
+                } else {
+                    alert("ERROR: " + resp.error);
+                    btn.innerHTML = "Submit Sourcing Request"; 
+                    btn.disabled = false;
+                }
+            }).catch(err => { 
+                alert("CONNECTION ERROR. Please check your network."); 
+                btn.innerHTML = "Submit Sourcing Request"; 
+                btn.disabled = false; 
+            });
+        }
+    </script>
+</body>
+</html>
