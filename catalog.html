@@ -361,8 +361,11 @@
                 }
                 sliderHtml += `</div>`;
 
+                // 🟢 Generate the Amazon-style SEO slug from the product name
+                let safeSlug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
                 grid.innerHTML += `
-                <div class="${cardClass}" onclick="window.location.href='product.html?id=${p.id}'">
+                <div class="${cardClass}" onclick="window.location.href='/dp/${safeSlug}/${p.id}'">
                     <div class="img-container">${sliderHtml}</div>
                     <div class="p-4 flex flex-col flex-1">
                         <p class="text-[9px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1 truncate">${p.category}</p>
