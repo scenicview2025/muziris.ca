@@ -382,9 +382,12 @@
     }
 
     function openRfq(rfqId, status) {
-      if (status === 'Pending Supplier') {
+      // Check against the new database schema status
+      if (status === 'Pending Supplier Quote' || status === 'Pending Supplier') {
         localStorage.setItem('currentActionRfq', rfqId);
-        window.location.href = 'logistics-confirm.html';
+        
+        // 🟢 Redirects the supplier to your beautiful Quotation Portal!
+        window.location.href = 'quotation-portal.html?rfq=' + rfqId; 
       } else {
         alert("This RFQ is currently: " + status + "\n\nYou have already submitted your portion of the contract. Awaiting next steps.");
       }
