@@ -281,10 +281,15 @@
         let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
 
        window.onload = async function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
+            // 🟢 Extract the Product ID from the Amazon-style URL path
+            const pathParts = window.location.pathname.split('/');
+            const productId = pathParts[pathParts.length - 1]; 
             
-            if(!productId) { window.location.href = 'catalog.html'; return; }
+            if(!productId || productId === "product.html") { 
+                window.location.href = '/catalog.html'; 
+                return; 
+            }
+
             try {
                 const currRes = await fetch(API_BASE_URL + '/public-currencies');
                 const currData = await currRes.json();
