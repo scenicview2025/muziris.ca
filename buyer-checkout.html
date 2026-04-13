@@ -52,7 +52,7 @@
     
     .disclaimer-box { background: rgba(41, 128, 185, 0.05); border-left: 4px solid var(--blue); padding: 15px; font-size: 12px; color: var(--text-muted); margin-top: 15px; }
 
-    /* CHECKOUT SUMMARY */
+    /* CHECKOUT SUMMARY & BUTTONS */
     .checkout-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--border-color); }
     .grand-total-label { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
     .grand-total-amount { font-size: 32px; color: var(--green); font-weight: bold; font-family: monospace;}
@@ -60,6 +60,15 @@
     .btn-checkout { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #fff; padding: 18px 40px; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 6px; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
     .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.5); }
     .btn-checkout:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; transform: none; color: #888;}
+
+    /* REVISION BUTTON & MODAL */
+    .btn-secondary { background: transparent; color: var(--text-muted); padding: 18px 25px; font-weight: bold; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; border: 2px solid var(--border-color); cursor: pointer; transition: 0.3s; }
+    .btn-secondary:hover { border-color: var(--text-main); color: var(--text-main); }
+    
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+    .modal-card { background: var(--card-bg); width: 100%; max-width: 500px; border-radius: 12px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    .modal-card textarea { width: 100%; padding: 15px; border: 1px solid var(--border-color); border-radius: 6px; margin-top: 15px; font-family: 'Lato', sans-serif; resize: vertical; box-sizing: border-box; }
+    .modal-card textarea:focus { outline: none; border-color: var(--gold); }
 
     .escrow-badge { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
@@ -159,7 +168,8 @@
         <div class="grand-total-label">Total Selected for Funding</div>
         <div class="grand-total-amount" id="ui-grand-total">$0.00 <span style="font-size:16px; color:var(--text-muted);">CAD</span></div>
       </div>
-      <div>
+      <div style="display: flex; gap: 15px;">
+        <button class="btn-secondary" onclick="document.getElementById('negotiate-modal').style.display='flex'">REQUEST REVISION</button>
         <button class="btn-checkout" id="btn-submit" onclick="processCheckout()">AUTHORIZE & FUND ESCROW</button>
       </div>
     </div>
@@ -169,6 +179,23 @@
       <span><strong>Protected by Muziris Escrow.</strong> Funds are secured in a Canadian Vault and not released to the factory until shipment verification.</span>
     </div>
 
+  </div>
+
+  <div class="modal-overlay" id="negotiate-modal">
+      <div class="modal-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px;">
+              <h3 style="margin: 0; color: var(--text-main); font-family: 'Cinzel', serif;">Request Contract Revision</h3>
+              <span style="cursor: pointer; font-size: 20px; color: var(--text-muted);" onclick="document.getElementById('negotiate-modal').style.display='none'">✖</span>
+          </div>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+              Is the freight higher than expected? Do you need a better unit price? Send your target requirements to your Muziris Account Manager, and we will renegotiate with the supplier and logistics team on your behalf.
+          </p>
+          <textarea id="revision-message" rows="4" placeholder="Example: The sea freight is too high. Can we get it under $1,200 CAD? Or, I need the unit price to be closer to $40..."></textarea>
+          
+          <button onclick="submitRevision()" style="width: 100%; background: var(--text-main); color: #fff; padding: 15px; border: none; border-radius: 6px; margin-top: 20px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
+              Submit to Muziris Agent
+          </button>
+      </div>
   </div>
 
   <script>
@@ -304,9 +331,41 @@
 
         document.getElementById('ui-grand-total').innerHTML = "$" + total.toFixed(2) + ` <span style="font-size:16px; color:var(--text-muted);">CAD</span>`;
 
-        // 🟢 FIX: Disable button if nothing is selected OR agreement is not checked
+        // Disable button if nothing is selected OR agreement is not checked
         const isAgreed = document.getElementById('chk-agreement') ? document.getElementById('chk-agreement').checked : false;
         document.getElementById('btn-submit').disabled = (total === 0 || !isAgreed);
+    }
+
+    function submitRevision() {
+        const msg = document.getElementById('revision-message').value;
+        if (!msg) return alert("Please type your revision request.");
+
+        const btn = document.querySelector('#negotiate-modal button');
+        btn.innerText = "SENDING TO AGENT...";
+        btn.disabled = true;
+
+        fetch(API_BASE_URL + '/checkout/request-revision', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rfqId: rfqId, message: msg })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                document.getElementById('main-content').innerHTML = `
+                    <div style="text-align:center; padding: 50px;">
+                        <h2 style="color:var(--blue); font-size: 28px;">REVISION SUBMITTED</h2>
+                        <p style="color:var(--text-main); font-size: 16px; line-height: 1.6;">Your Muziris Account Manager has received your request and is currently renegotiating the terms with the global supplier and logistics network.</p>
+                        <p style="color:var(--text-muted); font-size:14px; margin-top: 20px;">You will receive an email as soon as the updated contract is ready for your review.</p>
+                    </div>
+                `;
+                document.getElementById('negotiate-modal').style.display = 'none';
+            } else {
+                alert("Error: " + data.error);
+                btn.innerText = "Submit to Muziris Agent";
+                btn.disabled = false;
+            }
+        });
     }
 
     function processCheckout() {
@@ -330,7 +389,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             rfqId: rfqId,
-            fundedModules: fundedModules // Passing this to the backend
+            fundedModules: fundedModules
         })
       })
       .then(res => res.json())
