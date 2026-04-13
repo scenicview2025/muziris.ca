@@ -304,8 +304,9 @@
 
         document.getElementById('ui-grand-total').innerHTML = "$" + total.toFixed(2) + ` <span style="font-size:16px; color:var(--text-muted);">CAD</span>`;
 
-        // Disable button if nothing is selected
-        document.getElementById('btn-submit').disabled = (total === 0);
+        // 🟢 FIX: Disable button if nothing is selected OR agreement is not checked
+        const isAgreed = document.getElementById('chk-agreement') ? document.getElementById('chk-agreement').checked : false;
+        document.getElementById('btn-submit').disabled = (total === 0 || !isAgreed);
     }
 
     function processCheckout() {
