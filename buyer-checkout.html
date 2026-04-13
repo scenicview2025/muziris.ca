@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Secure Trade Checkout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --green: #4CAF50; }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    header { background: rgba(11, 14, 20, 0.95); padding: 20px; text-align: center; border-bottom: 1px solid var(--gold); }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
+    
+    .container { max-width: 900px; margin: 40px auto; background: var(--slate); padding: 40px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    h2 { color: #fff; font-family: 'Cinzel', serif; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; text-align: center; }
+    
+    .header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; font-size: 13px; line-height: 1.8; }
+    .header-box { background: #0b0e14; padding: 15px; border-radius: 6px; border: 1px solid #333; }
+    .header-box strong { color: var(--gold); display: inline-block; width: 120px; }
+
+    table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px; }
+    th { background: #0b0e14; color: var(--gold); padding: 15px; text-align: left; border-bottom: 2px solid var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+    td { padding: 15px; border-bottom: 1px solid #333; }
+    .text-right { text-align: right; }
+    
+    .totals-box { width: 350px; margin-left: auto; background: #0b0e14; padding: 20px; border-radius: 6px; border: 1px solid #333; }
+    .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+    .grand-total { font-size: 22px; color: var(--green); font-weight: bold; margin-top: 15px; padding-top: 15px; border-top: 1px solid #444; }
+
+    .escrow-badge { display: flex; align-items: center; gap: 15px; background: rgba(212,175,55,0.05); border: 1px solid rgba(212,175,55,0.3); padding: 20px; border-radius: 6px; margin: 30px 0; }
+    .escrow-badge span { font-size: 24px; }
+    .escrow-text { font-size: 12px; color: #aaa; line-height: 1.6; }
+    .escrow-text strong { color: var(--gold); }
+
+    .btn-checkout { display: block; width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; text-align: center; padding: 20px; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; }
+    .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
+    
+    #loading { text-align: center; padding: 100px; color: var(--gold); font-size: 18px; letter-spacing: 2px; font-family: 'Cinzel', serif; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="brand">Muziris</h1>
+    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Secure Escrow Vault</div>
+  </header>
+
+  <div id="loading">RETRIEVING SECURE CONTRACT...</div>
+
+  <div class="container" id="main-content" style="display:none;">
+    <h2>COMMERCIAL SOURCING CONTRACT</h2>
+    
+    <div class="header-grid">
+      <div class="header-box">
+        <strong>Contract ID:</strong> <span id="ui-rfq" style="color:#fff;"></span><br>
+        <strong>Issue Date:</strong> <span id="ui-date" style="color:#fff;"></span><br>
+        <strong>Status:</strong> <span style="color:var(--green); font-weight:bold;">Approved for Funding</span>
+      </div>
+      <div class="header-box">
+        <strong>Billed To:</strong> <span id="ui-company" style="color:#fff;"></span><br>
+        <strong>Destination:</strong> <span id="ui-dest" style="color:#fff;"></span><br>
+        <strong>Incoterms:</strong> <span id="ui-logistics" style="color:#fff;"></span>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th class="text-right">Qty</th>
+          <th class="text-right">Unit Price (CAD)</th>
+          <th class="text-right">Total (CAD)</th>
+        </tr>
+      </thead>
+      <tbody id="invoice-items">
+        </tbody>
+    </table>
+
+    <div class="totals-box">
+      <div class="total-row">
+        <span style="color:#aaa;">Product Subtotal:</span>
+        <strong id="ui-subtotal">$0.00</strong>
+      </div>
+      <div class="total-row">
+        <span style="color:#aaa;">Customs/Sample Fees:</span>
+        <strong id="ui-fees">$0.00</strong>
+      </div>
+      <div class="total-row">
+        <span style="color:#aaa;">Logistics & Freight:</span>
+        <strong id="ui-freight">$0.00</strong>
+      </div>
+      <div class="total-row grand-total">
+        <span>TOTAL DUE:</span>
+        <span id="ui-grand-total">$0.00</span>
+      </div>
+    </div>
+
+    <div class="escrow-badge">
+      <span>🛡️</span>
+      <div class="escrow-text">
+        <strong>Muziris Vault Protection Active</strong><br>
+        Your funds will be held in our secure Canadian escrow account. They will not be released to the manufacturing factory until the goods have been produced, shipped, and received at your final destination according to the specifications above.
+      </div>
+    </div>
+
+    <form onsubmit="event.preventDefault(); processCheckout();">
+      <button type="submit" class="btn-checkout" id="btn-submit">AUTHORIZE & FUND ESCROW</button>
+    </form>
+
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    const urlParams = new URLSearchParams(window.location.search);
+    const rfqId = urlParams.get('rfq');
+
+    let grandTotalGlobal = 0;
+
+    if (!rfqId) {
+      document.getElementById('loading').innerText = "INVALID CONTRACT LINK.";
+    } else {
+      fetch(API_BASE_URL + '/get-rfq/' + rfqId)
+        .then(res => res.json())
+        .then(data => {
+          if(data.error || data.status !== 'Quote Sent') {
+            document.getElementById('loading').innerText = "CONTRACT EXPIRED OR NOT READY FOR FUNDING.";
+            return;
+          }
+          
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('main-content').style.display = 'block';
+
+          // Set Header Details
+          document.getElementById('ui-rfq').innerText = data.rfq_id;
+          document.getElementById('ui-date').innerText = new Date().toLocaleDateString();
+          document.getElementById('ui-company').innerText = data.buyer_company;
+          document.getElementById('ui-dest').innerText = data.destination;
+          document.getElementById('ui-logistics').innerText = data.logistics;
+
+          // Parse JSON Data safely
+          let variants = [];
+          let quote = {};
+          try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
+          try { quote = typeof data.supplier_quote === 'string' ? JSON.parse(data.supplier_quote) : data.supplier_quote; } catch(e){}
+
+          const finalItems = quote.finalQuoteItems || [];
+          const totals = quote.calculatedBuyerTotals || {};
+          const freight = quote.freightData || {};
+
+          let itemsHtml = '';
+          
+          // 1. Build Product Rows
+          variants.forEach(v => {
+             let match = finalItems.find(f => f.variantId === v.variantId) || {};
+             let rowTotal = parseFloat(match.finalBuyerPrice || 0);
+             let qty = parseInt(v.quantity || 1);
+             let unitPrice = rowTotal / qty;
+
+             itemsHtml += `
+               <tr>
+                 <td>
+                   <strong style="color:#fff;">${data.product_name}</strong><br>
+                   <span style="font-size:12px; color:#888;">Variant: ${v.variantName}</span>
+                 </td>
+                 <td class="text-right">${qty}</td>
+                 <td class="text-right">$${unitPrice.toFixed(2)}</td>
+                 <td class="text-right" style="color:#fff; font-weight:bold;">$${rowTotal.toFixed(2)}</td>
+               </tr>
+             `;
+          });
+
+          // 2. Build Extra Fees Row (If Any)
+          let customFee = parseFloat(totals.finalCustomizationBuyer || 0);
+          let sampleFee = parseFloat(totals.finalSampleBuyer || 0);
+          let extraFeesTotal = customFee + sampleFee;
+
+          if (extraFeesTotal > 0) {
+             itemsHtml += `
+               <tr>
+                 <td>
+                   <strong style="color:#fff;">Additional Services</strong><br>
+                   <span style="font-size:12px; color:#888;">Prototyping, Molds, or Custom Branding</span>
+                 </td>
+                 <td class="text-right">1</td>
+                 <td class="text-right">$${extraFeesTotal.toFixed(2)}</td>
+                 <td class="text-right" style="color:#fff; font-weight:bold;">$${extraFeesTotal.toFixed(2)}</td>
+               </tr>
+             `;
+          }
+
+          // 3. Build Freight Row
+          let freightCost = parseFloat(freight.finalFreightBuyer || 0);
+          itemsHtml += `
+             <tr>
+               <td>
+                 <strong style="color:#fff;">Muziris Logistics Route</strong><br>
+                 <span style="font-size:12px; color:#888;">Carrier: ${freight.shipCarrier || 'Assigned Carrier'} | Est. Transit: ${freight.transitTime || 'TBD'} Days</span>
+               </td>
+               <td class="text-right">1</td>
+               <td class="text-right">$${freightCost.toFixed(2)}</td>
+               <td class="text-right" style="color:#fff; font-weight:bold;">$${freightCost.toFixed(2)}</td>
+             </tr>
+          `;
+
+          document.getElementById('invoice-items').innerHTML = itemsHtml;
+
+          // Set Summary Box
+          let prodSubtotal = parseFloat(totals.productTotalBuyer || 0);
+          grandTotalGlobal = prodSubtotal + extraFeesTotal + freightCost;
+
+          document.getElementById('ui-subtotal').innerText = "$" + prodSubtotal.toFixed(2);
+          document.getElementById('ui-fees').innerText = "$" + extraFeesTotal.toFixed(2);
+          document.getElementById('ui-freight').innerText = "$" + freightCost.toFixed(2);
+          document.getElementById('ui-grand-total').innerText = "$" + grandTotalGlobal.toFixed(2) + " CAD";
+
+        }).catch(err => { document.getElementById('loading').innerText = "SERVER CONNECTION FAILED."; });
+    }
+
+    function processCheckout() {
+      const btn = document.getElementById('btn-submit');
+      btn.innerText = "PROCESSING SECURE PAYMENT...";
+      btn.disabled = true;
+
+      // Call backend to lock the funds and create the shipment
+      fetch(API_BASE_URL + '/checkout/fund-escrow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rfqId: rfqId })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) {
+          document.getElementById('main-content').innerHTML = `
+            <div style="text-align:center; padding: 50px;">
+              <h2 style="color:var(--green);">✓ FUNDS SECURED IN ESCROW</h2>
+              <p style="color:#ccc; font-size: 16px; line-height: 1.6;">Your contract is now fully active. The factory has been notified to begin production immediately.</p>
+              <div style="background:#151922; border:1px solid #333; padding: 20px; border-radius:6px; margin: 30px auto; max-width: 400px;">
+                <div style="font-size:12px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Official Tracking Number</div>
+                <strong style="color:var(--gold); font-size:24px; font-family:monospace;">${data.shipmentId}</strong>
+              </div>
+              <p style="color:#aaa; font-size:13px;">You can monitor the status of this order anytime from your Buyer Dashboard.</p>
+            </div>
+          `;
+        } else {
+          alert("Payment Error: " + data.error);
+          btn.innerText = "AUTHORIZE & FUND ESCROW";
+          btn.disabled = false;
+        }
+      });
+    }
+  </script>
+</body>
+</html>
