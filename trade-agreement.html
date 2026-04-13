@@ -6,74 +6,76 @@
     <title>Muziris | Official Trade Agreement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0b0e14; color: #e0e0e0; font-family: 'Inter', sans-serif; }
+        body { background-color: #f4f6f8; color: #2c3e50; font-family: 'Lato', sans-serif; }
         .gold-border { border: 1px solid #D4AF37; }
         .gold-text { color: #D4AF37; }
         .gold-bg { background-color: #D4AF37; }
-        .legal-text { font-family: 'Georgia', serif; line-height: 1.8; color: #aaa; }
-        .contract-paper { background: #151922; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .legal-text { font-family: 'Georgia', serif; line-height: 1.8; color: #555; }
+        .contract-paper { background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e0e6ed; }
+        .brand-font { font-family: 'Cinzel', serif; }
     </style>
 </head>
 <body class="p-4 md:p-10 flex justify-center items-center min-h-screen">
 
-    <div class="max-w-4xl w-full contract-paper border border-gray-800 rounded-lg overflow-hidden relative">
+    <div class="max-w-4xl w-full contract-paper rounded-xl overflow-hidden relative">
         
-        <div class="absolute inset-0 flex justify-center items-center opacity-5 pointer-events-none">
-            <h1 class="text-9xl font-bold tracking-widest text-white transform -rotate-45 font-serif">MUZIRIS</h1>
+        <div class="absolute inset-0 flex justify-center items-center opacity-[0.03] pointer-events-none">
+            <h1 class="text-9xl font-bold tracking-widest text-gray-900 transform -rotate-45 brand-font">MUZIRIS</h1>
         </div>
 
         <div class="relative z-10">
-            <div class="bg-[#0b0e14] p-8 border-b border-gray-800 flex justify-between items-center">
+            <div class="bg-[#fafbfc] p-8 border-b border-gray-200 flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-bold tracking-widest text-white font-serif mb-1">MUZIRIS <span class="gold-text">SMART CONTRACT</span></h1>
+                    <h1 class="text-2xl font-bold tracking-widest text-gray-900 brand-font mb-1">MUZIRIS <span class="gold-text">SMART CONTRACT</span></h1>
                     <p class="text-xs text-gray-500 uppercase tracking-widest">Binding Mutual Agreement</p>
                 </div>
                 <div class="text-right">
                     <p class="text-xs text-gray-500 uppercase mb-1">Contract Reference</p>
                     <p class="font-mono text-sm gold-text font-bold" id="contract-id">AGR-LOADING...</p>
-                    <p class="text-[10px] text-gray-600 mt-1" id="contract-date"></p>
+                    <p class="text-[11px] text-gray-500 mt-1 font-bold" id="contract-date"></p>
                 </div>
             </div>
 
             <div class="p-8 space-y-8">
                 
-                <div class="grid grid-cols-2 gap-8 text-sm border-b border-gray-800 pb-8">
-                    <div>
-                        <h3 class="text-gray-500 uppercase tracking-widest text-xs mb-3">Supplier (The Seller)</h3>
-                        <p class="font-bold text-white text-lg" id="sup-name">Loading...</p>
-                        <p class="font-mono text-gray-400 mt-1 text-xs">ID: <span id="sup-id">---</span></p>
+                <div class="grid grid-cols-2 gap-8 text-sm border-b border-gray-200 pb-8">
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-100">
+                        <h3 class="text-gray-500 uppercase tracking-widest text-[10px] font-bold mb-3">Supplier (The Seller)</h3>
+                        <p class="font-bold text-gray-900 text-lg" id="sup-name">Loading...</p>
+                        <p class="font-mono text-gray-500 mt-1 text-xs">ID: <span id="sup-id">---</span></p>
                     </div>
-                    <div>
-                        <h3 class="text-gray-500 uppercase tracking-widest text-xs mb-3">Buyer (The Purchaser)</h3>
-                        <p class="font-bold text-white text-lg" id="buy-name">Loading...</p>
-                        <p class="font-mono text-gray-400 mt-1 text-xs">ID: <span id="buy-email">---</span></p>
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-100">
+                        <h3 class="text-gray-500 uppercase tracking-widest text-[10px] font-bold mb-3">Buyer (The Purchaser)</h3>
+                        <p class="font-bold text-gray-900 text-lg" id="buy-name">Loading...</p>
+                        <p class="font-mono text-gray-500 mt-1 text-xs">ID: <span id="buy-email">---</span></p>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="gold-text uppercase tracking-widest text-xs font-bold mb-4 border-l-2 border-[#D4AF37] pl-3">Order Schedule</h3>
-                    <div class="bg-[#0b0e14] border border-gray-800 rounded p-4 flex gap-6 items-center">
-                        <img id="prod-img" src="https://via.placeholder.com/100" class="w-20 h-20 object-contain bg-white rounded p-1">
+                    <h3 class="gold-text uppercase tracking-widest text-[11px] font-bold mb-4 border-l-2 border-[#D4AF37] pl-3">Order Schedule</h3>
+                    <div class="bg-white border border-gray-200 shadow-sm rounded-lg p-4 flex gap-6 items-center">
+                        <img id="prod-img" src="https://via.placeholder.com/100" class="w-20 h-20 object-contain bg-gray-50 border border-gray-100 rounded p-1">
                         <div class="flex-1">
-                            <p class="text-white font-bold text-lg mb-1" id="prod-name">Loading Product...</p>
+                            <p class="text-gray-900 font-bold text-lg mb-1" id="prod-name">Loading Product...</p>
                             <p class="text-xs text-gray-500 font-mono">Product ID: <span id="prod-id">---</span></p>
                         </div>
                         <div class="text-right pr-4">
-                            <p class="text-xs text-gray-500 uppercase mb-1">Agreed Quantity</p>
-                            <p class="text-xl font-bold text-white" id="order-qty">---</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Agreed Quantity</p>
+                            <p class="text-xl font-bold text-gray-800" id="order-qty">---</p>
                         </div>
-                        <div class="text-right border-l border-gray-800 pl-6">
-                            <p class="text-xs text-gray-500 uppercase mb-1">Contract Total</p>
-                            <p class="text-2xl font-bold gold-text" id="order-total">---</p>
-                            <p class="text-[10px] text-gray-500 uppercase mt-1">Excluding Final Freight</p>
+                        <div class="text-right border-l border-gray-200 pl-6 bg-gray-50 p-3 rounded">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Product & Services Total</p>
+                            <p class="text-2xl font-bold text-[#27ae60]" id="order-total">---</p>
+                            <p class="text-[9px] text-gray-500 uppercase mt-1 font-bold">Excludes Variable Freight</p>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="text-red-400 uppercase tracking-widest text-xs font-bold mb-4 border-l-2 border-red-400 pl-3">Muziris Escrow & Governance Terms</h3>
-                    <div class="bg-red-900/10 border border-red-500/20 rounded p-6 legal-text text-sm space-y-4">
+                    <h3 class="text-blue-600 uppercase tracking-widest text-[11px] font-bold mb-4 border-l-2 border-blue-600 pl-3">Muziris Escrow & Governance Terms</h3>
+                    <div class="bg-blue-50 border border-blue-100 rounded-lg p-6 legal-text text-[13px] space-y-4">
                         <p><strong>1. Role of Muziris International:</strong> Muziris acts strictly as an independent escrow agent and compliance facilitator. We do not own the inventory. By signing this agreement, both parties consent to Muziris holding the total contract value in a neutral trust account until delivery conditions are met.</p>
                         
                         <p><strong>2. The 7-Day Payment Release:</strong> Funds shall remain locked in the Muziris Vault while goods are in transit. Upon confirmed arrival at the destination port/facility, the Buyer has exactly seven (7) calendar days to inspect the goods. If no formal dispute is logged within this window, funds are automatically and irreversibly released to the Supplier.</p>
@@ -84,18 +86,10 @@
                     </div>
                 </div>
 
-                <div class="bg-[#0b0e14] p-6 border border-gray-800 rounded mt-8">
-                    <label class="flex items-start gap-4 cursor-pointer">
-                        <input type="checkbox" id="digital-signature" class="mt-1 w-5 h-5 accent-[#D4AF37]">
-                        <span class="text-sm text-gray-300">
-                            I, the Buyer, have read, understood, and agree to the <strong>Order Schedule</strong> and the <strong>Muziris Governance Terms</strong>. I authorize Muziris to act as the escrow agent for this transaction. I understand that proceeding will take me to the secure vault to lock these funds.
-                        </span>
-                    </label>
+                <div class="text-center mt-10 pt-6 border-t border-gray-200">
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">This is a secure legal document.</p>
+                    <p class="text-sm text-gray-500">You may close this window and return to the Checkout Page to provide your digital signature and fund the Escrow Vault.</p>
                 </div>
-
-                <button onclick="proceedToCheckout()" id="sign-btn" class="w-full bg-gray-800 text-gray-500 font-bold py-4 rounded uppercase tracking-widest transition duration-300 cursor-not-allowed" disabled>
-                    Digitally Sign & Proceed to Vault
-                </button>
 
             </div>
         </div>
@@ -107,20 +101,6 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const rfqId = urlParams.get('rfq');
-
-        // Enable button only when checked
-        document.getElementById('digital-signature').addEventListener('change', function(e) {
-            const btn = document.getElementById('sign-btn');
-            if (e.target.checked) {
-                btn.disabled = false;
-                btn.classList.remove('bg-gray-800', 'text-gray-500', 'cursor-not-allowed');
-                btn.classList.add('gold-bg', 'text-black', 'hover:bg-yellow-600');
-            } else {
-                btn.disabled = true;
-                btn.classList.add('bg-gray-800', 'text-gray-500', 'cursor-not-allowed');
-                btn.classList.remove('gold-bg', 'text-black', 'hover:bg-yellow-600');
-            }
-        });
 
         async function loadAgreementData() {
             if (!rfqId) {
@@ -142,21 +122,30 @@
                 document.getElementById('prod-name').innerText = data.product_name;
                 document.getElementById('prod-id').innerText = data.product_id;
 
-                // We need to fetch the supplier name and product image separately based on the IDs
+                // Fetch supplier/product images
                 fetchSupplierAndProductDetails(data.supplier_id, data.product_id);
 
-                // Parse the requested variants to get the agreed qty and price
+                // Safely parse the exact CAD totals generated by the Admin
+                let quote = {};
+                try { quote = typeof data.supplier_quote === 'string' ? JSON.parse(data.supplier_quote) : data.supplier_quote; } catch(e){}
+                
+                const totals = quote.calculatedBuyerTotals || {};
+                let prodTotal = parseFloat(totals.productTotalBuyer || 0);
+                let custTotal = parseFloat(totals.finalCustomizationBuyer || 0);
+                let sampTotal = parseFloat(totals.finalSampleBuyer || 0);
+                
+                // Final Contract Value (Excluding Freight)
+                let contractTotalCAD = prodTotal + custTotal + sampTotal;
+
+                // Grab the variant quantity for display
                 let variants = [];
                 try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
-                
                 if(variants && variants.length > 0) {
-                    const v = variants[0]; // Assuming the express invoice uses the first variant slot
-                    document.getElementById('order-qty').innerText = `${v.quantity} Units`;
-                    
-                    // Show the supplier's final offer if it exists, otherwise the buyer's target
-                    let displayTotal = v.supplierStandardTotal || v.targetPriceBuyer || "0.00";
-                    document.getElementById('order-total').innerText = `${parseFloat(displayTotal).toLocaleString()} ${data.currency}`;
+                    document.getElementById('order-qty').innerText = `${variants[0].quantity} Units`;
                 }
+
+                // Display the correct math!
+                document.getElementById('order-total').innerText = contractTotalCAD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " CAD";
 
             } catch (err) {
                 console.error(err);
@@ -166,7 +155,6 @@
 
         async function fetchSupplierAndProductDetails(supplierId, productId) {
             try {
-                // Fetch product details for the image
                 const pRes = await fetch('https://muziris-api.onrender.com/api/get-product-details', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -177,7 +165,6 @@
                     document.getElementById('prod-img').src = pData.hero_img;
                 }
 
-                // Fetch supplier details
                 const sRes = await fetch('https://muziris-api.onrender.com/api/get-supplier-profile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -188,13 +175,7 @@
                     document.getElementById('sup-name').innerText = sData.company_name;
                     document.getElementById('sup-id').innerText = sData.supplier_id;
                 }
-
             } catch(e) { console.error("Secondary fetch failed", e); }
-        }
-
-        function proceedToCheckout() {
-            // Because they signed the agreement, we securely forward them to the vault to pay.
-            window.location.href = `buyer-checkout.html?rfq=${rfqId}`;
         }
 
         // Initialize
