@@ -145,6 +145,15 @@
       </div>
     </div>
 
+    <div style="background: rgba(212, 175, 55, 0.05); border: 1px solid var(--gold); padding: 20px; border-radius: 8px; margin-top: 30px;">
+      <label style="display: flex; align-items: flex-start; gap: 15px; cursor: pointer; margin: 0;">
+        <input type="checkbox" id="chk-agreement" onchange="calculateTotal()" style="width: 24px; height: 24px; accent-color: var(--gold); margin-top: 2px;">
+        <span style="font-size: 14px; color: var(--text-main); line-height: 1.6;">
+          I digitally sign and agree to the <a href="#" onclick="window.open('trade-agreement.html?rfq=' + rfqId, '_blank')" style="color: var(--blue); font-weight: bold; text-decoration: none;">Muziris Official Trade Agreement</a> & Escrow Governance Terms. I understand that funding this escrow locks the foreign exchange rate and initiates production.
+        </span>
+      </label>
+    </div>
+
     <div class="checkout-footer">
       <div>
         <div class="grand-total-label">Total Selected for Funding</div>
