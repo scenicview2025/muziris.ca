@@ -3,38 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muziris | Secure Trade Checkout</title>
+  <title>Muziris | Secure Buyer Checkout</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --green: #4CAF50; }
-    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
-    header { background: rgba(11, 14, 20, 0.95); padding: 20px; text-align: center; border-bottom: 1px solid var(--gold); }
-    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
+    :root { 
+        --gold: #D4AF37; 
+        --bronze: #b89225; 
+        --bg-light: #f4f6f8; 
+        --card-bg: #ffffff; 
+        --text-main: #2c3e50; 
+        --text-muted: #7f8c8d; 
+        --border-color: #e0e6ed;
+        --green: #27ae60;
+        --blue: #2980b9;
+    }
     
-    .container { max-width: 900px; margin: 40px auto; background: var(--slate); padding: 40px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-    h2 { color: #fff; font-family: 'Cinzel', serif; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; text-align: center; }
+    body { background-color: var(--bg-light); color: var(--text-main); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    
+    /* LIGHT THEME HEADER */
+    header { background: var(--card-bg); padding: 20px; text-align: center; border-bottom: 2px solid var(--gold); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .brand { font-family: 'Cinzel', serif; color: var(--text-main); font-size: 28px; letter-spacing: 3px; margin: 0; text-transform: uppercase; font-weight: bold;}
+    
+    .container { max-width: 900px; margin: 40px auto; background: var(--card-bg); padding: 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    h2 { color: var(--text-main); font-family: 'Cinzel', serif; margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; text-align: center; }
     
     .header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; font-size: 13px; line-height: 1.8; }
-    .header-box { background: #0b0e14; padding: 15px; border-radius: 6px; border: 1px solid #333; }
-    .header-box strong { color: var(--gold); display: inline-block; width: 120px; }
+    .header-box { background: #fafbfc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); }
+    .header-box strong { color: var(--text-muted); display: inline-block; width: 120px; }
 
-    table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px; }
-    th { background: #0b0e14; color: var(--gold); padding: 15px; text-align: left; border-bottom: 2px solid var(--gold); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
-    td { padding: 15px; border-bottom: 1px solid #333; }
+    /* MODULAR CHECKOUT CARDS */
+    .module-card { border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; overflow: hidden; transition: 0.3s; }
+    .module-card.selected { border-color: var(--gold); box-shadow: 0 4px 15px rgba(212,175,55,0.15); }
+    
+    .module-header { background: #fafbfc; padding: 15px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
+    .module-header h3 { margin: 0; font-size: 16px; color: var(--text-main); flex: 1; }
+    .module-header .module-price { font-weight: bold; font-size: 18px; color: var(--text-main); }
+    
+    /* CUSTOM CHECKBOX */
+    input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--gold); cursor: pointer; }
+
+    .module-body { padding: 20px; font-size: 13px; }
+    
+    /* TABLES INSIDE MODULES */
+    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 13px; }
+    th { color: var(--text-muted); padding: 10px 5px; text-align: left; border-bottom: 2px solid var(--border-color); text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+    td { padding: 12px 5px; border-bottom: 1px solid #f0f0f0; }
     .text-right { text-align: right; }
     
-    .totals-box { width: 350px; margin-left: auto; background: #0b0e14; padding: 20px; border-radius: 6px; border: 1px solid #333; }
-    .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-    .grand-total { font-size: 22px; color: var(--green); font-weight: bold; margin-top: 15px; padding-top: 15px; border-top: 1px solid #444; }
+    .disclaimer-box { background: rgba(41, 128, 185, 0.05); border-left: 4px solid var(--blue); padding: 15px; font-size: 12px; color: var(--text-muted); margin-top: 15px; }
 
-    .escrow-badge { display: flex; align-items: center; gap: 15px; background: rgba(212,175,55,0.05); border: 1px solid rgba(212,175,55,0.3); padding: 20px; border-radius: 6px; margin: 30px 0; }
-    .escrow-badge span { font-size: 24px; }
-    .escrow-text { font-size: 12px; color: #aaa; line-height: 1.6; }
-    .escrow-text strong { color: var(--gold); }
-
-    .btn-checkout { display: block; width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; text-align: center; padding: 20px; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; }
-    .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
+    /* CHECKOUT SUMMARY */
+    .checkout-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--border-color); }
+    .grand-total-label { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+    .grand-total-amount { font-size: 32px; color: var(--green); font-weight: bold; font-family: monospace;}
     
+    .btn-checkout { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #fff; padding: 18px 40px; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 6px; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+    .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.5); }
+    .btn-checkout:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; transform: none; color: #888;}
+
+    .escrow-badge { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
     #loading { text-align: center; padding: 100px; color: var(--gold); font-size: 18px; letter-spacing: 2px; font-family: 'Cinzel', serif; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
   </style>
@@ -42,8 +70,8 @@
 <body>
 
   <header>
-    <h1 class="brand">Muziris</h1>
-    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Secure Escrow Vault</div>
+    <h1 class="brand">Muziris <span style="color:var(--gold);">|</span> Checkout</h1>
+    <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 2px; margin-top: 5px;">Secure Trade Escrow</div>
   </header>
 
   <div id="loading">RETRIEVING SECURE CONTRACT...</div>
@@ -53,60 +81,84 @@
     
     <div class="header-grid">
       <div class="header-box">
-        <strong>Contract ID:</strong> <span id="ui-rfq" style="color:#fff;"></span><br>
-        <strong>Issue Date:</strong> <span id="ui-date" style="color:#fff;"></span><br>
+        <strong>Contract ID:</strong> <span id="ui-rfq" style="color:var(--text-main); font-weight:bold;"></span><br>
+        <strong>Issue Date:</strong> <span id="ui-date" style="color:var(--text-main);"></span><br>
         <strong>Status:</strong> <span style="color:var(--green); font-weight:bold;">Approved for Funding</span>
       </div>
       <div class="header-box">
-        <strong>Billed To:</strong> <span id="ui-company" style="color:#fff;"></span><br>
-        <strong>Destination:</strong> <span id="ui-dest" style="color:#fff;"></span><br>
-        <strong>Incoterms:</strong> <span id="ui-logistics" style="color:#fff;"></span>
+        <strong>Billed To:</strong> <span id="ui-company" style="color:var(--text-main);"></span><br>
+        <strong>Destination:</strong> <span id="ui-dest" style="color:var(--text-main);"></span><br>
+        <strong>Logistics Plan:</strong> <span id="ui-logistics" style="color:var(--text-main);"></span>
       </div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th class="text-right">Qty</th>
-          <th class="text-right">Unit Price (CAD)</th>
-          <th class="text-right">Total (CAD)</th>
-        </tr>
-      </thead>
-      <tbody id="invoice-items">
-        </tbody>
-    </table>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom: 20px;">
+      Please select the modules you wish to fund today. You may fund individual stages or the entire contract at once.
+    </p>
 
-    <div class="totals-box">
-      <div class="total-row">
-        <span style="color:#aaa;">Product Subtotal:</span>
-        <strong id="ui-subtotal">$0.00</strong>
+    <div class="module-card" id="card-sample" style="display:none;">
+      <label class="module-header">
+        <input type="checkbox" id="chk-sample" onchange="calculateTotal()" checked>
+        <h3>1. Prototyping & Physical Sample</h3>
+        <div class="module-price" id="price-sample">$0.00</div>
+      </label>
+      <div class="module-body">
+        <span style="color:var(--text-muted);">Includes sample manufacturing and express air courier to your destination.</span>
       </div>
-      <div class="total-row">
-        <span style="color:#aaa;">Customs/Sample Fees:</span>
-        <strong id="ui-fees">$0.00</strong>
+    </div>
+
+    <div class="module-card" id="card-prod" style="display:none;">
+      <label class="module-header">
+        <input type="checkbox" id="chk-prod" onchange="calculateTotal()" checked>
+        <h3>2. Mass Production Run</h3>
+        <div class="module-price" id="price-prod">$0.00</div>
+      </label>
+      <div class="module-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th class="text-right">Qty</th>
+              <th class="text-right">Unit Price</th>
+              <th class="text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody id="table-prod">
+            </tbody>
+        </table>
       </div>
-      <div class="total-row">
-        <span style="color:#aaa;">Logistics & Freight:</span>
-        <strong id="ui-freight">$0.00</strong>
+    </div>
+
+    <div class="module-card" id="card-freight" style="display:none;">
+      <label class="module-header">
+        <input type="checkbox" id="chk-freight" onchange="calculateTotal()">
+        <h3>3. Muziris Managed Freight</h3>
+        <div class="module-price" id="price-freight">$0.00</div>
+      </label>
+      <div class="module-body">
+        <div id="freight-details">
+            </div>
+        <div class="disclaimer-box">
+            <strong>⚠️ ESTIMATED PRICING:</strong> Global freight markets are volatile. The price shown is an active market estimate based on current container/air rates. 
+            <strong>This price is not final.</strong> If you choose to fund freight today, any market variance at the actual time of shipping will be credited or billed as a true-up adjustment.
+        </div>
       </div>
-      <div class="total-row grand-total">
-        <span>TOTAL DUE:</span>
-        <span id="ui-grand-total">$0.00</span>
+    </div>
+
+    <div class="checkout-footer">
+      <div>
+        <div class="grand-total-label">Total Selected for Funding</div>
+        <div class="grand-total-amount" id="ui-grand-total">$0.00 <span style="font-size:16px; color:var(--text-muted);">CAD</span></div>
+      </div>
+      <div>
+        <button class="btn-checkout" id="btn-submit" onclick="processCheckout()">AUTHORIZE & FUND ESCROW</button>
       </div>
     </div>
 
     <div class="escrow-badge">
-      <span>🛡️</span>
-      <div class="escrow-text">
-        <strong>Muziris Vault Protection Active</strong><br>
-        Your funds will be held in our secure Canadian escrow account. They will not be released to the manufacturing factory until the goods have been produced, shipped, and received at your final destination according to the specifications above.
-      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      <span><strong>Protected by Muziris Escrow.</strong> Funds are secured in a Canadian Vault and not released to the factory until shipment verification.</span>
     </div>
-
-    <form onsubmit="event.preventDefault(); processCheckout();">
-      <button type="submit" class="btn-checkout" id="btn-submit">AUTHORIZE & FUND ESCROW</button>
-    </form>
 
   </div>
 
@@ -115,7 +167,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const rfqId = urlParams.get('rfq');
 
-    let grandTotalGlobal = 0;
+    let valSample = 0, valProd = 0, valFreight = 0;
 
     if (!rfqId) {
       document.getElementById('loading').innerText = "INVALID CONTRACT LINK.";
@@ -148,98 +200,141 @@
           const totals = quote.calculatedBuyerTotals || {};
           const freight = quote.freightData || {};
 
-          let itemsHtml = '';
-          
-          // 1. Build Product Rows
-          variants.forEach(v => {
-             let match = finalItems.find(f => f.variantId === v.variantId) || {};
-             let rowTotal = parseFloat(match.finalBuyerPrice || 0);
-             let qty = parseInt(v.quantity || 1);
-             let unitPrice = rowTotal / qty;
-
-             itemsHtml += `
-               <tr>
-                 <td>
-                   <strong style="color:#fff;">${data.product_name}</strong><br>
-                   <span style="font-size:12px; color:#888;">Variant: ${v.variantName}</span>
-                 </td>
-                 <td class="text-right">${qty}</td>
-                 <td class="text-right">$${unitPrice.toFixed(2)}</td>
-                 <td class="text-right" style="color:#fff; font-weight:bold;">$${rowTotal.toFixed(2)}</td>
-               </tr>
-             `;
-          });
-
-          // 2. Build Extra Fees Row (If Any)
-          let customFee = parseFloat(totals.finalCustomizationBuyer || 0);
-          let sampleFee = parseFloat(totals.finalSampleBuyer || 0);
-          let extraFeesTotal = customFee + sampleFee;
-
-          if (extraFeesTotal > 0) {
-             itemsHtml += `
-               <tr>
-                 <td>
-                   <strong style="color:#fff;">Additional Services</strong><br>
-                   <span style="font-size:12px; color:#888;">Prototyping, Molds, or Custom Branding</span>
-                 </td>
-                 <td class="text-right">1</td>
-                 <td class="text-right">$${extraFeesTotal.toFixed(2)}</td>
-                 <td class="text-right" style="color:#fff; font-weight:bold;">$${extraFeesTotal.toFixed(2)}</td>
-               </tr>
-             `;
+          // --- MODULE 1: SAMPLE ---
+          valSample = parseFloat(totals.finalSampleBuyer || 0);
+          if (valSample > 0) {
+              document.getElementById('card-sample').style.display = 'block';
+              document.getElementById('price-sample').innerText = "$" + valSample.toFixed(2);
           }
 
-          // 3. Build Freight Row
-          let freightCost = parseFloat(freight.finalFreightBuyer || 0);
-          itemsHtml += `
-             <tr>
-               <td>
-                 <strong style="color:#fff;">Muziris Logistics Route</strong><br>
-                 <span style="font-size:12px; color:#888;">Carrier: ${freight.shipCarrier || 'Assigned Carrier'} | Est. Transit: ${freight.transitTime || 'TBD'} Days</span>
-               </td>
-               <td class="text-right">1</td>
-               <td class="text-right">$${freightCost.toFixed(2)}</td>
-               <td class="text-right" style="color:#fff; font-weight:bold;">$${freightCost.toFixed(2)}</td>
-             </tr>
-          `;
-
-          document.getElementById('invoice-items').innerHTML = itemsHtml;
-
-          // Set Summary Box
+          // --- MODULE 2: PRODUCTION ---
           let prodSubtotal = parseFloat(totals.productTotalBuyer || 0);
-          grandTotalGlobal = prodSubtotal + extraFeesTotal + freightCost;
+          let customFee = parseFloat(totals.finalCustomizationBuyer || 0);
+          valProd = prodSubtotal + customFee;
 
-          document.getElementById('ui-subtotal').innerText = "$" + prodSubtotal.toFixed(2);
-          document.getElementById('ui-fees').innerText = "$" + extraFeesTotal.toFixed(2);
-          document.getElementById('ui-freight').innerText = "$" + freightCost.toFixed(2);
-          document.getElementById('ui-grand-total').innerText = "$" + grandTotalGlobal.toFixed(2) + " CAD";
+          if (valProd > 0) {
+              document.getElementById('card-prod').style.display = 'block';
+              document.getElementById('price-prod').innerText = "$" + valProd.toFixed(2);
+              
+              let prodHtml = '';
+              variants.forEach(v => {
+                 let match = finalItems.find(f => f.variantId === v.variantId) || {};
+                 let rowTotal = parseFloat(match.finalBuyerPrice || 0);
+                 let qty = parseInt(v.quantity || 1);
+                 let unitPrice = rowTotal / qty;
+
+                 prodHtml += `
+                   <tr>
+                     <td><strong>${data.product_name}</strong><br><span style="color:var(--text-muted); font-size:11px;">Var: ${v.variantName}</span></td>
+                     <td class="text-right">${qty}</td>
+                     <td class="text-right">$${unitPrice.toFixed(2)}</td>
+                     <td class="text-right" style="font-weight:bold; color:var(--text-main);">$${rowTotal.toFixed(2)}</td>
+                   </tr>
+                 `;
+              });
+
+              if (customFee > 0) {
+                 prodHtml += `
+                   <tr>
+                     <td><strong>Customization / Molds</strong><br><span style="color:var(--text-muted); font-size:11px;">Branding Requirements</span></td>
+                     <td class="text-right">1</td>
+                     <td class="text-right">$${customFee.toFixed(2)}</td>
+                     <td class="text-right" style="font-weight:bold; color:var(--text-main);">$${customFee.toFixed(2)}</td>
+                   </tr>
+                 `;
+              }
+              document.getElementById('table-prod').innerHTML = prodHtml;
+          }
+
+          // --- MODULE 3: FREIGHT ---
+          valFreight = parseFloat(freight.finalFreightBuyer || 0);
+          if (valFreight > 0) {
+              document.getElementById('card-freight').style.display = 'block';
+              document.getElementById('price-freight').innerText = "$" + valFreight.toFixed(2);
+              
+              document.getElementById('freight-details').innerHTML = `
+                <strong>Estimated Shipping Plan:</strong> ${freight.shipMode || 'Standard'}<br>
+                <strong>Carrier:</strong> ${freight.shipCarrier || 'Assigned by Muziris'}<br>
+                <strong>Estimated Transit:</strong> ${freight.transitTime ? freight.transitTime + ' Days' : 'TBD'}
+              `;
+          }
+
+          // Initial Calculation
+          calculateTotal();
 
         }).catch(err => { document.getElementById('loading').innerText = "SERVER CONNECTION FAILED."; });
     }
 
+    function calculateTotal() {
+        let total = 0;
+        
+        const chkSample = document.getElementById('chk-sample');
+        const chkProd = document.getElementById('chk-prod');
+        const chkFreight = document.getElementById('chk-freight');
+
+        if (chkSample && chkSample.checked) {
+            total += valSample;
+            document.getElementById('card-sample').classList.add('selected');
+        } else if(chkSample) {
+            document.getElementById('card-sample').classList.remove('selected');
+        }
+
+        if (chkProd && chkProd.checked) {
+            total += valProd;
+            document.getElementById('card-prod').classList.add('selected');
+        } else if(chkProd) {
+            document.getElementById('card-prod').classList.remove('selected');
+        }
+
+        if (chkFreight && chkFreight.checked) {
+            total += valFreight;
+            document.getElementById('card-freight').classList.add('selected');
+        } else if(chkFreight) {
+            document.getElementById('card-freight').classList.remove('selected');
+        }
+
+        document.getElementById('ui-grand-total').innerHTML = "$" + total.toFixed(2) + ` <span style="font-size:16px; color:var(--text-muted);">CAD</span>`;
+
+        // Disable button if nothing is selected
+        document.getElementById('btn-submit').disabled = (total === 0);
+    }
+
     function processCheckout() {
       const btn = document.getElementById('btn-submit');
+      
+      // Determine what they are actually funding today
+      let fundedModules = [];
+      if(document.getElementById('chk-sample') && document.getElementById('chk-sample').checked) fundedModules.push('Sample');
+      if(document.getElementById('chk-prod') && document.getElementById('chk-prod').checked) fundedModules.push('Production');
+      if(document.getElementById('chk-freight') && document.getElementById('chk-freight').checked) fundedModules.push('Logistics');
+
+      if (fundedModules.length === 0) return alert("Please select at least one module to fund.");
+
       btn.innerText = "PROCESSING SECURE PAYMENT...";
       btn.disabled = true;
 
-      // Call backend to lock the funds and create the shipment
+      // In the real world, this would redirect to Stripe/Moneris.
+      // For this build, we instantly trigger the escrow success API.
       fetch(API_BASE_URL + '/checkout/fund-escrow', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rfqId: rfqId })
+        body: JSON.stringify({ 
+            rfqId: rfqId,
+            fundedModules: fundedModules // Passing this to the backend
+        })
       })
       .then(res => res.json())
       .then(data => {
         if(data.success) {
           document.getElementById('main-content').innerHTML = `
             <div style="text-align:center; padding: 50px;">
-              <h2 style="color:var(--green);">✓ FUNDS SECURED IN ESCROW</h2>
-              <p style="color:#ccc; font-size: 16px; line-height: 1.6;">Your contract is now fully active. The factory has been notified to begin production immediately.</p>
-              <div style="background:#151922; border:1px solid #333; padding: 20px; border-radius:6px; margin: 30px auto; max-width: 400px;">
-                <div style="font-size:12px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Official Tracking Number</div>
-                <strong style="color:var(--gold); font-size:24px; font-family:monospace;">${data.shipmentId}</strong>
+              <h2 style="color:var(--green); font-size: 28px;">✓ FUNDS SECURED IN ESCROW</h2>
+              <p style="color:var(--text-main); font-size: 16px; line-height: 1.6;">Your selected modules have been successfully funded.</p>
+              <div style="background:#fafbfc; border:2px dashed var(--border-color); padding: 25px; border-radius:8px; margin: 30px auto; max-width: 400px;">
+                <div style="font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Official Logistics Tracking Number</div>
+                <strong style="color:var(--blue); font-size:28px; font-family:monospace;">${data.shipmentId}</strong>
               </div>
-              <p style="color:#aaa; font-size:13px;">You can monitor the status of this order anytime from your Buyer Dashboard.</p>
+              <p style="color:var(--text-muted); font-size:14px;">You can monitor the status of this order anytime from your Buyer Dashboard.</p>
             </div>
           `;
         } else {
