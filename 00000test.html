@@ -1,307 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muziris | Logistics Master Dashboard</title>
+  <title>Muziris | Freight & Logistics Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    :root { --gold: #D4AF37; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --blue: #1E88E5; --green: #4CAF50; --red: #ff5252; }
+    :root { --gold: #D4AF37; --bronze: #b89225; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --blue: #1E88E5; --green: #4CAF50;}
     body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
+    header { background: rgba(11, 14, 20, 0.95); padding: 20px; text-align: center; border-bottom: 1px solid var(--gold); }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 26px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
     
-    header { background: var(--slate); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); }
-    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
-    .nav-pill { background: rgba(212,175,55,0.1); border: 1px solid var(--gold); color: var(--gold); padding: 6px 15px; border-radius: 20px; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;}
-
-    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .container { max-width: 850px; margin: 40px auto; background: var(--slate); padding: 40px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    h2 { color: #fff; font-family: 'Cinzel', serif; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; }
     
-    /* TABLE STYLES */
-    .card { background: var(--slate); border: 1px solid #333; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-    th { background: #0b0e14; color: #888; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; padding: 15px 20px; border-bottom: 1px solid #333; }
-    td { padding: 15px 20px; border-bottom: 1px solid #222; }
-    tr:hover td { background-color: rgba(255,255,255,0.02); }
+    /* NEW: 2-COLUMN INFO DASHBOARD */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     
-    .btn-action { background: var(--blue); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; font-size: 11px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;}
-    .btn-action:hover { background: #1565C0; }
-
-    /* MODAL STYLES */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; backdrop-filter: blur(5px); }
-    .modal-card { background: var(--slate); width: 100%; max-width: 900px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.9); overflow: hidden; margin-bottom: 50px; }
+    .info-box { background: rgba(212,175,55,0.05); padding: 25px; border: 1px solid rgba(212,175,55,0.3); border-radius: 6px; font-size: 13px; line-height: 1.8; margin-bottom: 30px; }
+    .info-box h4 { margin-top: 0; font-size: 14px; text-transform: uppercase; border-bottom: 1px dashed #444; padding-bottom: 10px; margin-bottom: 15px; color: var(--gold); }
+    .info-box.blue-theme { background: rgba(30,136,229,0.05); border-color: rgba(30,136,229,0.3); }
+    .info-box.blue-theme h4 { color: var(--blue); }
     
-    .modal-header { background: #0b0e14; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
-    .modal-header h2 { margin: 0; color: var(--gold); font-family: 'Cinzel', serif; font-size: 22px; }
-    
-    .modal-body { padding: 30px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
-    
-    .data-box { background: #0b0e14; border: 1px solid #333; border-radius: 6px; padding: 20px; }
-    .data-box h4 { color: #fff; margin-top: 0; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; letter-spacing: 1px; }
-    .data-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; border-bottom: 1px dashed #222; padding-bottom: 5px; }
+    .data-row { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 5px; margin-bottom: 8px; }
     .data-label { color: #888; }
     .data-value { color: #fff; font-weight: bold; text-align: right; }
 
-    /* INPUTS */
-    label { display: block; font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 8px; font-weight: bold; }
-    input, select { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif; font-size: 14px;}
-    input:focus { border-color: var(--gold); outline: none; }
+    label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold; margin-top: 20px;}
+    input, select { width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-size: 14px;}
+    input:focus, select:focus { border-color: var(--gold); outline: none; }
     
-    .calc-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-    .calc-symbol { font-size: 20px; color: #666; font-weight: bold; margin-top: 20px;}
-
-    .btn-submit { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; width: 100%; padding: 18px; border: none; font-weight: bold; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: 0.3s; margin-top: 20px;}
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
-
-    .btn-blind { background: transparent; color: var(--gold); border: 1px dashed var(--gold); padding: 12px; width: 100%; text-align: center; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;}
-    .btn-blind:hover { background: rgba(212,175,55,0.1); }
+    .btn-submit { display: block; width: 100%; background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); color: #fff; text-align: center; padding: 20px; font-weight: bold; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; margin-top: 40px; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(30,136,229,0.4); }
+    #loading { text-align: center; padding: 100px; color: var(--gold); font-size: 18px; letter-spacing: 2px; font-family: 'Cinzel', serif; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
   </style>
 </head>
 <body>
 
   <header>
-    <h1 class="brand">Muziris <span style="color:#fff; font-size: 16px; letter-spacing: 1px;">| Logistics Desk</span></h1>
-    <div class="nav-pill">Admin Privileges Active</div>
+    <h1 class="brand">Muziris</h1>
+    <div style="font-size: 11px; color: #888; letter-spacing: 2px; margin-top: 5px;">Internal Logistics Bidding Portal</div>
   </header>
 
-  <div class="container">
-    <h2 style="color: #fff; font-family: 'Cinzel', serif; font-size: 24px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 30px;">Pending Freight Quotes (RLQs)</h2>
-    
-    <div class="card">
-      <table>
-        <thead>
-          <tr>
-            <th>RFQ ID</th>
-            <th>Buyer Destination</th>
-            <th>Export Port</th>
-            <th>Incoterm</th>
-            <th>Load Type</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="rlq-table-body">
-          <tr><td colspan="6" style="text-align: center; padding: 40px; color: #888;">Scanning for pending logistics requests...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div id="loading">RETRIEVING ROUTE DATA...</div>
 
-  <div class="modal-overlay" id="freight-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Dispatch & Price Freight: <span id="ui-rfq" style="color:#fff;"></span></h2>
-        <span style="color: #888; font-size: 24px; cursor: pointer;" onclick="closeModal()">✖</span>
+  <div class="container" id="main-content" style="display:none;">
+    <h2>ROUTE: <span id="ui-rfq-id" style="color:#1E88E5;"></span></h2>
+
+    <div class="grid-2">
+      <div class="info-box">
+        <h4>📍 Routing & Compliance</h4>
+        <div class="data-row"><span class="data-label">Origin Port:</span><span class="data-value" id="ui-port"></span></div>
+        <div class="data-row"><span class="data-label">Destination:</span><span class="data-value" id="ui-dest"></span></div>
+        <div class="data-row"><span class="data-label">Incoterms:</span><span class="data-value" id="ui-incoterm" style="color:var(--gold);"></span></div>
+        <div class="data-row"><span class="data-label">HS Code:</span><span class="data-value" id="ui-hs"></span></div>
+        <div class="data-row"><span class="data-label">Hazmat/DG:</span><span class="data-value" id="ui-hazmat"></span></div>
       </div>
-      
-      <div class="modal-body">
-        
-        <div class="grid-2">
-          <div class="data-box">
-            <h4>📍 Routing & Compliance</h4>
-            <div class="data-row"><span class="data-label">Origin Port:</span><span class="data-value" id="ui-port"></span></div>
-            <div class="data-row"><span class="data-label">Destination:</span><span class="data-value" id="ui-dest"></span></div>
-            <div class="data-row"><span class="data-label">Incoterm:</span><span class="data-value" id="ui-incoterm" style="color:var(--gold);"></span></div>
-            <div class="data-row"><span class="data-label">HS Code:</span><span class="data-value" id="ui-hs"></span></div>
-            <div class="data-row"><span class="data-label">Hazmat/DG:</span><span class="data-value" id="ui-hazmat"></span></div>
-          </div>
-          
-          <div class="data-box">
-            <h4>📦 Cargo Configuration</h4>
-            <div class="data-row"><span class="data-label">Load Type:</span><span class="data-value" id="ui-load" style="color:var(--blue);"></span></div>
-            <div class="data-row"><span class="data-label">Est. Weight (kg):</span><span class="data-value" id="ui-kg"></span></div>
-            <div class="data-row"><span class="data-label">CBM / Dimensions:</span><span class="data-value" id="ui-dims"></span></div>
-            <div class="data-row"><span class="data-label">Commercial Value:</span><span class="data-value" id="ui-value" style="color:var(--green);"></span></div>
-          </div>
-        </div>
 
-        <div style="background: rgba(30, 136, 229, 0.1); border: 1px solid var(--blue); padding: 20px; border-radius: 6px; margin-bottom: 30px;">
-          <h4 style="color: var(--blue); margin-top: 0; margin-bottom: 10px; font-size: 14px;">📄 Generate Commercial Documents</h4>
-          <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">Send this marked-up Commercial Invoice to your Freight Broker. Instruct the factory to ship BLIND (no pricing documents attached to cartons).</p>
-          <button class="btn-blind" onclick="generateBlindInvoice()">Download Blind Commercial Invoice (PDF)</button>
-        </div>
-
-        <div class="data-box" style="background: rgba(212, 175, 55, 0.05); border-color: var(--gold);">
-          <h4 style="color: var(--gold);">💰 Enter Freight Cost & Markup</h4>
-          
-          <div class="calc-row">
-            <div style="flex: 2;">
-              <label>Shipping Method</label>
-              <select id="ship-mode">
-                <option value="Air Express (DHL/FedEx)">Air Express (DHL/FedEx)</option>
-                <option value="Air Freight (Airport to Airport)">Air Freight (Standard)</option>
-                <option value="Ocean Freight (LCL)">Ocean Freight (LCL)</option>
-                <option value="Ocean Freight (FCL)">Ocean Freight (FCL)</option>
-              </select>
-            </div>
-            <div style="flex: 1;">
-              <label>Transit Time (Days)</label>
-              <input type="number" id="transit-days" placeholder="e.g. 14">
-            </div>
-          </div>
-
-          <div class="calc-row">
-            <div style="flex: 1;">
-              <label>Raw Broker Cost (CAD)</label>
-              <input type="number" step="0.01" id="broker-cost" value="0" oninput="calcFreight()">
-            </div>
-            <div class="calc-symbol">+</div>
-            <div style="flex: 1;">
-              <label>Muziris Margin (%)</label>
-              <input type="number" step="0.1" id="freight-margin" value="20" oninput="calcFreight()">
-            </div>
-            <div class="calc-symbol">=</div>
-            <div style="flex: 1;">
-              <label style="color:var(--green);">Final Buyer Price (CAD)</label>
-              <input type="text" id="final-freight" value="$0.00" style="color:var(--green); font-weight:bold; background:#000;" disabled>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn-submit" id="btn-approve" onclick="approveContract()">LOCK FREIGHT & DISPATCH CONTRACT TO BUYER</button>
+      <div class="info-box blue-theme">
+        <h4>📦 Cargo Configuration</h4>
+        <div class="data-row"><span class="data-label">Load Type:</span><span class="data-value" id="ui-loadtype" style="color:var(--blue); text-transform:uppercase;"></span></div>
+        <div class="data-row"><span class="data-label">Est. Weight:</span><span class="data-value" id="ui-kg"></span></div>
+        <div class="data-row"><span class="data-label">Dimensions / Qty:</span><span class="data-value" id="ui-dims"></span></div>
+        <div class="data-row" style="margin-top: 15px; border:none;"><span class="data-label">Commercial Value:</span><span class="data-value" id="ui-value" style="color:var(--green); font-size:16px;"></span></div>
       </div>
     </div>
+
+    <form id="freightForm" onsubmit="event.preventDefault(); submitFreightQuote();">
+      <h3 style="color:var(--gold); font-size: 14px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:10px;">1. Shipping Solution</h3>
+      <div class="grid-2">
+        <div>
+          <label>Mode of Transport</label>
+          <select id="ship-mode">
+            <option value="Sea Freight (LCL)">Sea Freight (LCL)</option>
+            <option value="Sea Freight (FCL)">Sea Freight (Full Container)</option>
+            <option value="Air Freight (Standard)">Air Freight (Standard)</option>
+            <option value="Air Express (Courier)">Air Express (Courier)</option>
+            <option value="Road Freight">Road Freight</option>
+          </select>
+        </div>
+        <div>
+          <label>Carrier / Steamship Line</label>
+          <input type="text" id="ship-carrier" placeholder="e.g. Maersk / DHL / MSC" required>
+        </div>
+      </div>
+
+      <h3 style="color:var(--gold); font-size: 14px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:10px; margin-top:30px;">2. Pricing & Timing</h3>
+      <div class="grid-2">
+        <div>
+          <label>Quotation Currency</label>
+          <select id="freight-currency">
+            <option value="USD">USD ($)</option>
+            <option value="CAD">CAD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+          </select>
+        </div>
+        <div>
+          <label>Muziris Net Freight Cost</label>
+          <input type="number" step="0.01" id="freight-cost" placeholder="0.00" required>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div><label>Est. Transit Time (Days)</label><input type="number" id="transit-time" placeholder="e.g. 14" required></div>
+        <div><label>Port of Loading (POL)</label><input type="text" id="ship-pol" placeholder="e.g. Shenzhen Port" required></div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-submit">SECURE ROUTE & DISPATCH TO BUYER</button>
+    </form>
   </div>
 
   <script>
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
-    let currentRfq = null;
-    let buyerCommercialValue = 0;
+    const urlParams = new URLSearchParams(window.location.search);
+    const rfqId = urlParams.get('rfq');
 
-    // Load Pending Logistics RFQs
-    function loadRLQs() {
-      // In production, you would fetch WHERE status = 'Pending Logistics' or 'Supplier Quoted'
-      fetch(API_BASE_URL + '/admin/dashboard-stats') 
-        .then(res => res.json())
-        .then(data => {
-            // For this mockup, we fetch all and filter client-side.
-            // Replace with your actual specific route later.
-            fetch(API_BASE_URL + '/get-all-rfqs')
-            .then(r => r.json())
-            .then(rfqs => {
-                let html = '';
-                rfqs.forEach(rfq => {
-                    // Only show RFQs where the supplier has quoted, but it hasn't been sent to buyer yet
-                    if(rfq.status === 'Pending Supplier' || rfq.status === 'Quote Sent' || !rfq.supplier_quote) return; 
+    if (!rfqId) { 
+        document.getElementById('loading').innerText = "INVALID ROUTE ID."; 
+    } else {
+      fetch(API_BASE_URL + '/get-rfq/' + rfqId)
+      .then(res => res.json())
+      .then(data => {
+          if(data.error) { document.getElementById('loading').innerText = "ROUTE EXPIRED."; return; }
+          
+          let quote = typeof data.supplier_quote === 'string' ? JSON.parse(data.supplier_quote) : data.supplier_quote;
+          if(!quote) { document.getElementById('loading').innerText = "WAITING ON SUPPLIER QUOTE."; return; }
 
-                    let quote = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
-                    
-                    html += `
-                      <tr>
-                        <td style="color:var(--gold); font-weight:bold;">${rfq.rfq_id}</td>
-                        <td>${rfq.destination}</td>
-                        <td>${quote.exportPort || 'Unknown'}</td>
-                        <td><span style="background:#333; padding:2px 6px; border-radius:4px; font-size:10px;">${quote.incoterm || 'FOB'}</span></td>
-                        <td>${determineLoadType(quote)}</td>
-                        <td><button class="btn-action" onclick='openModal(${JSON.stringify(rfq).replace(/'/g, "&apos;")})'>Process</button></td>
-                      </tr>
-                    `;
-                });
-                
-                if(html === '') html = '<tr><td colspan="6" style="text-align:center; padding: 40px; color:#888;">No pending logistics requests.</td></tr>';
-                document.getElementById('rlq-table-body').innerHTML = html;
-            });
-        });
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('main-content').style.display = 'block';
+
+          // 1. Set Identifiers
+          document.getElementById('ui-rfq-id').innerText = data.rfq_id;
+          document.getElementById('ui-dest').innerText = data.destination;
+
+          // 2. Set Compliance Data
+          document.getElementById('ui-port').innerText = quote.exportPort || 'Not specified';
+          document.getElementById('ui-incoterm').innerText = quote.incoterm || 'FOB';
+          document.getElementById('ui-hs').innerText = quote.hsCode || 'Not provided';
+          document.getElementById('ui-hazmat').innerText = quote.hazmat || 'No';
+
+          // 3. Smart Parsing for Load Types & Dimensions
+          let loadType = quote.loadType || 'loose'; // Default to loose if old data
+          
+          if (loadType === 'fcl' || quote.fclSize) {
+              document.getElementById('ui-loadtype').innerText = "Full Container (FCL)";
+              document.getElementById('ui-kg').innerText = quote.fclWeight ? quote.fclWeight + " kg" : "TBD";
+              document.getElementById('ui-dims').innerText = "1x " + (quote.fclSize || "Container");
+          } 
+          else if (loadType === 'pallets') {
+              document.getElementById('ui-loadtype').innerText = "Palletized Freight";
+              document.getElementById('ui-kg').innerText = (quote.masterCarton ? quote.masterCarton.weightKG : "0") + " kg";
+              let dims = quote.masterCarton ? `${quote.masterCarton.length}x${quote.masterCarton.width}x${quote.masterCarton.height} cm (${quote.masterCarton.totalCartons} Pallets)` : 'N/A';
+              document.getElementById('ui-dims').innerText = dims;
+          } 
+          else {
+              document.getElementById('ui-loadtype').innerText = "Loose Master Cartons";
+              document.getElementById('ui-kg').innerText = (quote.masterCarton ? quote.masterCarton.weightKG : "0") + " kg";
+              let dims = quote.masterCarton ? `${quote.masterCarton.length}x${quote.masterCarton.width}x${quote.masterCarton.height} cm (${quote.masterCarton.totalCartons} Cartons)` : 'N/A';
+              document.getElementById('ui-dims').innerText = dims;
+          }
+
+          // 4. Commercial Value extraction
+          let buyerValue = quote.calculatedBuyerTotals ? parseFloat(quote.calculatedBuyerTotals.productTotalBuyer) : 0;
+          document.getElementById('ui-value').innerText = "$" + buyerValue.toFixed(2) + " CAD";
+
+      }).catch(err => { document.getElementById('loading').innerText = "SERVER CONNECTION FAILED."; });
     }
 
-    // Helper to extract load type
-    function determineLoadType(quote) {
-        if(quote.masterCarton && quote.masterCarton.length) return "Loose Cartons";
-        return "Unknown Cargo"; // Expand this logic based on your DB JSON structure
+    function submitFreightQuote() {
+      const btn = document.getElementById('btn-submit');
+      btn.innerText = "CALCULATING FINAL MARGINS..."; btn.disabled = true;
+
+      const payload = {
+        rfqId: rfqId,
+        freightCost: document.getElementById('freight-cost').value,
+        freightCurrency: document.getElementById('freight-currency').value,
+        transitTime: document.getElementById('transit-time').value,
+        shipMode: document.getElementById('ship-mode').value,
+        shipCarrier: document.getElementById('ship-carrier').value,
+        shipPol: document.getElementById('ship-pol').value
+      };
+
+      fetch(API_BASE_URL + '/submit-freight-quote', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success) { 
+          document.getElementById('main-content').innerHTML = `
+            <div style="text-align:center; padding: 50px;">
+              <h2 style="color:#1E88E5;">✓ ROUTE SECURED</h2>
+              <p style="color:#aaa;">The official contract has been dispatched to the buyer for escrow funding.</p>
+            </div>`;
+        } else { 
+          alert("Error: " + data.error); 
+          btn.disabled = false; 
+          btn.innerText = "SECURE ROUTE & DISPATCH TO BUYER";
+        }
+      });
     }
-
-    // Open Modal and populate data
-    function openModal(rfqObj) {
-        currentRfq = rfqObj;
-        let quote = typeof rfqObj.supplier_quote === 'string' ? JSON.parse(rfqObj.supplier_quote) : rfqObj.supplier_quote;
-        
-        document.getElementById('ui-rfq').innerText = rfqObj.rfq_id;
-        document.getElementById('ui-dest').innerText = rfqObj.destination;
-        document.getElementById('ui-port').innerText = quote.exportPort || 'Not specified';
-        document.getElementById('ui-incoterm').innerText = quote.incoterm || 'FOB';
-        
-        // Mocking the values based on our previous logic
-        document.getElementById('ui-hs').innerText = quote.hsCode || "9503.00.00";
-        document.getElementById('ui-hazmat').innerText = quote.hazmat || "No";
-        document.getElementById('ui-load').innerText = determineLoadType(quote);
-        document.getElementById('ui-kg').innerText = (quote.masterCarton ? quote.masterCarton.weightKG : "0") + " kg";
-        
-        let dims = quote.masterCarton ? `${quote.masterCarton.length}x${quote.masterCarton.width}x${quote.masterCarton.height} cm (${quote.masterCarton.totalCartons} qty)` : 'N/A';
-        document.getElementById('ui-dims').innerText = dims;
-
-        // Calculate Commercial Value (The Marked-Up Price the Buyer Pays)
-        buyerCommercialValue = quote.calculatedBuyerTotals ? parseFloat(quote.calculatedBuyerTotals.productTotalBuyer) : 0;
-        document.getElementById('ui-value').innerText = "$" + buyerCommercialValue.toFixed(2) + " CAD";
-
-        document.getElementById('freight-modal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('freight-modal').style.display = 'none';
-        currentRfq = null;
-    }
-
-    // Calculate final freight with markup
-    function calcFreight() {
-        let base = parseFloat(document.getElementById('broker-cost').value) || 0;
-        let marginPct = parseFloat(document.getElementById('freight-margin').value) || 0;
-        let finalPrice = base * (1 + (marginPct / 100));
-        document.getElementById('final-freight').value = "$" + finalPrice.toFixed(2);
-        return finalPrice;
-    }
-
-    function generateBlindInvoice() {
-        alert("Downloading Blind Commercial Invoice PDF...\n\nValue Declared: $" + buyerCommercialValue.toFixed(2) + " CAD\nConsignee: Muziris Escrow C/O Buyer");
-        // In reality, this triggers a backend library (like pdfkit) to generate and download the file.
-    }
-
-    function approveContract() {
-        let finalFreight = calcFreight();
-        if(finalFreight <= 0) return alert("Please enter a valid freight cost.");
-
-        const btn = document.getElementById('btn-approve');
-        btn.innerText = "UPDATING DATABASE & EMAILING BUYER...";
-        btn.disabled = true;
-
-        let freightData = {
-            shipMode: document.getElementById('ship-mode').value,
-            transitTime: document.getElementById('transit-days').value,
-            rawBrokerCost: parseFloat(document.getElementById('broker-cost').value),
-            marginPercent: parseFloat(document.getElementById('freight-margin').value),
-            finalFreightBuyer: finalFreight
-        };
-
-        // Inject the freight data into the existing quote JSON
-        let updatedQuote = typeof currentRfq.supplier_quote === 'string' ? JSON.parse(currentRfq.supplier_quote) : currentRfq.supplier_quote;
-        updatedQuote.freightData = freightData;
-
-        // Make API Call to save the updated JSON and change status to 'Quote Sent'
-        fetch(API_BASE_URL + '/admin/approve-logistics', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                rfqId: currentRfq.rfq_id,
-                updatedQuote: updatedQuote
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.success) {
-                alert("Contract successfully dispatched to buyer!");
-                closeModal();
-                loadRLQs(); // Reload table
-            } else {
-                alert("Error: " + data.error);
-            }
-            btn.innerText = "LOCK FREIGHT & DISPATCH CONTRACT TO BUYER";
-            btn.disabled = false;
-        })
-        .catch(err => {
-            alert("Network Error.");
-            btn.disabled = false;
-        });
-    }
-
-    // Initialize
-    loadRLQs();
   </script>
 </body>
 </html>
