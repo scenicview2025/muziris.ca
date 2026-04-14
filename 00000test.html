@@ -1,356 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muziris | Supplier RFQ Inbox</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Logistics Master Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --gold: #D4AF37; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --blue: #1E88E5; --green: #4CAF50; --red: #ff5252; }
+    body { background-color: var(--void); color: var(--mist); font-family: 'Lato', sans-serif; padding: 0; margin: 0; }
     
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    header { background: var(--slate); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); }
+    .brand { font-family: 'Cinzel', serif; color: var(--gold); font-size: 24px; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
+    .nav-pill { background: rgba(212,175,55,0.1); border: 1px solid var(--gold); color: var(--gold); padding: 6px 15px; border-radius: 20px; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;}
 
-    <style>
-        :root { 
-            --gold: #D4AF37; 
-            --void: #0b0e14; 
-            --slate: #151922; 
-            --mist: #e0e0e0; 
-            --border: #2a2f3a;
-            --success: #4CAF50;
-            --alert: #ff5252;
-            --blue: #00e5ff;
-        }
-        body { margin: 0; font-family: 'Lato', sans-serif; background: var(--void); color: var(--mist); display: flex; height: 100vh; overflow: hidden; }
-        
-        /* SIDEBAR */
-        .sidebar { width: 250px; background: var(--slate); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        .logo { padding: 30px; font-family: 'Cinzel', serif; font-size: 24px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; text-align: center; border-bottom: 1px solid var(--border); }
-        .nav-menu { padding: 20px 0; }
-        .nav-item { padding: 15px 30px; color: #888; text-decoration: none; display: flex; align-items: center; gap: 15px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; border-left: 3px solid transparent; }
-        .nav-item:hover { background: rgba(255,255,255,0.02); color: #fff; }
-        .nav-item.active { background: rgba(212,175,55,0.05); color: var(--gold); border-left-color: var(--gold); }
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    
+    /* TABLE STYLES */
+    .card { background: var(--slate); border: 1px solid #333; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { background: #0b0e14; color: #888; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; padding: 15px 20px; border-bottom: 1px solid #333; }
+    td { padding: 15px 20px; border-bottom: 1px solid #222; }
+    tr:hover td { background-color: rgba(255,255,255,0.02); }
+    
+    .btn-action { background: var(--blue); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; font-size: 11px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;}
+    .btn-action:hover { background: #1565C0; }
 
-        /* MAIN CONTENT */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        .top-nav { height: 80px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: rgba(11, 14, 20, 0.9); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); }
-        .page-title { font-family: 'Cinzel', serif; font-size: 22px; color: #fff; letter-spacing: 1px; }
-        
-        .dashboard-body { padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+    /* MODAL STYLES */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; backdrop-filter: blur(5px); }
+    .modal-card { background: var(--slate); width: 100%; max-width: 900px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.9); overflow: hidden; margin-bottom: 50px; }
+    
+    .modal-header { background: #0b0e14; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+    .modal-header h2 { margin: 0; color: var(--gold); font-family: 'Cinzel', serif; font-size: 22px; }
+    
+    .modal-body { padding: 30px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+    
+    .data-box { background: #0b0e14; border: 1px solid #333; border-radius: 6px; padding: 20px; }
+    .data-box h4 { color: #fff; margin-top: 0; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; letter-spacing: 1px; }
+    .data-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; border-bottom: 1px dashed #222; padding-bottom: 5px; }
+    .data-label { color: #888; }
+    .data-value { color: #fff; font-weight: bold; text-align: right; }
 
-        /* TABLE STYLES */
-        .rfq-table-container { background: var(--slate); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { padding: 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.2); }
-        td { padding: 20px; font-size: 14px; border-bottom: 1px solid var(--border); color: #ccc; }
-        tr:hover td { background: rgba(255,255,255,0.02); }
-        tr:last-child td { border-bottom: none; }
+    /* INPUTS */
+    label { display: block; font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 8px; font-weight: bold; }
+    input, select { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif; font-size: 14px;}
+    input:focus { border-color: var(--gold); outline: none; }
+    
+    .calc-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .calc-symbol { font-size: 20px; color: #666; font-weight: bold; margin-top: 20px;}
 
-        .status-badge { padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border: 1px solid transparent; display: inline-block; }
-        .status-new { background: rgba(255, 82, 82, 0.1); color: var(--alert); border-color: rgba(255, 82, 82, 0.3); }
-        .status-quoted { background: rgba(0, 229, 255, 0.1); color: var(--blue); border-color: rgba(0, 229, 255, 0.3); }
-        .status-funded { background: rgba(76, 175, 80, 0.1); color: var(--success); border-color: rgba(76, 175, 80, 0.3); }
+    .btn-submit { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; width: 100%; padding: 18px; border: none; font-weight: bold; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: 0.3s; margin-top: 20px;}
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
 
-        .btn-action { background: var(--gold); color: #000; border: none; padding: 8px 16px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
-        .btn-action:hover { background: #fff; }
-        .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 16px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
-        .btn-outline:hover { background: var(--gold); color: #000; }
-
-        /* MODAL STYLES */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--slate); border: 1px solid var(--border); border-radius: 8px; width: 800px; max-width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .modal-header { padding: 25px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--slate); z-index: 10; }
-        .modal-title { font-family: 'Cinzel', serif; font-size: 20px; color: #fff; letter-spacing: 1px; margin: 0; }
-        .modal-close { color: #888; font-size: 24px; cursor: pointer; transition: 0.3s; }
-        .modal-close:hover { color: var(--alert); }
-
-        .modal-body { padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .data-group { margin-bottom: 20px; }
-        .data-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 5px; }
-        .data-value { font-size: 14px; color: #fff; font-weight: bold; background: #0b0e14; padding: 12px; border-radius: 4px; border: 1px solid #222; }
-
-        .tool-input { width: 100%; background: #0b0e14; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif; font-size: 14px; margin-bottom: 15px; outline: none; }
-        .tool-input:focus { border-color: var(--gold); }
-    </style>
+    .btn-blind { background: transparent; color: var(--gold); border: 1px dashed var(--gold); padding: 12px; width: 100%; text-align: center; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;}
+    .btn-blind:hover { background: rgba(212,175,55,0.1); }
+  </style>
 </head>
 <body>
 
-    <script>
-        const supplierId = localStorage.getItem('verifiedSupplierId') || 'DEMO_SUPPLIER'; // Replace with real auth
+  <header>
+    <h1 class="brand">Muziris <span style="color:#fff; font-size: 16px; letter-spacing: 1px;">| Logistics Desk</span></h1>
+    <div class="nav-pill">Admin Privileges Active</div>
+  </header>
+
+  <div class="container">
+    <h2 style="color: #fff; font-family: 'Cinzel', serif; font-size: 24px; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 30px;">Pending Freight Quotes (RLQs)</h2>
+    
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>RFQ ID</th>
+            <th>Buyer Destination</th>
+            <th>Export Port</th>
+            <th>Incoterm</th>
+            <th>Load Type</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="rlq-table-body">
+          <tr><td colspan="6" style="text-align: center; padding: 40px; color: #888;">Scanning for pending logistics requests...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="freight-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Dispatch & Price Freight: <span id="ui-rfq" style="color:#fff;"></span></h2>
+        <span style="color: #888; font-size: 24px; cursor: pointer;" onclick="closeModal()">✖</span>
+      </div>
+      
+      <div class="modal-body">
         
-        // Firebase Init
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
-            authDomain: "muziris-ac9dd.firebaseapp.com",
-            projectId: "muziris-ac9dd"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const API_BASE_URL = "https://muziris-api.onrender.com/api";
-    </script>
-
-    <div class="sidebar">
-        <div class="logo">Muziris</div>
-        <div class="nav-menu">
-            <a href="supplier-dashboard.html" class="nav-link nav-item"><i class="fas fa-chart-line"></i> Overview</a>
-            <a href="message-hub.html" class="nav-link nav-item"><i class="fas fa-comments"></i> Negotiation Hub</a>
-            <a href="#" class="nav-link nav-item active"><i class="fas fa-file-invoice-dollar"></i> RFQ Inbox</a>
-            <a href="product-upload.html" class="nav-link nav-item"><i class="fas fa-box"></i> Inventory</a>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="top-nav">
-            <h1 class="page-title">Sourcing Contracts (RFQs)</h1>
+        <div class="grid-2">
+          <div class="data-box">
+            <h4>📍 Routing & Compliance</h4>
+            <div class="data-row"><span class="data-label">Origin Port:</span><span class="data-value" id="ui-port"></span></div>
+            <div class="data-row"><span class="data-label">Destination:</span><span class="data-value" id="ui-dest"></span></div>
+            <div class="data-row"><span class="data-label">Incoterm:</span><span class="data-value" id="ui-incoterm" style="color:var(--gold);"></span></div>
+            <div class="data-row"><span class="data-label">HS Code:</span><span class="data-value" id="ui-hs"></span></div>
+            <div class="data-row"><span class="data-label">Hazmat/DG:</span><span class="data-value" id="ui-hazmat"></span></div>
+          </div>
+          
+          <div class="data-box">
+            <h4>📦 Cargo Configuration</h4>
+            <div class="data-row"><span class="data-label">Load Type:</span><span class="data-value" id="ui-load" style="color:var(--blue);"></span></div>
+            <div class="data-row"><span class="data-label">Est. Weight (kg):</span><span class="data-value" id="ui-kg"></span></div>
+            <div class="data-row"><span class="data-label">CBM / Dimensions:</span><span class="data-value" id="ui-dims"></span></div>
+            <div class="data-row"><span class="data-label">Commercial Value:</span><span class="data-value" id="ui-value" style="color:var(--green);"></span></div>
+          </div>
         </div>
 
-        <div class="dashboard-body">
-            <div class="rfq-table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>RFQ ID</th>
-                            <th>Date</th>
-                            <th>Product Details</th>
-                            <th>Buyer Target / Vol</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rfq-table-body">
-                        <tr><td colspan="6" style="text-align:center; padding:40px; color:#888;">Loading RFQs...</td></tr>
-                    </tbody>
-                </table>
+        <div style="background: rgba(30, 136, 229, 0.1); border: 1px solid var(--blue); padding: 20px; border-radius: 6px; margin-bottom: 30px;">
+          <h4 style="color: var(--blue); margin-top: 0; margin-bottom: 10px; font-size: 14px;">📄 Generate Commercial Documents</h4>
+          <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">Send this marked-up Commercial Invoice to your Freight Broker. Instruct the factory to ship BLIND (no pricing documents attached to cartons).</p>
+          <button class="btn-blind" onclick="generateBlindInvoice()">Download Blind Commercial Invoice (PDF)</button>
+        </div>
+
+        <div class="data-box" style="background: rgba(212, 175, 55, 0.05); border-color: var(--gold);">
+          <h4 style="color: var(--gold);">💰 Enter Freight Cost & Markup</h4>
+          
+          <div class="calc-row">
+            <div style="flex: 2;">
+              <label>Shipping Method</label>
+              <select id="ship-mode">
+                <option value="Air Express (DHL/FedEx)">Air Express (DHL/FedEx)</option>
+                <option value="Air Freight (Airport to Airport)">Air Freight (Standard)</option>
+                <option value="Ocean Freight (LCL)">Ocean Freight (LCL)</option>
+                <option value="Ocean Freight (FCL)">Ocean Freight (FCL)</option>
+              </select>
             </div>
-        </div>
-    </div>
-
-    <div id="quote-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div>
-                    <h2 class="modal-title">Issue Official Quotation</h2>
-                    <div id="modal-rfq-id" style="font-size:11px; color:var(--gold); margin-top:5px; font-family:monospace;">RFQ-123456</div>
-                </div>
-                <div class="modal-close" onclick="closeModal()">×</div>
+            <div style="flex: 1;">
+              <label>Transit Time (Days)</label>
+              <input type="number" id="transit-days" placeholder="e.g. 14">
             </div>
-            
-            <div class="modal-body">
-                <div style="border-right: 1px solid var(--border); padding-right: 30px;">
-                    <h3 style="font-size: 14px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0;">Buyer Requirements</h3>
-                    
-                    <div class="data-group">
-                        <div class="data-label">Product</div>
-                        <div class="data-value" id="modal-product-name">Loading...</div>
-                    </div>
-                    
-                    <div class="data-group">
-                        <div class="data-label">Requested Volume Matrix</div>
-                        <div class="data-value" id="modal-matrix" style="font-size:12px; font-family:monospace; line-height:1.6;">Loading...</div>
-                    </div>
+          </div>
 
-                    <div class="data-group">
-                        <div class="data-label">Logistics & Destination</div>
-                        <div class="data-value" id="modal-logistics">Loading...</div>
-                    </div>
-
-                    <div class="data-group">
-                        <div class="data-label">Compliance Requests</div>
-                        <div class="data-value" id="modal-compliance" style="color:var(--blue);">Loading...</div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 style="font-size: 14px; color: var(--success); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0;">Your Official Quote</h3>
-                    
-                    <label class="data-label">Final Base Unit Price (USD)</label>
-                    <input type="number" step="0.01" id="quote-base-price" class="tool-input" placeholder="e.g. 12.50">
-
-                    <label class="data-label">Estimated Lead Time</label>
-                    <input type="text" id="quote-lead-time" class="tool-input" placeholder="e.g. 30 Days">
-
-                    <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px dashed #333;">
-                        <label class="data-label" style="color:var(--gold);">+ Additional Customization / Setup Fee</label>
-                        <div style="display:flex; gap:10px;">
-                            <input type="text" id="quote-fee-name" class="tool-input" placeholder="Fee Name (e.g. Mold Setup)" style="margin-bottom:0; flex:2;">
-                            <input type="number" step="0.01" id="quote-fee-amt" class="tool-input" placeholder="USD Amount" style="margin-bottom:0; flex:1;">
-                        </div>
-                    </div>
-
-                    <label class="data-label">Official Terms & Notes</label>
-                    <textarea id="quote-notes" class="tool-input" rows="3" placeholder="e.g. Price valid for 14 days. Includes red pantone matching."></textarea>
-
-                    <button class="btn-action" style="width:100%; padding:15px; font-size:13px; margin-top:10px;" onclick="submitOfficialQuote()">
-                        Sign & Issue Quotation
-                    </button>
-                </div>
+          <div class="calc-row">
+            <div style="flex: 1;">
+              <label>Raw Broker Cost (CAD)</label>
+              <input type="number" step="0.01" id="broker-cost" value="0" oninput="calcFreight()">
             </div>
+            <div class="calc-symbol">+</div>
+            <div style="flex: 1;">
+              <label>Muziris Margin (%)</label>
+              <input type="number" step="0.1" id="freight-margin" value="20" oninput="calcFreight()">
+            </div>
+            <div class="calc-symbol">=</div>
+            <div style="flex: 1;">
+              <label style="color:var(--green);">Final Buyer Price (CAD)</label>
+              <input type="text" id="final-freight" value="$0.00" style="color:var(--green); font-weight:bold; background:#000;" disabled>
+            </div>
+          </div>
         </div>
+
+        <button class="btn-submit" id="btn-approve" onclick="approveContract()">LOCK FREIGHT & DISPATCH CONTRACT TO BUYER</button>
+      </div>
     </div>
+  </div>
 
-    <script>
-        let allRFQs = [];
-        let currentRfqForQuote = null;
+  <script>
+    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+    let currentRfq = null;
+    let buyerCommercialValue = 0;
 
-        // 1. Fetch RFQs from Database
-        function loadRFQs() {
-            // Note: Update to your actual endpoint handling supplier_id
-            fetch(API_BASE_URL + '/get-admin-rfqs', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ adminKey: "MUZIRIS_MASTER_KEY_2026" })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.error) throw new Error(data.error);
-                // Filter for this supplier
-                allRFQs = data.filter(r => r.supplier_id === supplierId).reverse();
-                renderTable();
-            })
-            .catch(err => {
-                document.getElementById('rfq-table-body').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--alert);">Connection Failed.</td></tr>`;
-            });
-        }
+    // Load Pending Logistics RFQs
+    function loadRLQs() {
+      // In production, you would fetch WHERE status = 'Pending Logistics' or 'Supplier Quoted'
+      fetch(API_BASE_URL + '/admin/dashboard-stats') 
+        .then(res => res.json())
+        .then(data => {
+            // For this mockup, we fetch all and filter client-side.
+            // Replace with your actual specific route later.
+            fetch(API_BASE_URL + '/get-all-rfqs')
+            .then(r => r.json())
+            .then(rfqs => {
+                let html = '';
+                rfqs.forEach(rfq => {
+                    // Only show RFQs where the supplier has quoted, but it hasn't been sent to buyer yet
+                    if(rfq.status === 'Pending Supplier' || rfq.status === 'Quote Sent' || !rfq.supplier_quote) return; 
 
-        // 2. Render Table
-        function renderTable() {
-            const tbody = document.getElementById('rfq-table-body');
-            tbody.innerHTML = "";
-
-            if(allRFQs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#888;">No RFQs received yet.</td></tr>`;
-                return;
-            }
-
-            allRFQs.forEach(rfq => {
-                // Determine Status Badge
-                let badgeClass = 'status-new';
-                if(rfq.status === 'Quote Issued') badgeClass = 'status-quoted';
-                if(rfq.status === 'Funded Escrow' || rfq.status === 'In Production') badgeClass = 'status-funded';
-
-                // Format Buyer Target Data
-                let targetDisplay = "N/A";
-                try {
-                    let variants = typeof rfq.variants_requested === 'string' ? JSON.parse(rfq.variants_requested) : rfq.variants_requested;
-                    if(variants && variants.length > 0) {
-                        targetDisplay = `${variants[0].quantity} units @ $${variants[0].targetPriceBuyer || '?'}`;
-                    }
-                } catch(e){}
-
-                // Determine Action Button
-                let actionBtn = `<button class="btn-outline" style="opacity:0.5; cursor:not-allowed;" disabled>Processing</button>`;
-                
-                if (rfq.status === 'Pending Supplier Quote') {
-                    actionBtn = `<button class="btn-action" onclick="openQuoteModal('${rfq.rfq_id}')">Review & Quote</button>`;
-                } else if (rfq.status === 'Quote Issued') {
-                    actionBtn = `<button class="btn-outline" onclick="alert('Waiting for buyer to fund escrow.')">Awaiting Payment</button>`;
-                } else if (rfq.status === 'Funded Escrow' || rfq.status === 'In Production') {
-                    actionBtn = `<button class="btn-outline" style="border-color:var(--success); color:var(--success);" onclick="window.location.href='supplier-dashboard.html'">Manage Order</button>`;
-                }
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-family:monospace; color:var(--gold); font-weight:bold;">${rfq.rfq_id}</td>
-                        <td style="color:#888;">${new Date(rfq.submitted_date).toLocaleDateString()}</td>
-                        <td>
-                            <strong style="color:#fff;">${rfq.product_name}</strong><br>
-                            <span style="font-size:10px; color:#888; text-transform:uppercase;">${rfq.buyer_company || rfq.buyer_email}</span>
-                        </td>
-                        <td style="font-family:monospace; color:#ccc;">${targetDisplay}</td>
-                        <td><span class="status-badge ${badgeClass}">${rfq.status}</span></td>
-                        <td>${actionBtn}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        // 3. Open Modal & Populate Buyer Data
-        function openQuoteModal(rfqId) {
-            currentRfqForQuote = allRFQs.find(r => r.rfq_id === rfqId);
-            if(!currentRfqForQuote) return;
-
-            document.getElementById('modal-rfq-id').innerText = rfqId;
-            document.getElementById('modal-product-name').innerText = currentRfqForQuote.product_name;
-            document.getElementById('modal-logistics').innerText = `${currentRfqForQuote.logistics} ➔ ${currentRfqForQuote.destination || 'TBD'}`;
-            
-            // Format Compliance
-            let comp = [];
-            if(currentRfqForQuote.req_certs === 'Yes') comp.push("Certs");
-            if(currentRfqForQuote.req_video === 'Yes') comp.push("Video");
-            if(currentRfqForQuote.req_photos === 'Yes') comp.push("Photos");
-            document.getElementById('modal-compliance').innerText = comp.length > 0 ? comp.join(' | ') : "Standard Quality Control";
-
-            // Format Matrix
-            let matrixHtml = "";
-            try {
-                let variants = typeof currentRfqForQuote.variants_requested === 'string' ? JSON.parse(currentRfqForQuote.variants_requested) : currentRfqForQuote.variants_requested;
-                variants.forEach(v => {
-                    matrixHtml += `• ${v.quantity}x ${v.variantName}<br><span style="color:#888;">&nbsp;&nbsp;Buyer Target: $${v.targetPriceBuyer || 'N/A'}</span><br>`;
+                    let quote = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
+                    
+                    html += `
+                      <tr>
+                        <td style="color:var(--gold); font-weight:bold;">${rfq.rfq_id}</td>
+                        <td>${rfq.destination}</td>
+                        <td>${quote.exportPort || 'Unknown'}</td>
+                        <td><span style="background:#333; padding:2px 6px; border-radius:4px; font-size:10px;">${quote.incoterm || 'FOB'}</span></td>
+                        <td>${determineLoadType(quote)}</td>
+                        <td><button class="btn-action" onclick='openModal(${JSON.stringify(rfq).replace(/'/g, "&apos;")})'>Process</button></td>
+                      </tr>
+                    `;
                 });
-            } catch(e){ matrixHtml = "Data error."; }
-            document.getElementById('modal-matrix').innerHTML = matrixHtml;
-
-            // Reset Inputs
-            document.getElementById('quote-base-price').value = "";
-            document.getElementById('quote-fee-name').value = "";
-            document.getElementById('quote-fee-amt').value = "";
-            document.getElementById('quote-lead-time').value = "";
-            document.getElementById('quote-notes').value = "";
-
-            document.getElementById('quote-modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('quote-modal').style.display = 'none';
-            currentRfqForQuote = null;
-        }
-
-        // 4. Submit Quote to Database
-        function submitOfficialQuote() {
-            if(!currentRfqForQuote) return;
-
-            const basePrice = document.getElementById('quote-base-price').value;
-            const leadTime = document.getElementById('quote-lead-time').value;
-            
-            if(!basePrice || !leadTime) return alert("Base Price and Lead Time are required.");
-
-            // Build the JSON payload matching our schema
-            const quoteData = {
-                basePrice: parseFloat(basePrice),
-                feeName: document.getElementById('quote-fee-name').value || "None",
-                feeAmt: parseFloat(document.getElementById('quote-fee-amt').value) || 0,
-                leadTime: leadTime,
-                notes: document.getElementById('quote-notes').value || "Standard manufacturing terms apply."
-            };
-
-            // Assuming you have an endpoint to update the RFQ status & append the quote
-            fetch(API_BASE_URL + '/update-rfq-status', {
-                method: 'PUT', // Or POST depending on your server setup
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    rfqId: currentRfqForQuote.rfq_id,
-                    status: 'Quote Issued',
-                    supplierQuote: quoteData
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.success) {
-                    alert("Quotation successfully issued to buyer!");
-                    closeModal();
-                    loadRFQs(); // Refresh table
-                } else {
-                    alert("Error: " + data.error);
-                }
-            })
-            .catch(err => {
-                alert("Network error. Could not issue quote.");
+                
+                if(html === '') html = '<tr><td colspan="6" style="text-align:center; padding: 40px; color:#888;">No pending logistics requests.</td></tr>';
+                document.getElementById('rlq-table-body').innerHTML = html;
             });
-        }
+        });
+    }
 
-        // Run on boot
-        window.onload = loadRFQs;
-    </script>
+    // Helper to extract load type
+    function determineLoadType(quote) {
+        if(quote.masterCarton && quote.masterCarton.length) return "Loose Cartons";
+        return "Unknown Cargo"; // Expand this logic based on your DB JSON structure
+    }
+
+    // Open Modal and populate data
+    function openModal(rfqObj) {
+        currentRfq = rfqObj;
+        let quote = typeof rfqObj.supplier_quote === 'string' ? JSON.parse(rfqObj.supplier_quote) : rfqObj.supplier_quote;
+        
+        document.getElementById('ui-rfq').innerText = rfqObj.rfq_id;
+        document.getElementById('ui-dest').innerText = rfqObj.destination;
+        document.getElementById('ui-port').innerText = quote.exportPort || 'Not specified';
+        document.getElementById('ui-incoterm').innerText = quote.incoterm || 'FOB';
+        
+        // Mocking the values based on our previous logic
+        document.getElementById('ui-hs').innerText = quote.hsCode || "9503.00.00";
+        document.getElementById('ui-hazmat').innerText = quote.hazmat || "No";
+        document.getElementById('ui-load').innerText = determineLoadType(quote);
+        document.getElementById('ui-kg').innerText = (quote.masterCarton ? quote.masterCarton.weightKG : "0") + " kg";
+        
+        let dims = quote.masterCarton ? `${quote.masterCarton.length}x${quote.masterCarton.width}x${quote.masterCarton.height} cm (${quote.masterCarton.totalCartons} qty)` : 'N/A';
+        document.getElementById('ui-dims').innerText = dims;
+
+        // Calculate Commercial Value (The Marked-Up Price the Buyer Pays)
+        buyerCommercialValue = quote.calculatedBuyerTotals ? parseFloat(quote.calculatedBuyerTotals.productTotalBuyer) : 0;
+        document.getElementById('ui-value').innerText = "$" + buyerCommercialValue.toFixed(2) + " CAD";
+
+        document.getElementById('freight-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('freight-modal').style.display = 'none';
+        currentRfq = null;
+    }
+
+    // Calculate final freight with markup
+    function calcFreight() {
+        let base = parseFloat(document.getElementById('broker-cost').value) || 0;
+        let marginPct = parseFloat(document.getElementById('freight-margin').value) || 0;
+        let finalPrice = base * (1 + (marginPct / 100));
+        document.getElementById('final-freight').value = "$" + finalPrice.toFixed(2);
+        return finalPrice;
+    }
+
+    function generateBlindInvoice() {
+        alert("Downloading Blind Commercial Invoice PDF...\n\nValue Declared: $" + buyerCommercialValue.toFixed(2) + " CAD\nConsignee: Muziris Escrow C/O Buyer");
+        // In reality, this triggers a backend library (like pdfkit) to generate and download the file.
+    }
+
+    function approveContract() {
+        let finalFreight = calcFreight();
+        if(finalFreight <= 0) return alert("Please enter a valid freight cost.");
+
+        const btn = document.getElementById('btn-approve');
+        btn.innerText = "UPDATING DATABASE & EMAILING BUYER...";
+        btn.disabled = true;
+
+        let freightData = {
+            shipMode: document.getElementById('ship-mode').value,
+            transitTime: document.getElementById('transit-days').value,
+            rawBrokerCost: parseFloat(document.getElementById('broker-cost').value),
+            marginPercent: parseFloat(document.getElementById('freight-margin').value),
+            finalFreightBuyer: finalFreight
+        };
+
+        // Inject the freight data into the existing quote JSON
+        let updatedQuote = typeof currentRfq.supplier_quote === 'string' ? JSON.parse(currentRfq.supplier_quote) : currentRfq.supplier_quote;
+        updatedQuote.freightData = freightData;
+
+        // Make API Call to save the updated JSON and change status to 'Quote Sent'
+        fetch(API_BASE_URL + '/admin/approve-logistics', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                rfqId: currentRfq.rfq_id,
+                updatedQuote: updatedQuote
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                alert("Contract successfully dispatched to buyer!");
+                closeModal();
+                loadRLQs(); // Reload table
+            } else {
+                alert("Error: " + data.error);
+            }
+            btn.innerText = "LOCK FREIGHT & DISPATCH CONTRACT TO BUYER";
+            btn.disabled = false;
+        })
+        .catch(err => {
+            alert("Network Error.");
+            btn.disabled = false;
+        });
+    }
+
+    // Initialize
+    loadRLQs();
+  </script>
 </body>
 </html>
