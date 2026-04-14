@@ -374,6 +374,12 @@
       const payload = {
         rfqId: rfqId,
         leadTime: document.getElementById('lead-time').value,
+        // 🟢 NEW: SEND SPECS TO DATABASE
+        specifications: {
+          materials: document.getElementById('spec-materials') ? document.getElementById('spec-materials').value : "",
+          warranty: document.getElementById('spec-warranty') ? document.getElementById('spec-warranty').value : "",
+          supplierNotes: document.getElementById('spec-notes') ? document.getElementById('spec-notes').value : ""
+        },
         masterCarton: {
           length: document.getElementById('box-l').value,
           width: document.getElementById('box-w').value,
