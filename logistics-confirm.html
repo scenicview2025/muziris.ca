@@ -308,6 +308,13 @@
               }
               if(existingQuote.leadTime) document.getElementById('lead-time').value = existingQuote.leadTime;
               
+              // 🟢 NEW: PRE-FILL SPECS & WARRANTY
+              if(existingQuote.specifications) {
+                if(document.getElementById('spec-materials')) document.getElementById('spec-materials').value = existingQuote.specifications.materials || '';
+                if(document.getElementById('spec-warranty')) document.getElementById('spec-warranty').value = existingQuote.specifications.warranty || '';
+                if(document.getElementById('spec-notes')) document.getElementById('spec-notes').value = existingQuote.specifications.supplierNotes || '';
+              }
+
               if(existingQuote.extraFees) {
                 if(document.getElementById('fee-cust')) document.getElementById('fee-cust').value = existingQuote.extraFees.customizationFee || 0;
                 if(document.getElementById('note-cust')) document.getElementById('note-cust').value = existingQuote.extraFees.customizationNotes || '';
