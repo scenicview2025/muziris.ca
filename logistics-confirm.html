@@ -392,7 +392,9 @@
         extraFees: {
           customizationFee: custFeeInput ? custFeeInput.value : 0,
           customizationNotes: custNoteInput ? custNoteInput.value : "",
-          sampleFee: sampFeeInput ? sampFeeInput.value : 0
+          sampleFee: sampFeeInput ? sampFeeInput.value : 0,
+          otherFee: document.getElementById('fee-other') ? document.getElementById('fee-other').value : 0,
+          otherNotes: document.getElementById('note-other') ? document.getElementById('note-other').value : ""
         },
         evidence: { 
           certFile: certUrl, 
