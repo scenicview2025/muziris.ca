@@ -342,29 +342,30 @@
           let variants = [];
           try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
 
-          // 🟢 NEW: GRAB THE PRODUCT IMAGE AND DISPLAY IT
-          let productImg = null;
-          
-          // 1. Try to find the real image from the database
-          if (variants.length > 0 && variants[0].img) {
-              productImg = variants[0].img;
-          } else if (variants.length > 0 && variants[0].variantImg) {
-              productImg = variants[0].variantImg;
-          } else if (variants.length > 0 && variants[0].image) {
-              productImg = variants[0].image; // Catch-all for other variable names
-          }
-          
-          // 🟢 2. THE FIX: If no image is found, use a sleek Muziris-themed placeholder!
-          if (!productImg || productImg === "") {
-              // This generates a beautiful dark grey box with Gold text
-              productImg = "https://placehold.co/150x150/151922/D4AF37.png?text=Image+Pending";
-          }
-          
-          // 3. Display it
-          if (productImg) {
+          // 🟢 THE FIX: FETCH THE REAL PRODUCT IMAGE FROM THE GLOBAL LEDGER
+          // We use the product_id to ask the server for the exact hero image!
+          fetch(API_BASE_URL + '/get-product-details', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ supplierId: data.supplier_id, productId: data.product_id })
+          })
+          .then(prodRes => prodRes.json())
+          .then(prodData => {
+              let productImg = prodData.hero_img || prodData.life_img || prodData.detail_img;
+              
+              if (!productImg || productImg === "") {
+                  // Fallback if the supplier never uploaded an image
+                  productImg = "https://placehold.co/150x150/151922/D4AF37.png?text=Image+Pending";
+              }
+              
               document.getElementById('ui-product-img').src = productImg;
               document.getElementById('ui-product-img').style.display = 'block';
-          }
+          })
+          .catch(e => {
+              // If the network fails, just show the placeholder
+              document.getElementById('ui-product-img').src = "https://placehold.co/150x150/151922/D4AF37.png?text=Image+Pending";
+              document.getElementById('ui-product-img').style.display = 'block';
+          });
           
           // Pull existing quote to pre-fill the form if they are replying
           let existingQuote = null;
