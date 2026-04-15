@@ -344,12 +344,23 @@
 
           // 🟢 NEW: GRAB THE PRODUCT IMAGE AND DISPLAY IT
           let productImg = null;
+          
+          // 1. Try to find the real image from the database
           if (variants.length > 0 && variants[0].img) {
               productImg = variants[0].img;
           } else if (variants.length > 0 && variants[0].variantImg) {
               productImg = variants[0].variantImg;
+          } else if (variants.length > 0 && variants[0].image) {
+              productImg = variants[0].image; // Catch-all for other variable names
           }
           
+          // 🟢 2. THE FIX: If no image is found, use a sleek Muziris-themed placeholder!
+          if (!productImg || productImg === "") {
+              // This generates a beautiful dark grey box with Gold text
+              productImg = "https://placehold.co/150x150/151922/D4AF37.png?text=Image+Pending";
+          }
+          
+          // 3. Display it
           if (productImg) {
               document.getElementById('ui-product-img').src = productImg;
               document.getElementById('ui-product-img').style.display = 'block';
