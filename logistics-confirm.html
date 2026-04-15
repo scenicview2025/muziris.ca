@@ -510,9 +510,13 @@
           customizationFee: custFeeInput ? custFeeInput.value : 0,
           customizationNotes: custNoteInput ? custNoteInput.value : "",
           
-          // 🟢 NEW: Save the granular sample data
-          samplePrice: sampPriceInput ? sampPriceInput.value : 0,
-          sampleMax: sampMaxInput ? sampMaxInput.value : 1,
+          // 🟢 Keeps backend math happy (assumes 1 sample by default for the RFQ total)
+          sampleFee: sampBaseInput ? parseFloat(sampBaseInput.value) || 0 : 0,
+          
+          // 🟢 Saves the smart math variables for the Checkout Page!
+          sampleBasePrice: sampBaseInput ? sampBaseInput.value : 0,
+          sampleExtraPrice: sampExtraInput ? sampExtraInput.value : 0,
+          sampleMax: sampMaxInput ? sampMaxInput.value : 3,
           sampleNote: sampNoteInput ? sampNoteInput.value : "",
           
           otherFee: document.getElementById('fee-other') ? document.getElementById('fee-other').value : 0,
