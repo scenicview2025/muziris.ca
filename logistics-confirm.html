@@ -97,10 +97,18 @@
   <div class="container" id="main-content" style="display:none;">
     
     <div class="order-card">
-      <h2 style="color:var(--gold);"><span style="color:#888; font-size: 16px; vertical-align:middle;">RFQ:</span> <span id="ui-rfq-id"></span></h2>
       <input type="hidden" id="hidden-supplier-id">
-      <p style="font-size:16px; margin:0; line-height: 1.6;">You have received a sourcing request for <strong style="color:#fff; font-size:18px;" id="ui-product"></strong>.</p>
       
+      <div class="order-header-flex">
+        <img src="" id="ui-product-img" class="product-thumb" alt="Product Image" style="display: none;">
+        
+        <div>
+          <h2 style="color:var(--gold); margin-top:0;"><span style="color:#888; font-size: 16px; vertical-align:middle;">RFQ:</span> <span id="ui-rfq-id"></span></h2>
+          <p style="font-size:16px; margin:0; line-height: 1.4; color:#ccc;">You received a sourcing request for:<br><strong style="color:#fff; font-size:18px;" id="ui-product"></strong></p>
+        </div>
+      </div>
+      
+      <div class="order-details">      
       <div class="order-details">
         <div><span style="color:#888; font-size:11px; text-transform:uppercase;">Buyer Destination</span><br><strong style="font-size:14px;" id="ui-dest"></strong></div>
         <div><span style="color:#888; font-size:11px; text-transform:uppercase;">Logistics Rules</span><br><strong style="font-size:14px; color:var(--blue);" id="ui-logistics"></strong></div>
