@@ -454,9 +454,24 @@
       const videoLinkInput = document.getElementById('link-video');
       const supplierReplyInput = document.getElementById('supplier-reply');
 
+      // 🟢 1. GENERATE THE DIGITAL SIGNATURE
+      const signatureTimestamp = new Date().toISOString();
+      const deviceFingerprint = navigator.userAgent; 
+      const termsVersion = "Muziris_Supplier_Terms_v1.1_April2026";
+
       const payload = {
         rfqId: rfqId,
         leadTime: document.getElementById('lead-time').value,
+        
+        // 🟢 ADDED LOGISTICS & COMPLIANCE FIELDS
+        hsCode: document.getElementById('log-hs') ? document.getElementById('log-hs').value : "",
+        hazmat: document.getElementById('log-hazmat') ? document.getElementById('log-hazmat').value : "No",
+        incoterm: document.getElementById('log-incoterm') ? document.getElementById('log-incoterm').value : "FOB",
+        exportPort: document.getElementById('log-port') ? document.getElementById('log-port').value : "",
+        loadType: document.getElementById('log-load-type') ? document.getElementById('log-load-type').value : "loose",
+        fclSize: document.getElementById('fcl-size') ? document.getElementById('fcl-size').value : "",
+        fclWeight: document.getElementById('fcl-kg') ? document.getElementById('fcl-kg').value : "",
+
         // 🟢 NEW: SEND SPECS TO DATABASE
         specifications: {
           materials: document.getElementById('spec-materials') ? document.getElementById('spec-materials').value : "",
@@ -464,11 +479,11 @@
           supplierNotes: document.getElementById('spec-notes') ? document.getElementById('spec-notes').value : ""
         },
         masterCarton: {
-          length: document.getElementById('box-l').value,
-          width: document.getElementById('box-w').value,
-          height: document.getElementById('box-h').value,
-          weightKG: document.getElementById('box-kg').value,
-          totalCartons: document.getElementById('box-qty').value
+          length: document.getElementById('box-l').value || document.getElementById('pal-l').value,
+          width: document.getElementById('box-w').value || document.getElementById('pal-w').value,
+          height: document.getElementById('box-h').value || document.getElementById('pal-h').value,
+          weightKG: document.getElementById('box-kg').value || document.getElementById('pal-kg').value,
+          totalCartons: document.getElementById('box-qty').value || document.getElementById('pal-qty').value
         },
         counterOffers: counterOffers,
         extraFees: {
@@ -484,9 +499,15 @@
           videoLink: videoLinkInput ? videoLinkInput.value : "",
           supplierReply: supplierReplyInput ? supplierReplyInput.value : "" // 🟢 Pass reply back to buyer
         },
-        agreedToTerms: document.getElementById('legal-agree').checked
-      };
+        agreedToTerms: document.getElementById('legal-agree').checked,
 
+        // 🟢 2. INJECT DIGITAL SIGNATURE INTO YOUR PAYLOAD
+        digitalSignature: {
+            versionAgreed: termsVersion,
+            timestamp: signatureTimestamp,
+            device: deviceFingerprint
+        }
+      };
       fetch(API_BASE_URL + '/submit-supplier-quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
