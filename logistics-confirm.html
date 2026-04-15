@@ -341,6 +341,19 @@
 
           let variants = [];
           try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
+
+          // 🟢 NEW: GRAB THE PRODUCT IMAGE AND DISPLAY IT
+          let productImg = null;
+          if (variants.length > 0 && variants[0].img) {
+              productImg = variants[0].img;
+          } else if (variants.length > 0 && variants[0].variantImg) {
+              productImg = variants[0].variantImg;
+          }
+          
+          if (productImg) {
+              document.getElementById('ui-product-img').src = productImg;
+              document.getElementById('ui-product-img').style.display = 'block';
+          }
           
           // Pull existing quote to pre-fill the form if they are replying
           let existingQuote = null;
