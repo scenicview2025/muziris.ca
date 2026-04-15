@@ -539,7 +539,13 @@
 
       const counterOffers = [];
       document.querySelectorAll('.counter-input').forEach(input => {
-         counterOffers.push({ variantId: input.getAttribute('data-vid'), supplierFinalTotal: input.value || 0 });
+         // 🟢 THE NINJA MATH: Grab the unit price they typed, grab the hidden quantity, and multiply them!
+         let unitPrice = parseFloat(input.value) || 0;
+         let qty = parseInt(input.getAttribute('data-qty')) || 1;
+         let calculatedTotal = (unitPrice * qty).toFixed(2);
+         
+         // Send the calculated total to the backend so the Muziris Ledger math doesn't break!
+         counterOffers.push({ variantId: input.getAttribute('data-vid'), supplierFinalTotal: calculatedTotal });
       });
 
       const custFeeInput = document.getElementById('fee-cust');
