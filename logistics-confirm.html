@@ -257,6 +257,27 @@
   </div>
 
   <script>
+    // 🟢 WIZARD LOGIC (Changes the steps and updates the progress bar)
+    function goToStep(stepNumber) {
+      // Hide all steps
+      document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
+      // Show the requested step
+      document.getElementById('step-' + stepNumber).classList.add('active');
+      
+      // Update Progress Bar Colors
+      for(let i=1; i<=3; i++) {
+        let indicator = document.getElementById('indicator-' + i);
+        if (i < stepNumber) {
+          indicator.className = 'step-item completed';
+        } else if (i === stepNumber) {
+          indicator.className = 'step-item active';
+        } else {
+          indicator.className = 'step-item';
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top smoothly
+    }
+
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
 
     // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
