@@ -504,7 +504,12 @@
         extraFees: {
           customizationFee: custFeeInput ? custFeeInput.value : 0,
           customizationNotes: custNoteInput ? custNoteInput.value : "",
-          sampleFee: sampFeeInput ? sampFeeInput.value : 0,
+          
+          // 🟢 NEW: Save the granular sample data
+          samplePrice: sampPriceInput ? sampPriceInput.value : 0,
+          sampleMax: sampMaxInput ? sampMaxInput.value : 1,
+          sampleNote: sampNoteInput ? sampNoteInput.value : "",
+          
           otherFee: document.getElementById('fee-other') ? document.getElementById('fee-other').value : 0,
           otherNotes: document.getElementById('note-other') ? document.getElementById('note-other').value : ""
         },
