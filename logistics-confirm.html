@@ -92,177 +92,167 @@
   <div id="loading">LOCATING SOURCING CONTRACT...</div>
 
   <div class="container" id="main-content" style="display:none;">
-    <h2>RFQ: <span id="ui-rfq-id" style="color:var(--gold);"></span></h2>
-    <input type="hidden" id="hidden-supplier-id">
     
-    <div class="info-box">
-      <strong>Product:</strong> <span id="ui-product"></span><br>
-      <strong>Buyer Destination:</strong> <span id="ui-dest"></span><br>
-      <strong>Logistics Terms:</strong> <span id="ui-logistics"></span><br>
-      <div style="margin-top:10px; font-size:12px; color:#aaa;" id="ui-notes"></div>
+    <div class="order-card">
+      <h2 style="color:var(--gold);"><span style="color:#888; font-size: 16px; vertical-align:middle;">RFQ:</span> <span id="ui-rfq-id"></span></h2>
+      <input type="hidden" id="hidden-supplier-id">
+      <p style="font-size:16px; margin:0; line-height: 1.6;">You have received a sourcing request for <strong style="color:#fff; font-size:18px;" id="ui-product"></strong>.</p>
+      
+      <div class="order-details">
+        <div><span style="color:#888; font-size:11px; text-transform:uppercase;">Buyer Destination</span><br><strong style="font-size:14px;" id="ui-dest"></strong></div>
+        <div><span style="color:#888; font-size:11px; text-transform:uppercase;">Logistics Rules</span><br><strong style="font-size:14px; color:var(--blue);" id="ui-logistics"></strong></div>
+      </div>
+      <div style="margin-top:15px; font-size:12px; color:#aaa; background:rgba(0,0,0,0.5); padding: 10px; border-radius:4px;" id="ui-notes"></div>
     </div>
 
-    <div class="negotiation-room" id="negotiation-room">
-      <h3>💬 Clarification Required by Buyer</h3>
-      <div class="buyer-msg" id="ui-buyer-feedback"></div>
-      <div style="margin-top: 20px;">
-        <label style="color: var(--gold);">Your Reply / Confirmation</label>
-        <textarea id="supplier-reply" rows="3" placeholder="Type your reply to the buyer here..."></textarea>
+    <div class="step-progress">
+      <div class="step-item active" id="indicator-1">
+        <div class="step-dot">1</div>
+        <div class="step-label">Commercials</div>
+      </div>
+      <div class="step-item" id="indicator-2">
+        <div class="step-dot">2</div>
+        <div class="step-label">Logistics</div>
+      </div>
+      <div class="step-item" id="indicator-3">
+        <div class="step-dot">3</div>
+        <div class="step-label">Review & Submit</div>
       </div>
     </div>
 
     <form id="quoteForm" onsubmit="event.preventDefault(); submitQuote();">
       
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">1. Review Volumes & Product Pricing</h3>
-      <p style="font-size:12px; color:#888;">Input the final accepted base price for the volumes requested. (Prices must be in <strong id="ui-currency" style="color:var(--gold);"></strong>)</p>
-      
-      <div id="variants-container"></div>
-      <div id="dynamic-requests-container"></div>
-
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">Commercial Specifications (For Buyer Contract)</h3>
-      <p style="font-size:12px; color:#888;">This information will be printed on the official commercial quotation provided to the buyer.</p>
-      
-      <div class="grid-2">
-        <div>
-          <label>Primary Materials / Composition</label>
-          <input type="text" id="spec-materials" placeholder="e.g. 100% Organic Cotton, 316L Stainless Steel" required>
-        </div>
-        <div>
-          <label>Warranty Terms</label>
-          <input type="text" id="spec-warranty" placeholder="e.g. 1-Year Defect Warranty, No Warranty" required>
-        </div>
-      </div>
-      <div style="margin-top: 15px; margin-bottom: 40px;">
-        <label>Supplier Terms & Manufacturing Notes</label>
-        <textarea id="spec-notes" rows="3" placeholder="Any specific manufacturing tolerances, quality standards, or terms the buyer must accept..."></textarea>
-      </div>
-
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">3. Customs Compliance & Dangerous Goods</h3>
-      <div class="grid-2">
-        <div>
-          <label>Harmonized System (HS) Code</label>
-          <input type="text" id="log-hs" placeholder="e.g. 9503.00.00" required>
-        </div>
-        <div>
-          <label>Contains Batteries, Liquids, or Magnets?</label>
-          <select id="log-hazmat" required>
-            <option value="No">No - Standard Goods</option>
-            <option value="Yes">Yes - Dangerous Goods (MSDS Required)</option>
-          </select>
-        </div>
-      </div>
-
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">4. Export Routing & Incoterms</h3>
-      <div class="grid-2">
-        <div>
-          <label>Incoterms (Export Terms)</label>
-          <select id="log-incoterm" required>
-            <option value="FOB">FOB (Free On Board) - Supplier pays local truck to port</option>
-            <option value="EXW">EXW (Ex Works) - Freight forwarder picks up at factory</option>
-            <option value="FCA">FCA (Free Carrier) - Supplier drops at local logistics hub</option>
-          </select>
-        </div>
-        <div>
-          <label>Nearest Export Port / City</label>
-          <input type="text" id="log-port" placeholder="e.g. Shenzhen Port, Shanghai Airport" required>
-        </div>
-      </div>
-
-      <h3 style="color: #fff; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">4. Cargo Dimensions & Lead Time</h3>
-      
-      <div style="margin-bottom: 20px;">
-        <label>Cargo Packaging Type</label>
-        <select id="log-load-type" onchange="toggleLoadType()" style="border-color: var(--blue);" required>
-          <option value="loose">Loose Master Cartons (Air / LCL)</option>
-          <option value="pallets">Palletized Freight (Air / LCL)</option>
-          <option value="fcl">Full Container Load (FCL)</option>
-        </select>
-      </div>
-
-      <div id="ui-loose" style="display: block;">
-        <p style="font-size:11px; color:#888;">Enter the dimensions of a SINGLE master carton, and the total count.</p>
-        <div class="grid-3">
-          <div><label>Length (cm)</label><input type="number" id="box-l"></div>
-          <div><label>Width (cm)</label><input type="number" id="box-w"></div>
-          <div><label>Height (cm)</label><input type="number" id="box-h"></div>
-        </div>
-        <div class="grid-2">
-          <div><label>Total Number of Cartons</label><input type="number" id="box-qty"></div>
-          <div><label>Total Gross Wgt (All Cartons kg)</label><input type="number" step="0.1" id="box-kg"></div>
-        </div>
-      </div>
-
-      <div id="ui-pallets" style="display: none; background: rgba(30, 136, 229, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--blue);">
-        <p style="font-size:11px; color:#888;">Enter the dimensions of a SINGLE fully loaded pallet. Ensure pallets are ISPM-15 compliant.</p>
-        <div class="grid-3">
-          <div><label>Pallet Length (cm)</label><input type="number" id="pal-l"></div>
-          <div><label>Pallet Width (cm)</label><input type="number" id="pal-w"></div>
-          <div><label>Pallet Height (cm)</label><input type="number" id="pal-h"></div>
-        </div>
-        <div class="grid-2">
-          <div><label>Total Number of Pallets</label><input type="number" id="pal-qty"></div>
-          <div><label>Total Gross Wgt (All Pallets kg)</label><input type="number" step="0.1" id="pal-kg"></div>
-        </div>
-      </div>
-
-      <div id="ui-fcl" style="display: none; background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--gold);">
-        <p style="font-size:11px; color:#888;">Select the container size required for this shipment.</p>
-        <div class="grid-2">
-          <div>
-            <label>Container Size</label>
-            <select id="fcl-size">
-              <option value="20GP">20ft Standard (20'GP)</option>
-              <option value="40GP">40ft Standard (40'GP)</option>
-              <option value="40HQ">40ft High Cube (40'HQ)</option>
-            </select>
-          </div>
-          <div><label>Estimated Total Gross Weight (kg)</label><input type="number" step="0.1" id="fcl-kg"></div>
-        </div>
-      </div>
-
-      <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
-        <label style="color: var(--gold);">Estimated Production Lead Time (Days)</label>
-        <input type="number" id="lead-time" placeholder="e.g. 30" style="font-size: 18px;" required>
-      </div>
-
-      <script>
-        function toggleLoadType() {
-          const type = document.getElementById('log-load-type').value;
-          document.getElementById('ui-loose').style.display = type === 'loose' ? 'block' : 'none';
-          document.getElementById('ui-pallets').style.display = type === 'pallets' ? 'block' : 'none';
-          document.getElementById('ui-fcl').style.display = type === 'fcl' ? 'block' : 'none';
-        }
-      </script>
-
-      <div class="dynamic-section" style="border-color: var(--gold); background: rgba(0,0,0,0.5); margin-top: 40px;">
-        <h4 style="color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; font-size: 14px;">⚖️ Muziris Supplier Agreement & Legal Terms</h4>
+      <div class="wizard-step active" id="step-1">
         
-        <div style="height: 200px; overflow-y: auto; font-size: 11px; color: #aaa; padding: 15px; background: #000; border: 1px solid #333; border-radius: 4px; margin-bottom: 15px; line-height: 1.6; font-family: 'Lato', sans-serif;">
-          
-          <strong style="color: #fff;">1. CONTRACTUAL PARTIES & ROLE OF MUZIRIS</strong><br>
-          This quotation forms a binding commercial contract strictly between you (The Supplier) and the Buyer. Muziris International acts solely as a Marketplace Facilitator and technology provider. All financial transactions and escrow holds are processed strictly by Tazapay, a licensed and regulated global payment institution. Muziris assumes zero liability for manufacturing defects, delivery delays, IP infringement, or legal disputes arising between the Buyer and Supplier.<br><br>
-
-          <strong style="color: #fff;">2. ESCROW SETTLEMENT & PRODUCTION MANDATE</strong><br>
-          When the Buyer accepts this quotation, they will fund the secure Escrow Account managed by Tazapay. Upon funding, you will receive an official notification to commence production immediately. Funds are released to your connected Tazapay wallet as a 100% one-time settlement exactly seven (7) calendar days after the Buyer successfully receives and inspects the shipment.<br><br>
-          
-          <strong style="color: #fff;">3. SUPPLIER LIABILITY & DISPUTES</strong><br>
-          You are legally bound to deliver the goods according to the Lead Time and Specifications stated in this form. If you encounter issues, cannot fulfill the order, or suffer delays, you must notify Muziris immediately. If the Buyer files a valid legal complaint or demands a refund due to Supplier negligence, defective goods, or failure to deliver, the Supplier holds full financial liability. Disputes will be mediated in accordance with Muziris platform rules and Tazapay's dispute resolution policies.<br><br>
-
-          <strong style="color: #fff;">4. NON-CIRCUMVENTION & ANTI-BYPASS</strong><br>
-          By submitting this quote, the Supplier agrees to strict non-circumvention. Attempting to bypass Muziris to transact with the Buyer directly will result in immediate account termination, suspension of pending escrow payouts, and a $50,000 CAD liquidated damages penalty.<br><br>
-
-          <strong style="color: #fff;">5. THIRD-PARTY PAYMENT SERVICES (TAZAPAY)</strong><br>
-          Payment processing and escrow services for suppliers on Muziris are provided by Tazapay and are subject to the Tazapay Connected Account Agreement. By agreeing to these terms or continuing to operate as a Supplier on Muziris, you agree to be bound by Tazapay’s Terms of Service, Anti-Money Laundering (AML) policies, and regulatory compliance requirements.
-        </div>
-        <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #fff; cursor: pointer; text-transform: none; margin-top: 0;">
-          <input type="checkbox" id="legal-agree" required style="width: 20px; height: 20px; accent-color: var(--gold); margin-top: 2px; cursor: pointer;">
-          <div>
-            <strong>I legally agree to the terms above.</strong> I commit to the Muziris Escrow process and swear not to bypass the platform to contact this buyer directly.
+        <div class="negotiation-room" id="negotiation-room">
+          <h3>💬 Clarification Required by Buyer</h3>
+          <div class="buyer-msg" id="ui-buyer-feedback"></div>
+          <div style="margin-top: 20px;">
+            <label style="color: var(--gold);">Your Reply / Confirmation</label>
+            <textarea id="supplier-reply" rows="3" placeholder="Type your reply to the buyer here..."></textarea>
           </div>
-        </label>
+        </div>
+
+        <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px;">Review Volumes & Product Pricing</h3>
+        <p style="font-size:12px; color:#888;">Input the final accepted base price for the volumes requested. (Prices must be in <strong id="ui-currency" style="color:var(--gold);"></strong>)</p>
+        <div id="variants-container"></div>
+        
+        <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">Product Specifications</h3>
+        <div class="grid-2">
+          <div><label>Primary Materials</label><input type="text" id="spec-materials" placeholder="e.g. 100% Organic Cotton" required></div>
+          <div><label>Warranty Terms</label><input type="text" id="spec-warranty" placeholder="e.g. 1-Year Defect Warranty" required></div>
+        </div>
+        <div style="margin-top: 15px;"><label>Supplier Terms & Manufacturing Notes</label><textarea id="spec-notes" rows="2" placeholder="Specific tolerances, standards..."></textarea></div>
+
+        <div id="dynamic-requests-container"></div>
+
+        <div class="button-group">
+          <button type="button" class="btn-next" onclick="goToStep(2)">Proceed to Logistics ➡️</button>
+        </div>
       </div>
 
-      <button type="submit" class="btn-submit" id="btn-submit">SUBMIT TO LOGISTICS BROKER</button>
+      <div class="wizard-step" id="step-2">
+        
+        <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px;">Customs Compliance</h3>
+        <div class="grid-2">
+          <div><label>HS Code</label><input type="text" id="log-hs" placeholder="e.g. 9503.00.00" required></div>
+          <div><label>Dangerous Goods?</label><select id="log-hazmat" required><option value="No">No - Standard</option><option value="Yes">Yes - Hazmat/Battery</option></select></div>
+        </div>
+
+        <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">Export Routing</h3>
+        <div class="grid-2">
+          <div><label>Incoterms</label><select id="log-incoterm" required><option value="FOB">FOB (Free On Board)</option><option value="EXW">EXW (Ex Works)</option><option value="FCA">FCA (Free Carrier)</option></select></div>
+          <div><label>Nearest Export Port / City</label><input type="text" id="log-port" placeholder="e.g. Shenzhen Port" required></div>
+        </div>
+
+        <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">Cargo Dimensions & Lead Time</h3>
+        <div style="margin-bottom: 20px;">
+          <label>Cargo Packaging Type</label>
+          <select id="log-load-type" onchange="toggleLoadType()" style="border-color: var(--blue);" required>
+            <option value="loose">Loose Master Cartons (Air / LCL)</option>
+            <option value="pallets">Palletized Freight (Air / LCL)</option>
+            <option value="fcl">Full Container Load (FCL)</option>
+          </select>
+        </div>
+
+        <div id="ui-loose" style="display: block; background: rgba(255, 255, 255, 0.02); padding: 15px; border-radius: 6px;">
+          <p style="font-size:11px; color:#888;">Dimensions of a SINGLE master carton.</p>
+          <div class="grid-3">
+            <div><label>Length (cm)</label><input type="number" id="box-l"></div>
+            <div><label>Width (cm)</label><input type="number" id="box-w"></div>
+            <div><label>Height (cm)</label><input type="number" id="box-h"></div>
+          </div>
+          <div class="grid-2">
+            <div><label>Total Carton Count</label><input type="number" id="box-qty"></div>
+            <div><label>Total Gross Wgt (kg)</label><input type="number" step="0.1" id="box-kg"></div>
+          </div>
+        </div>
+
+        <div id="ui-pallets" style="display: none; background: rgba(30, 136, 229, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--blue);">
+          <p style="font-size:11px; color:#888;">Dimensions of a SINGLE fully loaded pallet.</p>
+          <div class="grid-3">
+            <div><label>Length (cm)</label><input type="number" id="pal-l"></div>
+            <div><label>Width (cm)</label><input type="number" id="pal-w"></div>
+            <div><label>Height (cm)</label><input type="number" id="pal-h"></div>
+          </div>
+          <div class="grid-2">
+            <div><label>Total Pallet Count</label><input type="number" id="pal-qty"></div>
+            <div><label>Total Gross Wgt (kg)</label><input type="number" step="0.1" id="pal-kg"></div>
+          </div>
+        </div>
+
+        <div id="ui-fcl" style="display: none; background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 6px; border: 1px dashed var(--gold);">
+          <div class="grid-2">
+            <div><label>Container Size</label><select id="fcl-size"><option value="20GP">20'GP</option><option value="40GP">40'GP</option><option value="40HQ">40'HQ</option></select></div>
+            <div><label>Est. Gross Wgt (kg)</label><input type="number" step="0.1" id="fcl-kg"></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
+          <label style="color: var(--gold);">Estimated Production Lead Time (Days)</label>
+          <input type="number" id="lead-time" placeholder="e.g. 30" style="font-size: 18px;" required>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="btn-prev" onclick="goToStep(1)">⬅️ Back</button>
+          <button type="button" class="btn-next" onclick="goToStep(3)">Final Review ➡️</button>
+        </div>
+      </div>
+
+      <div class="wizard-step" id="step-3">
+        
+        <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; text-align: center;">Final Confirmation</h3>
+        <p style="text-align: center; color: #aaa; margin-bottom: 30px;">Please review the Muziris Terms of Service. This serves as your digital signature.</p>
+
+        <div class="dynamic-section" style="border-color: var(--gold); background: rgba(0,0,0,0.5);">
+          <h4 style="color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; font-size: 14px;">⚖️ Muziris Supplier Agreement</h4>
+          
+          <div style="height: 200px; overflow-y: auto; font-size: 11px; color: #aaa; padding: 15px; background: #000; border: 1px solid #333; border-radius: 4px; margin-bottom: 15px; line-height: 1.6;">
+            <strong style="color: #fff;">1. CONTRACTUAL PARTIES & ROLE OF MUZIRIS</strong><br>
+            This quotation forms a binding commercial contract strictly between you (The Supplier) and the Buyer. Muziris International acts solely as a Marketplace Facilitator and technology provider. All financial transactions and escrow holds are processed strictly by Tazapay, a licensed and regulated global payment institution. Muziris assumes zero liability for manufacturing defects, delivery delays, IP infringement, or legal disputes arising between the Buyer and Supplier.<br><br>
+            <strong style="color: #fff;">2. ESCROW SETTLEMENT & PRODUCTION MANDATE</strong><br>
+            When the Buyer accepts this quotation, they will fund the secure Escrow Account managed by Tazapay. Upon funding, you will receive an official notification to commence production immediately. Funds are released to your connected Tazapay wallet as a 100% one-time settlement exactly seven (7) calendar days after the Buyer successfully receives and inspects the shipment.<br><br>
+            <strong style="color: #fff;">3. SUPPLIER LIABILITY & DISPUTES</strong><br>
+            You are legally bound to deliver the goods according to the Lead Time and Specifications stated in this form. If you encounter issues, cannot fulfill the order, or suffer delays, you must notify Muziris immediately. If the Buyer files a valid legal complaint or demands a refund due to Supplier negligence, defective goods, or failure to deliver, the Supplier holds full financial liability. Disputes will be mediated in accordance with Muziris platform rules and Tazapay's dispute resolution policies.<br><br>
+            <strong style="color: #fff;">4. NON-CIRCUMVENTION & ANTI-BYPASS</strong><br>
+            By submitting this quote, the Supplier agrees to strict non-circumvention. Attempting to bypass Muziris to transact with the Buyer directly will result in immediate account termination, suspension of pending escrow payouts, and a $50,000 CAD liquidated damages penalty.<br><br>
+            <strong style="color: #fff;">5. THIRD-PARTY PAYMENT SERVICES (TAZAPAY)</strong><br>
+            Payment processing and escrow services for suppliers on Muziris are provided by Tazapay and are subject to the Tazapay Connected Account Agreement. By agreeing to these terms or continuing to operate as a Supplier on Muziris, you agree to be bound by Tazapay’s Terms of Service, Anti-Money Laundering (AML) policies, and regulatory compliance requirements.
+          </div>
+          <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #fff; cursor: pointer; text-transform: none; margin-top: 0;">
+            <input type="checkbox" id="legal-agree" required style="width: 20px; height: 20px; accent-color: var(--gold); margin-top: 2px; cursor: pointer;">
+            <div>
+              <strong style="color:var(--gold);">I legally agree to the terms above.</strong> I commit to the Muziris Escrow process and swear not to bypass the platform to contact this buyer directly.
+            </div>
+          </label>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="btn-prev" onclick="goToStep(2)">⬅️ Back</button>
+          <button type="submit" class="btn-submit" id="btn-submit" style="margin-top: 0; flex: 2; font-size: 16px;">LOCK IN QUOTE & SUBMIT ✅</button>
+        </div>
+      </div>
+
     </form>
   </div>
 
