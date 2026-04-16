@@ -59,10 +59,11 @@
     .brand-details { flex: 1; }
     .brand-name { font-family: 'Cinzel', serif; font-size: 32px; color: #fff; margin: 0 0 5px 0; }
     .brand-id { font-size: 13px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-weight: bold; display: none; }
-    .brand-desc { margin-top: 15px; font-size: 14px; color: #aaa; line-height: 1.6; max-width: 800px; }
     
-    .edit-profile-btn { background: rgba(212, 175, 55, 0.1); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; transition: 0.3s; align-self: center; text-decoration: none;}
-    .edit-profile-btn:hover { background: var(--gold); color: #000; }
+    /* 🟢 FIXED: Line-clamping prevents long bios from breaking the header layout */
+    .brand-desc { margin-top: 15px; font-size: 14px; color: #aaa; line-height: 1.6; max-width: 800px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .edit-profile-btn { background: rgba(212, 175, 55, 0.1); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; transition: 0.3s; align-self: center; text-decoration: none;}    .edit-profile-btn:hover { background: var(--gold); color: #000; }
 
     /* FINANCIAL WIDGET */
     .finance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px; text-decoration: none; color: inherit; transition: 0.3s; border-radius: 12px; }
