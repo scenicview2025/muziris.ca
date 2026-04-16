@@ -498,7 +498,7 @@
       overlay.style.display = "flex";
 
       try {
-        // 1. Upload Banner if changed (using the cropped data instead of the file input)
+        // 1. Upload Banner if changed
         if(croppedBannerData) {
            overlay.innerText = "Encrypting Banner Image...";
            currentBannerUrl = await uploadToCloudinary(croppedBannerData, supplierId);
@@ -512,11 +512,29 @@
            currentLogoUrl = await uploadToCloudinary(lFile, supplierId);
         }
 
-        // 3. Prepare data and handle empty Year Input securely
+        // 3. 🟢 Upload Gallery Images if they selected new ones
+        overlay.innerText = "Processing Visual Evidence...";
+        
+        let g1 = document.getElementById('prev-gal1').src.startsWith('http') ? document.getElementById('prev-gal1').src : null;
+        let g2 = document.getElementById('prev-gal2').src.startsWith('http') ? document.getElementById('prev-gal2').src : null;
+        let g3 = document.getElementById('prev-gal3').src.startsWith('http') ? document.getElementById('prev-gal3').src : null;
+        let gCert = document.getElementById('prev-gal4').src.startsWith('http') ? document.getElementById('prev-gal4').src : null;
+
+        const fileIds = ['gal1', 'gal2', 'gal3', 'gal4'];
+        const results = [g1, g2, g3, gCert]; 
+
+        for (let i = 0; i < fileIds.length; i++) {
+           const fileInput = document.getElementById(fileIds[i]).files[0];
+           if (fileInput) {
+               const b64 = await readFileAsBase64(fileInput);
+               results[i] = await uploadToCloudinary(b64, supplierId);
+           }
+        }
+
+        // 4. Prepare data and handle empty Year Input securely
         const yearInput = document.getElementById('year').value;
         const parsedYear = yearInput === "" ? null : parseInt(yearInput, 10);
 
-        // 4. Save to Database
         overlay.innerText = "Saving to Muziris Ledger...";
         
         const profileData = {
@@ -531,19 +549,13 @@
           nearest_port: document.getElementById('port').value,
           website: document.getElementById('website').value,
           
-          // 🟢 NEW: Save expanded Trade Capabilities
-          core_products: document.getElementById('core-products').value,
-          oem_services: document.getElementById('oem-services').value,
-          incoterms: document.getElementById('incoterms').value,
-          languages: document.getElementById('languages').value,
-
-          // 🟢 NEW: Save Scale & Capabilities to Ledger
+          // 🟢 Scale & Capabilities
           biz_type: document.getElementById('biz-type').value,
           revenue: document.getElementById('revenue').value,
           factory_size: document.getElementById('factory-size').value,
           qc_staff: document.getElementById('qc-staff').value,
           
-          // 🟢 NEW: Save Gallery Images
+          // 🟢 Gallery Images (Results is now perfectly in scope!)
           gallery_1: results[0],
           gallery_2: results[1],
           gallery_3: results[2],
@@ -563,7 +575,6 @@
           btn.disabled = false;
           btn.innerText = "✓ PROFILE SAVED";
           
-          // Reset the cropped data since it's now saved to the backend
           croppedBannerData = null; 
           
           setTimeout(() => { btn.innerText = "Save Public Profile"; }, 3000);
