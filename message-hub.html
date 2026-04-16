@@ -481,65 +481,100 @@
         }
 
         // ==========================================
-        // 🟢 3. SEND MESSAGE & UPLOAD LOGIC
+        // 🟢 3. SEND MESSAGE & UPLOAD LOGIC (WhatsApp Style)
         // ==========================================
+        let pendingUploadFile = null;
+
+        // 1. Queue the file when selected
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            pendingUploadFile = file;
+            
+            // Show the preview box
+            document.getElementById('file-preview-name').innerText = file.name;
+            document.getElementById('file-preview-box').style.display = 'flex';
+        }
+
+        // 2. Clear the file if they click the 'X'
+        function clearSelectedFile() {
+            pendingUploadFile = null;
+            document.getElementById('supplier-file-upload').value = '';
+            document.getElementById('file-preview-box').style.display = 'none';
+        }
+
+        // 3. Process everything when they click SEND
         async function sendReply() {
             const input = document.getElementById('reply-input');
             const rawText = input.value.trim();
-            if (!rawText || !currentActiveChatId) return;
+            const btn = document.getElementById('send-msg-btn');
+            
+            if (!rawText && !pendingUploadFile) return;
+            if (!currentActiveChatId) return;
 
-            let safeText = rawText;
-            let securityTriggered = false;
-            const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/g;
-            const phoneRegex = /\b\d{7,15}\b/g;
-            const appRegex = /whatsapp|wechat|skype|telegram/gi;
-
-            if (emailRegex.test(rawText) || phoneRegex.test(rawText) || appRegex.test(rawText)) {
-                securityTriggered = true;
-                safeText = safeText.replace(emailRegex, "[EMAIL REDACTED]").replace(phoneRegex, "[PHONE REDACTED]").replace(appRegex, "[APP REDACTED]");
-            }
+            // UI Loading state (Turns the Send button into a spinner)
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+            btn.disabled = true;
 
             try {
-                input.value = ""; 
-                await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
-                    sender: "supplier", text: safeText, timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                await db.collection('chats').doc(currentActiveChatId).set({
-                    lastMessage: "Factory: " + safeText,
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-                    securityFlag: securityTriggered
-                }, { merge: true });
+                // 🟢 A. Did they attach a file? Upload it first!
+                if (pendingUploadFile) {
+                    const file = pendingUploadFile;
+                    const storageRef = storage.ref(`chat_attachments/${currentActiveChatId}/${Date.now()}_${file.name}`);
+                    await storageRef.put(file);
+                    const fileUrl = await storageRef.getDownloadURL();
 
-                if (securityTriggered) {
                     await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
-                        sender: "system", text: "⚠️ Warning: The factory attempted to share contact details. Escrow protection is void if transactions occur off-platform.", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        sender: "supplier", text: fileUrl, timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                    
+                    await db.collection('chats').doc(currentActiveChatId).set({
+                        lastMessage: "Factory: 📎 Sent an attachment", 
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+
+                    clearSelectedFile(); // Hide the preview box
                 }
-            } catch (error) { console.error(error); alert("Failed to send."); }
+
+                // 🟢 B. Did they type text? Send it!
+                if (rawText) {
+                    let safeText = rawText;
+                    let securityTriggered = false;
+                    const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/g;
+                    const phoneRegex = /\b\d{7,15}\b/g;
+                    const appRegex = /whatsapp|wechat|skype|telegram/gi;
+
+                    if (emailRegex.test(rawText) || phoneRegex.test(rawText) || appRegex.test(rawText)) {
+                        securityTriggered = true;
+                        safeText = safeText.replace(emailRegex, "[EMAIL REDACTED]").replace(phoneRegex, "[PHONE REDACTED]").replace(appRegex, "[APP REDACTED]");
+                    }
+
+                    input.value = ""; 
+                    await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                        sender: "supplier", text: safeText, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    await db.collection('chats').doc(currentActiveChatId).set({
+                        lastMessage: "Factory: " + safeText,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                        securityFlag: securityTriggered
+                    }, { merge: true });
+
+                    if (securityTriggered) {
+                        await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                            sender: "system", text: "⚠️ Warning: The factory attempted to share contact details. Escrow protection is void if transactions occur off-platform.", timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Failed to send message or file. Please check your connection.");
+            } finally {
+                // Reset the SEND button
+                btn.innerHTML = 'Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i>';
+                btn.disabled = false;
+            }
         }
-
-        async function uploadSupplierFile(event) {
-            const file = event.target.files[0];
-            if (!file || !currentActiveChatId) return;
-            const msgContainer = document.getElementById('messages-container');
-            msgContainer.innerHTML += `<div class="msg msg-system">Uploading attachment...</div>`;
-            msgContainer.scrollTop = msgContainer.scrollHeight;
-
-            try {
-                const storageRef = storage.ref(`chat_attachments/${currentActiveChatId}/${Date.now()}_${file.name}`);
-                await storageRef.put(file);
-                const fileUrl = await storageRef.getDownloadURL();
-
-                await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
-                    sender: "supplier", text: fileUrl, timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                await db.collection('chats').doc(currentActiveChatId).set({
-                    lastMessage: "Factory: 📎 Sent an attachment", lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-            } catch (error) { console.error(error); alert("Upload failed."); }
-        }
-
         // ==========================================
         // 🟢 4. RIGHT PANEL TOOLS LOGIC
         // ==========================================
