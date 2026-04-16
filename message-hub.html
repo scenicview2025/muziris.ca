@@ -130,11 +130,12 @@
             
             /* Add a Mobile Back Button inside the Chat Window */
             .mobile-back-to-list { display: flex !important; align-items: center; color: var(--gold); background: transparent; border: none; font-size: 14px; font-weight: bold; padding: 10px 0; cursor: pointer; }
-            .chat-header { padding: 15px; flex-direction: column; align-items: flex-start; gap: 10px; }
+            .chat-header { padding: 10px 15px; flex-direction: row; align-items: center; gap: 15px; } /* 🟢 Keeps header thin so input box stays on screen */
+            #chat-header-product { display: none; } /* Hide on mobile to save space */
             
             /* Tools Panel is hidden off-screen to the right, slides over chat */
-            .tools-panel { width: 100%; height: 100%; position: absolute; top: 0; left: 200%; z-index: 30; transition: transform 0.3s ease; border-left: none; }
-            .mobile-tools-toggle { display: block !important; position: absolute; top: 15px; right: 15px; background: var(--slate); border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; border-radius: 4px; z-index: 25; cursor: pointer; }
+            .tools-panel { width: 100%; height: 100%; position: absolute; top: 0; left: 200%; z-index: 30; transition: transform 0.3s ease; border-left: none; background: var(--slate); }
+            .mobile-tools-close { display: block !important; background: transparent; border: none; color: var(--gold); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 0 15px 0; text-align: left; }            .mobile-tools-toggle { display: block !important; position: absolute; top: 15px; right: 15px; background: var(--slate); border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; border-radius: 4px; z-index: 25; cursor: pointer; }
             
             /* Shrink inputs and text */
             .msg { max-width: 85%; }
