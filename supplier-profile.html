@@ -517,10 +517,11 @@
         // 3. 🟢 Upload Gallery Images if they selected new ones
         overlay.innerText = "Processing Visual Evidence...";
         
-        let g1 = document.getElementById('prev-gal1').src.startsWith('http') ? document.getElementById('prev-gal1').src : null;
-        let g2 = document.getElementById('prev-gal2').src.startsWith('http') ? document.getElementById('prev-gal2').src : null;
-        let g3 = document.getElementById('prev-gal3').src.startsWith('http') ? document.getElementById('prev-gal3').src : null;
-        let gCert = document.getElementById('prev-gal4').src.startsWith('http') ? document.getElementById('prev-gal4').src : null;
+        // FIXED: Using getAttribute prevents the browser's hidden URL quirk
+        let s1 = document.getElementById('prev-gal1').getAttribute('src'); let g1 = (s1 && s1.startsWith('http')) ? s1 : null;
+        let s2 = document.getElementById('prev-gal2').getAttribute('src'); let g2 = (s2 && s2.startsWith('http')) ? s2 : null;
+        let s3 = document.getElementById('prev-gal3').getAttribute('src'); let g3 = (s3 && s3.startsWith('http')) ? s3 : null;
+        let s4 = document.getElementById('prev-gal4').getAttribute('src'); let gCert = (s4 && s4.startsWith('http')) ? s4 : null;
 
         const fileIds = ['gal1', 'gal2', 'gal3', 'gal4'];
         const results = [g1, g2, g3, gCert]; 
