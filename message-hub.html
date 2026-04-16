@@ -138,7 +138,9 @@
             .mobile-tools-close { display: block !important; background: transparent; border: none; color: var(--gold); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 0 15px 0; text-align: left; }            .mobile-tools-toggle { display: block !important; position: absolute; top: 15px; right: 15px; background: var(--slate); border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; border-radius: 4px; z-index: 25; cursor: pointer; }
             
             /* Shrink inputs and text */
-            .msg { max-width: 85%; }
+            /* 🟢 NEW: Forces long URLs to wrap so the screen stops shaking! */
+            .msg { max-width: 85%; word-break: break-word; overflow-wrap: anywhere; }
+            
             .input-area { padding: 10px; }
             .chat-input { padding: 10px; }
             .send-btn { padding: 0 15px; height: 40px; }
