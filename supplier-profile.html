@@ -259,6 +259,40 @@
       </div>
 
     </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <h3 class="card-title">Visual Evidence & Factory Gallery</h3>
+      <p style="font-size:12px; color:#888; margin-top:-10px; margin-bottom:20px;">Upload high-quality images of your facilities and your primary business certificate to build absolute trust with enterprise buyers.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        
+        <div class="gallery-upload-box" onclick="document.getElementById('gal1').click()">
+          <img id="prev-gal1" src="MC.png">
+          <div class="gallery-label">📷 Factory Floor</div>
+        </div>
+        <input type="file" id="gal1" accept="image/*" style="display:none;" onchange="handleGalleryPreview(this, 'prev-gal1')">
+
+        <div class="gallery-upload-box" onclick="document.getElementById('gal2').click()">
+          <img id="prev-gal2" src="MC.png">
+          <div class="gallery-label">📷 Production Line</div>
+        </div>
+        <input type="file" id="gal2" accept="image/*" style="display:none;" onchange="handleGalleryPreview(this, 'prev-gal2')">
+
+        <div class="gallery-upload-box" onclick="document.getElementById('gal3').click()">
+          <img id="prev-gal3" src="MC.png">
+          <div class="gallery-label">📷 Product Showroom</div>
+        </div>
+        <input type="file" id="gal3" accept="image/*" style="display:none;" onchange="handleGalleryPreview(this, 'prev-gal3')">
+
+        <div class="gallery-upload-box" style="border-color: var(--gold);" onclick="document.getElementById('gal4').click()">
+          <img id="prev-gal4" src="MC.png">
+          <div class="gallery-label" style="color: #fff;">📜 Official Certificate</div>
+        </div>
+        <input type="file" id="gal4" accept="image/*,application/pdf" style="display:none;" onchange="handleGalleryPreview(this, 'prev-gal4')">
+
+      </div>
+    </div>
+
   </div>
 
   <div style="height: 100px;"></div> <div class="save-bar">
