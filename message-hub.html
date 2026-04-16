@@ -203,10 +203,14 @@
             </div>
 
             <div class="chat-header" id="chat-header" style="visibility:hidden;">
+                <button class="mobile-back-to-list" onclick="closeMobileChat()"><i class="fas fa-chevron-left" style="margin-right:8px;"></i> Inbox</button>
+                
                 <div>
                     <h3 id="chat-header-buyer" style="margin:0 0 5px 0; color:#fff;">Buyer ID</h3>
                     <div id="chat-header-product" style="font-size:11px; color:var(--gold); letter-spacing:1px; text-transform:uppercase;">Product ID</div>
                 </div>
+                
+                <button class="mobile-tools-toggle" onclick="toggleMobileTools()"><i class="fas fa-wrench"></i> Tools</button>
             </div>
 
             <div class="messages-container" id="messages-container"></div>
