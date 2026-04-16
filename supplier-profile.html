@@ -74,6 +74,13 @@
     .zoom-btn { background: #222; color: #fff; border: 1px solid #444; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;}
     .zoom-btn:hover { background: var(--gold); color: #000; border-color: var(--gold);}
 
+    /* 🟢 NEW: FACTORY GALLERY STYLES */
+    .gallery-upload-box { position: relative; background: #000; border: 1px dashed #555; border-radius: 8px; cursor: pointer; overflow: hidden; transition: 0.3s; height: 160px; display: flex; align-items: center; justify-content: center;}
+    .gallery-upload-box:hover { border-color: var(--gold); box-shadow: 0 0 15px rgba(212,175,55,0.2); }
+    .gallery-upload-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; transition: 0.3s; }
+    .gallery-upload-box:hover img { opacity: 0.2; }
+    .gallery-label { position: absolute; z-index: 2; color: var(--gold); font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; text-align: center; pointer-events: none; }
+
     @media (max-width: 768px) {
       .profile-info { flex-direction: column; align-items: center; text-align: center; }
       .bento-grid { grid-template-columns: 1fr; }
