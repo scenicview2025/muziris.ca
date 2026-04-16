@@ -262,7 +262,27 @@
             document.getElementById('sf-emp').innerText = data.employee_count || "-";
             document.getElementById('sf-certs').innerText = data.certifications || "Standard";
             document.getElementById('sf-markets').innerText = data.export_markets || "Global";
+            
+            // 🟢 MAP NEW SCALE & TRADE DATA
             document.getElementById('sf-port').innerText = data.nearest_port || "Factory Default";
+            document.getElementById('sf-biztype').innerText = data.biz_type || "Direct Manufacturer";
+            document.getElementById('sf-revenue').innerText = data.revenue || "Confidential";
+            document.getElementById('sf-facsize').innerText = data.factory_size ? data.factory_size + " SQM" : "Confidential";
+            document.getElementById('sf-qc').innerText = data.qc_staff ? data.qc_staff + " Inspectors" : "Confidential";
+            
+            document.getElementById('sf-core').innerText = data.core_products || "-";
+            document.getElementById('sf-oem').innerText = data.oem_services || "-";
+            document.getElementById('sf-inco').innerText = data.incoterms || "FOB, EXW, CIF, DDP";
+            document.getElementById('sf-lang').innerText = data.languages || "English";
+
+            // 🟢 DYNAMICALLY REVEAL UPLOADED GALLERY IMAGES
+            let hasGallery = false;
+            if (data.gallery_1 && data.gallery_1.startsWith('http')) { document.getElementById('sf-gal1').src = data.gallery_1; document.getElementById('gal1-box').classList.replace('hidden', 'flex'); hasGallery = true; }
+            if (data.gallery_2 && data.gallery_2.startsWith('http')) { document.getElementById('sf-gal2').src = data.gallery_2; document.getElementById('gal2-box').classList.replace('hidden', 'flex'); hasGallery = true; }
+            if (data.gallery_3 && data.gallery_3.startsWith('http')) { document.getElementById('sf-gal3').src = data.gallery_3; document.getElementById('gal3-box').classList.replace('hidden', 'flex'); hasGallery = true; }
+            if (data.gallery_cert && data.gallery_cert.startsWith('http')) { document.getElementById('sf-gal4').src = data.gallery_cert; document.getElementById('gal4-box').classList.replace('hidden', 'flex'); hasGallery = true; }
+            
+            if (!hasGallery) document.getElementById('no-gallery-msg').classList.remove('hidden');
 
             if (data.website) {
                 const webBtn = document.getElementById('sf-website');
@@ -270,7 +290,6 @@
                 webBtn.style.display = 'inline-block';
             }
         }
-
         function convertPrice(cadPrice) {
             if(!cadPrice || isNaN(cadPrice)) return "0.00";
             return (cadPrice * exchangeRates[activeCurrency]).toFixed(2);
