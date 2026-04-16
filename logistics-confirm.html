@@ -312,9 +312,33 @@
           indicator.className = 'step-item';
         }
       }
+      
+      // 🟢 NEW: REAL-TIME INVOICE MATH (Runs only when they click into Step 3)
+      if (stepNumber === 3) {
+          let currency = document.getElementById('ui-currency').innerText || '';
+          
+          // 1. Calculate Product Total (Adds up all variant inputs)
+          let productTotal = 0;
+          document.querySelectorAll('.counter-input').forEach(input => {
+              productTotal += parseFloat(input.value) || 0;
+          });
+          
+          // 2. Grab the Extra Commercial Fees
+          let custFee = parseFloat(document.getElementById('fee-cust')?.value) || 0;
+          let miscFee = parseFloat(document.getElementById('fee-other')?.value) || 0;
+          
+          // 3. Calculate Grand Total
+          let grandTotal = productTotal + custFee + miscFee;
+          
+          // 4. Inject the math into the beautiful Invoice UI
+          document.getElementById('sum-product').innerText = productTotal.toLocaleString(undefined, {minimumFractionDigits: 2}) + ' ' + currency;
+          document.getElementById('sum-cust').innerText = custFee.toLocaleString(undefined, {minimumFractionDigits: 2}) + ' ' + currency;
+          document.getElementById('sum-misc').innerText = miscFee.toLocaleString(undefined, {minimumFractionDigits: 2}) + ' ' + currency;
+          document.getElementById('sum-total').innerText = grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2}) + ' ' + currency;
+      }
+      
       window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top smoothly
     }
-
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
 
     // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
