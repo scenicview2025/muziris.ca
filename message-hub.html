@@ -402,8 +402,13 @@
             document.getElementById('chat-header-buyer').innerText = buyerName;
             document.getElementById('chat-header-product').innerText = productId !== 'General Inquiry' ? `Product Ref: ${productId}` : 'General Inquiry';
 
-            db.collection('chats').doc(chatId).update({ unreadBySupplier: false });
+            // 🟢 NEW: Trigger Mobile Sliding UI
+            if (window.innerWidth <= 900) {
+                document.querySelector('.chat-list-panel').classList.add('hide-mobile');
+                document.querySelector('.chat-window').classList.add('show-mobile');
+            }
 
+            db.collection('chats').doc(chatId).update({ unreadBySupplier: false });
             if (unsubscribeMessages) unsubscribeMessages();
 
             unsubscribeMessages = db.collection('chats').doc(chatId).collection('messages')
