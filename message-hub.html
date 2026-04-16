@@ -772,6 +772,7 @@
             const replyBox = document.getElementById('reply-input');
             replyBox.value = msgText;
             replyBox.focus();
+            document.querySelector('.tools-panel').classList.remove('show-mobile'); // 🟢 NEW: Auto-close tools
         }
 
         async function estimateAndInjectLogistics() {
