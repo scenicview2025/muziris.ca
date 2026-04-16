@@ -83,6 +83,33 @@
     .btn-next:hover { box-shadow: 0 5px 15px rgba(30,136,229,0.4); transform: translateY(-2px); }
     .btn-prev { flex: 0.5; background: transparent; color: #aaa; border: 1px solid #555; padding: 18px; font-weight: bold; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: 0.3s; }
     .btn-prev:hover { background: #333; color: #fff; }
+
+    /* 🟢 MOBILE RESPONSIVENESS (SMARTPHONE ADAPTATION) */
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .container { padding: 20px; margin: 10px auto; }
+      
+      /* Stack the grids vertically on phones */
+      .grid-2, .grid-3, .order-details { grid-template-columns: 1fr; gap: 15px; }
+      
+      /* Fix the VIP Order Card */
+      .order-header-flex { flex-direction: column; text-align: center; }
+      .order-card::after { top: 10px; right: -45px; font-size: 9px; }
+      
+      /* Fix the Variant Pricing Rows */
+      .variant-row { flex-direction: column; align-items: stretch; text-align: center; }
+      .v-details, .v-target, .v-input { width: 100%; min-width: 100%; }
+      .v-target { margin: 10px 0; }
+      
+      /* Shrink the Progress Bar labels */
+      .step-label { font-size: 9px; text-align: center; line-height: 1.2; }
+      .step-progress::before { width: calc(100% - 40px); left: 20px; }
+      
+      /* Stack the Next/Back Buttons */
+      .button-group { flex-direction: column; }
+      .btn-prev { order: 2; padding: 12px; }
+      .btn-next { order: 1; padding: 15px; }
+    }
   </style>
 </head>
 <body>
