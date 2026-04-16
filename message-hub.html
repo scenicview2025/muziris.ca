@@ -111,6 +111,47 @@
         ::-webkit-scrollbar-track { background: var(--void); }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+        /* 🟢 MOBILE RESPONSIVENESS (App-like Sliding UI) */
+        @media (max-width: 900px) {
+            .top-nav { padding: 0 15px; }
+            .hub-title { font-size: 16px; }
+            .escrow-badge { display: none; /* Hide badge to save space */ }
+            
+            /* Stack layout instead of side-by-side */
+            .main-layout { flex-direction: column; overflow: hidden; position: relative; }
+            
+            /* Chat List takes full width initially */
+            .chat-list-panel { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; transition: transform 0.3s ease; }
+            
+            /* Chat Window is hidden off-screen to the right */
+            .chat-window { width: 100%; height: 100%; position: absolute; top: 0; left: 100%; z-index: 20; transition: transform 0.3s ease; display: flex !important; }
+            
+            /* Add a Mobile Back Button inside the Chat Window */
+            .mobile-back-to-list { display: flex !important; align-items: center; color: var(--gold); background: transparent; border: none; font-size: 14px; font-weight: bold; padding: 10px 0; cursor: pointer; }
+            .chat-header { padding: 15px; flex-direction: column; align-items: flex-start; gap: 10px; }
+            
+            /* Tools Panel is hidden off-screen to the right, slides over chat */
+            .tools-panel { width: 100%; height: 100%; position: absolute; top: 0; left: 200%; z-index: 30; transition: transform 0.3s ease; border-left: none; }
+            .mobile-tools-toggle { display: block !important; position: absolute; top: 15px; right: 15px; background: var(--slate); border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; border-radius: 4px; z-index: 25; cursor: pointer; }
+            
+            /* Shrink inputs and text */
+            .msg { max-width: 85%; }
+            .input-area { padding: 10px; }
+            .chat-input { padding: 10px; }
+            .send-btn { padding: 0 15px; height: 40px; }
+            
+            /* Product Modal Fix */
+            .product-modal-content { flex-direction: column; height: 90vh; overflow-y: auto; }
+            .product-modal-left, .product-modal-right { width: 100%; }
+            .product-modal-left { min-height: 250px; }
+        }
+
+        /* Helpers to handle desktop vs mobile display states */
+        .mobile-back-to-list, .mobile-tools-toggle { display: none; }
+        .chat-list-panel.hide-mobile { transform: translateX(-100%); }
+        .chat-window.show-mobile { transform: translateX(-100%); }
+        .tools-panel.show-mobile { transform: translateX(-200%); }
     </style>
 </head>
 <body>
