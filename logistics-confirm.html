@@ -305,26 +305,24 @@
   </div>
 
   <script>
-    // 🟢 WIZARD LOGIC (Changes the steps and updates the progress bar)
+    // 🟢 TAB LOGIC & INVOICE GENERATOR
     function goToStep(stepNumber) {
-      // Hide all steps
+      // Hide all content blocks
       document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
-      // Show the requested step
+      // Show the requested content block
       document.getElementById('step-' + stepNumber).classList.add('active');
       
-      // Update Progress Bar Colors
+      // Update Tab Colors
       for(let i=1; i<=3; i++) {
-        let indicator = document.getElementById('indicator-' + i);
-        if (i < stepNumber) {
-          indicator.className = 'step-item completed';
-        } else if (i === stepNumber) {
-          indicator.className = 'step-item active';
+        let tab = document.getElementById('tab-btn-' + i);
+        if (i === stepNumber) {
+          tab.classList.add('active');
         } else {
-          indicator.className = 'step-item';
+          tab.classList.remove('active');
         }
       }
       
-      // 🟢 NEW: REAL-TIME INVOICE MATH (Runs only when they click into Step 3)
+      // 🟢 REAL-TIME INVOICE MATH (Runs automatically when Tab 3 is clicked)
       if (stepNumber === 3) {
           let currency = document.getElementById('ui-currency').innerText || '';
           
