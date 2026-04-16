@@ -136,19 +136,10 @@
       <div style="margin-top:15px; font-size:12px; color:#aaa; background:rgba(0,0,0,0.5); padding: 10px; border-radius:4px;" id="ui-notes"></div>
     </div>
 
-    <div class="step-progress">
-      <div class="step-item active" id="indicator-1">
-        <div class="step-dot">1</div>
-        <div class="step-label">Commercials</div>
-      </div>
-      <div class="step-item" id="indicator-2">
-        <div class="step-dot">2</div>
-        <div class="step-label">Logistics</div>
-      </div>
-      <div class="step-item" id="indicator-3">
-        <div class="step-dot">3</div>
-        <div class="step-label">Review & Submit</div>
-      </div>
+    <div class="tab-bar">
+      <div class="tab-btn active" id="tab-btn-1" onclick="goToStep(1)">1. Commercials</div>
+      <div class="tab-btn" id="tab-btn-2" onclick="goToStep(2)">2. Logistics</div>
+      <div class="tab-btn" id="tab-btn-3" onclick="goToStep(3)">3. Review & Submit</div>
     </div>
 
     <form id="quoteForm" onsubmit="event.preventDefault(); submitQuote();">
