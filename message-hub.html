@@ -449,8 +449,21 @@
                             </div>
                         `;
                     });
-                    msgContainer.scrollTop = msgContainer.scrollHeight;
+                   msgContainer.scrollTop = msgContainer.scrollHeight;
                 });
+        }
+
+        // 🟢 NEW: Mobile UI Sliding Functions
+        function closeMobileChat() {
+            document.querySelector('.chat-list-panel').classList.remove('hide-mobile');
+            document.querySelector('.chat-window').classList.remove('show-mobile');
+            document.querySelector('.tools-panel').classList.remove('show-mobile');
+            currentActiveChatId = null;
+        }
+
+        function toggleMobileTools() {
+            const toolsPanel = document.querySelector('.tools-panel');
+            toolsPanel.classList.toggle('show-mobile');
         }
 
         // ==========================================
