@@ -314,6 +314,12 @@
         document.getElementById('port').value = data.nearest_port || "";
         document.getElementById('website').value = data.website || "";
         
+        // 🟢 NEW: Load expanded Trade Capabilities
+        document.getElementById('core-products').value = data.core_products || "";
+        document.getElementById('oem-services').value = data.oem_services || "";
+        document.getElementById('incoterms').value = data.incoterms || "";
+        document.getElementById('languages').value = data.languages || "";
+        
         // 🟢 NEW: Load Scale & Capabilities
         if (data.biz_type) document.getElementById('biz-type').value = data.biz_type;
         document.getElementById('revenue').value = data.revenue || "";
