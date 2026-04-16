@@ -27,8 +27,9 @@
             --success: #4CAF50;
             --border: #2a2f3a;
             --ai-glow: #00e5ff;
-        }
-        body { margin: 0; font-family: 'Lato', sans-serif; background: var(--void); color: var(--mist); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+       }
+        * { box-sizing: border-box; } /* 🟢 Stops horizontal stretching */
+        body { margin: 0; font-family: 'Lato', sans-serif; background: var(--void); color: var(--mist); height: 100dvh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; position: fixed; } /* 🟢 100dvh fixes the hidden input, position:fixed stops the screen from shaking */
         
         /* TOP NAV */
         .top-nav { height: 60px; background: var(--slate); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
