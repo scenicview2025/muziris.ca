@@ -755,11 +755,11 @@
                             `Once we receive your official RFQ in our portal, we will issue the final quotation for your approval and payment so we can begin production!\n\n` +
                             `👉 ${link}`;
             
-            const replyBox = document.getElementById('reply-input');
+           const replyBox = document.getElementById('reply-input');
             replyBox.value = msgText;
             replyBox.focus();
+            document.querySelector('.tools-panel').classList.remove('show-mobile'); // 🟢 NEW: Auto-close tools
         }
-        
 
         // 🟢 Instantly drop the Escrow explanation link (Factory Persona)
         function shareEscrowLink() {
