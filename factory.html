@@ -140,22 +140,65 @@
                 </div>
             </div>
 
-            <div id="content-about" style="display: none;">
+            <div id="content-about" style="display: none;" class="space-y-6">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 brand-font mb-4 uppercase tracking-widest border-b border-gray-100 pb-4">Company Overview</h3>
+                        <p class="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm" id="sf-bio">No company biography provided.</p>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 brand-font mb-4 uppercase tracking-widest border-b border-gray-100 pb-4">Scale & Capacity</h3>
+                        <ul class="space-y-4">
+                            <li><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Business Type</span><strong class="text-gray-900 text-sm" id="sf-biztype">-</strong></li>
+                            <li><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Annual Revenue</span><strong class="text-gray-900 text-sm" id="sf-revenue">-</strong></li>
+                            <li><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Factory Size</span><strong class="text-gray-900 text-sm" id="sf-facsize">-</strong></li>
+                            <li><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">QC Staff</span><strong class="text-gray-900 text-sm" id="sf-qc">-</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
-                    <h3 class="text-lg font-bold text-gray-900 brand-font mb-4 uppercase tracking-widest border-b border-gray-100 pb-4">About the Manufacturer</h3>
-                    <p class="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm" id="sf-bio">No company biography provided.</p>
+                    <h3 class="text-lg font-bold text-gray-900 brand-font mb-4 uppercase tracking-widest border-b border-gray-100 pb-4">Trade Capabilities & Logistics</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Core Products</span><strong class="text-gray-900 text-sm" id="sf-core">-</strong></div>
+                        <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">OEM / ODM Support</span><strong class="text-gray-900 text-sm" id="sf-oem">-</strong></div>
+                        <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Spoken Languages</span><strong class="text-gray-900 text-sm" id="sf-lang">-</strong></div>
+                        <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Export Port</span><strong class="text-gray-900 text-sm" id="sf-port">-</strong></div>
+                        <div class="col-span-2 md:col-span-4"><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Incoterms Supported</span><strong class="text-gray-900 text-sm" id="sf-inco">-</strong></div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-lg font-bold text-gray-900 brand-font mb-6 uppercase tracking-widest border-b border-gray-100 pb-4">Visual Evidence & Certifications</h3>
                     
-                    <h3 class="text-lg font-bold text-gray-900 brand-font mb-4 uppercase tracking-widest border-b border-gray-100 pb-4 mt-10">Logistics & Shipping</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <div>
-                            <span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Nearest Export Port</span>
-                            <strong class="text-gray-900 text-sm" id="sf-port">Not specified</strong>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div id="gal1-box" class="hidden flex-col gap-2">
+                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group">
+                                <img id="sf-gal1" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="window.open(this.src, '_blank')">
+                            </div>
+                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-industry mr-1 text-[var(--gold)]"></i> Factory Floor</span>
                         </div>
-                        <div>
-                            <span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Incoterms Supported</span>
-                            <strong class="text-gray-900 text-sm">FOB, CIF, EXW, DDP (via Muziris)</strong>
+                        <div id="gal2-box" class="hidden flex-col gap-2">
+                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group">
+                                <img id="sf-gal2" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="window.open(this.src, '_blank')">
+                            </div>
+                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-cogs mr-1 text-[var(--gold)]"></i> Production Line</span>
+                        </div>
+                        <div id="gal3-box" class="hidden flex-col gap-2">
+                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group">
+                                <img id="sf-gal3" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="window.open(this.src, '_blank')">
+                            </div>
+                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-box-open mr-1 text-[var(--gold)]"></i> Showroom</span>
+                        </div>
+                        <div id="gal4-box" class="hidden flex-col gap-2">
+                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group">
+                                <img id="sf-gal4" src="" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="window.open(this.src, '_blank')">
+                            </div>
+                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-certificate mr-1 text-[var(--gold)]"></i> Official Cert</span>
                         </div>
                     </div>
+                    <p id="no-gallery-msg" class="text-sm text-gray-400 italic text-center py-4 hidden">No visual evidence uploaded yet.</p>
                 </div>
             </div>
         </div>
