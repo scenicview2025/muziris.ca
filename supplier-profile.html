@@ -289,6 +289,12 @@
         document.getElementById('certs').value = data.certifications || "";
         document.getElementById('port').value = data.nearest_port || "";
         document.getElementById('website').value = data.website || "";
+        
+        // 🟢 NEW: Load Scale & Capabilities
+        if (data.biz_type) document.getElementById('biz-type').value = data.biz_type;
+        document.getElementById('revenue').value = data.revenue || "";
+        document.getElementById('factory-size').value = data.factory_size || "";
+        document.getElementById('qc-staff').value = data.qc_staff || "";
       })
       .catch(err => console.error(err));
     }
