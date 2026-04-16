@@ -372,11 +372,11 @@
         document.getElementById('factory-size').value = data.factory_size || "";
         document.getElementById('qc-staff').value = data.qc_staff || "";
 
-        // 🟢 NEW: Load Gallery Images
-        if (data.gallery_1) { document.getElementById('prev-gal1').src = data.gallery_1; document.getElementById('prev-gal1').style.display = 'block'; }
-        if (data.gallery_2) { document.getElementById('prev-gal2').src = data.gallery_2; document.getElementById('prev-gal2').style.display = 'block'; }
-        if (data.gallery_3) { document.getElementById('prev-gal3').src = data.gallery_3; document.getElementById('prev-gal3').style.display = 'block'; }
-        if (data.gallery_cert) { document.getElementById('prev-gal4').src = data.gallery_cert; document.getElementById('prev-gal4').style.display = 'block'; }
+        // 🟢 FIXED: Only load Gallery Images if they are valid HTTP links
+        if (data.gallery_1 && data.gallery_1.startsWith('http')) { document.getElementById('prev-gal1').src = data.gallery_1; document.getElementById('prev-gal1').style.display = 'block'; }
+        if (data.gallery_2 && data.gallery_2.startsWith('http')) { document.getElementById('prev-gal2').src = data.gallery_2; document.getElementById('prev-gal2').style.display = 'block'; }
+        if (data.gallery_3 && data.gallery_3.startsWith('http')) { document.getElementById('prev-gal3').src = data.gallery_3; document.getElementById('prev-gal3').style.display = 'block'; }
+        if (data.gallery_cert && data.gallery_cert.startsWith('http')) { document.getElementById('prev-gal4').src = data.gallery_cert; document.getElementById('prev-gal4').style.display = 'block'; }
       })
       .catch(err => console.error(err));
     }
