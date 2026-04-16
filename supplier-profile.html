@@ -84,8 +84,9 @@
     .gallery-label { z-index: 2; color: #aaa; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; text-align: center; transition: 0.3s; }
     .gallery-upload-box:hover .gallery-label { color: #fff; }
     
-    .gallery-upload-box img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; z-index: 5; display: none; }
-    .gallery-upload-box:hover img { opacity: 0.4; }
+    /* 🟢 FIXED: Makes the uploaded image 100% solid and covers the icons completely! */
+    .gallery-upload-box img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 10; display: none; border-radius: 12px; opacity: 1 !important; }
+    .gallery-upload-box:hover img { opacity: 0.8 !important; }
     @media (max-width: 768px) {
       .profile-info { flex-direction: column; align-items: center; text-align: center; }
       .bento-grid { grid-template-columns: 1fr; }
