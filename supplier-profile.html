@@ -436,7 +436,13 @@
           export_markets: document.getElementById('markets').value,
           certifications: document.getElementById('certs').value,
           nearest_port: document.getElementById('port').value,
-          website: document.getElementById('website').value
+          website: document.getElementById('website').value,
+          
+          // 🟢 NEW: Save Scale & Capabilities to Ledger
+          biz_type: document.getElementById('biz-type').value,
+          revenue: document.getElementById('revenue').value,
+          factory_size: document.getElementById('factory-size').value,
+          qc_staff: document.getElementById('qc-staff').value
         };
 
         const res = await fetch(API_BASE_URL + '/update-supplier-profile', {
