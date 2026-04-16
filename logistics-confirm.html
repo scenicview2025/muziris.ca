@@ -62,22 +62,15 @@
     /* 🟢 NEW: IMAGE THUMBNAIL STYLES */
     .order-header-flex { display: flex; align-items: center; gap: 20px; }
     .product-thumb { width: 90px; height: 90px; border-radius: 8px; object-fit: cover; border: 2px solid var(--gold); background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-    /* 🟢 3-STEP WIZARD STYLES */
-    .step-progress { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; padding: 0 20px; }
-    .step-progress::before { content: ''; position: absolute; top: 15px; left: 30px; width: calc(100% - 60px); height: 2px; background: #333; z-index: 1; }
-    .step-item { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; width: 33%; }
-    .step-dot { background: var(--slate); border: 2px solid #333; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #555; transition: 0.4s; font-size: 14px; }
-    .step-label { font-size: 11px; color: #666; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; transition: 0.4s; }
+    /* 🟢 TAB NAVIGATION STYLES */
+    .tab-bar { display: flex; border-bottom: 1px solid #333; margin-bottom: 30px; background: rgba(0,0,0,0.4); border-radius: 8px 8px 0 0; overflow: hidden; flex-wrap: wrap; }
+    .tab-btn { flex: 1; text-align: center; padding: 18px 10px; cursor: pointer; color: #888; font-weight: bold; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; transition: 0.3s; border-bottom: 3px solid transparent; min-width: 120px; user-select: none; }
+    .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .tab-btn.active { color: var(--gold); border-bottom: 3px solid var(--gold); background: rgba(212,175,55,0.1); }
     
-    .step-item.active .step-dot { border-color: var(--gold); color: var(--gold); background: rgba(212,175,55,0.1); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
-    .step-item.active .step-label { color: var(--gold); }
-    .step-item.completed .step-dot { background: var(--gold); border-color: var(--gold); color: #000; }
-    .step-item.completed .step-label { color: #fff; }
-
-    .wizard-step { display: none; animation: slideUp 0.4s ease forwards; }
+    .wizard-step { display: none; animation: fadeIn 0.4s ease forwards; }
     .wizard-step.active { display: block; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .button-group { display: flex; gap: 15px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; }
     .btn-next { flex: 1; background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); color: #fff; text-align: center; padding: 18px; font-weight: bold; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; border: none; cursor: pointer; transition: 0.3s; }
     .btn-next:hover { box-shadow: 0 5px 15px rgba(30,136,229,0.4); transform: translateY(-2px); }
