@@ -58,6 +58,33 @@
     #log { margin-top: 20px; font-size: 12px; color: #aaa; max-height: 150px; overflow-y: auto; text-align: left; }
     
     @media (max-width: 900px) { .top-nav { top: 20px; left: 20px; } }
+    
+    /* 🟢 MOBILE RESPONSIVENESS FOR BULK UPLOAD */
+    @media (max-width: 900px) {
+      /* 1. Standard Layout & Sidebar Fixes */
+      .dashboard-body { padding: 20px 15px; } 
+      .sidebar { position: fixed; left: -250px; height: 100%; box-shadow: 10px 0 30px rgba(0,0,0,0.8); z-index: 1000; transition: left 0.3s ease; }
+      .sidebar.open { left: 0; }
+      .mobile-menu-btn { display: block; }
+      .topbar { padding: 15px 20px; }
+      .welcome-text { font-size: 16px; }
+      .main-content { margin-left: 0; }
+      
+      /* 2. Bulk Upload Specific Fixes */
+      /* Shrink the drag-and-drop zone so it fits on a phone screen */
+      .upload-zone { padding: 30px 15px; } 
+      .upload-zone h3 { font-size: 18px; }
+      
+      /* Allow CSV preview tables to be swiped left/right instead of breaking the page */
+      .table-wrapper, .preview-container { 
+        overflow-x: auto; 
+        -webkit-overflow-scrolling: touch; 
+        border-right: 1px solid #333; 
+      }
+      
+      /* Stack instructional steps vertically */
+      .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 15px; }
+    }
   </style>
 </head>
 <body>
