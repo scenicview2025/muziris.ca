@@ -366,10 +366,28 @@
         document.getElementById('revenue').value = data.revenue || "";
         document.getElementById('factory-size').value = data.factory_size || "";
         document.getElementById('qc-staff').value = data.qc_staff || "";
+
+        // 🟢 NEW: Load Gallery Images
+        if (data.gallery_1) { document.getElementById('prev-gal1').src = data.gallery_1; document.getElementById('prev-gal1').style.opacity = '1'; }
+        if (data.gallery_2) { document.getElementById('prev-gal2').src = data.gallery_2; document.getElementById('prev-gal2').style.opacity = '1'; }
+        if (data.gallery_3) { document.getElementById('prev-gal3').src = data.gallery_3; document.getElementById('prev-gal3').style.opacity = '1'; }
+        if (data.gallery_cert) { document.getElementById('prev-gal4').src = data.gallery_cert; document.getElementById('prev-gal4').style.opacity = '1'; }
       })
       .catch(err => console.error(err));
     }
 
+    // 🟢 NEW: Gallery Preview Function
+    function handleGalleryPreview(input, imgId) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgEl = document.getElementById(imgId);
+          imgEl.src = e.target.result;
+          imgEl.style.opacity = '1'; // Brighten it up so they know it worked
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
     // --- CROPPER LOGIC ---
     function handleImagePreview(input, type) {
       if (input.files && input.files[0]) {
