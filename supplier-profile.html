@@ -181,6 +181,44 @@
         </div>
 
         <div class="card">
+          <h3 class="card-title">Scale & Capabilities</h3>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="form-group">
+              <label>Business Type</label>
+              <select id="biz-type" class="input-clean">
+                <option value="Direct Manufacturer">Direct Manufacturer</option>
+                <option value="Trading Company">Trading Company</option>
+                <option value="Manufacturer & Trading">Manufacturer & Trading</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Annual Revenue</label>
+              <select id="revenue" class="input-clean">
+                <option value="">Select...</option>
+                <option value="Below $1M">Below $1 Million</option>
+                <option value="$1M - $5M">$1M - $5 Million</option>
+                <option value="$5M - $10M">$5M - $10 Million</option>
+                <option value="$10M - $50M">$10M - $50 Million</option>
+                <option value="$50M+">$50 Million+</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="form-group">
+              <label>Factory Size (SqM)</label>
+              <input type="number" id="factory-size" class="input-clean" placeholder="e.g. 10000">
+            </div>
+            <div class="form-group">
+              <label>QC Staff Count</label>
+              <input type="number" id="qc-staff" class="input-clean" placeholder="e.g. 15">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
           <h3 class="card-title">Digital Presence</h3>
           <div class="form-group">
             <label>Official Website</label>
