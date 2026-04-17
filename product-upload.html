@@ -936,49 +936,114 @@
       reader.onerror = reject;
     });
 
-    // 🟢 NEW: Generates the Live Buyer Mock-Up
+    // 🟢 UPGRADED: Generates the Authentic White Theme Mock-Up
     function generateLivePreview() {
-        // 1. Grab all the text values the user just typed into the form
+        // 1. Get Basic Info
         const pName = document.getElementById('pName').value || "Untitled Product";
         const mainCat = document.getElementById('mainCat').value || "Category";
-        const subCat = document.getElementById('subCat').value || "Sub-Category";
-        const desc = document.getElementById('desc').value || "No description provided.";
+        const desc = document.getElementById('desc').value || "No technical description provided.";
         const packaging = document.getElementById('packDetails').value || "Standard";
         const currency = document.getElementById('ui-currency-text').innerText || "USD";
+        const companyName = document.getElementById('cname').value || "Muziris Supplier";
         
-        // 2. Grab the very first price they entered in the pricing matrix table
+        // 2. Parse Services
+        let servicesArr = [];
+        if (document.getElementById('svc1').checked) servicesArr.push("Private Label");
+        if (document.getElementById('svc2').checked) servicesArr.push("Custom Pkg");
+        if (document.getElementById('svc3').checked) servicesArr.push("ODM Design");
+        const servicesTxt = servicesArr.join(", ") || "Standard";
+
+        // 3. Extract the FIRST Matrix Row for the preview
         let startingPrice = "0.00";
-        const firstPriceInput = document.querySelector('.p-price.q-input');
-        if (firstPriceInput && firstPriceInput.value) {
-            startingPrice = parseFloat(firstPriceInput.value).toFixed(2);
-        }
-        
-        // 3. Grab the A+ Content Image count
-        const aplusCount = window.accumulatedCatalogFiles ? window.accumulatedCatalogFiles.length : 0;
+        let leadTime = "30";
+        let inco = "FOB";
+        let vName = "Standard Base";
+        let vVol = "100 - 500 Pcs";
 
-        // 4. Try to grab the Hero Image (Creates a temporary browser URL to view local files instantly)
-        const heroInput = document.querySelector('input[name="img_hero"]');
-        const mockImgDiv = document.getElementById('preview-mock-img');
+        const firstRow = document.querySelector("#priceBody tr");
+        if (firstRow) {
+            startingPrice = firstRow.querySelector('.p-price').value || "0.00";
+            leadTime = firstRow.querySelector('.p-lead').value || "30";
+            inco = firstRow.querySelector('.p-incoterms').value || "FOB";
+            
+            let type = firstRow.querySelector('.p-type').value;
+            let opt = firstRow.querySelector('.p-opt').value;
+            vName = type === 'Standard' ? 'Standard Base' : opt;
+
+            let min = firstRow.querySelector('.p-min').value || "1";
+            let max = firstRow.querySelector('.p-max').value || "100";
+            let unit = firstRow.querySelector('.p-unit').value || "Pcs";
+            vVol = `${min} - ${max} ${unit}`;
+        }
+
+        // 4. Handle Images & Thumbnails
+        const getFileUrl = (inputName) => {
+            const input = document.querySelector(`input[name="${inputName}"]`);
+            if (input && input.files && input.files[0]) return URL.createObjectURL(input.files[0]);
+            return null;
+        };
+
+        let heroUrl = getFileUrl('img_hero');
+        if (!heroUrl && window.currentPreviewData) heroUrl = window.currentPreviewData.hero_img;
         
-        if (heroInput && heroInput.files && heroInput.files[0]) {
-            const imgUrl = URL.createObjectURL(heroInput.files[0]);
-            mockImgDiv.style.backgroundImage = `url('${imgUrl}')`;
-        } else if (window.currentPreviewData && window.currentPreviewData.hero_img) {
-            // If they are editing an existing product and didn't upload a new image, use the old one!
-            mockImgDiv.style.backgroundImage = `url('${window.currentPreviewData.hero_img}')`;
+        const mockHeroImg = document.getElementById('mock-hero');
+        if (heroUrl) {
+            mockHeroImg.src = heroUrl;
+            mockHeroImg.style.display = 'block';
         } else {
-            mockImgDiv.style.backgroundImage = `url('https://placehold.co/400x400/151922/D4AF37.png?text=No+Hero+Image')`;
+            mockHeroImg.style.display = 'none';
         }
-        
-        // 5. Inject everything into the UI Modal
-        document.getElementById('preview-mock-title').innerText = pName;
-        document.getElementById('preview-mock-cat').innerHTML = `${mainCat} &rsaquo; ${subCat}`;
-        document.getElementById('preview-mock-desc').innerText = desc;
-        document.getElementById('preview-mock-price').innerText = `${currency} ${startingPrice}`;
-        document.getElementById('preview-mock-pack').innerText = packaging;
-        document.getElementById('preview-mock-aplus').innerText = `${aplusCount} Image(s) Stacked`;
 
-        // 6. Show the modal
+        // Generate the 5 square thumbnails
+        let thumbsHtml = '';
+        ['img_hero', 'img_life', 'img_detail', 'img_pack', 'img_extra'].forEach(name => {
+            let url = getFileUrl(name);
+            if (!url && window.currentPreviewData) {
+                // If editing, pull existing images from DB
+                let dbCol = name.replace('img_', '') + '_img';
+                url = window.currentPreviewData[dbCol];
+            }
+            if (url) {
+                thumbsHtml += `<div style="width:50px; height:50px; border-radius:4px; border:1px solid #e5e7eb; background:url('${url}') center/cover no-repeat; cursor:pointer; opacity:0.8; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'" onclick="document.getElementById('mock-hero').src='${url}'"></div>`;
+            }
+        });
+        document.getElementById('mock-thumbs').innerHTML = thumbsHtml;
+
+        // 5. Generate the Stacked A+ Content
+        let aplusHtml = '';
+        if (window.accumulatedCatalogFiles && window.accumulatedCatalogFiles.length > 0) {
+            window.accumulatedCatalogFiles.forEach(file => {
+                aplusHtml += `<img src="${URL.createObjectURL(file)}" style="max-width:100%; display:block; margin:0 auto; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);">`;
+            });
+        } else if (window.currentPreviewData && window.currentPreviewData.catalog_pdf) {
+            // Re-draw existing A+ images if editing
+            let urls = window.currentPreviewData.catalog_pdf.split(',');
+            urls.forEach(u => {
+                if(u.trim()) aplusHtml += `<img src="${u.trim()}" style="max-width:100%; display:block; margin:0 auto; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);">`;
+            });
+        } else {
+            aplusHtml = `<div style="color:#9ca3af; font-size:12px; padding:30px;">No Extended A+ Content uploaded for this product.</div>`;
+        }
+        document.getElementById('mock-aplus-container').innerHTML = aplusHtml;
+
+        // 6. Inject Text into the UI
+        document.getElementById('mock-supplier').innerText = companyName;
+        document.getElementById('mock-title').innerText = pName;
+        document.getElementById('mock-cat').innerText = mainCat;
+        document.getElementById('mock-desc').innerText = desc;
+        document.getElementById('mock-price').innerText = startingPrice;
+        document.getElementById('mock-curr').innerText = currency;
+        
+        document.getElementById('mock-lead').innerText = `${leadTime} Days`;
+        document.getElementById('mock-inco').innerText = inco;
+        document.getElementById('mock-services').innerText = servicesTxt;
+        document.getElementById('mock-pack').innerText = packaging;
+        
+        document.getElementById('mock-v-name').innerText = vName;
+        document.getElementById('mock-v-vol').innerText = vVol;
+        document.getElementById('mock-v-price').innerText = `$${startingPrice}`;
+
+        // 7. Show Modal
         document.getElementById('live-preview-modal').style.display = 'flex';
     }
 
