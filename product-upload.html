@@ -1218,36 +1218,91 @@
   })();
   </script>
 <div id="live-preview-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(5px);">
-    <div style="display:flex; flex-direction:row; background:var(--slate); border:1px solid var(--blue); border-radius:8px; width:900px; max-width:95%; max-height:85vh; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.8); position:relative;">
-        <div style="position:absolute; top:15px; right:20px; color:#888; font-size:28px; cursor:pointer; transition:0.3s; z-index:10;" onclick="document.getElementById('live-preview-modal').style.display='none'" onmouseover="this.style.color='var(--alert)'" onmouseout="this.style.color='#888'">×</div>
-        
-        <div style="width:45%; background:#e0e0e0; display:flex; justify-content:center; align-items:center; position:relative;">
-            <div style="position:absolute; top:20px; left:20px; background:#111; color:var(--blue); padding:6px 12px; font-size:11px; font-weight:bold; border-radius:4px; border:1px solid #333; letter-spacing:1px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">● BUYER PREVIEW</div>
-            <div id="preview-mock-img" style="width:100%; height:100%; min-height:400px; background:url('https://placehold.co/400x400/151922/D4AF37.png?text=No+Hero+Image') center/cover no-repeat;"></div>
+    
+    <div style="background:#fdfdfd; width:1000px; max-width:95%; max-height:90vh; overflow-y:auto; border-radius:12px; position:relative; font-family:'Lato', sans-serif; color:#111827; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+      
+      <div onclick="document.getElementById('live-preview-modal').style.display='none'" style="position:absolute; top:15px; right:20px; font-size:28px; cursor:pointer; color:#888; z-index:100; line-height:1;" onmouseover="this.style.color='#ff5252'" onmouseout="this.style.color='#888'">×</div>
+
+      <div style="padding:40px;">
+        <div style="font-size:12px; color:#6b7280; margin-bottom:20px;">
+            Global Catalog <span style="margin:0 8px;">/</span> <span id="mock-cat" style="color:var(--gold); font-weight:bold;">Category</span>
         </div>
-        
-        <div style="width:55%; padding:40px; color:#fff; overflow-y:auto;">
-            <h2 id="preview-mock-title" style="margin-top:0; font-family:'Cinzel', serif; color:#fff; font-size:28px; padding-right:30px; border:none; margin-bottom:5px; text-align:left;">Product Name</h2>
-            <div id="preview-mock-cat" style="color:var(--gold); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:20px;">Category &rsaquo; Sub-Category</div>
+
+        <div style="display:flex; gap:40px; background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:30px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); flex-wrap:wrap;">
+          
+          <div style="flex:1; min-width:300px;">
+            <div style="position:relative; background:#f9fafb; border-radius:8px; height:320px; display:flex; align-items:center; justify-content:center; border:1px solid #f3f4f6; overflow:hidden;">
+              <div style="position:absolute; top:15px; left:15px; background:#fff; border:1px solid #e5e7eb; padding:4px 12px; border-radius:20px; font-size:10px; font-weight:bold; color:#111; box-shadow:0 2px 4px rgba(0,0,0,0.05); z-index:10;">
+                <span style="color:var(--gold);">✓</span> VERIFIED
+              </div>
+              <img id="mock-hero" src="" style="max-width:100%; max-height:100%; object-fit:contain;">
+            </div>
+            <div id="mock-thumbs" style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+              </div>
+          </div>
+
+          <div style="flex:1.2; min-width:350px;">
+            <div style="font-size:10px; color:#6b7280; text-transform:uppercase; font-weight:bold; margin-bottom:8px; letter-spacing:1px;">
+                <i class="fas fa-industry" style="margin-right:4px;"></i> <span id="mock-supplier">Supplier Name</span>
+            </div>
             
-            <p id="preview-mock-desc" style="color:#aaa; font-size:13px; line-height:1.6; margin-bottom:30px; white-space:pre-wrap;">Description goes here...</p>
-            
-            <div style="display:flex; gap:15px; margin-bottom:25px;">
-                <div style="background:#0b0e14; border:1px solid #333; padding:15px; border-radius:6px; flex:1; text-align:center;">
-                    <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:5px;">Starting Price</div>
-                    <div id="preview-mock-price" style="font-size:24px; color:var(--gold); font-weight:bold; font-family:monospace;">$0.00</div>
-                </div>
-                <div style="background:#0b0e14; border:1px solid #333; padding:15px; border-radius:6px; flex:1; text-align:center;">
-                    <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:5px;">Packaging</div>
-                    <div id="preview-mock-pack" style="font-size:14px; color:#fff; font-weight:bold; margin-top:5px;">Standard</div>
-                </div>
+            <h1 id="mock-title" style="font-size:28px; font-weight:800; margin:0 0 20px 0; color:#111827; line-height:1.2;">Product Name</h1>
+
+            <div style="background:#f9fafb; border-radius:8px; padding:20px; margin-bottom:25px; border:1px solid #f3f4f6;">
+              <div style="font-size:10px; color:#6b7280; text-transform:uppercase; font-weight:bold; margin-bottom:8px; letter-spacing:1px;">Wholesale Starting Price</div>
+              <div style="font-size:32px; font-weight:900; color:#111827; font-family:monospace; line-height:1;">
+                  <span id="mock-price">$0.00</span> <span id="mock-curr" style="font-size:14px; color:#6b7280; font-family:'Lato', sans-serif;">CAD</span>
+              </div>
             </div>
 
-            <div style="background:rgba(30,136,229,0.05); border:1px dashed var(--blue); padding:15px; border-radius:6px; text-align:center;">
-                <div style="color:var(--blue); font-size:12px; font-weight:bold; margin-bottom:5px;">A+ Content Elements Included</div>
-                <div id="preview-mock-aplus" style="color:#fff; font-size:16px; font-family:monospace; font-weight:bold;">0 Images Stacked</div>
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:15px; margin-bottom:25px; border-bottom:1px solid #e5e7eb; padding-bottom:25px;">
+              <div>
+                <div style="font-size:10px; color:#6b7280; text-transform:uppercase; font-weight:bold; margin-bottom:5px;">Lead Time</div>
+                <div id="mock-lead" style="font-size:13px; font-weight:bold; color:#111827;">30 Days</div>
+              </div>
+              <div>
+                <div style="font-size:10px; color:#6b7280; text-transform:uppercase; font-weight:bold; margin-bottom:5px;">Incoterms</div>
+                <div id="mock-inco" style="font-size:13px; font-weight:bold; color:#111827;">FOB</div>
+              </div>
+              <div>
+                <div style="font-size:10px; color:#6b7280; text-transform:uppercase; font-weight:bold; margin-bottom:5px;">Services</div>
+                <div id="mock-services" style="font-size:13px; font-weight:bold; color:#111827;">Private Label</div>
+              </div>
+              <div>
+                <div style="font-size:10px; color:#6b7280; text-transform:uppercase; font-weight:bold; margin-bottom:5px;">Packaging</div>
+                <div id="mock-pack" style="font-size:13px; font-weight:bold; color:#111827;">Standard</div>
+              </div>
             </div>
+
+            <div style="margin-bottom:25px;">
+              <div style="font-size:11px; color:#111827; text-transform:uppercase; font-weight:800; margin-bottom:12px; letter-spacing:1px;">Volume Matrix</div>
+              <div style="display:flex; justify-content:space-between; font-size:10px; color:#6b7280; text-transform:uppercase; font-weight:bold; border-bottom:1px solid #e5e7eb; padding-bottom:8px; margin-bottom:12px;">
+                <span style="flex:1;">Variant</span><span style="flex:1; text-align:center;">Volume</span><span style="flex:1; text-align:right;">Unit Price</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13px; color:#111827; font-weight:700;">
+                <span id="mock-v-name" style="flex:1;">Standard Base</span>
+                <span id="mock-v-vol" style="flex:1; text-align:center; color:#6b7280;">100 - 500 Pcs</span>
+                <span id="mock-v-price" style="flex:1; text-align:right; color:var(--bronze);">$0.00</span>
+              </div>
+            </div>
+
+            <div style="background:#0b0e14; color:var(--gold); padding:16px; border-radius:6px; font-weight:bold; font-size:12px; letter-spacing:1px; text-align:center; text-transform:uppercase; margin-bottom:10px;">REQUEST OFFICIAL QUOTE</div>
+            <div style="background:#fff; color:#111827; border:1px solid #e5e7eb; padding:14px; border-radius:6px; font-weight:bold; font-size:12px; letter-spacing:1px; text-align:center;">💬 Message Factory</div>
+          </div>
         </div>
+
+        <div style="margin-top:30px; background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:40px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">
+          
+          <h3 style="font-size:14px; color:#111827; text-transform:uppercase; letter-spacing:1px; margin-top:0; margin-bottom:15px; font-weight:800;">Technical Description</h3>
+          <p id="mock-desc" style="font-size:14px; color:#4b5563; line-height:1.7; margin-bottom:40px; white-space:pre-wrap;">Description goes here...</p>
+
+          <h3 style="font-size:14px; color:#111827; text-transform:uppercase; letter-spacing:1px; border-top:1px solid #e5e7eb; padding-top:30px; margin-bottom:20px; font-weight:800;">Product Details</h3>
+          
+          <div id="mock-aplus-container" style="display:flex; flex-direction:column; gap:0; background:#f9fafb; border:1px dashed #e5e7eb; min-height:100px; justify-content:center; align-items:center;">
+             </div>
+        </div>
+
+      </div>
     </div>
   </div>
   
