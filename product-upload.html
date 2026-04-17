@@ -372,6 +372,29 @@
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     var catData = {};
 
+    // 🟢 NEW: Global array to hold stacked A+ Content images!
+    window.accumulatedCatalogFiles = [];
+
+    function accumulateCatalogFiles(input) {
+      if (input.files && input.files.length > 0) {
+        for (let i = 0; i < input.files.length; i++) {
+          window.accumulatedCatalogFiles.push(input.files[i]);
+        }
+        document.getElementById('status_catalog').innerHTML = `<span style='color:#D4AF37'>✎ ${window.accumulatedCatalogFiles.length} image(s) stacked ready for upload!</span>`;
+        document.getElementById('clear_catalog_btn').style.display = 'block';
+        
+        // Wipe the HTML input so the browser allows selecting the exact same file again if needed
+        input.value = ''; 
+      }
+    }
+
+    function clearCatalogFiles() {
+      window.accumulatedCatalogFiles = [];
+      document.getElementById('status_catalog').innerHTML = "New Upload";
+      document.getElementById('clear_catalog_btn').style.display = 'none';
+      document.getElementById('catalog-input').value = '';
+    }
+
     // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
     window.addEventListener('pageshow', function(event) {
       if (!localStorage.getItem('verifiedSupplierId')) {
