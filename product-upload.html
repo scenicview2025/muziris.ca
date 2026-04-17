@@ -952,16 +952,16 @@
         let packUrl = await uploadFile(formElement.img_pack);
         let extraUrl = await uploadFile(formElement.img_extra);
         
-        // 🟢 NEW: MULTI-IMAGE CATALOG UPLOADER
+        // 🟢 FIXED: MULTI-IMAGE CATALOG UPLOADER (Using the new Stacking Array)
         let catalogUrl = "";
-        if (formElement.catalog.files && formElement.catalog.files.length > 0) {
+        if (window.accumulatedCatalogFiles && window.accumulatedCatalogFiles.length > 0) {
             let uploadedUrls = [];
             
-            // Loop through every image they selected
-            for (let i = 0; i < formElement.catalog.files.length; i++) {
-                document.getElementById("btn").innerHTML = `UPLOADING A+ CONTENT (${i+1}/${formElement.catalog.files.length})...`;
+            // Loop through every image they stacked
+            for (let i = 0; i < window.accumulatedCatalogFiles.length; i++) {
+                document.getElementById("btn").innerHTML = `UPLOADING A+ CONTENT (${i+1}/${window.accumulatedCatalogFiles.length})...`;
                 
-                let fileObj = await compressImage(formElement.catalog.files[i]);
+                let fileObj = await compressImage(window.accumulatedCatalogFiles[i]);
                 let response = await fetch(API_BASE_URL + '/upload-media', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
