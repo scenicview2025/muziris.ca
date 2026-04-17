@@ -378,7 +378,7 @@
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     var catData = {};
 
-    // 🟢 NEW: Global array to hold stacked A+ Content images!
+    // 🟢 FIXED: Global array and Visual Rendering for stacked A+ Content images!
     window.accumulatedCatalogFiles = [];
 
     function accumulateCatalogFiles(input) {
@@ -386,19 +386,51 @@
         for (let i = 0; i < input.files.length; i++) {
           window.accumulatedCatalogFiles.push(input.files[i]);
         }
-        document.getElementById('status_catalog').innerHTML = `<span style='color:#D4AF37'>✎ ${window.accumulatedCatalogFiles.length} image(s) stacked ready for upload!</span>`;
-        document.getElementById('clear_catalog_btn').style.display = 'block';
         
-        // Wipe the HTML input so the browser allows selecting the exact same file again if needed
-        input.value = ''; 
+        input.value = ''; // Wipe input memory so they can click the button again seamlessly
+        renderCatalogPreviews(); // Draw the beautiful UI!
       }
+    }
+
+    // Generates the image thumbnails
+    function renderCatalogPreviews() {
+      const container = document.getElementById('catalog-preview-container');
+      const status = document.getElementById('status_catalog');
+      const clearBtn = document.getElementById('clear_catalog_btn');
+      
+      container.innerHTML = ''; // Clear existing UI
+      
+      if (window.accumulatedCatalogFiles.length === 0) {
+          status.innerHTML = "New Upload";
+          clearBtn.style.display = 'none';
+          return;
+      }
+      
+      status.innerHTML = `<span style='color:#D4AF37'>✎ ${window.accumulatedCatalogFiles.length} image(s) stacked ready for upload!</span>`;
+      clearBtn.style.display = 'block';
+      
+      // Loop through the digital cart and draw a box for each image
+      window.accumulatedCatalogFiles.forEach((file, index) => {
+          const imgUrl = URL.createObjectURL(file); // Temporary browser URL to show the image instantly
+          const previewHtml = `
+            <div style="position:relative; width:80px; height:80px; border-radius:6px; border:1px solid #444; background:url('${imgUrl}') center/cover no-repeat; box-shadow:0 4px 10px rgba(0,0,0,0.5);">
+                <button type="button" onclick="removeCatalogFile(${index})" title="Remove Image" style="position:absolute; top:-8px; right:-8px; background:var(--alert); color:#fff; border:2px solid var(--slate); border-radius:50%; width:24px; height:24px; font-size:12px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.5); transition:0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">×</button>
+            </div>
+          `;
+          container.innerHTML += previewHtml;
+      });
+    }
+
+    // Removes a specific image when they click the 'X'
+    function removeCatalogFile(index) {
+        window.accumulatedCatalogFiles.splice(index, 1); // Slice that exact file out of the array
+        renderCatalogPreviews(); // Re-draw the UI
     }
 
     function clearCatalogFiles() {
       window.accumulatedCatalogFiles = [];
-      document.getElementById('status_catalog').innerHTML = "New Upload";
-      document.getElementById('clear_catalog_btn').style.display = 'none';
       document.getElementById('catalog-input').value = '';
+      renderCatalogPreviews();
     }
 
     // 🟢 ANTI-BACK-BUTTON SECURITY (BFCache Kickout)
