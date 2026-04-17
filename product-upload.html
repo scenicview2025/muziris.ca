@@ -337,12 +337,18 @@
           
           <label>EXTENDED SPECIFICATIONS (A+ CONTENT)</label>
           <span class="sub-label">Select images one by one, or hold CTRL to select multiple. They will stack seamlessly!</span>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
-              <div id="status_catalog" style="font-size: 11px; color: #666; font-weight: bold;">New Upload</div>
-              <button type="button" onclick="clearCatalogFiles()" id="clear_catalog_btn" style="display:none; background:transparent; border:none; color:var(--alert); cursor:pointer; font-size:10px; text-transform:uppercase; font-weight:bold;">Clear Files</button>
+          
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+              <div id="status_catalog" style="font-size: 11px; color: var(--gold); font-weight: bold;">New Upload</div>
+              <button type="button" onclick="clearCatalogFiles()" id="clear_catalog_btn" style="display:none; background:transparent; border:none; color:var(--alert); cursor:pointer; font-size:10px; text-transform:uppercase; font-weight:bold;">Clear All Files</button>
           </div>
-          <input type="file" id="catalog-input" name="catalog" accept="image/*" multiple onchange="accumulateCatalogFiles(this)">
-
+          
+          <label for="catalog-input" style="display:inline-block; background:rgba(212,175,55,0.1); border:1px solid var(--gold); color:var(--gold); padding:10px 20px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-top:0; transition:0.3s;" onmouseover="this.style.background='var(--gold)'; this.style.color='#000';" onmouseout="this.style.background='rgba(212,175,55,0.1)'; this.style.color='var(--gold)';">
+              <i class="fas fa-plus" style="margin-right:5px;"></i> Choose Files
+          </label>
+          <input type="file" id="catalog-input" name="catalog" accept="image/*" multiple onchange="accumulateCatalogFiles(this)" style="display:none;">
+          
+          <div id="catalog-preview-container" style="display:flex; flex-wrap:wrap; gap:15px; margin-top:20px;"></div>
           <div class="btn-group">
             <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
             <button type="submit" class="gold-btn" id="btn" style="width:auto; margin-top:0;">UPLOAD TO GLOBAL LEDGER</button>
