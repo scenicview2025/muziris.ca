@@ -351,7 +351,12 @@
           <div id="catalog-preview-container" style="display:flex; flex-wrap:wrap; gap:15px; margin-top:20px;"></div>
           <div class="btn-group">
             <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
-            <button type="submit" class="gold-btn" id="btn" style="width:auto; margin-top:0;">UPLOAD TO GLOBAL LEDGER</button>
+            <div style="display:flex; gap:15px;">
+                <button type="button" onclick="generateLivePreview()" style="background:transparent; border:1px solid var(--blue); color:var(--blue); padding:12px 25px; border-radius:4px; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:0.3s;" onmouseover="this.style.background='var(--blue)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='var(--blue)';">
+                    👁️ LIVE PREVIEW
+                </button>
+                <button type="submit" class="gold-btn" id="btn" style="width:auto; margin-top:0;">UPLOAD TO GLOBAL LEDGER</button>
+            </div>
           </div>
           <div id="loading">Encrypting & Uploading to Server...<br>Please wait...</div>
         </div>
