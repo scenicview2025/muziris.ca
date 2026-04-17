@@ -936,6 +936,52 @@
       reader.onerror = reject;
     });
 
+    // 🟢 NEW: Generates the Live Buyer Mock-Up
+    function generateLivePreview() {
+        // 1. Grab all the text values the user just typed into the form
+        const pName = document.getElementById('pName').value || "Untitled Product";
+        const mainCat = document.getElementById('mainCat').value || "Category";
+        const subCat = document.getElementById('subCat').value || "Sub-Category";
+        const desc = document.getElementById('desc').value || "No description provided.";
+        const packaging = document.getElementById('packDetails').value || "Standard";
+        const currency = document.getElementById('ui-currency-text').innerText || "USD";
+        
+        // 2. Grab the very first price they entered in the pricing matrix table
+        let startingPrice = "0.00";
+        const firstPriceInput = document.querySelector('.p-price.q-input');
+        if (firstPriceInput && firstPriceInput.value) {
+            startingPrice = parseFloat(firstPriceInput.value).toFixed(2);
+        }
+        
+        // 3. Grab the A+ Content Image count
+        const aplusCount = window.accumulatedCatalogFiles ? window.accumulatedCatalogFiles.length : 0;
+
+        // 4. Try to grab the Hero Image (Creates a temporary browser URL to view local files instantly)
+        const heroInput = document.querySelector('input[name="img_hero"]');
+        const mockImgDiv = document.getElementById('preview-mock-img');
+        
+        if (heroInput && heroInput.files && heroInput.files[0]) {
+            const imgUrl = URL.createObjectURL(heroInput.files[0]);
+            mockImgDiv.style.backgroundImage = `url('${imgUrl}')`;
+        } else if (window.currentPreviewData && window.currentPreviewData.hero_img) {
+            // If they are editing an existing product and didn't upload a new image, use the old one!
+            mockImgDiv.style.backgroundImage = `url('${window.currentPreviewData.hero_img}')`;
+        } else {
+            mockImgDiv.style.backgroundImage = `url('https://placehold.co/400x400/151922/D4AF37.png?text=No+Hero+Image')`;
+        }
+        
+        // 5. Inject everything into the UI Modal
+        document.getElementById('preview-mock-title').innerText = pName;
+        document.getElementById('preview-mock-cat').innerHTML = `${mainCat} &rsaquo; ${subCat}`;
+        document.getElementById('preview-mock-desc').innerText = desc;
+        document.getElementById('preview-mock-price').innerText = `${currency} ${startingPrice}`;
+        document.getElementById('preview-mock-pack').innerText = packaging;
+        document.getElementById('preview-mock-aplus').innerText = `${aplusCount} Image(s) Stacked`;
+
+        // 6. Show the modal
+        document.getElementById('live-preview-modal').style.display = 'flex';
+    }
+
     async function submitForm(formElement) {
       var dataList = [];
       var rows = document.querySelectorAll("#priceBody tr");
