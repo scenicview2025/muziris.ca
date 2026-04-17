@@ -936,11 +936,12 @@
       reader.onerror = reject;
     });
 
-    // 🟢 UPGRADED: Generates the Authentic White Theme Mock-Up
+    // 🟢 UPGRADED: Authentic White Theme Mock-Up Logic
     function generateLivePreview() {
         // 1. Get Basic Info
         const pName = document.getElementById('pName').value || "Untitled Product";
         const mainCat = document.getElementById('mainCat').value || "Category";
+        const subCat = document.getElementById('subCat').value || "Sub-Category";
         const desc = document.getElementById('desc').value || "No technical description provided.";
         const packaging = document.getElementById('packDetails').value || "Standard";
         const currency = document.getElementById('ui-currency-text').innerText || "USD";
@@ -991,7 +992,8 @@
             mockHeroImg.src = heroUrl;
             mockHeroImg.style.display = 'block';
         } else {
-            mockHeroImg.style.display = 'none';
+            // Default placeholder if no image is uploaded
+            mockHeroImg.src = 'https://placehold.co/400x400/f9fafb/D4AF37.png?text=No+Hero+Image';
         }
 
         // Generate the 5 square thumbnails
@@ -999,7 +1001,6 @@
         ['img_hero', 'img_life', 'img_detail', 'img_pack', 'img_extra'].forEach(name => {
             let url = getFileUrl(name);
             if (!url && window.currentPreviewData) {
-                // If editing, pull existing images from DB
                 let dbCol = name.replace('img_', '') + '_img';
                 url = window.currentPreviewData[dbCol];
             }
@@ -1016,7 +1017,6 @@
                 aplusHtml += `<img src="${URL.createObjectURL(file)}" style="max-width:100%; display:block; margin:0 auto; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);">`;
             });
         } else if (window.currentPreviewData && window.currentPreviewData.catalog_pdf) {
-            // Re-draw existing A+ images if editing
             let urls = window.currentPreviewData.catalog_pdf.split(',');
             urls.forEach(u => {
                 if(u.trim()) aplusHtml += `<img src="${u.trim()}" style="max-width:100%; display:block; margin:0 auto; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);">`;
@@ -1026,10 +1026,10 @@
         }
         document.getElementById('mock-aplus-container').innerHTML = aplusHtml;
 
-        // 6. Inject Text into the UI
+        // 6. Inject Text into the White UI
         document.getElementById('mock-supplier').innerText = companyName;
         document.getElementById('mock-title').innerText = pName;
-        document.getElementById('mock-cat').innerText = mainCat;
+        document.getElementById('mock-cat').innerHTML = `${mainCat} &rsaquo; ${subCat}`;
         document.getElementById('mock-desc').innerText = desc;
         document.getElementById('mock-price').innerText = startingPrice;
         document.getElementById('mock-curr').innerText = currency;
@@ -1046,7 +1046,6 @@
         // 7. Show Modal
         document.getElementById('live-preview-modal').style.display = 'flex';
     }
-
     async function submitForm(formElement) {
       var dataList = [];
       var rows = document.querySelectorAll("#priceBody tr");
