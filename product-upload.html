@@ -446,7 +446,11 @@
       fetchAPI('generateDescription', { productName: pName, category: category })
         .then(res => {
           if(res.description) document.getElementById('desc').value = res.description;
-          else customAlert("AI Error", res.error || "Could not generate.");
+          else {
+            // 🟢 FIXED: Masks the ugly Google API error with a professional fallback!
+            let safeError = res.error ? "Our AI Concierge is currently handling a high volume of requests. Please try again in a few minutes or write the description manually." : "Could not generate.";
+            customAlert("AI Concierge Busy", safeError);
+          }
           btn.innerText = "✨ Auto-Write with AI";
           btn.disabled = false;
         })
