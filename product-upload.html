@@ -1103,7 +1103,10 @@
          document.getElementById('preview_img_' + type).style.backgroundImage = '';
          document.getElementById('status_img_' + type).innerHTML = 'New Upload';
       });
-      document.getElementById('status_catalog').innerHTML = 'New Upload';
+      
+      // 🟢 FIXED: Clear the accumulated A+ images so the next product starts fresh!
+      if (typeof clearCatalogFiles === "function") clearCatalogFiles();
+      else document.getElementById('status_catalog').innerHTML = 'New Upload';
       
       // Remove URL param
       const url = new URL(window.location);
