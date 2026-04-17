@@ -336,9 +336,12 @@
           </div>
           
           <label>EXTENDED SPECIFICATIONS (A+ CONTENT)</label>
-          <span class="sub-label">You can select multiple images at once to stack them seamlessly.</span>
-          <div id="status_catalog" style="font-size: 11px; color: #666; margin-bottom: 5px; font-weight: bold;">New Upload</div>
-          <input type="file" name="catalog" accept="image/*" multiple onchange="document.getElementById('status_catalog').innerHTML='<span style=\'color:#D4AF37\'>✎ ' + this.files.length + ' image(s) selected</span>'">
+          <span class="sub-label">Select images one by one, or hold CTRL to select multiple. They will stack seamlessly!</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
+              <div id="status_catalog" style="font-size: 11px; color: #666; font-weight: bold;">New Upload</div>
+              <button type="button" onclick="clearCatalogFiles()" id="clear_catalog_btn" style="display:none; background:transparent; border:none; color:var(--alert); cursor:pointer; font-size:10px; text-transform:uppercase; font-weight:bold;">Clear Files</button>
+          </div>
+          <input type="file" id="catalog-input" name="catalog" accept="image/*" multiple onchange="accumulateCatalogFiles(this)">
 
           <div class="btn-group">
             <button type="button" class="btn-prev" onclick="prevStep(3)">Back</button>
