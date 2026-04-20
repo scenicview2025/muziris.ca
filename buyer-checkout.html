@@ -52,8 +52,14 @@
     
     .disclaimer-box { background: rgba(41, 128, 185, 0.05); border-left: 4px solid var(--blue); padding: 15px; font-size: 12px; color: var(--text-muted); margin-top: 15px; }
 
+    /* 🟢 NEW: CURRENCY SELECTOR STYLES */
+    .currency-box { background: #f8fafc; border: 1px solid var(--blue); padding: 20px; border-radius: 8px; margin-top: 30px; display: flex; justify-content: space-between; align-items: center; gap: 20px;}
+    .currency-box label { font-size: 12px; font-weight: bold; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+    .currency-select { padding: 12px; border: 1px solid #bfdbfe; border-radius: 6px; font-size: 16px; font-family: 'Lato', sans-serif; background: #fff; cursor: pointer; outline: none; font-weight: bold; flex: 1; max-width: 300px;}
+    .currency-select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1); }
+
     /* CHECKOUT SUMMARY & BUTTONS */
-    .checkout-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--border-color); }
+    .checkout-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 30px; border-top: 2px solid var(--border-color); }
     .grand-total-label { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
     .grand-total-amount { font-size: 32px; color: var(--green); font-weight: bold; font-family: monospace;}
     
@@ -107,7 +113,7 @@
 
     <div class="module-card" id="card-sample" style="display:none;">
       <label class="module-header">
-        <input type="checkbox" id="chk-sample" onchange="calculateTotal()" checked>
+        <input type="checkbox" id="chk-sample" checked>
         <h3>1. Prototyping & Physical Sample</h3>
         <div class="module-price" id="price-sample">$0.00</div>
       </label>
@@ -118,7 +124,7 @@
 
     <div class="module-card" id="card-prod" style="display:none;">
       <label class="module-header">
-        <input type="checkbox" id="chk-prod" onchange="calculateTotal()" checked>
+        <input type="checkbox" id="chk-prod" checked>
         <h3>2. Mass Production Run</h3>
         <div class="module-price" id="price-prod">$0.00</div>
       </label>
@@ -140,7 +146,7 @@
 
     <div class="module-card" id="card-freight" style="display:none;">
       <label class="module-header">
-        <input type="checkbox" id="chk-freight" onchange="calculateTotal()">
+        <input type="checkbox" id="chk-freight">
         <h3>3. Muziris Managed Freight</h3>
         <div class="module-price" id="price-freight">$0.00</div>
       </label>
@@ -156,11 +162,25 @@
 
     <div style="background: rgba(212, 175, 55, 0.05); border: 1px solid var(--gold); padding: 20px; border-radius: 8px; margin-top: 30px;">
       <label style="display: flex; align-items: flex-start; gap: 15px; cursor: pointer; margin: 0;">
-        <input type="checkbox" id="chk-agreement" onchange="calculateTotal()" style="width: 24px; height: 24px; accent-color: var(--gold); margin-top: 2px;">
+        <input type="checkbox" id="chk-agreement" style="width: 24px; height: 24px; accent-color: var(--gold); margin-top: 2px;">
         <span style="font-size: 14px; color: var(--text-main); line-height: 1.6;">
           I digitally sign and agree to the <a href="#" onclick="window.open('trade-agreement.html?rfq=' + rfqId, '_blank')" style="color: var(--blue); font-weight: bold; text-decoration: none;">Muziris Official Trade Agreement</a> & Escrow Governance Terms. I understand that funding this escrow locks the foreign exchange rate and initiates production.
         </span>
       </label>
+    </div>
+
+    <div class="currency-box">
+      <div>
+          <label>Select Billing Currency</label>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Live FX Rate Estimated</div>
+      </div>
+      <select id="buyer-currency" class="currency-select">
+        <option value="USD" selected>🇺🇸 USD - US Dollar</option>
+        <option value="CAD">🇨🇦 CAD - Canadian Dollar</option>
+        <option value="EUR">🇪🇺 EUR - Euro</option>
+        <option value="GBP">🇬🇧 GBP - British Pound</option>
+        <option value="AUD">🇦🇺 AUD - Australian Dollar</option>
+      </select>
     </div>
 
     <div class="checkout-footer">
@@ -170,9 +190,11 @@
       </div>
       <div style="display: flex; gap: 15px;">
         <button class="btn-secondary" onclick="document.getElementById('negotiate-modal').style.display='flex'">REQUEST REVISION</button>
-        <button class="btn-checkout" id="btn-submit" onclick="processCheckout()">AUTHORIZE & FUND ESCROW</button>
+        <button class="btn-checkout" id="btn-submit">AUTHORIZE & FUND ESCROW</button>
       </div>
     </div>
+    
+    <div id="locked-rate-banner" style="display:none; margin-top: 15px; padding: 15px; border: 1px solid var(--border-color); background: #fafbfc; border-radius: 6px; font-size: 13px; color: var(--text-main); text-align: center;"></div>
 
     <div class="escrow-badge">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
@@ -199,143 +221,286 @@
   </div>
 
   <script>
+    /* ====== CONFIG ====== */
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     const urlParams = new URLSearchParams(window.location.search);
     const rfqId = urlParams.get('rfq');
+    const userLocale = navigator.language || 'en-US';
 
+    /* ====== STATE ====== */
+    let rfqData = null;
     let valSample = 0, valProd = 0, valFreight = 0;
+    let liveExchangeRates = {}; // display-only
+    let fxFetchFailed = false;
 
-    if (!rfqId) {
-      document.getElementById('loading').innerText = "INVALID CONTRACT LINK.";
-    } else {
-      fetch(API_BASE_URL + '/get-rfq/' + rfqId)
-        .then(res => res.json())
-        .then(data => {
-          if(data.error || data.status !== 'Quote Sent') {
-            document.getElementById('loading').innerText = "CONTRACT EXPIRED OR NOT READY FOR FUNDING.";
-            return;
-          }
-          
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('main-content').style.display = 'block';
-
-          // Set Header Details
-          document.getElementById('ui-rfq').innerText = data.rfq_id;
-          document.getElementById('ui-date').innerText = new Date().toLocaleDateString();
-          document.getElementById('ui-company').innerText = data.buyer_company;
-          document.getElementById('ui-dest').innerText = data.destination;
-          document.getElementById('ui-logistics').innerText = data.logistics;
-
-          // Parse JSON Data safely
-          let variants = [];
-          let quote = {};
-          try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
-          try { quote = typeof data.supplier_quote === 'string' ? JSON.parse(data.supplier_quote) : data.supplier_quote; } catch(e){}
-
-          const finalItems = quote.finalQuoteItems || [];
-          const totals = quote.calculatedBuyerTotals || {};
-          const freight = quote.freightData || {};
-
-          // --- MODULE 1: SAMPLE ---
-          valSample = parseFloat(totals.finalSampleBuyer || 0);
-          if (valSample > 0) {
-              document.getElementById('card-sample').style.display = 'block';
-              document.getElementById('price-sample').innerText = "$" + valSample.toFixed(2);
-          }
-
-          // --- MODULE 2: PRODUCTION ---
-          let prodSubtotal = parseFloat(totals.productTotalBuyer || 0);
-          let customFee = parseFloat(totals.finalCustomizationBuyer || 0);
-          valProd = prodSubtotal + customFee;
-
-          if (valProd > 0) {
-              document.getElementById('card-prod').style.display = 'block';
-              document.getElementById('price-prod').innerText = "$" + valProd.toFixed(2);
-              
-              let prodHtml = '';
-              variants.forEach(v => {
-                 let match = finalItems.find(f => f.variantId === v.variantId) || {};
-                 let rowTotal = parseFloat(match.finalBuyerPrice || 0);
-                 let qty = parseInt(v.quantity || 1);
-                 let unitPrice = rowTotal / qty;
-
-                 prodHtml += `
-                   <tr>
-                     <td><strong>${data.product_name}</strong><br><span style="color:var(--text-muted); font-size:11px;">Var: ${v.variantName}</span></td>
-                     <td class="text-right">${qty}</td>
-                     <td class="text-right">$${unitPrice.toFixed(2)}</td>
-                     <td class="text-right" style="font-weight:bold; color:var(--text-main);">$${rowTotal.toFixed(2)}</td>
-                   </tr>
-                 `;
-              });
-
-              if (customFee > 0) {
-                 prodHtml += `
-                   <tr>
-                     <td><strong>Customization / Molds</strong><br><span style="color:var(--text-muted); font-size:11px;">Branding Requirements</span></td>
-                     <td class="text-right">1</td>
-                     <td class="text-right">$${customFee.toFixed(2)}</td>
-                     <td class="text-right" style="font-weight:bold; color:var(--text-main);">$${customFee.toFixed(2)}</td>
-                   </tr>
-                 `;
-              }
-              document.getElementById('table-prod').innerHTML = prodHtml;
-          }
-
-          // --- MODULE 3: FREIGHT ---
-          valFreight = parseFloat(freight.finalFreightBuyer || 0);
-          if (valFreight > 0) {
-              document.getElementById('card-freight').style.display = 'block';
-              document.getElementById('price-freight').innerText = "$" + valFreight.toFixed(2);
-              
-              document.getElementById('freight-details').innerHTML = `
-                <strong>Estimated Shipping Plan:</strong> ${freight.shipMode || 'Standard'}<br>
-                <strong>Carrier:</strong> ${freight.shipCarrier || 'Assigned by Muziris'}<br>
-                <strong>Estimated Transit:</strong> ${freight.transitTime ? freight.transitTime + ' Days' : 'TBD'}
-              `;
-          }
-
-          // Initial Calculation
-          calculateTotal();
-
-        }).catch(err => { document.getElementById('loading').innerText = "SERVER CONNECTION FAILED."; });
+    /* ====== HELPERS ====== */
+    function generateIdempotencyKey(rfq) {
+      const storageKey = `muziris_idempotency_${rfq}`;
+      let key = localStorage.getItem(storageKey);
+      if (!key) {
+        key = 'ORD-' + rfq + '-' + Date.now().toString(36) + '-' + Math.floor(Math.random()*1e6);
+        localStorage.setItem(storageKey, key);
+      }
+      return key;
     }
 
-    function calculateTotal() {
-        let total = 0;
+    function formatCurrency(amount, currency, locale = userLocale) {
+      try {
+        return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount);
+      } catch (e) {
+        return `${currency} ${Number(amount).toFixed(2)}`;
+      }
+    }
+
+    // Stops UI from glitching if user clicks rapidly
+    function debounce(fn, wait = 150) {
+      let t;
+      return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
+    }
+
+    /* ====== FX (display only) ====== */
+    async function fetchLiveRates() {
+      try {
+        const res = await fetch('https://open.er-api.com/v6/latest/CAD');
+        const data = await res.json();
+        if (data && data.result === 'success' && data.rates) {
+          liveExchangeRates = data.rates;
+          fxFetchFailed = false;
+        } else {
+          fxFetchFailed = true;
+        }
+      } catch (e) {
+        console.error('FX fetch failed', e);
+        fxFetchFailed = true;
+      }
+      calculateTotal(); 
+    }
+
+    /* ====== LOAD RFQ ====== */
+    async function loadRfq() {
+      if (!rfqId) {
+        document.getElementById('loading').innerText = "INVALID CONTRACT LINK.";
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE_URL}/get-rfq/${rfqId}`);
+        const data = await res.json();
         
-        const chkSample = document.getElementById('chk-sample');
-        const chkProd = document.getElementById('chk-prod');
-        const chkFreight = document.getElementById('chk-freight');
+        if (!data || data.error || data.status !== 'Quote Sent') {
+          document.getElementById('loading').innerText = "CONTRACT EXPIRED OR NOT READY FOR FUNDING.";
+          return;
+        }
+        
+        rfqData = data;
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        
+        // Populate Header
+        document.getElementById('ui-rfq').innerText = data.rfq_id || rfqId;
+        document.getElementById('ui-date').innerText = new Date().toLocaleDateString();
+        document.getElementById('ui-company').innerText = data.buyer_company || '';
+        document.getElementById('ui-dest').innerText = data.destination || '';
+        document.getElementById('ui-logistics').innerText = data.logistics || '';
 
-        if (chkSample && chkSample.checked) {
-            total += valSample;
-            document.getElementById('card-sample').classList.add('selected');
-        } else if(chkSample) {
-            document.getElementById('card-sample').classList.remove('selected');
+        // Parse quote safely
+        let quote = {};
+        try { quote = typeof data.supplier_quote === 'string' ? JSON.parse(data.supplier_quote) : (data.supplier_quote || {}); } catch(e){ quote = {}; }
+        const totals = quote.calculatedBuyerTotals || {};
+        const freight = quote.freightData || {};
+
+        // Set module values (CAD - Server Truth)
+        valSample = parseFloat(totals.finalSampleBuyer || 0);
+        valProd = parseFloat(totals.productTotalBuyer || 0) + parseFloat(totals.finalCustomizationBuyer || 0);
+        valFreight = parseFloat(freight.finalFreightBuyer || 0);
+
+        // Update UI blocks
+        if (valSample > 0) {
+          document.getElementById('card-sample').style.display = 'block';
+          document.getElementById('price-sample').innerText = formatCurrency(valSample, 'CAD');
+        }
+        if (valProd > 0) {
+          document.getElementById('card-prod').style.display = 'block';
+          document.getElementById('price-prod').innerText = formatCurrency(valProd, 'CAD');
+          
+          let variants = [];
+          try { variants = typeof data.variants_requested === 'string' ? JSON.parse(data.variants_requested) : data.variants_requested; } catch(e){}
+          const finalItems = quote.finalQuoteItems || [];
+          
+          let prodHtml = '';
+          variants.forEach(v => {
+             let match = finalItems.find(f => f.variantId === v.variantId) || {};
+             let rowTotal = parseFloat(match.finalBuyerPrice || 0);
+             let qty = parseInt(v.quantity || 1);
+             let unitPrice = rowTotal / qty;
+
+             prodHtml += `
+               <tr>
+                 <td><strong>${data.product_name}</strong><br><span style="color:var(--text-muted); font-size:11px;">Var: ${v.variantName}</span></td>
+                 <td class="text-right">${qty}</td>
+                 <td class="text-right">${formatCurrency(unitPrice, 'CAD')}</td>
+                 <td class="text-right" style="font-weight:bold; color:var(--text-main);">${formatCurrency(rowTotal, 'CAD')}</td>
+               </tr>
+             `;
+          });
+
+          let customFee = parseFloat(totals.finalCustomizationBuyer || 0);
+          if (customFee > 0) {
+             prodHtml += `
+               <tr>
+                 <td><strong>Customization / Molds</strong><br><span style="color:var(--text-muted); font-size:11px;">Branding Requirements</span></td>
+                 <td class="text-right">1</td>
+                 <td class="text-right">${formatCurrency(customFee, 'CAD')}</td>
+                 <td class="text-right" style="font-weight:bold; color:var(--text-main);">${formatCurrency(customFee, 'CAD')}</td>
+               </tr>
+             `;
+          }
+          document.getElementById('table-prod').innerHTML = prodHtml;
+        }
+        
+        if (valFreight > 0) {
+          document.getElementById('card-freight').style.display = 'block';
+          document.getElementById('price-freight').innerText = formatCurrency(valFreight, 'CAD');
+          document.getElementById('freight-details').innerHTML = `
+            <strong>Estimated Shipping Plan :</strong> ${freight.shipMode || 'Standard'}<br>
+            <strong>Carrier :</strong> ${freight.shipCarrier || 'Assigned by Muziris'}<br>
+            <strong>Estimated Transit :</strong> ${freight.transitTime ? freight.transitTime + ' Days' : 'TBD'}
+          `;
         }
 
-        if (chkProd && chkProd.checked) {
-            total += valProd;
-            document.getElementById('card-prod').classList.add('selected');
-        } else if(chkProd) {
-            document.getElementById('card-prod').classList.remove('selected');
-        }
-
-        if (chkFreight && chkFreight.checked) {
-            total += valFreight;
-            document.getElementById('card-freight').classList.add('selected');
-        } else if(chkFreight) {
-            document.getElementById('card-freight').classList.remove('selected');
-        }
-
-        document.getElementById('ui-grand-total').innerHTML = "$" + total.toFixed(2) + ` <span style="font-size:16px; color:var(--text-muted);">CAD</span>`;
-
-        // Disable button if nothing is selected OR agreement is not checked
-        const isAgreed = document.getElementById('chk-agreement') ? document.getElementById('chk-agreement').checked : false;
-        document.getElementById('btn-submit').disabled = (total === 0 || !isAgreed);
+        // Initialize Calculation
+        calculateTotal();
+      } catch (err) {
+        console.error('RFQ load failed', err);
+        document.getElementById('loading').innerText = "SERVER CONNECTION FAILED.";
+      }
     }
 
+    /* ====== CALCULATION & DISPLAY (JIT) ====== */
+    const calculateTotal = debounce(() => {
+      let baseCADTotal = 0;
+      const chkSample = document.getElementById('chk-sample');
+      const chkProd = document.getElementById('chk-prod');
+      const chkFreight = document.getElementById('chk-freight');
+
+      if (chkSample && chkSample.checked) {
+          baseCADTotal += valSample;
+          document.getElementById('card-sample').classList.add('selected');
+      } else if (chkSample) document.getElementById('card-sample').classList.remove('selected');
+      
+      if (chkProd && chkProd.checked) {
+          baseCADTotal += valProd;
+          document.getElementById('card-prod').classList.add('selected');
+      } else if (chkProd) document.getElementById('card-prod').classList.remove('selected');
+      
+      if (chkFreight && chkFreight.checked) {
+          baseCADTotal += valFreight;
+          document.getElementById('card-freight').classList.add('selected');
+      } else if (chkFreight) document.getElementById('card-freight').classList.remove('selected');
+
+      const selectedCurrEl = document.getElementById('buyer-currency');
+      const selectedCurr = selectedCurrEl ? selectedCurrEl.value : 'USD';
+
+      const rate = (liveExchangeRates && liveExchangeRates[selectedCurr]) ? liveExchangeRates[selectedCurr] : 1;
+      const displayTotal = baseCADTotal * rate;
+
+      const grandTotalEl = document.getElementById('ui-grand-total');
+      if (fxFetchFailed) {
+        grandTotalEl.innerHTML = `${formatCurrency(displayTotal, selectedCurr)} <span style="font-size:12px;color:var(--text-muted)"> (approx. — final rate locked at payment)</span>`;
+      } else {
+        grandTotalEl.innerHTML = `${formatCurrency(displayTotal, selectedCurr)} <span style="font-size:12px;color:var(--text-muted)"> (${selectedCurr})</span>`;
+      }
+
+      const isAgreed = document.getElementById('chk-agreement') ? document.getElementById('chk-agreement').checked : false;
+      
+      const btn = document.getElementById('btn-submit');
+      if(btn) {
+          btn.disabled = (baseCADTotal === 0 || !isAgreed);
+          btn.dataset.baseCadTotal = baseCADTotal;
+      }
+    }, 120);
+
+    /* ====== CHECKOUT (TAZAPAY ESCROW LOCK) ====== */
+    let checkoutInProgress = false;
+    async function processCheckout() {
+      if (checkoutInProgress) return;
+      checkoutInProgress = true;
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true;
+      btn.innerText = 'PROCESSING SECURE PAYMENT...';
+
+      try {
+        const fundedModules = [];
+        if (document.getElementById('chk-sample') && document.getElementById('chk-sample').checked) fundedModules.push('Sample');
+        if (document.getElementById('chk-prod') && document.getElementById('chk-prod').checked) fundedModules.push('Production');
+        if (document.getElementById('chk-freight') && document.getElementById('chk-freight').checked) fundedModules.push('Logistics');
+
+        if (fundedModules.length === 0) throw new Error('No modules selected.');
+
+        const buyerCurrency = document.getElementById('buyer-currency') ? document.getElementById('buyer-currency').value : 'USD';
+        const idempotencyKey = generateIdempotencyKey(rfqId);
+
+        const payload = {
+          rfqId,
+          fundedModules,
+          buyerCurrency,
+          idempotencyKey,
+          buyerLocale: userLocale
+        };
+
+        const res = await fetch(`${API_BASE_URL}/checkout/fund-escrow`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+        if (!res.ok || !result.success) throw new Error(result.error || 'Checkout failed');
+
+        // Show locked rate banner returned by server
+        const lockedRate = result.tazapay_fx_rate_locked || null;
+        const charged = result.tazapay_total_charged || null;
+        const txId = result.transactionId || null;
+
+        const banner = document.getElementById('locked-rate-banner');
+        if (banner) {
+          banner.style.display = 'block';
+          banner.innerHTML = `
+            <strong><i class="fas fa-lock"></i> Escrow Rate Locked:</strong> ${lockedRate ? `1 CAD = ${lockedRate} ${buyerCurrency}` : 'Locked by Tazapay'}.
+            ${charged ? `You were successfully charged <strong>${formatCurrency(charged, buyerCurrency)}</strong>.` : ''}
+            <br><span style="color:var(--text-muted);">Transaction ID: ${txId || 'N/A'}</span>
+          `;
+        }
+
+        // If Tazapay requires redirect to hosted payment page, do it here
+        if (result.hosted_payment_url) {
+            window.location.href = result.hosted_payment_url;
+            return;
+        }
+
+        // SUCCESS UI (If no redirect required)
+        document.getElementById('main-content').innerHTML = `
+          <div style="text-align:center; padding: 50px;">
+            <h2 style="color:var(--green); font-size: 28px;">✓ FUNDS SECURED IN ESCROW</h2>
+            <p style="color:var(--text-main); font-size: 16px; line-height: 1.6;">Your selected modules have been successfully funded.</p>
+            <div style="background:#fafbfc; border:2px dashed var(--border-color); padding: 25px; border-radius:8px; margin: 30px auto; max-width: 400px;">
+              <div style="font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Official Logistics Tracking Number</div>
+              <strong style="color:var(--blue); font-size:28px; font-family:monospace;">${result.shipmentId}</strong>
+            </div>
+            <p style="color:var(--text-muted); font-size:14px;">You can monitor the status of this order anytime from your Buyer Dashboard.</p>
+          </div>
+        `;
+
+      } catch (err) {
+        console.error('Checkout error', err);
+        alert(err.message || 'Checkout failed. Please try again.');
+        btn.innerText = 'AUTHORIZE & FUND ESCROW';
+        btn.disabled = false;
+      } finally {
+        checkoutInProgress = false;
+      }
+    }
+
+    // 🟢 Revision Function
     function submitRevision() {
         const msg = document.getElementById('revision-message').value;
         if (!msg) return alert("Please type your revision request.");
@@ -368,51 +533,18 @@
         });
     }
 
-    function processCheckout() {
-      const btn = document.getElementById('btn-submit');
-      
-      // Determine what they are actually funding today
-      let fundedModules = [];
-      if(document.getElementById('chk-sample') && document.getElementById('chk-sample').checked) fundedModules.push('Sample');
-      if(document.getElementById('chk-prod') && document.getElementById('chk-prod').checked) fundedModules.push('Production');
-      if(document.getElementById('chk-freight') && document.getElementById('chk-freight').checked) fundedModules.push('Logistics');
+    /* ====== INIT ====== */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('buyer-currency')?.addEventListener('change', calculateTotal);
+      document.getElementById('chk-sample')?.addEventListener('change', calculateTotal);
+      document.getElementById('chk-prod')?.addEventListener('change', calculateTotal);
+      document.getElementById('chk-freight')?.addEventListener('change', calculateTotal);
+      document.getElementById('chk-agreement')?.addEventListener('change', calculateTotal);
+      document.getElementById('btn-submit')?.addEventListener('click', processCheckout);
 
-      if (fundedModules.length === 0) return alert("Please select at least one module to fund.");
-
-      btn.innerText = "PROCESSING SECURE PAYMENT...";
-      btn.disabled = true;
-
-      // In the real world, this would redirect to Stripe/Moneris.
-      // For this build, we instantly trigger the escrow success API.
-      fetch(API_BASE_URL + '/checkout/fund-escrow', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            rfqId: rfqId,
-            fundedModules: fundedModules
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.success) {
-          document.getElementById('main-content').innerHTML = `
-            <div style="text-align:center; padding: 50px;">
-              <h2 style="color:var(--green); font-size: 28px;">✓ FUNDS SECURED IN ESCROW</h2>
-              <p style="color:var(--text-main); font-size: 16px; line-height: 1.6;">Your selected modules have been successfully funded.</p>
-              <div style="background:#fafbfc; border:2px dashed var(--border-color); padding: 25px; border-radius:8px; margin: 30px auto; max-width: 400px;">
-                <div style="font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Official Logistics Tracking Number</div>
-                <strong style="color:var(--blue); font-size:28px; font-family:monospace;">${data.shipmentId}</strong>
-              </div>
-              <p style="color:var(--text-muted); font-size:14px;">You can monitor the status of this order anytime from your Buyer Dashboard.</p>
-            </div>
-          `;
-        } else {
-          alert("Payment Error: " + data.error);
-          btn.innerText = "AUTHORIZE & FUND ESCROW";
-          btn.disabled = false;
-        }
-      });
-    }
+      fetchLiveRates();
+      loadRfq();
+    });
   </script>
 </body>
 </html>
