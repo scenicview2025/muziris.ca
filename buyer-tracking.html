@@ -256,17 +256,17 @@
     function logoutBuyer() { auth.signOut().catch((error) => console.error("Sign out error", error)); }
 
     function fetchRfqDetails(rfqId, buyerEmail) {
-        fetch(API_BASE_URL + '/get-admin-rfqs', { 
+        // 🟢 UPDATED: Use the secure Buyer endpoint to get Ledger & Tracking Data!
+        fetch(API_BASE_URL + '/buyer/my-orders', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ adminKey: "MUZIRIS_MASTER_KEY_2026" })
+            body: JSON.stringify({ email: buyerEmail })
         })
         .then(res => res.json())
         .then(data => {
-            if(data.error) throw new Error(data.error);
+            if(data.error || !data.success) throw new Error(data.error);
             
-            // Find the specific RFQ ensuring it belongs to this buyer
-            const rfq = data.find(r => r.rfq_id === rfqId && r.buyer_email.toLowerCase() === buyerEmail.toLowerCase());
+            const rfq = data.orders.find(r => r.rfq_id === rfqId);
             
             if (rfq) {
                 populateTrackingPage(rfq);
@@ -283,16 +283,17 @@
         document.getElementById('loader').style.display = 'none';
         document.getElementById('tracking-content').style.display = 'block';
 
-        // Populate Headers
+        // 🟢 UPDATED: Show the official SHP Tracking number from the Ledger
         document.getElementById('detail-title').innerText = rfq.product_name;
-        document.getElementById('detail-id').innerText = `REF: ${rfq.rfq_id} | SUP: ${rfq.supplier_id}`;
+        const displayId = rfq.shipment_id ? rfq.shipment_id : rfq.rfq_id;
+        document.getElementById('detail-id').innerText = `REF: ${displayId} | SUP: ${rfq.supplier_id}`;
         
         // Populate Logistics
         document.getElementById('detail-destination').innerText = rfq.destination || "EXW (No Destination Provided)";
         document.getElementById('detail-logistics').innerText = rfq.logistics || "Buyer Managed Forwarder";
         
         if (rfq.status === 'Shipped' || rfq.status === 'Completed') {
-            document.getElementById('detail-tracking').innerText = rfq.tracking_number || "DISPATCHED (Awaiting Carrier Sync)";
+            document.getElementById('detail-tracking').innerText = rfq.shipment_id ? `DISPATCHED: ${rfq.shipment_id}` : "DISPATCHED (Awaiting Carrier Sync)";
             document.getElementById('detail-tracking').style.color = "var(--success)";
         } else {
             document.getElementById('detail-tracking').innerText = "Awaiting Cargo Dispatch...";
@@ -306,13 +307,9 @@
         const s4 = document.getElementById('step-4');
         const bar = document.getElementById('stepper-progress');
 
-        if (rfq.status === 'Funded Escrow') {
+        if (rfq.status === 'Funded Escrow' || rfq.status === 'In Production') {
             s1.classList.add('completed'); s2.classList.add('active'); bar.style.width = '33%';
-        } else if (rfq.status === 'In Production') {
-            s1.classList.add('completed'); s2.classList.add('active'); bar.style.width = '33%';
-        } else if (rfq.status === 'Pending Freight Payment') {
-            s1.classList.add('completed'); s2.classList.add('completed'); s3.classList.add('active'); bar.style.width = '66%';
-        } else if (rfq.status === 'Shipped') {
+        } else if (rfq.status === 'Pending Freight Payment' || rfq.status === 'Shipped') {
             s1.classList.add('completed'); s2.classList.add('completed'); s3.classList.add('active'); bar.style.width = '66%';
         } else if (rfq.status === 'Completed') {
             s1.classList.add('completed'); s2.classList.add('completed'); s3.classList.add('completed'); s4.classList.add('completed'); bar.style.width = '100%';
@@ -320,14 +317,15 @@
 
         // Populate Financials
         let q = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
-        let curr = rfq.currency || "USD";
+        
+        // 🟢 UPDATED: Pull the exact currency and totals locked in the database
+        let curr = rfq.tazapay_buyer_currency || rfq.currency || "USD";
+        let exactLedgerTotal = parseFloat(rfq.tazapay_total_charged || 0);
         let itemsHtml = "";
-        let total = 0;
 
         if (q && q.finalQuoteItems) {
             q.finalQuoteItems.forEach(item => {
-                let itemTotal = parseFloat(item.supplierTotalRaw || 0);
-                total += itemTotal;
+                let itemTotal = parseFloat(item.finalBuyerPrice || item.supplierTotalRaw || 0);
                 itemsHtml += `
                     <div class="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
                         <div>
@@ -341,25 +339,27 @@
         }
         
         // Add extra fees to receipt if they exist
-        if (q && q.extraFees) {
-            let custFee = parseFloat(q.extraFees.customizationFee || 0);
-            if (custFee > 0) { total += custFee; itemsHtml += `<div class="flex justify-between items-center py-2"><div class="text-sm font-bold text-gray-700">Customization Fee</div><div class="font-mono font-bold text-gray-700">$${custFee.toFixed(2)}</div></div>`; }
+        if (q && q.calculatedBuyerTotals) {
+            let custFee = parseFloat(q.calculatedBuyerTotals.finalCustomizationBuyer || 0);
+            let sampFee = parseFloat(q.calculatedBuyerTotals.finalSampleBuyer || 0);
+            if (custFee > 0) { itemsHtml += `<div class="flex justify-between items-center py-2"><div class="text-sm font-bold text-gray-700">Customization Fee</div><div class="font-mono font-bold text-gray-700">$${custFee.toFixed(2)}</div></div>`; }
+            if (sampFee > 0) { itemsHtml += `<div class="flex justify-between items-center py-2"><div class="text-sm font-bold text-gray-700">Physical Sample Production</div><div class="font-mono font-bold text-gray-700">$${sampFee.toFixed(2)}</div></div>`; }
         }
-
-        // Add platform fee
-        let platformFee = total * 0.025;
-        total += platformFee;
-        itemsHtml += `<div class="flex justify-between items-center py-2"><div class="text-sm font-bold text-gray-500">Muziris Escrow Fee (2.5%)</div><div class="font-mono font-bold text-gray-500">$${platformFee.toFixed(2)}</div></div>`;
 
         // Add freight if funded
         if (q && q.freightData && (rfq.status === 'Shipped' || rfq.status === 'Completed')) {
             let f = parseFloat(q.freightData.finalFreightBuyer || 0);
-            total += f;
             itemsHtml += `<div class="flex justify-between items-center py-2"><div class="text-sm font-bold text-[var(--blue)]">Logistics Dispatch</div><div class="font-mono font-bold text-[var(--blue)]">$${f.toFixed(2)}</div></div>`;
         }
 
         document.getElementById('detail-line-items').innerHTML = itemsHtml || "<div class='text-sm text-gray-500'>Itemized data unavailable.</div>";
-        document.getElementById('detail-total').innerText = `$${total.toFixed(2)} ${curr}`;
+        
+        // 🟢 UPDATED: Uses the EXACT amount from the ledger instead of re-calculating!
+        if (exactLedgerTotal > 0) {
+            document.getElementById('detail-total').innerText = `$${exactLedgerTotal.toFixed(2)} ${curr}`;
+        } else {
+            document.getElementById('detail-total').innerText = "Pending Validation";
+        }
     }
   </script>
 </body>
