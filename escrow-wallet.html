@@ -263,8 +263,49 @@
     }
 
     function fetchFinancials() {
-        // (Keep your existing ledger logic here, unchanged)
-        document.getElementById('ledger-body').innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color:#666;">No financial transactions found.</td></tr>`;
+        fetch(API_BASE_URL + '/get-wallet-summary', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ supplierId: supplierId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                // 1. Update the Top KPIs
+                document.getElementById('kpi-available').innerText = Number(data.availableBalance).toLocaleString(undefined, {minimumFractionDigits: 2});
+                document.getElementById('kpi-escrow').innerText = Number(data.lockedInEscrow).toLocaleString(undefined, {minimumFractionDigits: 2});
+                document.getElementById('kpi-total').innerText = Number(data.lifetimeEarned).toLocaleString(undefined, {minimumFractionDigits: 2});
+                
+                // 2. Build the Transaction Table
+                if (data.ledger && data.ledger.length > 0) {
+                    let html = '';
+                    data.ledger.forEach(row => {
+                        let date = new Date(row.created_at).toLocaleDateString();
+                        let amount = Number(row.tazapay_total_charged).toLocaleString(undefined, {minimumFractionDigits: 2});
+                        let curr = row.tazapay_buyer_currency || 'CAD';
+                        
+                        let badge = '<span style="color:#aaa;">Pending</span>';
+                        if (row.status === 'Released') badge = '<span style="color:var(--success); font-weight:bold; padding: 4px 8px; border: 1px solid var(--success); border-radius: 4px; background: rgba(76, 175, 80, 0.1);">Available</span>';
+                        else badge = '<span style="color:var(--blue); font-weight:bold; padding: 4px 8px; border: 1px solid var(--blue); border-radius: 4px; background: rgba(30, 136, 229, 0.1);">Locked in Escrow</span>';
+
+                        html += `
+                            <tr>
+                                <td>${date}</td>
+                                <td style="font-family:monospace; color:var(--gold);">${row.tazapay_transaction_id || 'Processing...'}</td>
+                                <td>${row.rfq_id}</td>
+                                <td>Smart Contract Funding</td>
+                                <td style="font-family:monospace; font-weight:bold; color:#fff;">$${amount} ${curr}</td>
+                                <td>${badge}</td>
+                            </tr>
+                        `;
+                    });
+                    document.getElementById('ledger-body').innerHTML = html;
+                } else {
+                    document.getElementById('ledger-body').innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color:#666;">No financial transactions found.</td></tr>`;
+                }
+            }
+        })
+        .catch(console.error);
     }
 
     function openWithdrawModal() {
