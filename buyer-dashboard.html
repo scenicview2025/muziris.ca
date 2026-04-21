@@ -305,15 +305,16 @@
     // RFQ FETCHING & DASHBOARD LOGIC
     // ==========================================
     function fetchBuyerRfqs() {
-      fetch(API_BASE_URL + '/get-admin-rfqs', { 
+      // 🟢 UPDATED: Using the new secure buyer-specific route
+      fetch(API_BASE_URL + '/buyer/my-orders', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminKey: "MUZIRIS_MASTER_KEY_2026" })
+        body: JSON.stringify({ email: currentBuyerEmail })
       })
       .then(res => res.json())
       .then(data => {
-        if(data.error) throw new Error(data.error);
-        allBuyerRfqs = data.filter(r => r.buyer_email && r.buyer_email.toLowerCase() === currentBuyerEmail.toLowerCase());
+        if(data.error || !data.success) throw new Error(data.error);
+        allBuyerRfqs = data.orders; // The backend already filtered by email!
         renderDashboard();
       })
       .catch(err => {
@@ -330,31 +331,21 @@
         return;
       }
 
-      allBuyerRfqs.sort((a,b) => new Date(b.submitted_date) - new Date(a.submitted_date));
-
       allBuyerRfqs.forEach(rfq => {
-        // 🟢 TWO PHASE LOGIC CHECKS
         let isPhase1Action = ['Supplier Replied', 'Quote Sent'].includes(rfq.status);
-        let isPhase2Action = ['Pending Freight Payment'].includes(rfq.status); // Triggers Freight Invoice
-        
+        let isPhase2Action = ['Pending Freight Payment'].includes(rfq.status);
         let isEscrow = ['Funded Escrow', 'In Production', 'Shipped'].includes(rfq.status);
         let isCompleted = (rfq.status === 'Completed');
         
         if(!isCompleted && rfq.status !== 'Cancelled') activeCount++;
         if(isCompleted) completedCount++;
 
-        let contractTotal = 0;
-        if(rfq.supplier_quote) {
-           try {
-             let q = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
-             if(q.finalQuoteItems) q.finalQuoteItems.forEach(i => contractTotal += parseFloat(i.supplierTotalRaw || 0));
-             if(q.extraFees) {
-               contractTotal += parseFloat(q.extraFees.customizationFee || 0);
-               contractTotal += parseFloat(q.extraFees.sampleFee || 0);
-             }
-           } catch(e){}
+        // 🟢 UPDATED: Pull the exact locked amount from the new Ledger if it exists!
+        if(isEscrow || isCompleted) {
+            if(rfq.tazapay_total_charged) {
+                escrowLocked += parseFloat(rfq.tazapay_total_charged);
+            }
         }
-        if(isEscrow) escrowLocked += contractTotal;
 
         // 🟢 DYNAMIC ALERTS
         if(isPhase1Action || isPhase2Action) {
@@ -362,7 +353,7 @@
           let alertTitle = isPhase1Action ? "Manufacturing Quote Ready" : "Freight Invoice Ready";
           let alertDesc = isPhase1Action ? "The supplier has approved your request. Review the official contract to begin production." : "Your goods are ready! Review the logistics bill to dispatch the cargo.";
           let btnText = isPhase1Action ? "Review Contract" : "Fund Logistics";
-          let phaseNum = isPhase1Action ? 1 : 2;
+          let targetUrl = isPhase1Action ? `buyer-checkout.html?rfq=${rfq.rfq_id}` : `buyer-checkout.html?rfq=${rfq.rfq_id}`;
 
           alertHtml += `
             <div class="alert-item flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -370,7 +361,7 @@
                 <div class="alert-item-name">${alertTitle}: ${rfq.product_name}</div>
                 <div class="alert-item-msg">${alertDesc}</div>
               </div>
-              <button class="btn-gold w-full sm:w-auto text-center" onclick="openQuoteModal('${rfq.rfq_id}', ${phaseNum})">${btnText}</button>
+              <button class="btn-gold w-full sm:w-auto text-center" onclick="window.location.href='${targetUrl}'">${btnText}</button>
             </div>
           `;
         }
@@ -381,21 +372,21 @@
 
         if(isPhase1Action) {
           statusBadge = `<span class="status-badge status-action">Fund Production</span>`;
-          actionBtn = `<button class="btn-gold" onclick="openQuoteModal('${rfq.rfq_id}', 1)">Sign & Pay</button>`;
+          actionBtn = `<button class="btn-gold" onclick="window.location.href='buyer-checkout.html?rfq=${rfq.rfq_id}'">Sign & Pay</button>`;
         } else if (isPhase2Action) {
           statusBadge = `<span class="status-badge status-action" style="background:#e0f2fe; color:#0ea5e9; border-color:#7dd3fc;">Fund Logistics</span>`;
-          actionBtn = `<button class="btn-gold" style="background:#0ea5e9; color:#fff;" onclick="openQuoteModal('${rfq.rfq_id}', 2)">Pay Freight</button>`;
-       } else if (isEscrow) {
-          statusBadge = `<span class="status-badge status-escrow">${rfq.status}</span>`;
+          actionBtn = `<button class="btn-gold" style="background:#0ea5e9; color:#fff;" onclick="window.location.href='buyer-checkout.html?rfq=${rfq.rfq_id}'">Pay Freight</button>`;
+        } else if (isEscrow || isCompleted) {
+          statusBadge = isCompleted ? `<span class="status-badge status-shipped">Delivered</span>` : `<span class="status-badge status-escrow">${rfq.status}</span>`;
           actionBtn = `<button class="btn-outline" onclick="window.location.href='buyer-tracking.html?id=${rfq.rfq_id}'">Track Status</button>`;
-        } else if (isCompleted) {
-          statusBadge = `<span class="status-badge status-shipped">Delivered</span>`;
-          actionBtn = `<button class="btn-outline" onclick="window.location.href='buyer-tracking.html?id=${rfq.rfq_id}'">View Receipt</button>`;
         }
+
+        // 🟢 UPDATED: Display SHP- Tracking number if it has been generated by the checkout!
+        let displayId = rfq.shipment_id ? `<span style="color:var(--blue); font-weight:900;">${rfq.shipment_id}</span>` : rfq.rfq_id;
 
         tableHtml += `
           <tr>
-            <td class="font-mono text-[var(--gold-dark)] font-bold">${rfq.rfq_id}</td>
+            <td class="font-mono font-bold">${displayId}</td>
             <td class="text-gray-500">${new Date(rfq.submitted_date).toLocaleDateString()}</td>
             <td>
               <div class="font-bold text-gray-900">${rfq.product_name}</div>
@@ -419,162 +410,6 @@
       } else {
         document.getElementById('rfqWidget').style.display = 'none';
       }
-    }
-
-    // ==========================================
-    // 🟢 THE SMART MODAL ENGINE (Handles Phase 1 & 2)
-    // ==========================================
-    function openQuoteModal(rfqId, phase) {
-      activeRfqForModal = allBuyerRfqs.find(r => r.rfq_id === rfqId);
-      activePhaseForModal = phase;
-      if(!activeRfqForModal || !activeRfqForModal.supplier_quote) return;
-
-      let q = typeof activeRfqForModal.supplier_quote === 'string' ? JSON.parse(activeRfqForModal.supplier_quote) : activeRfqForModal.supplier_quote;
-      let curr = activeRfqForModal.currency || "USD";
-      
-      document.getElementById('modal-rfq-id').innerText = rfqId;
-      document.getElementById('digital-signature').checked = false; // Reset checkbox
-      
-      const btn = document.getElementById('btn-fund');
-      const sigBlock = document.getElementById('signature-block');
-      const escrowBadge = document.getElementById('freight-escrow-badge');
-
-      let finHtml = "";
-      let grandTotal = 0;
-
-      // ----------------------------------------
-      // PHASE 1: MANUFACTURING INVOICE
-      // ----------------------------------------
-      if (phase === 1) {
-          document.getElementById('modal-title').innerText = "Official Manufacturing Agreement";
-          document.getElementById('modal-msg-title').innerText = "Supplier Message";
-          document.getElementById('modal-supplier-msg').innerText = `"${q.evidence?.supplierReply || 'Please review the official itemized quote below.'}"`;
-          document.getElementById('modal-financial-title').innerText = "Manufacturing Breakdown (EXW)";
-
-          sigBlock.style.display = 'block';
-          escrowBadge.style.display = 'none';
-          
-          btn.disabled = true;
-          btn.className = "flex-[2] bg-gray-300 text-gray-500 font-bold py-4 rounded uppercase tracking-widest transition cursor-not-allowed";
-          btn.innerHTML = `<i class="fas fa-pen-nib"></i> Sign Agreement to Pay`;
-
-          if(q.finalQuoteItems) {
-            q.finalQuoteItems.forEach(item => {
-              let itemTotal = parseFloat(item.supplierTotalRaw || 0);
-              grandTotal += itemTotal;
-              finHtml += `<div class="financial-row"><div><strong class="text-gray-900">${item.variantName}</strong><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1 font-bold">Qty: ${item.quantity} | Final Base Rate</div></div><div class="font-mono text-[var(--gold-dark)] font-bold">$${itemTotal.toFixed(2)} ${curr}</div></div>`;
-            });
-          }
-
-          if(q.extraFees) {
-            let custFee = parseFloat(q.extraFees.customizationFee || 0);
-            let sampFee = parseFloat(q.extraFees.sampleFee || 0);
-            if(custFee > 0) {
-              grandTotal += custFee;
-              finHtml += `<div class="financial-row"><div><strong class="text-gray-700">Customization / Mold Fee</strong><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">${q.extraFees.customizationNotes || 'Branding setup'}</div></div><div class="font-mono text-gray-700 font-bold">$${custFee.toFixed(2)} ${curr}</div></div>`;
-            }
-            if(sampFee > 0) {
-              grandTotal += sampFee;
-              finHtml += `<div class="financial-row"><div><strong class="text-gray-700">Physical Sample Production</strong></div><div class="font-mono text-gray-700 font-bold">$${sampFee.toFixed(2)} ${curr}</div></div>`;
-            }
-          }
-          let platformFee = grandTotal * 0.025;
-          grandTotal += platformFee;
-          finHtml += `<div class="financial-row"><div><strong class="text-gray-500">Muziris Escrow & Audit Fee (2.5%)</strong></div><div class="font-mono text-gray-500 font-bold">$${platformFee.toFixed(2)} ${curr}</div></div>`;
-
-      } 
-      // ----------------------------------------
-      // PHASE 2: LOGISTICS INVOICE
-      // ----------------------------------------
-      else if (phase === 2) {
-          document.getElementById('modal-title').innerText = "Official Logistics Invoice";
-          document.getElementById('modal-msg-title').innerText = "Muziris Freight Team";
-          document.getElementById('modal-supplier-msg').innerText = "Your goods have been boxed and measured. Please review the live freight rate to dispatch the cargo to your destination.";
-          document.getElementById('modal-financial-title').innerText = "Landed Freight Breakdown";
-
-          sigBlock.style.display = 'none'; // No signature needed for shipping
-          escrowBadge.style.display = 'flex';
-          
-          btn.disabled = false;
-          btn.className = "flex-[2] bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-bold py-4 rounded uppercase tracking-widest transition";
-          btn.innerHTML = `<i class="fas fa-ship"></i> FUND FREIGHT & DISPATCH`;
-
-          // Pull Freight data (if you attached it to the quote in Phase 2)
-          let freightCost = q.freightData ? parseFloat(q.freightData.finalFreightBuyer || 0) : 0;
-          grandTotal += freightCost;
-
-          finHtml += `<div class="financial-row"><div><strong class="text-gray-900">Ocean/Air Freight to ${activeRfqForModal.destination}</strong><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-1 font-bold">Includes Insurance & Delivery</div></div><div class="font-mono text-[var(--gold-dark)] font-bold">$${freightCost.toFixed(2)} ${curr}</div></div>`;
-      }
-
-      // Grand Total Row
-      finHtml += `
-        <div class="financial-row total">
-          <div>TOTAL DUE NOW</div>
-          <div class="text-[var(--gold-dark)]">$${grandTotal.toFixed(2)} ${curr}</div>
-        </div>
-      `;
-
-      document.getElementById('modal-financials').innerHTML = finHtml;
-      document.getElementById('quote-modal').style.display = 'flex';
-    }
-
-    // Toggle button state when signature checkbox is clicked
-    function togglePayButton() {
-        const btn = document.getElementById('btn-fund');
-        const isChecked = document.getElementById('digital-signature').checked;
-        
-        if (isChecked) {
-            btn.disabled = false;
-            btn.className = "flex-[2] bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-black font-bold py-4 rounded uppercase tracking-widest transition";
-            btn.innerHTML = `<i class="fas fa-lock"></i> LOCK FUNDS IN ESCROW`;
-        } else {
-            btn.disabled = true;
-            btn.className = "flex-[2] bg-gray-300 text-gray-500 font-bold py-4 rounded uppercase tracking-widest transition cursor-not-allowed";
-            btn.innerHTML = `<i class="fas fa-pen-nib"></i> Sign Agreement to Pay`;
-        }
-    }
-
-    function fundEscrow() {
-      if(!activeRfqForModal) return;
-      
-      const btn = document.getElementById('btn-fund');
-      btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> PROCESSING PAYMENT...`;
-      btn.disabled = true;
-
-      // 🟢 Determine next status based on Phase!
-      let newStatus = activePhaseForModal === 1 ? 'In Production' : 'Shipped';
-
-      fetch(API_BASE_URL + '/update-rfq-status', {
-        method: 'PUT', // Assuming PUT is used in server.js for update-rfq-status
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.success) {
-          document.getElementById('quote-modal').style.display = 'none';
-          if (activePhaseForModal === 1) {
-              alert("✓ MANUFACTURING CONTRACT SIGNED\n\nYour funds have been locked in the Muziris Vault. The supplier has been notified to begin production immediately.");
-          } else {
-              alert("✓ FREIGHT SECURED\n\nMuziris Logistics is dispatching your cargo now. You will receive a tracking number shortly.");
-          }
-          fetchBuyerRfqs(); 
-        } else {
-          alert("Payment Error: " + data.error);
-          btn.disabled = false;
-        }
-      })
-      .catch(err => {
-        alert("Network Error during payment processing.");
-        btn.disabled = false;
-      });
-    }
-
-    function closeModal(e) {
-      if(e.target.id === 'quote-modal' || e.target.closest('.modal-close')) {
-        document.getElementById('quote-modal').style.display = 'none';
-      }
-    }
-  </script>
+    }  </script>
 </body>
 </html>
