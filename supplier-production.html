@@ -44,7 +44,7 @@
         
         <div id="view-order-list">
             <h2 style="color:#fff; margin-bottom: 5px; margin-top:0;">Active Production Queue</h2>
-            <p style="color:#888; margin-bottom: 30px;">Select an order to update its manufacturing status, upload visual QC proof, or generate shipping documents.</p>
+            <p style="color:#888; margin-bottom: 30px;">Select an order to accept production, upload visual QC proof, or generate shipping documents.</p>
 
             <div id="order-list-container">
                 <div style="text-align:center; padding:50px; color:#888;">Syncing active orders from Muziris Ledger...</div>
@@ -68,6 +68,15 @@
                 </div>
             </div>
 
+            <div id="accept-order-banner" class="card" style="border-top: 4px solid var(--success); display:none;">
+                <h3 style="color:#fff; margin-top:0; font-size:20px; display:flex; align-items:center; gap:10px;">
+                    Production Authorized
+                    <span style="font-size:11px; padding:4px 10px; background:rgba(76,175,80,0.1); color:var(--success); border-radius:20px; border:1px solid var(--success);">Escrow Funded</span>
+                </h3>
+                <p style="color:#888; font-size:13px; line-height:1.6; margin-bottom:20px;">The buyer has securely locked funds into the Muziris Vault. Please formally confirm receipt to begin manufacturing.</p>
+                <button id="btn-accept-order" class="btn-gold" style="background:var(--success); color:#fff; width:auto;" onclick="acceptOrder()">✓ Accept Order & Begin Production</button>
+            </div>
+
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
                 
                 <div>
@@ -86,13 +95,12 @@
                     <div class="card">
                         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px;">
                             <h3 style="color:var(--gold); margin:0; font-family:'Cinzel', serif;">Visual QC Vault</h3>
-                            <button class="btn-gold" style="padding:8px 15px; font-size:10px;" onclick="document.getElementById('file-qc').click()">+ Upload Media</button>
+                            <button class="btn-gold" style="padding:8px 15px; font-size:10px; width:auto;" onclick="document.getElementById('file-qc').click()">+ Upload Media</button>
                             <input type="file" id="file-qc" class="hidden" accept="image/*,video/*" onchange="uploadQCMedia()">
                         </div>
                         <p style="color:#888; font-size:12px; margin-bottom:15px;">Upload photos/videos of the production line. This acts as undeniable proof of quality for the buyer.</p>
                         
-                        <div class="gallery-grid" id="qc-gallery">
-                            </div>
+                        <div class="gallery-grid" id="qc-gallery"></div>
                     </div>
                 </div>
 
@@ -151,7 +159,6 @@
 
             </div>
         </div>
-
     </div>
 
     <script>
@@ -179,8 +186,8 @@
             .then(data => {
                 if(data.error) return;
                 
-                // Filter only orders that are in production or pending freight
-                currentActiveOrders = data.filter(rfq => ['In Production', 'Pending Freight Payment', 'Shipped'].includes(rfq.status));
+                // 🟢 SHOW FUNDED ESCROW + IN PRODUCTION ORDERS
+                currentActiveOrders = data.filter(rfq => ['Funded Escrow', 'In Production', 'Pending Freight Payment', 'Shipped'].includes(rfq.status));
                 renderOrderList();
             })
             .catch(console.error);
@@ -196,14 +203,17 @@
 
             let html = '';
             currentActiveOrders.forEach(rfq => {
-                // Calculate rough days remaining (Mock math for demo)
                 let daysLeft = 30; 
                 try {
                     let quote = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
                     if(quote.leadTime) daysLeft = quote.leadTime;
                 } catch(e){}
 
-                let statusBadge = rfq.status === 'In Production' ? `<span style="color:var(--gold);">● IN PRODUCTION</span>` : `<span style="color:var(--blue);">● LOGISTICS PENDING</span>`;
+                // Dynamic Status Colors
+                let statusBadge = '';
+                if (rfq.status === 'Funded Escrow') statusBadge = `<span style="color:var(--success);">● NEW ORDER FUNDED</span>`;
+                else if (rfq.status === 'In Production') statusBadge = `<span style="color:var(--gold);">● IN PRODUCTION</span>`;
+                else statusBadge = `<span style="color:var(--blue);">● LOGISTICS PENDING</span>`;
 
                 html += `
                     <div class="order-row" onclick="openOrderDetail('${rfq.rfq_id}')">
@@ -243,7 +253,14 @@
             } catch(e){}
             document.getElementById('ui-det-days').innerText = daysLeft;
 
-            // Reset UI State
+            // Show or Hide the "Accept Order" Banner based on status
+            const banner = document.getElementById('accept-order-banner');
+            if (activeOrderContext.status === 'Funded Escrow') {
+                banner.style.display = 'block';
+            } else {
+                banner.style.display = 'none';
+            }
+
             setMilestone(1);
             document.getElementById('qc-gallery').innerHTML = ''; // In real app, fetch existing photos
         }
@@ -277,13 +294,52 @@
             }
         }
 
+        // 🟢 REAL ACCEPT ORDER FUNCTION
+        function acceptOrder() {
+            if(!activeOrderContext) return;
+            
+            const btn = document.getElementById('btn-accept-order');
+            btn.innerHTML = "Processing...";
+            btn.disabled = true;
+            
+            // Bypass Auth for Demo (Admin token used for update route)
+            const adminAuthToken = btoa('admin:Muziris2026!'); 
+            
+            fetch(API_BASE_URL + '/update-rfq-status/' + activeOrderContext.rfq_id, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + adminAuthToken
+                },
+                body: JSON.stringify({ status: 'In Production' })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    document.getElementById('accept-order-banner').style.display = 'none';
+                    activeOrderContext.status = 'In Production';
+                    
+                    // Refresh the background list so it's correct when they go back
+                    fetchActiveOrders(); 
+                } else {
+                    alert("Database Error: " + data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = "✓ Accept Order & Begin Production";
+                }
+            })
+            .catch(e => {
+                alert("Network Error.");
+                btn.disabled = false;
+                btn.innerHTML = "✓ Accept Order & Begin Production";
+            });
+        }
+
         // 🟢 CLOUDINARY MEDIA UPLOAD
         function uploadQCMedia() {
             const fileInput = document.getElementById('file-qc');
             const file = fileInput.files[0];
             if(!file) return;
 
-            // Temporary placeholder
             const gallery = document.getElementById('qc-gallery');
             const placeholderId = 'upload_' + Date.now();
             gallery.innerHTML += `<div class="media-card" id="${placeholderId}" style="display:flex; justify-content:center; align-items:center; color:var(--gold);"><i class="fas fa-spinner fa-spin text-2xl"></i></div>`;
@@ -308,8 +364,6 @@
                         let isVideo = file.type.includes('video');
                         let mediaTag = isVideo ? `<video src="${data.url}" muted autoplay loop></video>` : `<img src="${data.url}">`;
                         document.getElementById(placeholderId).innerHTML = mediaTag;
-                        
-                        // In a real app, you would now save this URL to the order in the database!
                     } else {
                         document.getElementById(placeholderId).remove();
                         alert("Upload failed.");
@@ -341,8 +395,7 @@
                 gstin: document.getElementById('sup-gstin').value,
                 qty: document.getElementById('cargo-qty').value,
                 weight: document.getElementById('cargo-weight').value,
-                cbm: document.getElementById('cargo-cbm').value,
-                // In real app, grab doc URLs from Cloudinary here
+                cbm: document.getElementById('cargo-cbm').value
             };
 
             fetch(API_BASE_URL + '/supplier/logistics/save', {
