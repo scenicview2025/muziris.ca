@@ -235,13 +235,8 @@
 
     /* ====== HELPERS ====== */
     function generateIdempotencyKey(rfq) {
-      const storageKey = `muziris_idempotency_${rfq}`;
-      let key = localStorage.getItem(storageKey);
-      if (!key) {
-        key = 'ORD-' + rfq + '-' + Date.now().toString(36) + '-' + Math.floor(Math.random()*1e6);
-        localStorage.setItem(storageKey, key);
-      }
-      return key;
+      // Force a brand new transaction ID every single time for testing!
+      return 'ORD-' + rfq + '-' + Date.now().toString(36) + '-' + Math.floor(Math.random()*1e6);
     }
 
     function formatCurrency(amount, currency, locale = userLocale) {
