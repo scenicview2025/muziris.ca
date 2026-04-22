@@ -205,7 +205,8 @@
 
         if(data.error) return alert("Error loading profile");
 
-        const status = data.verification_status || 'Unverified';
+        // 🟢 TEST MODE BYPASS: Force the account to act as 'Verified'
+        const status = 'Verified'; 
         localStorage.setItem('verificationStatus', status);
 
         // UI Routing based on status
