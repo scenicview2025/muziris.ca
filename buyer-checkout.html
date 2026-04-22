@@ -471,9 +471,9 @@
           `;
         }
 
-        // If Tazapay requires redirect to hosted payment page, do it here
-        if (result.hosted_payment_url) {
-            window.location.href = result.hosted_payment_url;
+        // 🟢 Redirect the buyer to the actual Tazapay Checkout Page!
+        if (result.payment_url) {
+            window.location.href = result.payment_url;
             return;
         }
 
