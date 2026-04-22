@@ -3,120 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muziris | Export Manifest (SLI)</title>
+    <title>Muziris | Order Fulfillment & Logistics</title>
     <link rel="icon" type="image/png" href="MC.png">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        :root { --gold: #D4AF37; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --success: #4CAF50;}
+        :root { --gold: #D4AF37; --void: #0b0e14; --slate: #151922; --mist: #e0e0e0; --success: #4CAF50; --blue: #1E88E5;}
         body { margin: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); }
         .topbar { padding: 20px 40px; border-bottom: 1px solid #333; background: rgba(11, 14, 20, 0.95); position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between;}
-        .card { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 30px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .input-dark { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; outline: none; transition: 0.3s;}
         .input-dark:focus { border-color: var(--gold); }
         .label-text { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold;}
         .btn-gold { background: var(--gold); color: #000; border: none; padding: 15px 30px; border-radius: 4px; font-weight: bold; text-transform: uppercase; cursor: pointer; width: 100%; transition: 0.3s;}
         .btn-gold:hover { background: #b89225; }
+        
+        /* Custom Scrollbar for Chat */
+        .chat-box::-webkit-scrollbar { width: 6px; }
+        .chat-box::-webkit-scrollbar-track { background: #0b0e14; }
+        .chat-box::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
     </style>
 </head>
 <body>
 
     <div class="topbar">
-        <h1 style="font-family:'Cinzel', serif; color:var(--gold); margin:0;">Export Manifest (SLI)</h1>
+        <h1 style="font-family:'Cinzel', serif; color:var(--gold); margin:0;">Order Fulfillment Hub</h1>
         <div style="color:#888; font-size:12px; display:flex; align-items:center; gap:10px;">
-            <a href="supplier-dashboard.html" style="color:var(--gold); text-decoration:none;">&larr; Back to Dashboard</a>
+            <a href="supplier-dashboard.html" style="color:var(--gold); text-decoration:none; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">&larr; Back to Dashboard</a>
         </div>
     </div>
 
-    <div style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
-        <h2 style="color:#fff; margin-bottom: 5px;">Shipping Instructions</h2>
-        <p style="color:#888; margin-bottom: 30px;">Complete this manifest to trigger Muziris Logistics. We will generate your Bill of Lading.</p>
-
-        <form id="sliForm" onsubmit="event.preventDefault(); submitSupplierManifest();">
+    <div style="max-width: 1400px; margin: 40px auto; padding: 0 20px;">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <div class="card">
-                <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">1. Exporter Compliance (India)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div>
-                        <label class="label-text">GSTIN Number</label>
-                        <input type="text" id="sup-gstin" class="input-dark" placeholder="Your 15-digit GSTIN" required>
+            <div class="col-span-1 lg:col-span-5">
+                
+                <div class="card" style="border-top: 4px solid var(--success);">
+                    <h3 style="color:#fff; margin-top:0; font-size:20px; display:flex; justify-content:space-between;">
+                        Production Authorized
+                        <span style="font-size:11px; padding:4px 10px; background:rgba(76,175,80,0.1); color:var(--success); border-radius:20px; border:1px solid var(--success); display:flex; align-items:center;">Escrow Funded</span>
+                    </h3>
+                    <p style="color:#888; font-size:13px; line-height:1.6;">The buyer has locked funds into the Muziris Vault. Please confirm receipt and verify your actual lead time to begin.</p>
+                    
+                    <div style="background:#0b0e14; padding:15px; border-radius:6px; border:1px solid #333; margin-top:20px;">
+                        <div class="flex justify-between mb-2"><span style="color:#888; font-size:12px;">Order Ref:</span> <strong id="ui-rfq" style="color:var(--gold); font-family:monospace;">Loading...</strong></div>
+                        <div class="flex justify-between mb-2"><span style="color:#888; font-size:12px;">Shipment ID:</span> <strong style="color:var(--blue); font-family:monospace;">PENDING MANIFEST</strong></div>
+                        <div class="flex justify-between"><span style="color:#888; font-size:12px;">Target Lead Time:</span> <strong style="color:#fff;">30 Days</strong></div>
                     </div>
-                    <div>
-                        <label class="label-text">IEC (Import Export Code)</label>
-                        <input type="text" id="sup-iec" class="input-dark" placeholder="Your 10-digit IEC" required>
-                    </div>
-                    <div class="col-span-1 md:col-span-2">
-                        <label class="label-text">Exact Factory Pickup Address</label>
-                        <textarea id="sup-pickup" class="input-dark" rows="2" placeholder="Full address for the truck driver" required></textarea>
-                    </div>
-                    <div>
-                        <label class="label-text">Cargo Ready Date</label>
-                        <input type="date" id="sup-ready" class="input-dark" required>
+
+                    <div style="margin-top: 20px;">
+                        <button class="btn-gold" id="btn-accept-order" onclick="acceptOrder()" style="background:var(--success); color:#fff; font-size:12px;">✓ Accept Order & Begin Production</button>
                     </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">2. Cargo & Dimensions</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-                    <div>
-                        <label class="label-text">Total Cartons / Packages</label>
-                        <input type="number" id="cargo-qty" class="input-dark" placeholder="e.g. 50" required>
+                <div class="card flex flex-col h-[500px]">
+                    <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">Order Communication Hub</h3>
+                    <p style="color:#888; font-size:12px; margin-bottom:15px;">Send production updates or photos directly to the buyer.</p>
+                    
+                    <div class="chat-box flex-1 bg-[#0b0e14] border border-[#333] rounded-lg p-4 overflow-y-auto flex flex-col gap-3">
+                        <div class="bg-[#151922] border border-[#333] p-3 rounded-lg max-w-[85%] self-start">
+                            <span class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">System Message</span>
+                            <span class="text-sm text-gray-300">Escrow funded successfully. Awaiting supplier acceptance.</span>
+                        </div>
                     </div>
-                    <div>
-                        <label class="label-text">Total Gross Weight (KG)</label>
-                        <input type="number" id="cargo-weight" class="input-dark" step="0.1" placeholder="e.g. 450.5" required>
-                    </div>
-                    <div>
-                        <label class="label-text">Total Volume (CBM)</label>
-                        <input type="number" id="cargo-cbm" class="input-dark" step="0.01" placeholder="e.g. 2.45" required>
-                    </div>
-                    <div>
-                        <label class="label-text">Packaging Type</label>
-                        <select id="cargo-pack" class="input-dark">
-                            <option>Loose Cartons</option>
-                            <option>Wooden Pallets</option>
-                            <option>Plastic Pallets</option>
-                            <option>Wooden Crates</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center gap-4 mt-6 col-span-2">
-                        <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-gray-400">
-                            <input type="checkbox" id="cargo-stackable" checked class="w-4 h-4 accent-[var(--gold)]">
-                            Cargo is Stackable
-                        </label>
+
+                    <div class="mt-4 flex gap-2">
+                        <input type="text" id="chat-input" class="input-dark flex-1" placeholder="Type a message to the buyer...">
+                        <button class="bg-[var(--gold)] text-black px-4 rounded font-bold hover:bg-[#b89225] transition" onclick="alert('Message Sent (Demo)')"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
+
             </div>
 
-            <div class="card">
-                <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">3. Export Document Vault</h3>
-                <p class="text-sm text-gray-400 mb-4">You must upload your final Commercial Invoice and Packing List for Indian Customs clearance.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button type="button" class="border border-dashed border-[#444] p-6 rounded text-center text-xs font-bold text-[#888] hover:bg-[#222] transition" onclick="alert('Upload Trigger')">
-                        <i class="fas fa-file-invoice mb-2 text-2xl"></i><br>UPLOAD COMMERCIAL INVOICE
-                    </button>
-                    <button type="button" class="border border-dashed border-[#444] p-6 rounded text-center text-xs font-bold text-[#888] hover:bg-[#222] transition" onclick="alert('Upload Trigger')">
-                        <i class="fas fa-box-open mb-2 text-2xl"></i><br>UPLOAD PACKING LIST
-                    </button>
-                </div>
+            <div class="col-span-1 lg:col-span-7">
+                <h2 style="color:#fff; margin-bottom: 5px; margin-top:0;">Export Manifest (SLI)</h2>
+                <p style="color:#888; margin-bottom: 30px;">Complete this manifest when cargo is ready to trigger Muziris Logistics.</p>
+
+                <form id="sliForm" onsubmit="event.preventDefault(); submitSupplierManifest();">
+                    
+                    <div class="card">
+                        <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">1. Exporter Compliance</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label class="label-text">GSTIN Number</label>
+                                <input type="text" id="sup-gstin" class="input-dark" placeholder="Your 15-digit GSTIN" required>
+                            </div>
+                            <div>
+                                <label class="label-text">IEC (Import Export Code)</label>
+                                <input type="text" id="sup-iec" class="input-dark" placeholder="Your 10-digit IEC" required>
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="label-text">Exact Factory Pickup Address</label>
+                                <textarea id="sup-pickup" class="input-dark" rows="2" placeholder="Full address for the truck driver" required></textarea>
+                            </div>
+                            <div>
+                                <label class="label-text">Cargo Ready Date</label>
+                                <input type="date" id="sup-ready" class="input-dark" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">2. Cargo Dimensions</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+                            <div>
+                                <label class="label-text">Total Cartons</label>
+                                <input type="number" id="cargo-qty" class="input-dark" placeholder="e.g. 50" required>
+                            </div>
+                            <div>
+                                <label class="label-text">Total Gross Weight (KG)</label>
+                                <input type="number" id="cargo-weight" class="input-dark" step="0.1" placeholder="e.g. 450.5" required>
+                            </div>
+                            <div>
+                                <label class="label-text">Total Volume (CBM)</label>
+                                <input type="number" id="cargo-cbm" class="input-dark" step="0.01" placeholder="e.g. 2.45" required>
+                            </div>
+                            <div>
+                                <label class="label-text">Packaging Type</label>
+                                <select id="cargo-pack" class="input-dark">
+                                    <option>Loose Cartons</option>
+                                    <option>Wooden Pallets</option>
+                                    <option>Plastic Pallets</option>
+                                    <option>Wooden Crates</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-4 mt-6 col-span-2">
+                                <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-gray-400">
+                                    <input type="checkbox" id="cargo-stackable" checked class="w-4 h-4 accent-[var(--gold)]">
+                                    Cargo is Stackable
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">3. Document Vault</h3>
+                        <p class="text-sm text-gray-400 mb-4">Upload your final Commercial Invoice and Packing List for customs clearance.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            
+                            <div class="relative">
+                                <input type="file" id="file-invoice" class="hidden" accept=".pdf,.jpg,.png" onchange="uploadDocument('file-invoice', 'url-invoice', 'btn-invoice')">
+                                <input type="hidden" id="url-invoice">
+                                <button type="button" id="btn-invoice" class="w-full border border-dashed border-[#444] p-6 rounded text-center text-xs font-bold text-[#888] hover:bg-[#222] hover:border-[var(--gold)] hover:text-[var(--gold)] transition" onclick="document.getElementById('file-invoice').click()">
+                                    <i class="fas fa-file-invoice mb-2 text-2xl"></i><br>UPLOAD COMMERCIAL INVOICE
+                                </button>
+                            </div>
+
+                            <div class="relative">
+                                <input type="file" id="file-packing" class="hidden" accept=".pdf,.jpg,.png" onchange="uploadDocument('file-packing', 'url-packing', 'btn-packing')">
+                                <input type="hidden" id="url-packing">
+                                <button type="button" id="btn-packing" class="w-full border border-dashed border-[#444] p-6 rounded text-center text-xs font-bold text-[#888] hover:bg-[#222] hover:border-[var(--gold)] hover:text-[var(--gold)] transition" onclick="document.getElementById('file-packing').click()">
+                                    <i class="fas fa-box-open mb-2 text-2xl"></i><br>UPLOAD PACKING LIST
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-gold" id="btn-submit" style="font-size:16px; padding:20px;">Sign Manifest & Request Pickup</button>
+
+                </form>
             </div>
-
-            <button type="submit" class="btn-gold" id="btn-submit">Sign Manifest & Request Pickup</button>
-
-        </form>
+        </div>
     </div>
 
     <script>
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
         const urlParams = new URLSearchParams(window.location.search);
-        const rfqId = urlParams.get('rfq'); // Pulls RFQ from the URL
+        const rfqId = urlParams.get('rfq'); 
         const supplierId = localStorage.getItem('verifiedSupplierId');
 
+        window.onload = function() {
+            if(!rfqId) {
+                document.getElementById('ui-rfq').innerText = "NO ORDER SELECTED";
+            } else {
+                document.getElementById('ui-rfq').innerText = rfqId;
+            }
+        };
+
+        // 🟢 DEMO ACCEPT ORDER FUNCTION
+        function acceptOrder() {
+            const btn = document.getElementById('btn-accept-order');
+            btn.innerHTML = "Processing...";
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.style.background = "transparent";
+                btn.style.border = "1px solid var(--success)";
+                btn.style.color = "var(--success)";
+                btn.innerHTML = "✓ Order Accepted & In Production";
+            }, 1000);
+        }
+
+        // 🟢 REAL CLOUDINARY UPLOAD FUNCTION
+        function uploadDocument(inputId, hiddenInputId, btnId) {
+            const fileInput = document.getElementById(inputId);
+            const file = fileInput.files[0];
+            if(!file) return;
+
+            const btn = document.getElementById(btnId);
+            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin mb-2 text-2xl text-[var(--blue)]"></i><br>UPLOADING...`;
+            btn.style.color = "var(--blue)";
+            btn.style.borderColor = "var(--blue)";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Strip the metadata prefix to get raw base64
+                const base64Data = e.target.result.split(',')[1]; 
+                
+                fetch(API_BASE_URL + '/upload-media', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        supplierId: supplierId || 'GUEST',
+                        fileName: file.name,
+                        mimeType: file.type,
+                        fileData: base64Data
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.url) {
+                        document.getElementById(hiddenInputId).value = data.url;
+                        btn.innerHTML = `<i class="fas fa-check-circle mb-2 text-2xl text-[var(--success)]"></i><br>DOCUMENT SECURED`;
+                        btn.style.color = "var(--success)";
+                        btn.style.borderColor = "var(--success)";
+                        btn.style.background = "rgba(76, 175, 80, 0.1)";
+                    } else {
+                        alert("Upload failed. Try again.");
+                        btn.innerHTML = `<i class="fas fa-exclamation-triangle mb-2 text-2xl text-[var(--alert)]"></i><br>UPLOAD FAILED`;
+                        btn.style.color = "var(--alert)";
+                        btn.style.borderColor = "var(--alert)";
+                    }
+                })
+                .catch(err => {
+                    alert("Network error during upload.");
+                    btn.innerHTML = `<i class="fas fa-exclamation-triangle mb-2 text-2xl text-[var(--alert)]"></i><br>UPLOAD FAILED`;
+                    btn.style.color = "var(--alert)";
+                    btn.style.borderColor = "var(--alert)";
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 🟢 LOGISTICS SUBMISSION
         function submitSupplierManifest() {
             if(!rfqId || !supplierId) return alert("Missing secure routing data. Please launch this page from your Dashboard.");
+
+            // Check if documents were uploaded!
+            const invUrl = document.getElementById('url-invoice').value;
+            const packUrl = document.getElementById('url-packing').value;
+
+            if(!invUrl || !packUrl) {
+                return alert("Hold on! You must upload both the Commercial Invoice and Packing List before requesting pickup.");
+            }
 
             const btn = document.getElementById('btn-submit');
             btn.innerHTML = "Submitting to Customs Ledger...";
@@ -133,7 +277,11 @@
                 weight: document.getElementById('cargo-weight').value,
                 cbm: document.getElementById('cargo-cbm').value,
                 packType: document.getElementById('cargo-pack').value,
-                stackable: document.getElementById('cargo-stackable').checked
+                stackable: document.getElementById('cargo-stackable').checked,
+                
+                // Pass the uploaded document URLs to the backend!
+                docInvoice: invUrl,
+                docPacking: packUrl
             };
 
             fetch(API_BASE_URL + '/supplier/logistics/save', {
