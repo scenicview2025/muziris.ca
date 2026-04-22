@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muziris | Order Fulfillment & Logistics</title>
+    <title>Muziris | Production Floor & QC</title>
     <link rel="icon" type="image/png" href="MC.png">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,19 +17,24 @@
         .input-dark { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; outline: none; transition: 0.3s;}
         .input-dark:focus { border-color: var(--gold); }
         .label-text { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: bold;}
-        .btn-gold { background: var(--gold); color: #000; border: none; padding: 15px 30px; border-radius: 4px; font-weight: bold; text-transform: uppercase; cursor: pointer; width: 100%; transition: 0.3s;}
+        .btn-gold { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 4px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.3s;}
         .btn-gold:hover { background: #b89225; }
         
-        /* Custom Scrollbar for Chat */
-        .chat-box::-webkit-scrollbar { width: 6px; }
-        .chat-box::-webkit-scrollbar-track { background: #0b0e14; }
-        .chat-box::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .order-row { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; transition: 0.3s; }
+        .order-row:hover { border-color: var(--gold); transform: translateY(-2px); }
+        
+        .milestone-btn { background: #0b0e14; border: 1px solid #333; color: #888; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.3s; font-size: 12px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        .milestone-btn.active { border-color: var(--success); color: var(--success); background: rgba(76, 175, 80, 0.1); }
+        
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 15px; }
+        .media-card { width: 100%; aspect-ratio: 1; background: #000; border: 1px solid #444; border-radius: 6px; overflow: hidden; position: relative; }
+        .media-card img, .media-card video { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
     <div class="topbar">
-        <h1 style="font-family:'Cinzel', serif; color:var(--gold); margin:0;">Order Fulfillment Hub</h1>
+        <h1 style="font-family:'Cinzel', serif; color:var(--gold); margin:0;">🏭 Production Floor</h1>
         <div style="color:#888; font-size:12px; display:flex; align-items:center; gap:10px;">
             <a href="supplier-dashboard.html" style="color:var(--gold); text-decoration:none; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">&larr; Back to Dashboard</a>
         </div>
@@ -37,189 +42,261 @@
 
     <div style="max-width: 1400px; margin: 40px auto; padding: 0 20px;">
         
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <div class="col-span-1 lg:col-span-5">
-                
-                <div class="card" style="border-top: 4px solid var(--success);">
-                    <h3 style="color:#fff; margin-top:0; font-size:20px; display:flex; justify-content:space-between;">
-                        Production Authorized
-                        <span style="font-size:11px; padding:4px 10px; background:rgba(76,175,80,0.1); color:var(--success); border-radius:20px; border:1px solid var(--success); display:flex; align-items:center;">Escrow Funded</span>
-                    </h3>
-                    <p style="color:#888; font-size:13px; line-height:1.6;">The buyer has locked funds into the Muziris Vault. Please confirm receipt and verify your actual lead time to begin.</p>
-                    
-                    <div style="background:#0b0e14; padding:15px; border-radius:6px; border:1px solid #333; margin-top:20px;">
-                        <div class="flex justify-between mb-2"><span style="color:#888; font-size:12px;">Order Ref:</span> <strong id="ui-rfq" style="color:var(--gold); font-family:monospace;">Loading...</strong></div>
-                        <div class="flex justify-between mb-2"><span style="color:#888; font-size:12px;">Shipment ID:</span> <strong style="color:var(--blue); font-family:monospace;">PENDING MANIFEST</strong></div>
-                        <div class="flex justify-between"><span style="color:#888; font-size:12px;">Target Lead Time:</span> <strong style="color:#fff;">30 Days</strong></div>
-                    </div>
+        <div id="view-order-list">
+            <h2 style="color:#fff; margin-bottom: 5px; margin-top:0;">Active Production Queue</h2>
+            <p style="color:#888; margin-bottom: 30px;">Select an order to update its manufacturing status, upload visual QC proof, or generate shipping documents.</p>
 
-                    <div style="margin-top: 20px;">
-                        <button class="btn-gold" id="btn-accept-order" onclick="acceptOrder()" style="background:var(--success); color:#fff; font-size:12px;">✓ Accept Order & Begin Production</button>
-                    </div>
-                </div>
-
-                <div class="card flex flex-col h-[500px]">
-                    <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">Order Communication Hub</h3>
-                    <p style="color:#888; font-size:12px; margin-bottom:15px;">Send production updates or photos directly to the buyer.</p>
-                    
-                    <div class="chat-box flex-1 bg-[#0b0e14] border border-[#333] rounded-lg p-4 overflow-y-auto flex flex-col gap-3">
-                        <div class="bg-[#151922] border border-[#333] p-3 rounded-lg max-w-[85%] self-start">
-                            <span class="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">System Message</span>
-                            <span class="text-sm text-gray-300">Escrow funded successfully. Awaiting supplier acceptance.</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 flex gap-2">
-                        <input type="text" id="chat-input" class="input-dark flex-1" placeholder="Type a message to the buyer...">
-                        <button class="bg-[var(--gold)] text-black px-4 rounded font-bold hover:bg-[#b89225] transition" onclick="alert('Message Sent (Demo)')"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col-span-1 lg:col-span-7">
-                <h2 style="color:#fff; margin-bottom: 5px; margin-top:0;">Export Manifest (SLI)</h2>
-                <p style="color:#888; margin-bottom: 30px;">Complete this manifest when cargo is ready to trigger Muziris Logistics.</p>
-
-                <form id="sliForm" onsubmit="event.preventDefault(); submitSupplierManifest();">
-                    
-                    <div class="card">
-                        <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">1. Exporter Compliance</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label class="label-text">GSTIN Number</label>
-                                <input type="text" id="sup-gstin" class="input-dark" placeholder="Your 15-digit GSTIN" required>
-                            </div>
-                            <div>
-                                <label class="label-text">IEC (Import Export Code)</label>
-                                <input type="text" id="sup-iec" class="input-dark" placeholder="Your 10-digit IEC" required>
-                            </div>
-                            <div class="col-span-1 md:col-span-2">
-                                <label class="label-text">Exact Factory Pickup Address</label>
-                                <textarea id="sup-pickup" class="input-dark" rows="2" placeholder="Full address for the truck driver" required></textarea>
-                            </div>
-                            <div>
-                                <label class="label-text">Cargo Ready Date</label>
-                                <input type="date" id="sup-ready" class="input-dark" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">2. Cargo Dimensions</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-                            <div>
-                                <label class="label-text">Total Cartons</label>
-                                <input type="number" id="cargo-qty" class="input-dark" placeholder="e.g. 50" required>
-                            </div>
-                            <div>
-                                <label class="label-text">Total Gross Weight (KG)</label>
-                                <input type="number" id="cargo-weight" class="input-dark" step="0.1" placeholder="e.g. 450.5" required>
-                            </div>
-                            <div>
-                                <label class="label-text">Total Volume (CBM)</label>
-                                <input type="number" id="cargo-cbm" class="input-dark" step="0.01" placeholder="e.g. 2.45" required>
-                            </div>
-                            <div>
-                                <label class="label-text">Packaging Type</label>
-                                <select id="cargo-pack" class="input-dark">
-                                    <option>Loose Cartons</option>
-                                    <option>Wooden Pallets</option>
-                                    <option>Plastic Pallets</option>
-                                    <option>Wooden Crates</option>
-                                </select>
-                            </div>
-                            <div class="flex items-center gap-4 mt-6 col-span-2">
-                                <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-gray-400">
-                                    <input type="checkbox" id="cargo-stackable" checked class="w-4 h-4 accent-[var(--gold)]">
-                                    Cargo is Stackable
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">3. Document Vault</h3>
-                        <p class="text-sm text-gray-400 mb-4">Upload your final Commercial Invoice and Packing List for customs clearance.</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            
-                            <div class="relative">
-                                <input type="file" id="file-invoice" class="hidden" accept=".pdf,.jpg,.png" onchange="uploadDocument('file-invoice', 'url-invoice', 'btn-invoice')">
-                                <input type="hidden" id="url-invoice">
-                                <button type="button" id="btn-invoice" class="w-full border border-dashed border-[#444] p-6 rounded text-center text-xs font-bold text-[#888] hover:bg-[#222] hover:border-[var(--gold)] hover:text-[var(--gold)] transition" onclick="document.getElementById('file-invoice').click()">
-                                    <i class="fas fa-file-invoice mb-2 text-2xl"></i><br>UPLOAD COMMERCIAL INVOICE
-                                </button>
-                            </div>
-
-                            <div class="relative">
-                                <input type="file" id="file-packing" class="hidden" accept=".pdf,.jpg,.png" onchange="uploadDocument('file-packing', 'url-packing', 'btn-packing')">
-                                <input type="hidden" id="url-packing">
-                                <button type="button" id="btn-packing" class="w-full border border-dashed border-[#444] p-6 rounded text-center text-xs font-bold text-[#888] hover:bg-[#222] hover:border-[var(--gold)] hover:text-[var(--gold)] transition" onclick="document.getElementById('file-packing').click()">
-                                    <i class="fas fa-box-open mb-2 text-2xl"></i><br>UPLOAD PACKING LIST
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-gold" id="btn-submit" style="font-size:16px; padding:20px;">Sign Manifest & Request Pickup</button>
-
-                </form>
+            <div id="order-list-container">
+                <div style="text-align:center; padding:50px; color:#888;">Syncing active orders from Muziris Ledger...</div>
             </div>
         </div>
+
+        <div id="view-order-detail" style="display: none;">
+            
+            <button onclick="showList()" style="background:transparent; color:#888; border:1px solid #333; padding:8px 15px; border-radius:4px; margin-bottom:20px; font-size:12px; text-transform:uppercase; cursor:pointer;">&larr; Back to Queue</button>
+            
+            <div class="card" style="border-top: 4px solid var(--gold); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="color:var(--gold); font-size:12px; text-transform:uppercase; letter-spacing:2px; font-weight:bold;" id="ui-det-id">RFQ-XXXX</div>
+                    <h2 style="color:#fff; margin:5px 0; font-size:24px;" id="ui-det-product">Product Name</h2>
+                    <div style="color:#888; font-size:14px;">Buyer: <strong style="color:#ccc;" id="ui-det-buyer">Company Name</strong></div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:11px; color:#888; text-transform:uppercase; letter-spacing:1px;">Target Deadline</div>
+                    <div style="font-size:32px; color:#fff; font-family:monospace; font-weight:bold;" id="ui-det-days">--</div>
+                    <div style="color:var(--gold); font-size:12px;">Days Remaining</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                
+                <div>
+                    <div class="card">
+                        <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">Manufacturing Milestones</h3>
+                        <p style="color:#888; font-size:12px; margin-bottom:20px;">Click to update the buyer on your current stage.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="milestone-btn active" id="m1" onclick="setMilestone(1)"><i class="fas fa-box-open mb-2 text-2xl"></i><br>Raw Materials</div>
+                            <div class="milestone-btn" id="m2" onclick="setMilestone(2)"><i class="fas fa-cogs mb-2 text-2xl"></i><br>Assembly</div>
+                            <div class="milestone-btn" id="m3" onclick="setMilestone(3)"><i class="fas fa-search mb-2 text-2xl"></i><br>Quality Control</div>
+                            <div class="milestone-btn" id="m4" onclick="setMilestone(4)"><i class="fas fa-pallet mb-2 text-2xl"></i><br>Packed & Ready</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px;">
+                            <h3 style="color:var(--gold); margin:0; font-family:'Cinzel', serif;">Visual QC Vault</h3>
+                            <button class="btn-gold" style="padding:8px 15px; font-size:10px;" onclick="document.getElementById('file-qc').click()">+ Upload Media</button>
+                            <input type="file" id="file-qc" class="hidden" accept="image/*,video/*" onchange="uploadQCMedia()">
+                        </div>
+                        <p style="color:#888; font-size:12px; margin-bottom:15px;">Upload photos/videos of the production line. This acts as undeniable proof of quality for the buyer.</p>
+                        
+                        <div class="gallery-grid" id="qc-gallery">
+                            </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card" id="manifest-card" style="opacity: 0.5; pointer-events: none; position: relative;">
+                        
+                        <div id="manifest-lock" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(11,14,20,0.8); z-index:10; display:flex; align-items:center; justify-content:center; border-radius:8px; backdrop-filter:blur(2px);">
+                            <div style="text-align:center;">
+                                <i class="fas fa-lock text-4xl text-[#555] mb-3"></i>
+                                <div style="color:#888; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">Reach "Packed & Ready" to Unlock</div>
+                            </div>
+                        </div>
+
+                        <h3 style="color:var(--gold); margin-top:0; border-bottom:1px solid #333; padding-bottom:10px; font-family:'Cinzel', serif;">Final Export Manifest (SLI)</h3>
+                        <p style="color:#888; font-size:12px; margin-bottom:20px;">Complete this only when cargo is fully boxed and ready for pickup.</p>
+
+                        <form id="sliForm" onsubmit="event.preventDefault(); submitManifest();">
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="col-span-2">
+                                    <label class="label-text">GSTIN / Tax ID</label>
+                                    <input type="text" id="sup-gstin" class="input-dark" required>
+                                </div>
+                                <div>
+                                    <label class="label-text">Total Cartons</label>
+                                    <input type="number" id="cargo-qty" class="input-dark" required>
+                                </div>
+                                <div>
+                                    <label class="label-text">Gross Weight (KG)</label>
+                                    <input type="number" id="cargo-weight" class="input-dark" step="0.1" required>
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="label-text">Total Volume (CBM)</label>
+                                    <input type="number" id="cargo-cbm" class="input-dark" step="0.01" required>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="relative">
+                                    <input type="file" id="file-invoice" class="hidden" accept=".pdf,.jpg" onchange="handleDocUpload('file-invoice', 'btn-invoice')">
+                                    <button type="button" id="btn-invoice" class="w-full border border-dashed border-[#444] p-4 rounded text-center text-[10px] font-bold text-[#888] hover:bg-[#222] transition" onclick="document.getElementById('file-invoice').click()">
+                                        <i class="fas fa-file-invoice text-xl mb-1 block"></i> COMM INVOICE
+                                    </button>
+                                </div>
+                                <div class="relative">
+                                    <input type="file" id="file-packing" class="hidden" accept=".pdf,.jpg" onchange="handleDocUpload('file-packing', 'btn-packing')">
+                                    <button type="button" id="btn-packing" class="w-full border border-dashed border-[#444] p-4 rounded text-center text-[10px] font-bold text-[#888] hover:bg-[#222] transition" onclick="document.getElementById('file-packing').click()">
+                                        <i class="fas fa-box-open text-xl mb-1 block"></i> PACKING LIST
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-gold" id="btn-submit">Submit to Muziris Logistics</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
     <script>
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
-        const urlParams = new URLSearchParams(window.location.search);
-        const rfqId = urlParams.get('rfq'); 
         const supplierId = localStorage.getItem('verifiedSupplierId');
+        let currentActiveOrders = [];
+        let activeOrderContext = null;
 
         window.onload = function() {
-            if(!rfqId) {
-                document.getElementById('ui-rfq').innerText = "NO ORDER SELECTED";
-            } else {
-                document.getElementById('ui-rfq').innerText = rfqId;
+            if(!supplierId) {
+                window.location.replace('suppliers');
+                return;
             }
+            fetchActiveOrders();
         };
 
-        // 🟢 DEMO ACCEPT ORDER FUNCTION
-        function acceptOrder() {
-            const btn = document.getElementById('btn-accept-order');
-            btn.innerHTML = "Processing...";
-            btn.disabled = true;
-            
-            setTimeout(() => {
-                btn.style.background = "transparent";
-                btn.style.border = "1px solid var(--success)";
-                btn.style.color = "var(--success)";
-                btn.innerHTML = "✓ Order Accepted & In Production";
-            }, 1000);
+        // 🟢 FETCH ORDERS FROM BACKEND
+        function fetchActiveOrders() {
+            fetch(API_BASE_URL + '/get-supplier-rfqs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ supplierId: supplierId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.error) return;
+                
+                // Filter only orders that are in production or pending freight
+                currentActiveOrders = data.filter(rfq => ['In Production', 'Pending Freight Payment', 'Shipped'].includes(rfq.status));
+                renderOrderList();
+            })
+            .catch(console.error);
         }
 
-        // 🟢 REAL CLOUDINARY UPLOAD FUNCTION
-        function uploadDocument(inputId, hiddenInputId, btnId) {
-            const fileInput = document.getElementById(inputId);
+        // 🟢 RENDER THE LIST VIEW
+        function renderOrderList() {
+            const container = document.getElementById('order-list-container');
+            if (currentActiveOrders.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:50px; color:#888; background:var(--slate); border-radius:8px; border:1px dashed #444;">No active production orders found.</div>`;
+                return;
+            }
+
+            let html = '';
+            currentActiveOrders.forEach(rfq => {
+                // Calculate rough days remaining (Mock math for demo)
+                let daysLeft = 30; 
+                try {
+                    let quote = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : rfq.supplier_quote;
+                    if(quote.leadTime) daysLeft = quote.leadTime;
+                } catch(e){}
+
+                let statusBadge = rfq.status === 'In Production' ? `<span style="color:var(--gold);">● IN PRODUCTION</span>` : `<span style="color:var(--blue);">● LOGISTICS PENDING</span>`;
+
+                html += `
+                    <div class="order-row" onclick="openOrderDetail('${rfq.rfq_id}')">
+                        <div style="display:flex; align-items:center; gap:20px;">
+                            <div style="background:#0b0e14; padding:15px; border-radius:6px; font-family:monospace; color:var(--gold); font-weight:bold; border:1px solid #333;">${rfq.rfq_id}</div>
+                            <div>
+                                <h3 style="margin:0; color:#fff; font-size:18px;">${rfq.product_name}</h3>
+                                <div style="color:#888; font-size:12px; margin-top:4px;">Buyer: ${rfq.buyer_company} | Dest: ${rfq.destination}</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:11px; font-weight:bold; letter-spacing:1px; margin-bottom:5px;">${statusBadge}</div>
+                            <div style="color:#ccc; font-size:13px;"><strong style="color:#fff;">${daysLeft}</strong> Days to Dispatch</div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // 🟢 SWITCH TO DETAIL VIEW
+        function openOrderDetail(rfqId) {
+            activeOrderContext = currentActiveOrders.find(r => r.rfq_id === rfqId);
+            if(!activeOrderContext) return;
+
+            document.getElementById('view-order-list').style.display = 'none';
+            document.getElementById('view-order-detail').style.display = 'block';
+
+            document.getElementById('ui-det-id').innerText = activeOrderContext.rfq_id;
+            document.getElementById('ui-det-product').innerText = activeOrderContext.product_name;
+            document.getElementById('ui-det-buyer').innerText = activeOrderContext.buyer_company;
+            
+            let daysLeft = 30; 
+            try {
+                let quote = typeof activeOrderContext.supplier_quote === 'string' ? JSON.parse(activeOrderContext.supplier_quote) : activeOrderContext.supplier_quote;
+                if(quote.leadTime) daysLeft = quote.leadTime;
+            } catch(e){}
+            document.getElementById('ui-det-days').innerText = daysLeft;
+
+            // Reset UI State
+            setMilestone(1);
+            document.getElementById('qc-gallery').innerHTML = ''; // In real app, fetch existing photos
+        }
+
+        function showList() {
+            document.getElementById('view-order-detail').style.display = 'none';
+            document.getElementById('view-order-list').style.display = 'block';
+            activeOrderContext = null;
+        }
+
+        // 🟢 MILESTONE LOGIC
+        function setMilestone(level) {
+            for(let i=1; i<=4; i++) {
+                let btn = document.getElementById('m'+i);
+                if(i <= level) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            }
+
+            // UNLOCK MANIFEST IF PACKED
+            if(level === 4) {
+                document.getElementById('manifest-card').style.opacity = '1';
+                document.getElementById('manifest-card').style.pointerEvents = 'auto';
+                document.getElementById('manifest-lock').style.display = 'none';
+            } else {
+                document.getElementById('manifest-card').style.opacity = '0.5';
+                document.getElementById('manifest-card').style.pointerEvents = 'none';
+                document.getElementById('manifest-lock').style.display = 'flex';
+            }
+        }
+
+        // 🟢 CLOUDINARY MEDIA UPLOAD
+        function uploadQCMedia() {
+            const fileInput = document.getElementById('file-qc');
             const file = fileInput.files[0];
             if(!file) return;
 
-            const btn = document.getElementById(btnId);
-            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin mb-2 text-2xl text-[var(--blue)]"></i><br>UPLOADING...`;
-            btn.style.color = "var(--blue)";
-            btn.style.borderColor = "var(--blue)";
+            // Temporary placeholder
+            const gallery = document.getElementById('qc-gallery');
+            const placeholderId = 'upload_' + Date.now();
+            gallery.innerHTML += `<div class="media-card" id="${placeholderId}" style="display:flex; justify-content:center; align-items:center; color:var(--gold);"><i class="fas fa-spinner fa-spin text-2xl"></i></div>`;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Strip the metadata prefix to get raw base64
                 const base64Data = e.target.result.split(',')[1]; 
                 
                 fetch(API_BASE_URL + '/upload-media', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        supplierId: supplierId || 'GUEST',
+                        supplierId: supplierId,
                         fileName: file.name,
                         mimeType: file.type,
                         fileData: base64Data
@@ -228,60 +305,44 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.url) {
-                        document.getElementById(hiddenInputId).value = data.url;
-                        btn.innerHTML = `<i class="fas fa-check-circle mb-2 text-2xl text-[var(--success)]"></i><br>DOCUMENT SECURED`;
-                        btn.style.color = "var(--success)";
-                        btn.style.borderColor = "var(--success)";
-                        btn.style.background = "rgba(76, 175, 80, 0.1)";
+                        let isVideo = file.type.includes('video');
+                        let mediaTag = isVideo ? `<video src="${data.url}" muted autoplay loop></video>` : `<img src="${data.url}">`;
+                        document.getElementById(placeholderId).innerHTML = mediaTag;
+                        
+                        // In a real app, you would now save this URL to the order in the database!
                     } else {
-                        alert("Upload failed. Try again.");
-                        btn.innerHTML = `<i class="fas fa-exclamation-triangle mb-2 text-2xl text-[var(--alert)]"></i><br>UPLOAD FAILED`;
-                        btn.style.color = "var(--alert)";
-                        btn.style.borderColor = "var(--alert)";
+                        document.getElementById(placeholderId).remove();
+                        alert("Upload failed.");
                     }
-                })
-                .catch(err => {
-                    alert("Network error during upload.");
-                    btn.innerHTML = `<i class="fas fa-exclamation-triangle mb-2 text-2xl text-[var(--alert)]"></i><br>UPLOAD FAILED`;
-                    btn.style.color = "var(--alert)";
-                    btn.style.borderColor = "var(--alert)";
+                }).catch(err => {
+                    document.getElementById(placeholderId).remove();
+                    alert("Network error.");
                 });
             };
             reader.readAsDataURL(file);
         }
 
-        // 🟢 LOGISTICS SUBMISSION
-        function submitSupplierManifest() {
-            if(!rfqId || !supplierId) return alert("Missing secure routing data. Please launch this page from your Dashboard.");
+        // 🟢 DOC UPLOAD UI
+        function handleDocUpload(inputId, btnId) {
+            const btn = document.getElementById(btnId);
+            btn.innerHTML = `<i class="fas fa-check-circle text-xl mb-1 text-[var(--success)] block"></i> <span style="color:var(--success)">SECURED</span>`;
+            btn.style.borderColor = "var(--success)";
+        }
 
-            // Check if documents were uploaded!
-            const invUrl = document.getElementById('url-invoice').value;
-            const packUrl = document.getElementById('url-packing').value;
-
-            if(!invUrl || !packUrl) {
-                return alert("Hold on! You must upload both the Commercial Invoice and Packing List before requesting pickup.");
-            }
-
+        // 🟢 SUBMIT MANIFEST
+        function submitManifest() {
             const btn = document.getElementById('btn-submit');
-            btn.innerHTML = "Submitting to Customs Ledger...";
+            btn.innerHTML = "Submitting to Logistics...";
             btn.disabled = true;
 
             const payload = {
-                rfqId: rfqId,
+                rfqId: activeOrderContext.rfq_id,
                 supplierId: supplierId,
                 gstin: document.getElementById('sup-gstin').value,
-                iec: document.getElementById('sup-iec').value,
-                pickupAddress: document.getElementById('sup-pickup').value,
-                readyDate: document.getElementById('sup-ready').value,
                 qty: document.getElementById('cargo-qty').value,
                 weight: document.getElementById('cargo-weight').value,
                 cbm: document.getElementById('cargo-cbm').value,
-                packType: document.getElementById('cargo-pack').value,
-                stackable: document.getElementById('cargo-stackable').checked,
-                
-                // Pass the uploaded document URLs to the backend!
-                docInvoice: invUrl,
-                docPacking: packUrl
+                // In real app, grab doc URLs from Cloudinary here
             };
 
             fetch(API_BASE_URL + '/supplier/logistics/save', {
@@ -292,17 +353,17 @@
             .then(res => res.json())
             .then(data => {
                 if(data.success) {
-                    alert("✓ MANIFEST SUBMITTED\n\nMuziris Logistics has been notified. Your designated forwarder will contact you shortly regarding the pickup.");
-                    window.location.href = "supplier-dashboard.html";
+                    alert("✓ MANIFEST SECURED\n\nThe buyer will now pay for freight. You will receive the shipping labels shortly.");
+                    location.reload();
                 } else {
                     alert("Error: " + data.error);
                     btn.disabled = false;
-                    btn.innerHTML = "Sign Manifest & Request Pickup";
+                    btn.innerHTML = "Submit to Muziris Logistics";
                 }
             }).catch(e => {
                 alert("Network Error.");
                 btn.disabled = false;
-                btn.innerHTML = "Sign Manifest & Request Pickup";
+                btn.innerHTML = "Submit to Muziris Logistics";
             });
         }
     </script>
