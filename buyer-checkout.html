@@ -451,39 +451,23 @@
         const result = await res.json();
         if (!res.ok || !result.success) throw new Error(result.error || 'Checkout failed');
 
-        // Show locked rate banner returned by server
-        const lockedRate = result.tazapay_fx_rate_locked || null;
-        const charged = result.tazapay_total_charged || null;
-        const txId = result.transactionId || null;
-
-        const banner = document.getElementById('locked-rate-banner');
-        if (banner) {
-          banner.style.display = 'block';
-          banner.innerHTML = `
-            <strong><i class="fas fa-lock"></i> Escrow Rate Locked:</strong> ${lockedRate ? `1 CAD = ${lockedRate} ${buyerCurrency}` : 'Locked by Tazapay'}.
-            ${charged ? `You were successfully charged <strong>${formatCurrency(charged, buyerCurrency)}</strong>.` : ''}
-            <br><span style="color:var(--text-muted);">Transaction ID: ${txId || 'N/A'}</span>
-          `;
+        // 🟢 THE ENTERPRISE FIX: Create a physical button so the browser cannot block the redirect!
+        const finalUrl = result.payment_url || result.hosted_payment_url;
+        
+        if (finalUrl) {
+             document.getElementById('main-content').innerHTML = `
+              <div style="text-align:center; padding: 60px 20px;">
+                <h2 style="color:var(--gold); font-size: 28px; border:none;">CONTRACT APPROVED</h2>
+                <p style="color:var(--text-main); font-size: 16px; margin-bottom: 30px;">Your secure escrow vault has been generated.</p>
+                <a href="${finalUrl}" style="background: linear-gradient(135deg, #2980b9 0%, #1c5982 100%); color:#fff; padding:20px 40px; font-size:18px; font-weight:bold; text-decoration:none; border-radius:6px; display:inline-block; box-shadow: 0 4px 15px rgba(41, 128, 185, 0.3);">
+                    🔒 PROCEED TO SECURE CHECKOUT
+                </a>
+                <p style="color:var(--text-muted); font-size:12px; margin-top:20px;">You will be redirected to our bank-grade partner, Tazapay, to complete the funding.</p>
+              </div>
+            `;
+        } else {
+            throw new Error("Server failed to return a valid payment URL.");
         }
-
-        // 🟢 Redirect the buyer to the actual Tazapay Checkout Page!
-        if (result.payment_url) {
-            window.location.href = result.payment_url;
-            return;
-        }
-
-        // SUCCESS UI (If no redirect required)
-        document.getElementById('main-content').innerHTML = `
-          <div style="text-align:center; padding: 50px;">
-            <h2 style="color:var(--green); font-size: 28px;">✓ FUNDS SECURED IN ESCROW</h2>
-            <p style="color:var(--text-main); font-size: 16px; line-height: 1.6;">Your selected modules have been successfully funded.</p>
-            <div style="background:#fafbfc; border:2px dashed var(--border-color); padding: 25px; border-radius:8px; margin: 30px auto; max-width: 400px;">
-              <div style="font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Official Logistics Tracking Number</div>
-              <strong style="color:var(--blue); font-size:28px; font-family:monospace;">${result.shipmentId}</strong>
-            </div>
-            <p style="color:var(--text-muted); font-size:14px;">You can monitor the status of this order anytime from your Buyer Dashboard.</p>
-          </div>
-        `;
 
       } catch (err) {
         console.error('Checkout error', err);
