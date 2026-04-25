@@ -2,34 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Muziris Logo Render</title>
+    <title>Muziris Logo Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
+        /* Smooth transitions when clicking the buttons */
         body {
-            /* Applied your dark background color */
-            background-color: #0b0e14;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            transition: background-color 0.3s ease;
+            font-family: sans-serif;
         }
 
+        /* The Logo Styling */
         .logo-text {
-            /* Applied 'Cinzel' font family and bold weight */
             font-family: 'Cinzel', serif;
             font-weight: 700;
-            /* Applied your gold color */
-            color: #D4AF37;
-            /* Applied your font sizing and letter spacing */
-            font-size: 100px; /* Increased for better screenshot resolution */
+            font-size: 100px;
             letter-spacing: 2px;
             margin: 0;
-            text-transform: none; /* Cinzel often defaults to caps, but standard 'Muziris' looks more premium */
+            text-transform: none;
+            transition: color 0.3s ease;
+        }
+
+        /* The Button Menu at the top */
+        .controls {
+            position: absolute;
+            top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            transition: transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-gold {
+            background-color: #151922;
+            color: #D4AF37;
+            border: 1px solid #D4AF37;
+        }
+
+        .btn-bw {
+            background-color: #f4f4f4;
+            color: #000000;
+            border: 1px solid #000;
+        }
+
+        /* === THEMES === */
+        /* 1. Black & Gold Theme */
+        body.theme-gold {
+            background-color: #0b0e14;
+        }
+        body.theme-gold .logo-text {
+            color: #D4AF37;
+        }
+
+        /* 2. Black & White Theme */
+        body.theme-bw {
+            background-color: #ffffff;
+        }
+        body.theme-bw .logo-text {
+            color: #000000;
         }
     </style>
 </head>
-<body>
+
+<body class="theme-bw">
+
+    <div class="controls">
+        <button class="btn-gold" onclick="setTheme('theme-gold')">Black & Gold Theme</button>
+        <button class="btn-bw" onclick="setTheme('theme-bw')">Black & White Theme</button>
+    </div>
+
     <h1 class="logo-text">Muziris</h1>
+
+    <script>
+        // Simple JavaScript to swap the colors when a button is clicked
+        function setTheme(themeName) {
+            document.body.className = themeName;
+        }
+    </script>
 </body>
 </html>
