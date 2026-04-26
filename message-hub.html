@@ -617,7 +617,8 @@
                 const res = await fetch('https://muziris-api.onrender.com/api/negotiation-data', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ productId })
+                    // 🟢 THE FIX: Send the supplierId alongside the productId!
+                    body: JSON.stringify({ productId: productId, supplierId: supplierId }) 
                 });
                 const data = await res.json();
                 
