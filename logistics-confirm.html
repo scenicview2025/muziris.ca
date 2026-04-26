@@ -591,9 +591,11 @@
               }
             }, 100); // Tiny delay to let the DOM inject the dynamic HTML first
           }
-
         })
-        .catch(err => { document.getElementById('loading').innerText = "SERVER CONNECTION FAILED."; });
+        .catch(err => { document.getElementById('loading').innerText = "RFQ FETCH FAILED."; });
+        
+      })
+      .catch(err => { document.getElementById('loading').innerText = "PROFILE CHECK FAILED."; }); // 🟢 Closes the new Security Gate!
     }
 
     const readFile = (file) => new Promise((resolve, reject) => {
