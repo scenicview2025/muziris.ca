@@ -247,7 +247,17 @@
             if (rfqIdToLoad) {
                 fetchRfqDetails(rfqIdToLoad, user.email);
             } else {
-                window.location.replace('buyer-dashboard.html'); // Bounce back if no ID
+                // 🟢 THE FIX: Show a friendly message instead of kicking them out!
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('tracking-content').style.display = 'block';
+                document.getElementById('tracking-content').innerHTML = `
+                    <div style="text-align:center; padding: 60px 20px; margin-top: 40px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb;">
+                        <i class="fas fa-map-marked-alt" style="font-size: 48px; color: #d1d5db; margin-bottom: 20px;"></i>
+                        <h2 style="font-size: 24px; color: #111827; font-weight: bold; font-family: 'Cinzel', serif; margin-bottom: 10px;">Select an Order to Track</h2>
+                        <p style="color: #6b7280; margin-bottom: 30px;">Please go to your Dashboard and click "Track Status" on a specific active order.</p>
+                        <button onclick="window.location.href='buyer-dashboard.html'" class="btn-gold" style="background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 8px; font-weight: bold; text-transform: uppercase;">Go to Dashboard</button>
+                    </div>
+                `;
             }
         } else {
             window.location.replace('index1.html');
