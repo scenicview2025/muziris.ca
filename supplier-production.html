@@ -302,14 +302,11 @@
             btn.innerHTML = "Processing...";
             btn.disabled = true;
             
-            // Bypass Auth for Demo (Admin token used for update route)
-            const adminAuthToken = btoa('admin:Muziris2026!'); 
-            
-            fetch(API_BASE_URL + '/update-rfq-status/' + activeOrderContext.rfq_id, {
+            // 🟢 POINT TO THE NEW SUPPLIER-SPECIFIC API DOOR (No Admin Passwords needed!)
+            fetch(API_BASE_URL + '/supplier/accept-order/' + activeOrderContext.rfq_id, {
                 method: 'PUT',
                 headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + adminAuthToken
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ status: 'In Production' })
             })
