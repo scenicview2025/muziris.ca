@@ -205,10 +205,10 @@
 
         if(data.error) return alert("Error loading profile");
 
-        // 🟢 TEST MODE BYPASS: Force the account to act as 'Verified'
-        const status = 'Verified'; 
+        // 🟢 Read the REAL status from the database!
+        const status = data.kyc_status || 'Unverified'; 
         localStorage.setItem('verificationStatus', status);
-
+        
         // UI Routing based on status
         if (status === 'Unverified') {
           document.getElementById('banner-unverified').style.display = 'flex';
