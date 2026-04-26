@@ -370,9 +370,36 @@
     if (!rfqId) {
       document.getElementById('loading').innerText = "INVALID RFQ LINK. ACCESS DENIED.";
     } else {
-      fetch(API_BASE_URL + '/get-rfq/' + rfqId)
-        .then(res => res.json())
-        .then(data => {
+      // 🟢 SECURITY GATE 1: CHECK KYB STATUS BEFORE SHOWING THE FORM
+      fetch(API_BASE_URL + '/get-supplier-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ supplierId: localStorage.getItem('verifiedSupplierId') })
+      })
+      .then(profileRes => profileRes.json())
+      .then(profileData => {
+          
+          // If they are Unverified or Pending, destroy the page and show a giant red warning!
+          if (profileData.kyc_status !== 'Verified') {
+              document.getElementById('loading').style.display = 'none';
+              document.getElementById('main-content').style.display = 'block';
+              document.getElementById('main-content').innerHTML = `
+                <div style="text-align:center; padding: 60px 20px; border: 1px solid #ff5252; border-radius: 8px; background: rgba(255, 82, 82, 0.05); box-shadow: 0 10px 30px rgba(255, 82, 82, 0.1);">
+                  <span style="font-size: 60px;">🛑</span>
+                  <h2 style="color: #ff5252; font-family: 'Cinzel', serif; margin-bottom: 10px;">KYB VERIFICATION REQUIRED</h2>
+                  <p style="color:#aaa; font-size: 16px; max-width: 500px; margin: 0 auto 30px auto; line-height: 1.6;">
+                    By international banking law, you cannot submit quotes or accept Escrow funds until your business entity has been securely verified by Tazapay.
+                  </p>
+                  <a href="supplier-wallet.html" style="background: #1E88E5; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; letter-spacing: 1px; display: inline-block; transition: 0.3s;">GO TO FINANCIAL WALLET TO VERIFY &rarr;</a>
+                </div>
+              `;
+              return; // ⬅️ THIS STOPS THE REST OF THE CODE FROM RUNNING
+          }
+
+          // 🟢 SECURITY GATE 2: IF VERIFIED, LOAD THE RFQ NORMALLY
+          fetch(API_BASE_URL + '/get-rfq/' + rfqId)
+            .then(res => res.json())
+            .then(data => {
           if(data.error) {
             document.getElementById('loading').innerText = "RFQ NOT FOUND OR EXPIRED.";
             return;
