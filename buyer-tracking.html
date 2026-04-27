@@ -361,6 +361,9 @@
 
       let activeCount = 0; let completedCount = 0; let escrowLocked = 0;
       let tableHtml = "";
+      
+      // 🟢 THE FIX: Read the secret filter from the URL
+      const filterParam = urlParams.get('filter');
 
       if(allBuyerRfqs.length === 0) {
         document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-16 text-gray-500 font-medium">No active sourcing requests. <br><a href="catalog.html" class="text-[var(--gold)] hover:underline mt-2 inline-block">Browse the global catalog to start.</a></td></tr>`;
@@ -379,6 +382,18 @@
                 escrowLocked += parseFloat(rfq.tazapay_total_charged);
             }
         }
+
+        // 🟢 FILTERING LOGIC
+        let isNegotiating = ['Pending Supplier', 'Supplier Clarification', 'Quote Sent', 'Buyer Counter-Offer', 'Supplier Replied'].includes(rfq.status);
+        let isProduction = ['Funded Escrow', 'In Production'].includes(rfq.status);
+        let isTransit = ['Pending Freight Payment', 'Shipped'].includes(rfq.status);
+        let isDelivered = ['Completed', 'Delivered', 'Hold Period'].includes(rfq.status);
+
+        // If a filter is applied, skip rows that don't match!
+        if (filterParam === 'negotiating' && !isNegotiating) return;
+        if (filterParam === 'production' && !isProduction) return;
+        if (filterParam === 'transit' && !isTransit) return;
+        if (filterParam === 'delivered' && !isDelivered) return;
 
         let statusBadge = `<span class="status-badge status-pending">${rfq.status}</span>`;
         if(isEscrow) statusBadge = `<span class="status-badge status-escrow">${rfq.status}</span>`;
@@ -403,6 +418,11 @@
           </tr>
         `;
       });
+
+      // Show "No Results" if the filter hid everything
+      if (tableHtml === "") {
+         tableHtml = `<tr><td colspan="6" class="text-center py-16 text-gray-500 font-medium">No items match this filter. <a href="buyer-tracking.html" class="text-blue-500 hover:underline">View All Orders</a></td></tr>`;
+      }
 
       document.getElementById('rfq-body').innerHTML = tableHtml;
       document.getElementById('kpi-active').innerText = activeCount;
