@@ -460,6 +460,68 @@
     }
 
     // ==========================================
+    // 🟢 AI CONCIERGE CHAT LOGIC
+    // ==========================================
+    function openAiModal() {
+        document.getElementById('ai-modal').style.display = 'flex';
+    }
+
+    function closeAiModal(e) {
+        if(e.target.id === 'ai-modal') {
+            document.getElementById('ai-modal').style.display = 'none';
+        }
+    }
+
+    function askAi() {
+        const input = document.getElementById('ai-input');
+        const chatBox = document.getElementById('ai-chat-box');
+        const btn = document.getElementById('ai-send-btn');
+        const question = input.value.trim();
+        
+        if(!question) return;
+
+        // 1. Add user message to UI
+        chatBox.innerHTML += `
+            <div style="align-self: flex-end; background: var(--void); color: #fff; padding: 12px 16px; border-radius: 12px 0 12px 12px; font-size: 13px; max-width: 85%; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                ${question}
+            </div>
+        `;
+        
+        input.value = '';
+        btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`;
+        btn.disabled = true;
+        chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to bottom
+
+        // 2. Call server.js
+        fetch(API_BASE_URL + '/buyer/ai-concierge', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: currentBuyerEmail, question: question })
+        })
+        .then(res => res.json())
+        .then(data => {
+            let replyText = data.success ? data.reply : "Sorry, I am having trouble connecting to the database.";
+            
+            // Format line breaks for HTML
+            replyText = replyText.replace(/\n/g, '<br>');
+
+            chatBox.innerHTML += `
+                <div style="align-self: flex-start; background: #fff; border: 1px solid var(--border-light); border-left: 3px solid var(--purple); padding: 12px 16px; border-radius: 0 12px 12px 12px; font-size: 13px; color: var(--text-dark); max-width: 85%; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                    ${replyText}
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(err => {
+            chatBox.innerHTML += `<div style="align-self: flex-start; color: red; font-size: 12px;">Connection error.</div>`;
+        })
+        .finally(() => {
+            btn.innerHTML = `<i class="fas fa-paper-plane"></i>`;
+            btn.disabled = false;
+        });
+    }
+
+    // ==========================================
     // 🟢 FETCH RECOMMENDED PRODUCTS SHOWCASE
     // ==========================================
     function fetchRecommendedProducts() {
