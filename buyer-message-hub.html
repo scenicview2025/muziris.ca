@@ -207,6 +207,11 @@
             items.forEach(item => item.classList.remove('active'));
             event.currentTarget.classList.add('active');
 
+            // 🟢 NEW: Tell Firebase the buyer has read this chat!
+            db.collection('chats').doc(chatId).set({
+                unreadByBuyer: false
+            }, { merge: true });
+
             if (unsubscribeMessages) unsubscribeMessages();
 
             unsubscribeMessages = db.collection('chats').doc(chatId).collection('messages')
