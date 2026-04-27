@@ -229,6 +229,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const db = firebase.firestore(); // 🟢 ADDED for message listener
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
 
         let currentBuyerEmail = "";
