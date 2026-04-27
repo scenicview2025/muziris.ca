@@ -388,6 +388,7 @@
             document.getElementById('team-owner-email').innerText = user.email;
             
             loadSettings();
+            listenForUnreadMessages(); // 🟢 ADDED: Watch for messages globally!
         } else {
             window.location.replace('index1.html');
         }
