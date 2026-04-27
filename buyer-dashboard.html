@@ -25,21 +25,22 @@
       --success: #10b981;
       --blue: #0ea5e9;
       --alert: #ef4444;
+      --purple: #8b5cf6;
     }
     
     body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #FAFAFA; color: var(--text-dark); overflow-x: hidden; display: flex; height: 100vh; -webkit-font-smoothing: antialiased; }
     .brand-font { font-family: 'Cinzel', serif; }
     
-    /* SIDEBAR */
+    /* 🟢 PERFECTED SIDEBAR */
     .sidebar { width: 260px; background-color: var(--slate); border-right: 1px solid var(--border-light); display: flex; flex-direction: column; z-index: 100; box-shadow: 2px 0 10px rgba(0,0,0,0.02); flex-shrink: 0; }
     .logo-container { padding: 30px 24px; text-align: left; border-bottom: 1px solid var(--border-light); }
     .logo { font-family: 'Cinzel', serif; color: var(--text-dark); font-size: 24px; text-decoration: none; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
     
     .nav-links { flex: 1; padding: 30px 16px; overflow-y: auto; }
-        .nav-link { display: flex; align-items: center; gap: 14px; padding: 15px 20px; color: var(--text-gray); text-decoration: none; font-size: 15px; font-weight: 600; transition: 0.3s; border-radius: 10px; margin-bottom: 8px; }
-        .nav-link i { font-size: 18px; width: 24px; text-align: center; }
-        .nav-link:hover { background: #f9fafb; color: var(--text-dark); }
-        .nav-link.active { background: var(--void); color: var(--gold); box-shadow: 0 4px 10px rgba(11, 14, 20, 0.1); }
+    .nav-link { display: flex; align-items: center; gap: 14px; padding: 15px 20px; color: var(--text-gray); text-decoration: none; font-size: 15px; font-weight: 600; transition: 0.3s; border-radius: 10px; margin-bottom: 8px; }
+    .nav-link i { font-size: 18px; width: 24px; text-align: center; }
+    .nav-link:hover { background: #f9fafb; color: var(--text-dark); }
+    .nav-link.active { background: var(--void); color: var(--gold); box-shadow: 0 4px 10px rgba(11, 14, 20, 0.1); }
     
     .logout-btn { padding: 20px; border-top: 1px solid var(--border-light); }
     .logout-btn button { background: #fff; border: 1px solid var(--border-light); color: var(--text-gray); padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; font-size: 13px; }
@@ -47,65 +48,61 @@
 
     /* MAIN CONTENT */
     .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
-    
     .topbar { padding: 20px 40px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.95); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     .welcome-text { font-size: 18px; font-weight: 700; color: var(--text-dark); margin: 0; }
-    
     .dashboard-body { padding: 40px; max-width: 1400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
 
-    /* KPI WIDGETS */
-    .finance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 30px; }
-    .finance-card { background: var(--slate); border: 1px solid var(--border-light); border-radius: 16px; padding: 30px; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: transform 0.3s, box-shadow 0.3s; }
-    .finance-card:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(0,0,0,0.06); border-color: rgba(212, 175, 55, 0.3); }
-    .finance-card.escrow { border-top: 4px solid var(--blue); }
-    .finance-card.total { border-top: 4px solid var(--success); }
-    .finance-card.active-rfq { border-top: 4px solid var(--gold); }
-
-    .finance-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-gray); margin-bottom: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .finance-amount { font-family: 'Courier New', monospace; font-size: 36px; color: var(--text-dark); margin: 0; font-weight: 800; letter-spacing: -1px; }
-    .finance-sub { font-size: 12px; color: #9ca3af; margin-top: 8px; font-weight: 500; }
-
-    /* ALERTS WIDGET */
+    /* 🟢 ALERTS WIDGET */
     .rfq-widget { background: #fffbeb; border: 1px solid #fde68a; border-radius: 16px; padding: 25px; display: none; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.05); }
     .rfq-title { color: var(--gold-dark); font-family: 'Cinzel', serif; margin-top: 0; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-    
-    .alert-item { background: #ffffff; border: 1px solid #fef3c7; padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .alert-item { background: #ffffff; border: 1px solid #fef3c7; padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: 0.3s;}
+    .alert-item:hover { border-color: var(--gold); transform: translateY(-2px); }
     .alert-item-name { color: var(--text-dark); font-weight: 700; font-size: 15px; }
     .alert-item-msg { color: var(--text-gray); font-size: 13px; margin-top: 4px; font-weight: 500; }
     
     .btn-gold { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(212,175,55,0.2); }
     .btn-gold:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(212,175,55,0.3); }
 
-    /* TABLE STYLES */
-    .table-container { background: var(--slate); border: 1px solid var(--border-light); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 40px; }
-    .table-header { padding: 24px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: #ffffff; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-    th { color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; padding: 16px 24px; border-bottom: 1px solid var(--border-light); background: #f9fafb; font-weight: 700; }
-    td { padding: 20px 24px; border-bottom: 1px solid var(--border-light); color: var(--text-dark); font-weight: 500; vertical-align: middle; }
-    tr:hover td { background-color: #f9fafb; }
+    /* 🟢 FINANCIAL KPIs */
+    .finance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 30px; }
+    .finance-card { background: var(--slate); border: 1px solid var(--border-light); border-radius: 16px; padding: 30px; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: transform 0.3s, box-shadow 0.3s; }
+    .finance-card:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(0,0,0,0.06); }
+    .finance-card.escrow { border-top: 4px solid var(--blue); }
+    .finance-card.savings { border-top: 4px solid var(--success); }
+    .finance-card.active-rfq { border-top: 4px solid var(--gold); }
 
-    .status-badge { padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; border: 1px solid transparent;}
-    .status-pending { background: #f3f4f6; color: #6b7280; border-color: #e5e7eb; }
-    .status-action { background: #fffbeb; color: var(--gold-dark); border-color: #fde68a; animation: pulse-border 2s infinite;}
-    .status-escrow { background: #f0f9ff; color: var(--blue); border-color: #bae6fd; }
-    .status-shipped { background: #f0fdf4; color: var(--success); border-color: #bbf7d0; }
+    .finance-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-gray); margin-bottom: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .finance-amount { font-family: 'Courier New', monospace; font-size: 36px; color: var(--text-dark); margin: 0; font-weight: 800; letter-spacing: -1px; }
+    .finance-sub { font-size: 12px; color: #9ca3af; margin-top: 8px; font-weight: 500; }
 
-    .btn-outline { background: #fff; color: var(--text-dark); border: 1px solid var(--border-light); padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; transition: 0.3s; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
-    .btn-outline:hover { background: #f9fafb; border-color: #d1d5db; }
+    /* 🟢 SUPPLY CHAIN PULSE PIPELINE */
+    .dashboard-split { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+    @media (max-width: 1024px) { .dashboard-split { grid-template-columns: 1fr; } }
 
-    /* MODAL STYLING */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11, 14, 20, 0.7); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-    .modal-content { background: #ffffff; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 16px; overflow-y: auto; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: slideUp 0.3s ease; }
-    .modal-header { position: sticky; top: 0; background: #ffffff; padding: 25px 30px; border-bottom: 1px solid var(--border-light); z-index: 10; display: flex; justify-content: space-between; align-items: center; }
+    .pulse-card { background: var(--slate); border: 1px solid var(--border-light); border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    .pulse-header { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: var(--text-dark); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
     
-    .financial-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px dashed var(--border-light); font-size: 14px; }
-    .financial-row.total { border-bottom: none; border-top: 2px solid var(--gold); margin-top: 10px; padding-top: 20px; font-size: 18px; font-weight: 800; color: var(--text-dark); }
+    .pulse-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .pulse-item { background: #f9fafb; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 20px; transition: 0.3s; cursor: pointer; }
+    .pulse-item:hover { border-color: var(--gold); background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transform: translateY(-2px);}
+    
+    .pulse-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 20px; color: #fff; flex-shrink: 0; }
+    .icon-negotiate { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .icon-produce { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+    .icon-transit { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    .icon-deliver { background: linear-gradient(135deg, #10b981, #059669); }
+    
+    .pulse-data h4 { margin: 0 0 5px 0; font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    .pulse-data .count { font-size: 28px; font-weight: 800; color: var(--text-dark); line-height: 1; }
 
-    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+    /* 🟢 DISCOVERY CARD */
+    .discovery-list { display: flex; flex-direction: column; gap: 15px; }
+    .discovery-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; border: 1px solid var(--border-light); border-radius: 10px; background: #fafafa; transition: 0.3s; }
+    .discovery-item:hover { background: #fff; border-color: var(--blue); }
+    .discovery-icon { width: 40px; height: 40px; border-radius: 50%; background: #e0f2fe; color: var(--blue); display: flex; justify-content: center; align-items: center; font-size: 16px; }
 
     /* MOBILE NAVIGATION */
-    .mobile-nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; backdrop-filter: blur(2px); }
+    .mobile-nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; backdrop-filter: blur(2px); }
     .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--text-dark); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; }
     @media (max-width: 900px) {
       .sidebar { position: fixed; left: -260px; height: 100%; transition: 0.3s; }
@@ -113,6 +110,7 @@
       .mobile-menu-btn { display: block; }
       .topbar { padding: 15px 20px; }
       .dashboard-body { padding: 20px; }
+      .pulse-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -142,7 +140,7 @@
     <div class="topbar">
       <div style="display: flex; align-items: center; gap: 15px;">
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-        <h1 class="welcome-text">Procurement Hub</h1>
+        <h1 class="welcome-text">Command Center</h1>
       </div>
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-full bg-[var(--gold)]/20 text-[var(--gold-dark)] flex items-center justify-center font-bold border border-[var(--gold)]/30"><i class="far fa-user"></i></div>
@@ -151,109 +149,116 @@
     </div>
 
     <div class="dashboard-body">
-      
-      <div class="finance-grid">
-        <div class="finance-card active-rfq">
-          <div class="finance-title"><i class="fas fa-file-contract text-[var(--gold)]"></i> Active RFQs</div>
-          <h2 class="finance-amount" id="kpi-active">0</h2>
-          <div class="finance-sub">Quotes pending or in negotiation</div>
-        </div>
-        
-        <div class="finance-card escrow">
-          <div class="finance-title"><i class="fas fa-vault text-[var(--blue)]"></i> Funds in Escrow</div>
-          <h2 class="finance-amount"><span class="text-2xl text-gray-400 mr-1">$</span><span id="kpi-escrow">0.00</span></h2>
-          <div class="finance-sub text-[var(--blue)] font-bold">100% Protected by Muziris</div>
-        </div>
-
-        <div class="finance-card total">
-          <div class="finance-title"><i class="fas fa-check-circle text-[var(--success)]"></i> Completed Deals</div>
-          <h2 class="finance-amount" id="kpi-completed">0</h2>
-          <div class="finance-sub">Successfully delivered contracts</div>
-        </div>
-      </div>
 
       <div class="rfq-widget" id="rfqWidget">
-        <h3 class="rfq-title"><i class="fas fa-bell"></i> Action Required: Escrow Funding</h3>
+        <h3 class="rfq-title"><i class="fas fa-bell"></i> Action Required</h3>
         <div id="rfqContainer"></div>
       </div>
 
-      <div class="table-container">
-        <div class="table-header">
-          <h3 class="text-lg font-bold text-gray-900 brand-font uppercase tracking-widest m-0">Sourcing Contracts</h3>
+      <div class="finance-grid">
+        <div class="finance-card escrow">
+          <div class="finance-title"><i class="fas fa-vault text-[var(--blue)]"></i> Total Escrow Locked</div>
+          <h2 class="finance-amount"><span class="text-2xl text-gray-400 mr-1">$</span><span id="kpi-escrow">0.00</span></h2>
+          <div class="finance-sub text-[var(--blue)] font-bold">100% Protected Capital</div>
         </div>
-        <div class="overflow-x-auto">
-          <table>
-            <thead>
-              <tr>
-                <th>Contract ID</th>
-                <th>Date Initiated</th>
-                <th>Product & Supplier</th>
-                <th>Destination</th>
-                <th>Status</th>
-                <th class="text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody id="rfq-body">
-              <tr><td colspan="6" class="text-center py-10 text-gray-500 font-medium"><i class="fas fa-circle-notch fa-spin mr-2 text-[var(--gold)]"></i> Syncing with Muziris Ledger...</td></tr>
-            </tbody>
-          </table>
+        
+        <div class="finance-card active-rfq">
+          <div class="finance-title"><i class="fas fa-file-invoice-dollar text-[var(--gold)]"></i> Active Contracts</div>
+          <h2 class="finance-amount" id="kpi-active">0</h2>
+          <div class="finance-sub">Orders currently in progress</div>
+        </div>
+
+        <div class="finance-card savings">
+          <div class="finance-title"><i class="fas fa-chart-line text-[var(--success)]"></i> Estimated Platform Savings</div>
+          <h2 class="finance-amount text-[var(--success)]"><span class="text-2xl opacity-70 mr-1">$</span><span id="kpi-savings">0.00</span></h2>
+          <div class="finance-sub">Saved vs traditional freight routing</div>
         </div>
       </div>
 
-    </div>
-  </div>
-
-  <div id="quote-modal" class="modal-overlay" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <div>
-          <h2 class="text-2xl font-bold text-gray-900 brand-font m-0" id="modal-title">Official Supplier Quote</h2>
-          <div class="text-xs text-gray-500 mt-1 font-mono font-bold" id="modal-rfq-id">RFQ-123456</div>
-        </div>
-        <button class="text-gray-400 hover:text-gray-900 text-2xl transition" onclick="closeModal({target:{id:'quote-modal'}})">×</button>
-      </div>
-      
-      <div class="p-8">
-        <div class="bg-gray-50 border border-gray-200 p-6 rounded-xl mb-8">
-          <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-3" id="modal-msg-title">Supplier Message</div>
-          <p class="text-sm text-gray-700 italic font-medium" id="modal-supplier-msg">Loading message...</p>
-        </div>
-
-        <h3 class="text-sm text-[var(--gold-dark)] font-bold uppercase tracking-widest mb-4 border-b border-gray-100 pb-3" id="modal-financial-title">Financial Breakdown</h3>
-        <div id="modal-financials" class="mb-8">
+      <div class="dashboard-split">
+          
+          <div class="pulse-card">
+              <div class="pulse-header">
+                  <span><i class="fas fa-project-diagram mr-2 text-[var(--gold)]"></i> Supply Chain Pulse</span>
+                  <a href="buyer-tracking.html" class="text-xs text-[var(--blue)] hover:underline font-bold font-sans tracking-widest uppercase">View Master List &rarr;</a>
+              </div>
+              
+              <div class="pulse-grid">
+                  <div class="pulse-item" onclick="window.location.href='buyer-tracking.html'">
+                      <div class="pulse-icon icon-negotiate"><i class="fas fa-comments-dollar"></i></div>
+                      <div class="pulse-data">
+                          <h4>Negotiating</h4>
+                          <div class="count" id="pulse-nego">0</div>
+                      </div>
+                  </div>
+                  <div class="pulse-item" onclick="window.location.href='buyer-tracking.html'">
+                      <div class="pulse-icon icon-produce"><i class="fas fa-cogs"></i></div>
+                      <div class="pulse-data">
+                          <h4>In Production</h4>
+                          <div class="count" id="pulse-prod">0</div>
+                      </div>
+                  </div>
+                  <div class="pulse-item" onclick="window.location.href='buyer-tracking.html'">
+                      <div class="pulse-icon icon-transit"><i class="fas fa-ship"></i></div>
+                      <div class="pulse-data">
+                          <h4>On The Water</h4>
+                          <div class="count" id="pulse-transit">0</div>
+                      </div>
+                  </div>
+                  <div class="pulse-item" onclick="window.location.href='buyer-tracking.html'">
+                      <div class="pulse-icon icon-deliver"><i class="fas fa-box-open"></i></div>
+                      <div class="pulse-data">
+                          <h4>Delivered</h4>
+                          <div class="count" id="pulse-deliver">0</div>
+                      </div>
+                  </div>
+              </div>
           </div>
 
-        <div id="signature-block" class="bg-amber-50 border border-amber-200 p-6 rounded-xl mb-8 hidden">
-            <h4 class="text-amber-800 font-bold text-xs uppercase tracking-widest mb-3 border-b border-amber-200 pb-2">Muziris Smart Contract Agreement</h4>
-            <div class="text-xs text-amber-900/80 mb-4 space-y-2">
-                <p>1. <strong>Escrow Protection:</strong> Funds will remain locked in the Muziris Vault and will not be released to the supplier until 7 days after goods arrive at the destination.</p>
-                <p>2. <strong>Logistics Policy:</strong> This payment covers the manufacturing cost only. A separate invoice for final freight will be provided once production is complete.</p>
-            </div>
-            <label class="flex items-start gap-3 cursor-pointer">
-                <input type="checkbox" id="digital-signature" class="mt-0.5 w-4 h-4 accent-[var(--gold)]" onchange="togglePayButton()">
-                <span class="text-sm text-amber-900 font-bold">
-                    I digitally sign and agree to the Muziris Governance Terms.
-                </span>
-            </label>
-        </div>
+          <div class="pulse-card">
+              <div class="pulse-header">
+                  <span><i class="fas fa-compass mr-2 text-[var(--gold)]"></i> Quick Actions</span>
+              </div>
+              <div class="discovery-list">
+                  
+                  <div class="discovery-item cursor-pointer" onclick="window.location.href='catalog.html'">
+                      <div class="flex items-center gap-4">
+                          <div class="discovery-icon"><i class="fas fa-search"></i></div>
+                          <div>
+                              <div class="font-bold text-sm text-gray-900">Sourcing Catalog</div>
+                              <div class="text-xs text-gray-500 mt-1">Discover new verified suppliers</div>
+                          </div>
+                      </div>
+                      <i class="fas fa-chevron-right text-gray-300"></i>
+                  </div>
 
-        <div id="freight-escrow-badge" class="bg-[#f0f9ff] border border-[#bae6fd] p-6 rounded-xl mb-8 flex gap-4 items-start hidden">
-          <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm border border-[#e0f2fe]"><i class="fas fa-ship text-[#0ea5e9]"></i></div>
-          <div>
-            <h4 class="text-[var(--blue)] font-bold text-xs uppercase tracking-widest mb-1.5">Cargo Dispatch Lock</h4>
-            <p class="text-xs text-gray-600 leading-relaxed font-medium">
-              By funding the freight, Muziris Logistics will immediately dispatch your cargo. Your initial manufacturing funds remain locked in escrow until the goods arrive.
-            </p>
+                  <div class="discovery-item cursor-pointer" onclick="window.location.href='buyer-message-hub.html'">
+                      <div class="flex items-center gap-4">
+                          <div class="discovery-icon" style="background:#fef3c7; color:#d97706;"><i class="fas fa-inbox"></i></div>
+                          <div>
+                              <div class="font-bold text-sm text-gray-900">Message Hub</div>
+                              <div class="text-xs text-gray-500 mt-1">Continue your negotiations</div>
+                          </div>
+                      </div>
+                      <i class="fas fa-chevron-right text-gray-300"></i>
+                  </div>
+
+                  <div class="discovery-item cursor-pointer" onclick="alert('Opening AI Procurement Assistant...')">
+                      <div class="flex items-center gap-4">
+                          <div class="discovery-icon" style="background:#f3e8ff; color:var(--purple);"><i class="fas fa-robot"></i></div>
+                          <div>
+                              <div class="font-bold text-sm text-gray-900">AI Concierge</div>
+                              <div class="text-xs text-gray-500 mt-1">Ask questions about your data</div>
+                          </div>
+                      </div>
+                      <i class="fas fa-chevron-right text-gray-300"></i>
+                  </div>
+
+              </div>
           </div>
-        </div>
 
-        <div class="flex flex-col sm:flex-row gap-4">
-          <button class="flex-1 btn-outline py-4" onclick="closeModal({target:{id:'quote-modal'}})">Review Later</button>
-          <button class="flex-[2] bg-gray-300 text-gray-500 font-bold py-4 rounded uppercase tracking-widest transition cursor-not-allowed" id="btn-fund" disabled onclick="fundEscrow()">
-            <i class="fas fa-pen-nib"></i> Sign Agreement to Pay
-          </button>
-        </div>
       </div>
+
     </div>
   </div>
 
@@ -275,13 +280,7 @@
 
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     let currentBuyerEmail = "";
-    let allBuyerRfqs = [];
-    
-    // Track which phase we are funding in the modal
-    let activeRfqForModal = null;
-    let activePhaseForModal = 1; 
 
-    // Mobile Menu
     function toggleMobileMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('mobile-overlay');
@@ -294,7 +293,7 @@
             currentBuyerEmail = user.email;
             let displayName = user.displayName || user.email.split('@')[0];
             document.getElementById('ui-buyer-email').innerText = displayName;
-            fetchBuyerRfqs(); 
+            fetchDashboardData(); 
         } else {
             window.location.replace('index1.html');
         }
@@ -303,10 +302,9 @@
     function logoutBuyer() { auth.signOut().catch((error) => console.error("Sign out error", error)); }
 
     // ==========================================
-    // RFQ FETCHING & DASHBOARD LOGIC
+    // 🟢 FETCH AND CALCULATE DASHBOARD DATA
     // ==========================================
-    function fetchBuyerRfqs() {
-      // 🟢 UPDATED: Using the new secure buyer-specific route
+    function fetchDashboardData() {
       fetch(API_BASE_URL + '/buyer/my-orders', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -315,46 +313,62 @@
       .then(res => res.json())
       .then(data => {
         if(data.error || !data.success) throw new Error(data.error);
-        allBuyerRfqs = data.orders; // The backend already filtered by email!
-        renderDashboard();
+        calculateKPIs(data.orders);
       })
       .catch(err => {
-        document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-10 text-red-500 font-bold">Database Connection Failed.</td></tr>`;
+        console.error("Dashboard Sync Failed:", err);
       });
     }
 
-    function renderDashboard() {
-      let activeCount = 0; let completedCount = 0; let escrowLocked = 0;
-      let tableHtml = ""; let alertHtml = ""; let alertsCount = 0;
+    function calculateKPIs(orders) {
+      let activeCount = 0; 
+      let escrowLocked = 0;
+      let totalSpend = 0;
 
-      if(allBuyerRfqs.length === 0) {
-        document.getElementById('rfq-body').innerHTML = `<tr><td colspan="6" class="text-center py-16 text-gray-500 font-medium">No active sourcing requests. <br><a href="catalog.html" class="text-[var(--gold)] hover:underline mt-2 inline-block">Browse the global catalog to start.</a></td></tr>`;
-        return;
-      }
+      // Pipeline Counters
+      let countNego = 0;
+      let countProd = 0;
+      let countTransit = 0;
+      let countDeliver = 0;
 
-      allBuyerRfqs.forEach(rfq => {
-        let isPhase1Action = ['Supplier Replied', 'Quote Sent'].includes(rfq.status);
-        let isPhase2Action = ['Pending Freight Payment'].includes(rfq.status);
-        let isEscrow = ['Funded Escrow', 'In Production', 'Shipped'].includes(rfq.status);
-        let isCompleted = (rfq.status === 'Completed');
+      let alertHtml = ""; 
+      let alertsCount = 0;
+
+      orders.forEach(rfq => {
+        // Categories
+        let isNegotiating = ['Pending Supplier', 'Supplier Clarification', 'Quote Sent', 'Buyer Counter-Offer', 'Supplier Replied'].includes(rfq.status);
+        let isProduction = ['Funded Escrow', 'In Production'].includes(rfq.status);
+        let isTransit = ['Pending Freight Payment', 'Shipped'].includes(rfq.status);
+        let isDelivered = ['Completed', 'Delivered', 'Hold Period'].includes(rfq.status);
         
-        if(!isCompleted && rfq.status !== 'Cancelled') activeCount++;
-        if(isCompleted) completedCount++;
+        if(isNegotiating) countNego++;
+        if(isProduction) countProd++;
+        if(isTransit) countTransit++;
+        if(isDelivered) countDeliver++;
 
-        // 🟢 UPDATED: Pull the exact locked amount from the new Ledger if it exists!
-        if(isEscrow || isCompleted) {
+        if(rfq.status !== 'Cancelled' && rfq.status !== 'Completed') activeCount++;
+
+        // Financials (Total Locked)
+        if(isProduction || isTransit || rfq.status === 'Hold Period') {
             if(rfq.tazapay_total_charged) {
                 escrowLocked += parseFloat(rfq.tazapay_total_charged);
+                totalSpend += parseFloat(rfq.tazapay_total_charged); // Add to lifetime spend logic
             }
         }
+        if(isDelivered) {
+             if(rfq.tazapay_total_charged) totalSpend += parseFloat(rfq.tazapay_total_charged);
+        }
 
-        // 🟢 DYNAMIC ALERTS
+        // 🟢 ALERTS GENERATION
+        let isPhase1Action = ['Supplier Replied', 'Quote Sent'].includes(rfq.status);
+        let isPhase2Action = ['Pending Freight Payment'].includes(rfq.status);
+
         if(isPhase1Action || isPhase2Action) {
           alertsCount++;
           let alertTitle = isPhase1Action ? "Manufacturing Quote Ready" : "Freight Invoice Ready";
           let alertDesc = isPhase1Action ? "The supplier has approved your request. Review the official contract to begin production." : "Your goods are ready! Review the logistics bill to dispatch the cargo.";
           let btnText = isPhase1Action ? "Review Contract" : "Fund Logistics";
-          let targetUrl = isPhase1Action ? `buyer-checkout.html?rfq=${rfq.rfq_id}` : `buyer-checkout.html?rfq=${rfq.rfq_id}`;
+          let targetUrl = `buyer-checkout.html?rfq=${rfq.rfq_id}`;
 
           alertHtml += `
             <div class="alert-item flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -366,51 +380,29 @@
             </div>
           `;
         }
-
-        // Table visual logic
-        let statusBadge = `<span class="status-badge status-pending">${rfq.status}</span>`;
-        let actionBtn = `<button class="btn-outline opacity-50 cursor-not-allowed" disabled>Processing</button>`;
-
-        if(isPhase1Action) {
-          statusBadge = `<span class="status-badge status-action">Fund Production</span>`;
-          actionBtn = `<button class="btn-gold" onclick="window.location.href='buyer-checkout.html?rfq=${rfq.rfq_id}'">Sign & Pay</button>`;
-        } else if (isPhase2Action) {
-          statusBadge = `<span class="status-badge status-action" style="background:#e0f2fe; color:#0ea5e9; border-color:#7dd3fc;">Fund Logistics</span>`;
-          actionBtn = `<button class="btn-gold" style="background:#0ea5e9; color:#fff;" onclick="window.location.href='buyer-checkout.html?rfq=${rfq.rfq_id}'">Pay Freight</button>`;
-        } else if (isEscrow || isCompleted) {
-          statusBadge = isCompleted ? `<span class="status-badge status-shipped">Delivered</span>` : `<span class="status-badge status-escrow">${rfq.status}</span>`;
-          actionBtn = `<button class="btn-outline" onclick="window.location.href='buyer-tracking.html?id=${rfq.rfq_id}'">Track Status</button>`;
-        }
-
-        // 🟢 UPDATED: Display SHP- Tracking number if it has been generated by the checkout!
-        let displayId = rfq.shipment_id ? `<span style="color:var(--blue); font-weight:900;">${rfq.shipment_id}</span>` : rfq.rfq_id;
-
-        tableHtml += `
-          <tr>
-            <td class="font-mono font-bold">${displayId}</td>
-            <td class="text-gray-500">${new Date(rfq.submitted_date).toLocaleDateString()}</td>
-            <td>
-              <div class="font-bold text-gray-900">${rfq.product_name}</div>
-              <div class="text-[10px] text-gray-400 uppercase tracking-widest mt-1 font-bold">Supplier ID: ${rfq.supplier_id}</div>
-            </td>
-            <td class="text-gray-600 font-medium">${rfq.destination || 'EXW (No Port)'}</td>
-            <td>${statusBadge}</td>
-            <td class="text-right">${actionBtn}</td>
-          </tr>
-        `;
       });
 
-      document.getElementById('rfq-body').innerHTML = tableHtml;
+      // INJECT DATA INTO UI
       document.getElementById('kpi-active').innerText = activeCount;
-      document.getElementById('kpi-completed').innerText = completedCount;
       document.getElementById('kpi-escrow').innerText = escrowLocked.toLocaleString(undefined, {minimumFractionDigits: 2});
+      
+      // Artificial "Savings" calculation based on lifetime spend to show Muziris Value
+      let estimatedSavings = totalSpend * 0.12; // e.g. 12% average B2B logistics savings
+      document.getElementById('kpi-savings').innerText = estimatedSavings.toLocaleString(undefined, {minimumFractionDigits: 2});
 
+      document.getElementById('pulse-nego').innerText = countNego;
+      document.getElementById('pulse-prod').innerText = countProd;
+      document.getElementById('pulse-transit').innerText = countTransit;
+      document.getElementById('pulse-deliver').innerText = countDeliver;
+
+      // Handle Alerts
       if(alertsCount > 0) {
         document.getElementById('rfqContainer').innerHTML = alertHtml;
         document.getElementById('rfqWidget').style.display = 'block';
       } else {
         document.getElementById('rfqWidget').style.display = 'none';
       }
-    }  </script>
+    }
+  </script>
 </body>
 </html>
