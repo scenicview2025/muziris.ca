@@ -242,7 +242,7 @@
                 </label>
                 <input type="file" id="supplier-file-upload" style="display:none;" accept="image/*,video/*,application/pdf" onchange="handleFileSelect(event)">
                 
-                <input type="text" id="reply-input" class="chat-input" placeholder="Type your secure reply..." onkeypress="if(event.key === 'Enter') sendReply()">
+                <input type="text" id="reply-input" class="chat-input" placeholder="Type your secure reply..." onkeypress="if(event.key === 'Enter') sendReply()" oninput="handleTyping()">
                 <button class="send-btn" id="send-msg-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i></button>
             </div>
         </div>
