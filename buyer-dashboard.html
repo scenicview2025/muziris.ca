@@ -302,6 +302,7 @@
             let displayName = user.displayName || user.email.split('@')[0];
             document.getElementById('ui-buyer-email').innerText = displayName;
             fetchDashboardData(); 
+            fetchRecommendedProducts(); // 🟢 ADD THIS LINE HERE!
         } else {
             window.location.replace('index1.html');
         }
