@@ -210,14 +210,24 @@
                 <button class="mobile-back-to-list" onclick="closeMobileChat()"><i class="fas fa-chevron-left" style="margin-right:8px;"></i> Inbox</button>
                 
                 <div>
-                    <h3 id="chat-header-buyer" style="margin:0 0 5px 0; color:#fff;">Buyer ID</h3>
-                    <div id="chat-header-product" style="font-size:11px; color:var(--gold); letter-spacing:1px; text-transform:uppercase;">Product ID</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h3 id="chat-header-buyer" style="margin:0; color:#fff;">Buyer ID</h3>
+                        <div style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 12px; border: 1px solid #333;">
+                            <div id="online-dot" style="width: 8px; height: 8px; background: #555; border-radius: 50%; transition: 0.3s;"></div>
+                            <span id="online-text" style="font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase;">Offline</span>
+                        </div>
+                    </div>
+                    <div id="chat-header-product" style="font-size:11px; color:var(--gold); letter-spacing:1px; text-transform:uppercase; margin-top:5px;">Product ID</div>
                 </div>
                 
                 <button class="mobile-tools-toggle" onclick="toggleMobileTools()"><i class="fas fa-wrench"></i> Tools</button>
             </div>
 
            <div class="messages-container" id="messages-container"></div>
+
+           <div id="typing-indicator" style="display: none; padding: 10px 30px; font-size: 12px; font-style: italic; color: var(--gold); background: var(--void); font-weight: bold;">
+               Buyer is typing...
+           </div>
 
             <div id="file-preview-box" style="display:none; padding: 10px 30px; background: #0b0e14; border-top: 1px solid #333; align-items:center; justify-content:space-between;">
                 <div style="display:flex; align-items:center; gap:10px; color:var(--gold); font-size:12px; font-weight:bold;">
