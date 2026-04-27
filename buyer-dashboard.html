@@ -288,6 +288,34 @@
     </div>
   </div>
 
+  <div id="ai-modal" class="modal-overlay" onclick="closeAiModal(event)">
+    <div class="modal-content" style="max-width: 500px; height: 600px; display: flex; flex-direction: column;" onclick="event.stopPropagation()">
+      
+      <div class="modal-header" style="background: var(--void); color: white; border-radius: 16px 16px 0 0;">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#f3e8ff] text-[var(--purple)] rounded-full flex items-center justify-center text-xl"><i class="fas fa-robot"></i></div>
+            <div>
+                <h2 class="text-lg font-bold brand-font m-0 text-white">AI Concierge</h2>
+                <div class="text-xs text-gray-400">Powered by Muziris Data Engine</div>
+            </div>
+        </div>
+        <button class="text-gray-400 hover:text-white text-2xl transition" onclick="closeAiModal({target:{id:'ai-modal'}})">×</button>
+      </div>
+      
+      <div id="ai-chat-box" style="flex: 1; padding: 20px; overflow-y: auto; background: #f9fafb; display: flex; flex-direction: column; gap: 15px;">
+          <div style="align-self: flex-start; background: #fff; border: 1px solid var(--border-light); padding: 12px 16px; border-radius: 0 12px 12px 12px; font-size: 13px; color: var(--text-dark); max-width: 85%; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+              Hello! I am your AI Procurement Assistant. I can see all your current orders and contracts. What would you like to know?
+          </div>
+      </div>
+
+      <div style="padding: 15px; background: #fff; border-top: 1px solid var(--border-light); border-radius: 0 0 16px 16px; display: flex; gap: 10px;">
+          <input type="text" id="ai-input" placeholder="e.g. How many orders are currently in transit?" style="flex: 1; padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; outline: none; font-size: 13px;" onkeypress="if(event.key === 'Enter') askAi()">
+          <button onclick="askAi()" id="ai-send-btn" style="background: var(--purple); color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;"><i class="fas fa-paper-plane"></i></button>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     // ==========================================
     // 🟢 FIREBASE INITIALIZATION & AUTH GUARD
