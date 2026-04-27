@@ -307,7 +307,9 @@
     const rfqIdToLoad = urlParams.get('id');
 
     let allBuyerRfqs = [];
-
+    let currentBuyerEmail = "";      // 🟢 ADDED for message listener
+    const db = firebase.firestore(); // 🟢 ADDED for message listener
+    
     function toggleMobileMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('mobile-overlay');
