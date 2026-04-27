@@ -250,7 +250,10 @@
 
                   <div class="discovery-item cursor-pointer" onclick="window.location.href='buyer-message-hub.html'">
                       <div class="flex items-center gap-4">
-                          <div class="discovery-icon" style="background:#fef3c7; color:#d97706;"><i class="fas fa-inbox"></i></div>
+                          <div class="discovery-icon" style="background:#fef3c7; color:#d97706; position: relative;">
+                              <i class="fas fa-inbox"></i>
+                              <div id="quick-msg-badge" style="display: none; position: absolute; top: -2px; right: -2px; width: 12px; height: 12px; background: var(--alert); border: 2px solid #fff; border-radius: 50%;"></div>
+                          </div>
                           <div>
                               <div class="font-bold text-sm text-gray-900">Message Hub</div>
                               <div class="text-xs text-gray-500 mt-1">Continue your negotiations</div>
