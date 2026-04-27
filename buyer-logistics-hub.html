@@ -240,6 +240,7 @@
                 currentBuyerEmail = user.email;
                 document.getElementById('loading-overlay').style.display = 'none';
                 loadInitialData();
+                listenForUnreadMessages(); // 🟢 Trigger the notification listener!
             } else {
                 window.location.replace('index1.html');
             }
