@@ -112,6 +112,14 @@
       .dashboard-body { padding: 20px; }
       .pulse-grid { grid-template-columns: 1fr; }
     }
+    /* 🟢 PRODUCT SHOWCASE */
+    .showcase-card { background: #fff; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden; transition: 0.3s; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .showcase-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.06); border-color: var(--gold); }
+    .showcase-img { width: 100%; height: 180px; object-fit: contain; background: #f9fafb; border-bottom: 1px solid var(--border-light); padding: 10px; }
+    .showcase-info { padding: 20px; }
+    .showcase-category { font-size: 10px; color: var(--gold-dark); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 6px; }
+    .showcase-title { font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 0 0 10px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .showcase-price { font-family: 'Courier New', monospace; font-size: 16px; font-weight: 800; color: var(--success); }
   </style>
 </head>
 <body>
