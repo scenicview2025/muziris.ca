@@ -177,8 +177,12 @@
                       const chat = doc.data();
                       const activeClass = currentActiveChatId === doc.id ? 'active' : '';
 
+                      // 🟢 NEW: Check if this specific chat is unread
+                      const unreadDot = chat.unreadByBuyer ? `<div style="width:8px; height:8px; background:var(--alert); border-radius:50%; position:absolute; right:20px; top:25px;"></div>` : '';
+
                       listContainer.innerHTML += `
                           <div class="chat-item ${activeClass}" onclick="openChat('${doc.id}', '${chat.supplierId}', '${chat.productId || 'General'}')">
+                              ${unreadDot}
                               <div class="chat-supplier"><i class="fas fa-industry text-gray-400"></i> Supplier: ${chat.supplierId}</div>
                               <div class="chat-product">Product: ${chat.productId || 'Inquiry'}</div>
                               <div class="chat-preview">${chat.lastMessage || 'No messages yet.'}</div>
