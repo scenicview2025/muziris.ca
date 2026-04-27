@@ -412,6 +412,44 @@
         document.getElementById('rfqWidget').style.display = 'none';
       }
     }
+
+    // ==========================================
+    // 🟢 FETCH RECOMMENDED PRODUCTS SHOWCASE
+    // ==========================================
+    function fetchRecommendedProducts() {
+        // We reuse the exact same backend route that powers your main Catalog!
+        fetch(API_BASE_URL + '/public-catalog', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            if(data.products && data.products.length > 0) {
+                // Shuffle the products so they look fresh every time the buyer logs in!
+                let shuffled = data.products.sort(() => 0.5 - Math.random());
+                let displayProducts = shuffled.slice(0, 4); // Grab exactly 4 items
+                
+                let showcaseHtml = '';
+                displayProducts.forEach(p => {
+                    let priceText = p.startingPriceCAD > 0 ? `$${p.startingPriceCAD.toFixed(2)} CAD` : 'Quote Required';
+                    showcaseHtml += `
+                        <div class="showcase-card" onclick="window.location.href='catalog.html'">
+                            <img src="${p.hero || 'MC.png'}" class="showcase-img" alt="${p.name}">
+                            <div class="showcase-info">
+                                <div class="showcase-category">${p.category || 'Trending'}</div>
+                                <h4 class="showcase-title" title="${p.name}">${p.name}</h4>
+                                <div class="showcase-price">${priceText}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('dashboard-showcase').innerHTML = showcaseHtml;
+            } else {
+                document.getElementById('dashboard-showcase').innerHTML = `<div class="col-span-4 text-center py-10 text-gray-500">No trending products available right now.</div>`;
+            }
+        })
+        .catch(err => {
+            console.error("Showcase load error:", err);
+            document.getElementById('dashboard-showcase').innerHTML = `<div class="col-span-4 text-center py-10 text-red-500">Failed to load showcase.</div>`;
+        });
+    }
   </script>
 </body>
 </html>
