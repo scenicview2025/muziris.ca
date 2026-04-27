@@ -319,8 +319,11 @@
 
     auth.onAuthStateChanged((user) => {
         if (user) {
+            currentBuyerEmail = user.email; // 🟢 Save email globally
             let displayName = user.displayName || user.email.split('@')[0];
             document.getElementById('ui-buyer-email').innerText = displayName;
+            
+            listenForUnreadMessages(); // 🟢 Trigger the notification listener!
             
             // 🟢 ARCHITECTURE LOGIC: List vs Detail View
             if (rfqIdToLoad) {
