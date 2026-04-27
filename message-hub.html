@@ -530,9 +530,10 @@
                     
                     await db.collection('chats').doc(currentActiveChatId).set({
                         lastMessage: "Factory: 📎 Sent an attachment", 
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                        unreadByBuyer: true
                     }, { merge: true });
-
+                    
                     clearSelectedFile(); // Hide the preview box
                 }
 
