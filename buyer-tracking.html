@@ -547,6 +547,30 @@
             document.getElementById('detail-total').innerText = "Pending Validation";
         }
     }
+
+    // ==========================================
+    // 🟢 REAL-TIME UNREAD MESSAGE LISTENER
+    // ==========================================
+    function listenForUnreadMessages() {
+        db.collection('chats')
+          .where('buyerEmail', '==', currentBuyerEmail)
+          .where('unreadByBuyer', '==', true)
+          .onSnapshot((snapshot) => {
+              const sidebarBadge = document.getElementById('sidebar-msg-badge');
+              
+              if (!snapshot.empty) {
+                  let unreadCount = snapshot.docs.length;
+                  if(sidebarBadge) {
+                      sidebarBadge.innerText = unreadCount;
+                      sidebarBadge.style.display = 'block';
+                  }
+              } else {
+                  if(sidebarBadge) sidebarBadge.style.display = 'none';
+              }
+          }, (error) => {
+              console.error("Error listening to messages:", error);
+          });
+    }
   </script>
 </body>
 </html>
