@@ -436,8 +436,36 @@
                 document.querySelector('.chat-window').classList.add('show-mobile');
             }
 
-            db.collection('chats').doc(chatId).update({ unreadBySupplier: false });
+            // 🟢 Tell Firebase the supplier read the chat AND is currently online
+            db.collection('chats').doc(chatId).set({ 
+                unreadBySupplier: false,
+                supplierOnline: true 
+            }, { merge: true });
+
             if (unsubscribeMessages) unsubscribeMessages();
+            if (unsubscribeChatDoc) unsubscribeChatDoc();
+
+            // 🟢 Listen for Buyer's Online/Typing status
+            unsubscribeChatDoc = db.collection('chats').doc(chatId).onSnapshot(doc => {
+                const data = doc.data();
+                if (!data) return;
+
+                const typingInd = document.getElementById('typing-indicator');
+                if (data.buyerTyping) typingInd.style.display = 'block';
+                else typingInd.style.display = 'none';
+
+                const dot = document.getElementById('online-dot');
+                const text = document.getElementById('online-text');
+                if (data.buyerOnline) {
+                    dot.style.background = 'var(--success)';
+                    text.innerText = 'Online';
+                    text.style.color = 'var(--success)';
+                } else {
+                    dot.style.background = '#555';
+                    text.innerText = 'Offline';
+                    text.style.color = '#888';
+                }
+            });
 
             unsubscribeMessages = db.collection('chats').doc(chatId).collection('messages')
                 .orderBy('timestamp', 'asc')
