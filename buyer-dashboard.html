@@ -267,6 +267,24 @@
 
       </div>
 
+      <div style="margin-top: 40px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+              <div>
+                  <h3 style="font-size: 20px; font-weight: 700; color: var(--text-dark); font-family: 'Cinzel', serif; margin: 0;">Trending Products</h3>
+                  <p style="font-size: 13px; color: var(--text-gray); margin: 4px 0 0 0;">Discover new opportunities from verified global suppliers</p>
+              </div>
+              <button onclick="window.location.href='catalog.html'" style="background: transparent; border: none; color: var(--blue); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 0;">
+                  Explore Catalog &rarr;
+              </button>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="dashboard-showcase">
+              <div class="col-span-4 text-center py-10 text-gray-500">
+                  <i class="fas fa-circle-notch fa-spin text-[var(--gold)] text-2xl mb-3"></i><br>Loading trending products...
+              </div>
+          </div>
+      </div>
+
     </div>
   </div>
 
