@@ -571,6 +571,41 @@
             document.getElementById('dashboard-showcase').innerHTML = `<div class="col-span-4 text-center py-10 text-red-500">Failed to load showcase.</div>`;
         });
     }
+  // ==========================================
+    // 🟢 REAL-TIME UNREAD MESSAGE LISTENER
+    // ==========================================
+    function listenForUnreadMessages() {
+        const db = firebase.firestore();
+        
+        // Listen to the 'chats' collection where this buyer is involved and hasn't read the message
+        db.collection('chats')
+          .where('buyerEmail', '==', currentBuyerEmail)
+          .where('unreadByBuyer', '==', true)
+          .onSnapshot((snapshot) => {
+              const sidebarBadge = document.getElementById('sidebar-msg-badge');
+              const quickBadge = document.getElementById('quick-msg-badge');
+              
+              if (!snapshot.empty) {
+                  // They have unread messages! Show the badges
+                  let unreadCount = snapshot.docs.length;
+                  
+                  if(sidebarBadge) {
+                      sidebarBadge.innerText = unreadCount;
+                      sidebarBadge.style.display = 'block';
+                  }
+                  if(quickBadge) {
+                      quickBadge.style.display = 'block';
+                  }
+              } else {
+                  // All caught up! Hide the badges
+                  if(sidebarBadge) sidebarBadge.style.display = 'none';
+                  if(quickBadge) quickBadge.style.display = 'none';
+              }
+          }, (error) => {
+              console.error("Error listening to messages:", error);
+          });
+    }
+    
   </script>
 </body>
 </html>
