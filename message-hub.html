@@ -916,6 +916,32 @@
             }
         }
 
+        // 🟢 NEW: Typing Detector Logic
+        function handleTyping() {
+            if (!currentActiveChatId) return;
+
+            if (!isTyping) {
+                isTyping = true;
+                db.collection('chats').doc(currentActiveChatId).set({ supplierTyping: true }, { merge: true });
+            }
+
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                isTyping = false;
+                db.collection('chats').doc(currentActiveChatId).set({ supplierTyping: false }, { merge: true });
+            }, 1500);
+        }
+
+        // 🟢 NEW: Set Offline when closing browser tab
+        window.addEventListener('beforeunload', () => {
+            if (currentActiveChatId) {
+                db.collection('chats').doc(currentActiveChatId).set({ 
+                    supplierOnline: false, 
+                    supplierTyping: false 
+                }, { merge: true });
+            }
+        });
+
         // Start listening when page loads
         window.onload = () => {
             loadChatList();
