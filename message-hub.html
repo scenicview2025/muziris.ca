@@ -558,7 +558,8 @@
                     await db.collection('chats').doc(currentActiveChatId).set({
                         lastMessage: "Factory: " + safeText,
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-                        securityFlag: securityTriggered
+                        securityFlag: securityTriggered,
+                        unreadByBuyer: true
                     }, { merge: true });
 
                     if (securityTriggered) {
