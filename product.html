@@ -174,30 +174,41 @@
         <div style="background:var(--void); padding:15px; color:var(--gold); display:flex; justify-content:space-between; align-items:center;">
             <div>
                 <div style="font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase;">Secure Connection</div>
-                <div id="chat-supplier-name" style="font-size:14px; font-weight:bold; color:#fff;">Factory Name</div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div id="chat-supplier-name" style="font-size:14px; font-weight:bold; color:#fff;">Factory Name</div>
+                    <div style="display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 12px;">
+                        <div id="online-dot" style="width: 6px; height: 6px; background: #9ca3af; border-radius: 50%;"></div>
+                        <span id="online-text" style="font-size: 9px; font-weight: bold; color: #9ca3af; text-transform: uppercase;">Offline</span>
+                    </div>
+                </div>
             </div>
             
             <div style="display:flex; align-items:center; gap:15px;">
                 <a href="buyer-message-hub.html" style="color:var(--gold); border:1px solid var(--gold); padding:4px 8px; border-radius:4px; font-size:10px; font-weight:bold; text-transform:uppercase; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='var(--gold)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
                     <i class="fas fa-expand-arrows-alt"></i> Full Inbox
                 </a>
-                <i class="fas fa-times" style="cursor:pointer; color:#888; font-size:18px;" onclick="document.getElementById('live-chat-window').style.display='none'"></i>
+                <i class="fas fa-times" style="cursor:pointer; color:#888; font-size:18px;" onclick="closeLiveChat()"></i>
             </div>
             
         </div>
-        <div style="background:var(--gold-light); padding:8px 12px; font-size:10px; color:var(--gold-dark); font-weight:700; text-align:center; border-bottom:1px solid var(--gold-border);">
+        <div style="background:rgba(212,175,55,0.1); padding:8px 12px; font-size:10px; color:var(--gold-dark); font-weight:700; text-align:center; border-bottom:1px solid rgba(212,175,55,0.3);">
             <i class="fas fa-shield-alt"></i> Payments & escrow are protected when negotiating via Muziris.
         </div>
         <div id="chat-history" style="flex:1; padding:15px; background:#fafafa; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
             <div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>
         </div>
+
+        <div id="typing-indicator" style="display: none; padding: 5px 15px; font-size: 11px; font-style: italic; color: var(--gold-dark); background: #fafafa; font-weight: 600;">
+            Supplier is typing...
+        </div>
+
         <div style="padding:15px; background:#fff; border-top:1px solid var(--border-light); display:flex; gap:10px; align-items:center;">
             <label for="chat-file-upload" style="cursor:pointer; color:#888; font-size:18px; padding:5px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
                 <i class="fas fa-paperclip"></i>
             </label>
             <input type="file" id="chat-file-upload" style="display:none;" accept="image/*,video/*" onchange="uploadChatFile(event)">
             
-            <input type="text" id="chat-input" placeholder="Type a message..." style="flex:1; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; outline:none; font-size:13px;" onkeypress="if(event.key === 'Enter') sendSupplierMessage()">
+            <input type="text" id="chat-input" placeholder="Type a message..." style="flex:1; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; outline:none; font-size:13px;" onkeypress="if(event.key === 'Enter') sendSupplierMessage()" oninput="handleTyping()">
             <button onclick="sendSupplierMessage()" style="background:var(--void); color:var(--gold); border:none; padding:0 15px; border-radius:8px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
