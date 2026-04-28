@@ -376,14 +376,21 @@
               .orderBy('lastUpdated', 'desc')
               .onSnapshot(snapshot => {
                   const listContainer = document.getElementById('chat-list-container');
-                  listContainer.innerHTML = "";
-
-                  if (snapshot.empty) {
-                      listContainer.innerHTML = '<div style="padding:30px; color:#555; text-align:center; font-size:13px;">No active conversations yet.</div>';
-                      return;
-                  }
+                  
+                  // 🟢 NEW: Permanently inject the Training Simulator at the top!
+                  const trainingId = `TRAINING_${supplierId}`;
+                  const isTrainingActive = currentActiveChatId === trainingId ? 'active' : '';
+                  
+                  let html = `
+                      <div class="chat-item training ${isTrainingActive}" onclick="openChat('${trainingId}', 'AI Training Simulator', 'Sandbox Mode')">
+                          <div class="chat-buyer"><i class="fas fa-robot" style="margin-right:5px; color:#a855f7;"></i> Training Simulator <span class="training-badge">Playground</span></div>
+                          <div class="chat-product"><i class="fas fa-graduation-cap" style="margin-right:5px;"></i> Practice Using Tools</div>
+                          <div class="chat-preview">Test your tools without affecting buyers.</div>
+                      </div>
+                  `;
 
                   snapshot.forEach(doc => {
+                      if (doc.id === trainingId) return; // Prevent duplicating the training chat from DB
                       const chat = doc.data();
                       const isUnread = chat.unreadBySupplier ? 'display:block;' : 'display:none;';
                       const activeClass = currentActiveChatId === doc.id ? 'active' : '';
