@@ -516,6 +516,11 @@
 
         // 🟢 NEW: Mobile UI Sliding Functions
         function closeMobileChat() {
+            // 🟢 FIX: Tell Firebase the supplier stopped looking at the chat
+            if (currentActiveChatId) {
+                db.collection('chats').doc(currentActiveChatId).set({ supplierOnline: false, supplierTyping: false }, { merge: true });
+            }
+
             document.querySelector('.chat-list-panel').classList.remove('hide-mobile');
             document.querySelector('.chat-window').classList.remove('show-mobile');
             document.querySelector('.tools-panel').classList.remove('show-mobile');
