@@ -233,6 +233,9 @@
 
         let currentUser = null;
         let pendingRfqTrigger = false;
+        let unsubscribeChatDoc = null; // 🟢 NEW
+        let isTyping = false;          // 🟢 NEW
+        let typingTimeout = null;      // 🟢 NEW
         
         auth.onAuthStateChanged((user) => {
             if (user) {
