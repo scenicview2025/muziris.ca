@@ -475,6 +475,43 @@
             history.appendChild(msgDiv); history.scrollTop = history.scrollHeight;
         }
 
+        // 🟢 NEW: Typing Detector Logic
+        function handleTyping() {
+            if (!currentUser || !targetProduct) return;
+            const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+
+            if (!isTyping) {
+                isTyping = true;
+                db.collection('chats').doc(chatId).set({ buyerTyping: true }, { merge: true });
+            }
+
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                isTyping = false;
+                db.collection('chats').doc(chatId).set({ buyerTyping: false }, { merge: true });
+            }, 1500);
+        }
+
+        // 🟢 NEW: Safely go offline when closing the modal window
+        function closeLiveChat() {
+            document.getElementById('live-chat-window').style.display='none';
+            if (currentUser && targetProduct) {
+                const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+                db.collection('chats').doc(chatId).set({ buyerOnline: false, buyerTyping: false }, { merge: true });
+            }
+        }
+
+        // 🟢 NEW: Set Offline when closing the browser tab
+        window.addEventListener('beforeunload', () => {
+            if (currentUser && targetProduct && document.getElementById('live-chat-window').style.display !== 'none') {
+                const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+                db.collection('chats').doc(chatId).set({ 
+                    buyerOnline: false, 
+                    buyerTyping: false 
+                }, { merge: true });
+            }
+        });
+
         async function uploadChatFile(event) {
             const file = event.target.files[0];
             if (!file || !currentUser) return;
