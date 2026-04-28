@@ -432,17 +432,25 @@
                 }
             });
             
+            // 🟢 NEW: Context Switching Logic!
+            // Check if they are looking at a NEW product, and if so, drop the context card!
+            const chatRef = db.collection('chats').doc(chatId);
+            chatRef.get().then(async (docSnap) => {
+                if (!docSnap.exists || docSnap.data().productId !== targetProduct.id) {
+                    const contextText = `OFFICIAL INQUIRY: Buyer is interested in "${targetProduct.name}" (ID: ${targetProduct.id}).`;
+                    await chatRef.collection('messages').add({ sender: "system-context", text: contextText, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+                    await chatRef.set({ productId: targetProduct.id, productName: targetProduct.name }, { merge: true });
+                }
+            });
+
             db.collection('chats').doc(chatId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(async snapshot => {
-                  history.innerHTML = ""; 
-                  if (snapshot.empty) {
-                      const contextText = `OFFICIAL INQUIRY: Buyer is interested in "${targetProduct.name}" (ID: ${targetProduct.id}).`;
-                      await db.collection('chats').doc(chatId).collection('messages').add({ sender: "system-context", text: contextText, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-                  } else {
-                      snapshot.forEach(doc => {
-                          const msg = doc.data();
-                          if (msg.sender !== 'system-context') addChatMessage(msg.sender === 'buyer' ? "You" : "Factory", msg.text, msg.sender === 'buyer' ? 'buyer' : (msg.sender === 'system' ? 'system' : 'supplier'));
-                      });
-                  }
+                  history.innerHTML = '<div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>'; 
+                  snapshot.forEach(doc => {
+                      const msg = doc.data();
+                      if (msg.sender !== 'system-context') {
+                          addChatMessage(msg.sender === 'buyer' ? "You" : "Factory", msg.text, msg.sender === 'buyer' ? 'buyer' : (msg.sender === 'system' ? 'system' : 'supplier'));
+                      }
+                  });
             });
         }
 
