@@ -408,6 +408,11 @@
         // 🟢 2. OPEN SPECIFIC CHAT
         // ==========================================
         function openChat(chatId, buyerName, productId) {
+            // 🟢 NEW: If they were in another chat, set them offline there first!
+            if (currentActiveChatId && currentActiveChatId !== chatId) {
+                db.collection('chats').doc(currentActiveChatId).set({ supplierOnline: false, supplierTyping: false }, { merge: true });
+            }
+            
             currentActiveChatId = chatId;
             currentProductId = productId; 
             loadCalcData(productId); // 🟢 Fetches Live Rates & Markup for this specific chat
