@@ -463,7 +463,18 @@
             clearTimeout(typingTimeout);
 
             await db.collection('chats').doc(chatId).collection('messages').add({ sender: "buyer", text: safeText, timestamp: firebase.firestore.FieldValue.serverTimestamp(), productId: targetProduct.id, productName: targetProduct.name });
-            await db.collection('chats').doc(chatId).set({ buyerEmail: currentUser.email, supplierId: targetProduct.supplierId, lastMessage: safeText, lastUpdated: firebase.firestore.FieldValue.serverTimestamp(), securityFlag: securityTriggered, unreadBySupplier: true, buyerTyping: false }, { merge: true });
+            
+            await db.collection('chats').doc(chatId).set({ 
+                buyerEmail: currentUser.email, 
+                supplierId: targetProduct.supplierId, 
+                productId: targetProduct.id,      // 🟢 Locks the current product into the Inbox
+                productName: targetProduct.name,  // 🟢 Locks the current product into the Inbox
+                lastMessage: safeText, 
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp(), 
+                securityFlag: securityTriggered, 
+                unreadBySupplier: true, 
+                buyerTyping: false 
+            }, { merge: true });
             
             if (securityTriggered) addChatMessage("System", "⚠️ Security Alert: Direct contact details violate ToS.", "system");
         }
