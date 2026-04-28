@@ -629,8 +629,36 @@
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
                         securityFlag: securityTriggered,
                         unreadByBuyer: true,
-                        supplierTyping: false // 🟢 FIX: Update database
+                        supplierTyping: false
                     }, { merge: true });
+
+                    // 🟢 NEW: TRAINING BOT AUTO-RESPONDER
+                    if (currentActiveChatId === `TRAINING_${supplierId}`) {
+                        // Make the bot show "Online" and "Typing..."
+                        db.collection('chats').doc(currentActiveChatId).set({ buyerOnline: true, buyerTyping: true }, { merge: true });
+                        
+                        // Wait 3.5 seconds to simulate a human reading it
+                        setTimeout(async () => {
+                            const botPrompts = [
+                                "Perfect! Can you test the 'Freight Estimator' tool on the right and send me a quote to Toronto, CA?",
+                                "Could you practice sending me an Official RFQ invite link using the 'Catalog' tool?",
+                                "I'm nervous about wiring money overseas. Can you click the 'Trust & Escrow' tool to send me the guide?",
+                                "Can you use the 'Reverse Markup Calc' to tell me what my final CAD price would be if you offered $50 base?"
+                            ];
+                            const botReply = botPrompts[Math.floor(Math.random() * botPrompts.length)];
+                            
+                            await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
+                                sender: "buyer", text: botReply, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            
+                            await db.collection('chats').doc(currentActiveChatId).set({
+                                buyerTyping: false,
+                                unreadBySupplier: true,
+                                lastMessage: "Bot: " + botReply,
+                                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                            }, { merge: true });
+                        }, 3500);
+                    }
 
                     if (securityTriggered) {
                         await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
