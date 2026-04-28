@@ -947,6 +947,18 @@
             }
         });
 
+        // 🟢 NEW: Safely go offline when clicking Back to Dashboard
+        async function leaveHub() {
+            if (currentActiveChatId) {
+                // Wait for Firebase to register the offline status BEFORE leaving the page
+                await db.collection('chats').doc(currentActiveChatId).set({ 
+                    supplierOnline: false, 
+                    supplierTyping: false 
+                }, { merge: true });
+            }
+            window.location.href = "supplier-dashboard.html";
+        }
+
         // Start listening when page loads
         window.onload = () => {
             loadChatList();
