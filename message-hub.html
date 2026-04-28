@@ -399,7 +399,7 @@
                       let safeName = chat.buyerEmail ? chat.buyerEmail.split('@')[0] : "UNKNOWN";
                       let maskedBuyer = "Buyer: " + safeName.substring(0, 3).toUpperCase() + "***";
 
-                      listContainer.innerHTML += `
+                      html += `
                           <div class="chat-item ${activeClass}" onclick="openChat('${doc.id}', '${maskedBuyer}', '${chat.productId || 'General Inquiry'}')">
                               <div class="unread-dot" style="${isUnread}"></div>
                               <div class="chat-buyer"><i class="fas fa-user-secret" style="margin-right:5px; color:#888;"></i> ${maskedBuyer}</div>
@@ -408,6 +408,7 @@
                           </div>
                       `;
                   });
+                  listContainer.innerHTML = html; // 🟢 Apply HTML
               }, (error) => {
                   console.error("Firestore Error:", error);
                   if (error.message.includes("requires an index")) {
