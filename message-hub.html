@@ -680,7 +680,7 @@
         // 🟢 4. RIGHT PANEL TOOLS LOGIC
         // ==========================================
         
-        // --- AI SALES COACH ---
+        // --- AI SALES COACH (Now Context-Aware!) ---
         function analyzeChatWithAI() {
             if (!currentActiveChatId) return;
             const btn = document.querySelector('.ai-btn');
@@ -691,23 +691,39 @@
             typing.style.display = 'block';
             resultBox.style.display = 'none';
 
-            // Simulate AI reading the chat history and calculating a strategy
-            setTimeout(() => {
-                const tactics = [
-                    "<strong>🧠 Psychological Trigger: Risk Reversal</strong><br>The buyer is evaluating risk. Offer to send a sample unit or a CAD drawing before requiring a deposit. This drops their barrier to entry.",
-                    "<strong>🧠 Psychological Trigger: Reciprocity</strong><br>Give them unexpected value. Provide a free assessment of their shipping dimensions to save them freight costs. They will feel obligated to close with you.",
-                    "<strong>🧠 Sales Tactic: The 'Puppy Dog' Close</strong><br>Don't push the full order yet. Focus on getting them to agree to a small test order with low MOQ. Once they see the quality, the big contract is guaranteed.",
-                    "<strong>🧠 Sales Tactic: Scarcity Injection</strong><br>Politely mention that raw material costs (like aluminum/steel) are shifting next week. Offer to lock in today's price if they execute the RFQ by Friday."
-                ];
-                
-                const randomTactic = tactics[Math.floor(Math.random() * tactics.length)];
-                
-                typing.style.display = 'none';
-                resultBox.innerHTML = randomTactic + `<br><br><button onclick="document.getElementById('ai-result').style.display='none'; document.querySelector('.ai-btn').style.display='block';" style="background:transparent; border:none; color:var(--ai-glow); text-decoration:underline; cursor:pointer; font-size:10px;">Dismiss Advice</button>`;
-                resultBox.style.display = 'block';
-            }, 1500); 
-        }
+            // 1. Read the actual chat history from the screen!
+            let chatHistory = "";
+            const messages = document.querySelectorAll('.messages-container .msg');
+            messages.forEach(msg => {
+                if (msg.classList.contains('msg-buyer')) {
+                    chatHistory += "Buyer: " + msg.innerText + "\n";
+                } else if (msg.classList.contains('msg-supplier')) {
+                    chatHistory += "Supplier (Me): " + msg.innerText + "\n";
+                }
+            });
 
+            // 2. Send it to the Render Server
+            fetch(API_BASE_URL + '/supplier/ai-advisor', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chatHistory: chatHistory })
+            })
+            .then(res => res.json())
+            .then(data => {
+                typing.style.display = 'none';
+                if (data.success) {
+                    resultBox.innerHTML = data.reply + `<br><br><button onclick="document.getElementById('ai-result').style.display='none'; document.querySelector('.ai-btn').style.display='block';" style="background:transparent; border:none; color:var(--ai-glow); text-decoration:underline; cursor:pointer; font-size:10px;">Dismiss Advice</button>`;
+                } else {
+                    resultBox.innerHTML = "Analysis failed. Please try again.";
+                }
+                resultBox.style.display = 'block';
+            })
+            .catch(err => {
+                typing.style.display = 'none';
+                resultBox.innerHTML = "Network connection error.";
+                resultBox.style.display = 'block';
+            });
+        }
         // --- LIVE CURRENCY & REVERSE MARKUP CALCULATOR ---
         let liveRates = {};
         let currentMarkup = 20; // Default
