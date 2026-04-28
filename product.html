@@ -402,6 +402,36 @@
             const history = document.getElementById('chat-history');
             history.innerHTML = '<div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>';
             
+            // 🟢 Tell Firebase you opened the chat and are online
+            db.collection('chats').doc(chatId).set({
+                buyerOnline: true,
+                unreadByBuyer: false
+            }, { merge: true });
+
+            if (unsubscribeChatDoc) unsubscribeChatDoc();
+
+            // 🟢 Listen for Supplier's Online/Typing status
+            unsubscribeChatDoc = db.collection('chats').doc(chatId).onSnapshot(doc => {
+                const data = doc.data();
+                if (!data) return;
+
+                const typingInd = document.getElementById('typing-indicator');
+                if (data.supplierTyping) typingInd.style.display = 'block';
+                else typingInd.style.display = 'none';
+
+                const dot = document.getElementById('online-dot');
+                const text = document.getElementById('online-text');
+                if (data.supplierOnline) {
+                    dot.style.background = 'var(--success)';
+                    text.innerText = 'Online';
+                    text.style.color = 'var(--success)';
+                } else {
+                    dot.style.background = '#9ca3af';
+                    text.innerText = 'Offline';
+                    text.style.color = '#9ca3af';
+                }
+            });
+            
             db.collection('chats').doc(chatId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(async snapshot => {
                   history.innerHTML = ""; 
                   if (snapshot.empty) {
