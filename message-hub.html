@@ -603,6 +603,11 @@
                     }
 
                     input.value = ""; 
+                    
+                    // 🟢 FIX: Instantly kill the typing animation
+                    isTyping = false;
+                    clearTimeout(typingTimeout);
+
                     await db.collection('chats').doc(currentActiveChatId).collection('messages').add({
                         sender: "supplier", text: safeText, timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
@@ -611,7 +616,8 @@
                         lastMessage: "Factory: " + safeText,
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
                         securityFlag: securityTriggered,
-                        unreadByBuyer: true
+                        unreadByBuyer: true,
+                        supplierTyping: false // 🟢 FIX: Update database
                     }, { merge: true });
 
                     if (securityTriggered) {
