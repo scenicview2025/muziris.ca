@@ -470,7 +470,11 @@
             isTyping = false;
             clearTimeout(typingTimeout);
 
-            await db.collection('chats').doc(chatId).collection('messages').add({ sender: "buyer", text: safeText, timestamp: firebase.firestore.FieldValue.serverTimestamp(), productId: targetProduct.id, productName: targetProduct.name });
+            await db.collection('chats').doc(chatId).collection('messages').add({ 
+                sender: "buyer", 
+                text: safeText, 
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+            });
             
             await db.collection('chats').doc(chatId).set({ 
                 buyerEmail: currentUser.email, 
