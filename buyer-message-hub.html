@@ -166,14 +166,20 @@
                 Supplier is typing...
             </div>
 
-            <div class="input-area" id="input-area" style="visibility:hidden;">
+            <div class="input-area" id="input-area" style="visibility:hidden; position: relative;">
+                <div id="emoji-wrapper-buy" style="display: none; position: absolute; bottom: 85px; left: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb;">
+                    <emoji-picker class="light"></emoji-picker>
+                </div>
+
                 <label for="buyer-file-upload" class="attach-btn">
                     <i class="fas fa-paperclip"></i>
                 </label>
                 <input type="file" id="buyer-file-upload" style="display:none;" accept="image/*,application/pdf" onchange="uploadBuyerFile(event)">
                 
+                <button class="attach-btn" style="border:none; background:transparent;" onclick="const ew = document.getElementById('emoji-wrapper-buy'); ew.style.display = ew.style.display === 'block' ? 'none' : 'block';"><i class="far fa-smile"></i></button>
+
                 <input type="text" id="reply-input" class="chat-input" placeholder="Type a message to the supplier..." onkeypress="if(event.key === 'Enter') sendReply()" oninput="handleTyping()">
-                <button class="send-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane"></i></button>
+                <button class="send-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane" style="margin-left: 8px;"></i></button>
             </div>
         </div>
 
