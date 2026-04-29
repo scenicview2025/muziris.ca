@@ -669,13 +669,13 @@
         const url = await ref.getDownloadURL();
         postToFeedBuy(url);
     }
-    function insertEmojiBuy(emoji) {
+    // 🟢 Listen for clicks on the full Emoji library
+    document.querySelector('#emoji-wrapper-buy emoji-picker').addEventListener('emoji-click', event => {
         const input = document.getElementById('feed-input-buy');
-        input.value += emoji;
+        input.value += event.detail.unicode; // Grabs the official emoji character
         input.focus();
-        document.getElementById('emoji-picker-buy').classList.add('hidden');
-        document.getElementById('emoji-picker-buy').classList.remove('flex');
-    }
+        document.getElementById('emoji-wrapper-buy').classList.add('hidden'); // Auto-close
+    });
   </script>
 </body>
 </html>
