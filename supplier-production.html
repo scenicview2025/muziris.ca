@@ -94,13 +94,22 @@
 
                     <div class="card">
                         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px;">
-                            <h3 style="color:var(--gold); margin:0; font-family:'Cinzel', serif;">Visual QC Vault</h3>
-                            <button class="btn-gold" style="padding:8px 15px; font-size:10px; width:auto;" onclick="document.getElementById('file-qc').click()">+ Upload Media</button>
-                            <input type="file" id="file-qc" class="hidden" accept="image/*,video/*" onchange="uploadQCMedia()">
+                            <h3 style="color:var(--gold); margin:0; font-family:'Cinzel', serif;"><i class="fas fa-comments"></i> Order Activity & QC Feed</h3>
                         </div>
-                        <p style="color:#888; font-size:12px; margin-bottom:15px;">Upload photos/videos of the production line. This acts as undeniable proof of quality for the buyer.</p>
+                        <p style="color:#888; font-size:12px; margin-bottom:15px;">Upload production photos, share certificates, and chat directly with the buyer about this specific order.</p>
                         
-                        <div class="gallery-grid" id="qc-gallery"></div>
+                        <div id="order-feed" style="height: 300px; overflow-y: auto; padding: 15px; background: #0b0e14; border: 1px solid #333; border-radius: 8px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 15px;">
+                            <div style="text-align: center; color: #666; font-size: 12px; margin-top: auto; margin-bottom: auto;">Loading activity...</div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; align-items: center; background: #000; padding: 5px; border-radius: 6px; border: 1px solid #333;">
+                            <label for="feed-file-sup" style="cursor: pointer; color: #888; font-size: 18px; padding: 0 10px; transition: 0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
+                                <i class="fas fa-paperclip"></i>
+                            </label>
+                            <input type="file" id="feed-file-sup" style="display: none;" accept="image/*,video/*,application/pdf" onchange="uploadFeedFileSup(event)">
+                            <input type="text" id="feed-input-sup" style="flex:1; background:transparent; border:none; color:#fff; outline:none; font-family:'Lato', sans-serif; font-size:13px;" placeholder="Post a status update or photo..." onkeypress="if(event.key === 'Enter') postToFeedSup()">
+                            <button onclick="postToFeedSup()" style="background:var(--gold); color:#000; border:none; padding:8px 20px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px; text-transform:uppercase;">Post</button>
+                        </div>
                     </div>
                 </div>
 
