@@ -418,6 +418,16 @@
             alert("This will navigate back to the global catalog page for this specific item.");
         }
 
+        // 🟢 NEW: Listen for Emoji Clicks
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+                const input = document.getElementById('reply-input');
+                input.value += event.detail.unicode;
+                input.focus();
+                document.getElementById('emoji-wrapper-buy').style.display = 'none';
+            });
+        });
+
     </script>
 </body>
 </html>
