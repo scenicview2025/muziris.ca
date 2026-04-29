@@ -638,9 +638,11 @@
                 const post = doc.data();
                 const isBuy = post.sender === 'buyer';
                 const align = isBuy ? 'self-end' : 'self-start';
-                const bg = isBuy ? 'bg-[var(--blue)] text-white' : 'bg-white text-gray-800 border border-gray-200';
+                
+                // 🟢 NEW: Black & Gold for Buyer, White & Gold for Factory
+                const bg = isBuy ? 'bg-[var(--void)] text-white border border-[var(--gold)]/30' : 'bg-white text-gray-800 border border-[var(--gold)]/50';
                 const name = isBuy ? 'You' : 'Factory';
-                const nameColor = isBuy ? 'text-blue-100' : 'text-gray-500';
+                const nameColor = isBuy ? 'text-[var(--gold)]' : 'text-[var(--gold-dark)]';
                 
                 let content = post.text;
                 let textClass = "text-sm leading-relaxed";
