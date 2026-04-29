@@ -107,35 +107,24 @@
                             <div style="text-align: center; color: #666; font-size: 12px; margin-top: auto; margin-bottom: auto;">Loading activity...</div>
                         </div>
                         
-                        <div style="position: relative;">
-                            <div id="emoji-picker-sup" style="display: none; position: absolute; bottom: 55px; left: 45px; background: #151922; border: 1px solid #333; border-radius: 8px; padding: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); z-index: 100; gap: 8px; flex-wrap: wrap; width: 180px;">
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('👍')">👍</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('✅')">✅</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('📦')">📦</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('🚢')">🚢</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('✈️')">✈️</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('📄')">📄</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('🏭')">🏭</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('📸')">📸</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('🤝')">🤝</span>
-                                <span style="cursor:pointer; font-size:18px; transition:0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="insertEmojiSup('⏳')">⏳</span>
+                        <div style="position: relative; width: 100%;">
+                            <div id="emoji-wrapper-sup" style="display: none; position: absolute; bottom: 55px; left: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.8); z-index: 100; border-radius: 8px; overflow: hidden; border: 1px solid #333;">
+                                <emoji-picker class="dark"></emoji-picker>
                             </div>
 
-                            <div style="display: flex; gap: 10px; align-items: center; background: #000; padding: 5px; border-radius: 6px; border: 1px solid #333;">
+                            <div style="display: flex; gap: 10px; align-items: center; background: #000; padding: 5px; border-radius: 6px; border: 1px solid #333; width: 100%;">
                                 <label for="feed-file-sup" style="cursor: pointer; color: #888; font-size: 18px; padding: 0 5px 0 10px; transition: 0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
                                     <i class="fas fa-paperclip"></i>
                                 </label>
                                 <input type="file" id="feed-file-sup" style="display: none;" accept="image/*,video/*,application/pdf" onchange="uploadFeedFileSup(event)">
                                 
-                                <button onclick="document.getElementById('emoji-picker-sup').style.display = document.getElementById('emoji-picker-sup').style.display === 'flex' ? 'none' : 'flex';" style="background:transparent; border:none; color:#888; font-size:18px; cursor:pointer; padding:0 5px; transition:0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'"><i class="far fa-smile"></i></button>
+                                <button onclick="const ew = document.getElementById('emoji-wrapper-sup'); ew.style.display = ew.style.display === 'block' ? 'none' : 'block';" style="background:transparent; border:none; color:#888; font-size:18px; cursor:pointer; padding:0 5px; transition:0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'"><i class="far fa-smile"></i></button>
 
                                 <input type="text" id="feed-input-sup" style="flex:1; background:transparent; border:none; color:#fff; outline:none; font-family:'Lato', sans-serif; font-size:13px;" placeholder="Post a status update or photo..." onkeypress="if(event.key === 'Enter') postToFeedSup()">
                                 <button onclick="postToFeedSup()" style="background:var(--gold); color:#000; border:none; padding:8px 20px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px; text-transform:uppercase;">Post</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
+                        
                 <div>
                     <div class="card" id="manifest-card" style="opacity: 0.5; pointer-events: none; position: relative;">
                         
