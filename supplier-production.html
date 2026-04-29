@@ -412,8 +412,8 @@
                         if(post.text.includes('.pdf')) content = `<a href="${post.text}" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:bold;"><i class="fas fa-file-pdf"></i> View Attached Document</a>`;
                         else content = `<img src="${post.text}" style="max-width: 200px; border-radius: 6px; cursor:pointer; border:1px solid #444;" onclick="window.open('${post.text}')">`;
                     } 
-                    // 🟢 NEW: Check if the string is ONLY emojis (and spaces)
-                    else if (/^[\p{Extended_Pictographic}\s]+$/u.test(post.text)) {
+                    // 🟢 NEW: Bulletproof check that allows invisible modifiers and skin tones!
+                    else if (/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji_Modifier}\uFE0F\u200D\s]+$/u.test(post.text)) {
                         textStyle = "font-size: 44px; line-height: 1.2; text-align: center; padding: 5px 0;";
                         content = `<div class="jumbo-emoji">${content}</div>`; // Wraps it in the animation!
                     }
