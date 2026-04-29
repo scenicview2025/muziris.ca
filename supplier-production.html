@@ -434,13 +434,14 @@
             postToFeedSup(url);
         }
 
-        function insertEmojiSup(emoji) {
+        // 🟢 Listen for clicks on the full Emoji library
+        document.querySelector('#emoji-wrapper-sup emoji-picker').addEventListener('emoji-click', event => {
             const input = document.getElementById('feed-input-sup');
-            input.value += emoji;
+            input.value += event.detail.unicode; // Grabs the official emoji character
             input.focus();
-            document.getElementById('emoji-picker-sup').style.display = 'none';
-        }
-
+            document.getElementById('emoji-wrapper-sup').style.display = 'none'; // Auto-close
+        });
+        
         // 🟢 DOC UPLOAD UI
         function handleDocUpload(inputId, btnId) {
             const btn = document.getElementById(btnId);
