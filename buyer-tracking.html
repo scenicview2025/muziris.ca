@@ -639,10 +639,15 @@
                 const isBuy = post.sender === 'buyer';
                 const align = isBuy ? 'self-end' : 'self-start';
                 
-                // 🟢 NEW: Black & Gold for Buyer, White & Gold for Factory
-                const bg = isBuy ? 'bg-[var(--void)] text-white border border-[var(--gold)]/30' : 'bg-white text-gray-800 border border-[var(--gold)]/50';
+                // 🟢 PREMIUM LUXURY THEME
+                // Buyer: Rich Slate (Charcoal) with a 3D shadow and delicate gold border
+                // Factory: Frosted off-white gradient with a very subtle gold hint
+                const bg = isBuy 
+                    ? 'bg-[var(--slate)] text-gray-100 border border-[var(--gold)]/40 shadow-lg shadow-black/10' 
+                    : 'bg-gradient-to-b from-white to-gray-50 text-gray-800 border border-[var(--gold)]/30 shadow-md shadow-black/5';
+                
                 const name = isBuy ? 'You' : 'Factory';
-                const nameColor = isBuy ? 'text-[var(--gold)]' : 'text-[var(--gold-dark)]';
+                const nameColor = isBuy ? 'text-[var(--gold)] tracking-widest drop-shadow-sm' : 'text-gray-500 tracking-widest';
                 
                 let content = post.text;
                 let textClass = "text-sm leading-relaxed";
