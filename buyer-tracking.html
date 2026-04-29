@@ -677,6 +677,13 @@
         const url = await ref.getDownloadURL();
         postToFeedBuy(url);
     }
+    function insertEmojiBuy(emoji) {
+        const input = document.getElementById('feed-input-buy');
+        input.value += emoji;
+        input.focus();
+        document.getElementById('emoji-picker-buy').classList.add('hidden');
+        document.getElementById('emoji-picker-buy').classList.remove('flex');
+    }
   </script>
 </body>
 </html>
