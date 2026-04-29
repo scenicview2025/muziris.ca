@@ -394,15 +394,21 @@
                     const nameColor = isSup ? 'var(--gold)' : '#fff';
                     
                     let content = post.text;
+                    let textStyle = "font-size: 13px; line-height: 1.5;";
+                    
                     if(post.text.startsWith('http')) {
                         if(post.text.includes('.pdf')) content = `<a href="${post.text}" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:bold;"><i class="fas fa-file-pdf"></i> View Attached Document</a>`;
                         else content = `<img src="${post.text}" style="max-width: 200px; border-radius: 6px; cursor:pointer; border:1px solid #444;" onclick="window.open('${post.text}')">`;
+                    } 
+                    // 🟢 NEW: Check if the string is ONLY emojis (and spaces)
+                    else if (/^[\p{Extended_Pictographic}\s]+$/u.test(post.text)) {
+                        textStyle = "font-size: 44px; line-height: 1.2; text-align: center; padding: 5px 0;";
                     }
                     
                     feedBox.innerHTML += `
                         <div style="align-self: ${align}; background: ${bg}; border: ${border}; padding: 10px 15px; border-radius: 8px; max-width: 80%;">
                             <div style="font-size: 10px; font-weight: bold; color: ${nameColor}; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">${name}</div>
-                            <div style="font-size: 13px; line-height: 1.5; color: #e0e0e0;">${content}</div>
+                            <div style="${textStyle} color: #e0e0e0;">${content}</div>
                         </div>
                     `;
                 });
