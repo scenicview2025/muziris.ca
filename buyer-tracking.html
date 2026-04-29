@@ -590,6 +590,72 @@
               console.error("Error listening to messages:", error);
           });
     }
+
+    // ==========================================
+    // 🟢 REAL-TIME ORDER FEED LOGIC (Buyer Side)
+    // ==========================================
+    let activeRfqId = null;
+    let feedUnsubscribe = null;
+    
+    function loadOrderFeed(rfqId) {
+        activeRfqId = rfqId;
+        const feedBox = document.getElementById('buyer-order-feed');
+        if(feedUnsubscribe) feedUnsubscribe();
+        
+        feedUnsubscribe = db.collection('order_feed').doc(rfqId).collection('posts').orderBy('timestamp', 'asc').onSnapshot(snap => {
+            feedBox.innerHTML = '';
+            if(snap.empty) {
+                feedBox.innerHTML = '<div class="text-center text-gray-400 text-sm py-10 my-auto">No activity yet. Request an update or certificate from the factory here!</div>';
+                return;
+            }
+            snap.forEach(doc => {
+                const post = doc.data();
+                const isBuy = post.sender === 'buyer';
+                const align = isBuy ? 'self-end' : 'self-start';
+                const bg = isBuy ? 'bg-[var(--blue)] text-white' : 'bg-white text-gray-800 border border-gray-200';
+                const name = isBuy ? 'You' : 'Factory';
+                const nameColor = isBuy ? 'text-blue-100' : 'text-gray-500';
+                
+                let content = post.text;
+                if(post.text.startsWith('http')) {
+                    if(post.text.includes('.pdf')) content = `<a href="${post.text}" target="_blank" class="underline font-bold"><i class="fas fa-file-pdf"></i> View Attached Document</a>`;
+                    else content = `<img src="${post.text}" class="max-w-[200px] rounded-lg cursor-pointer border ${isBuy ? 'border-white/20' : 'border-gray-200'}" onclick="window.open('${post.text}')">`;
+                }
+                
+                feedBox.innerHTML += `
+                    <div class="${align} ${bg} p-3 md:p-4 rounded-2xl max-w-[85%] md:max-w-[70%] shadow-sm">
+                        <div class="text-[10px] font-bold ${nameColor} mb-1 uppercase tracking-widest">${name}</div>
+                        <div class="text-sm leading-relaxed">${content}</div>
+                    </div>
+                `;
+            });
+            feedBox.scrollTop = feedBox.scrollHeight;
+        });
+    }
+    
+    async function postToFeedBuy(textOverride = null) {
+        const input = document.getElementById('feed-input-buy');
+        const text = textOverride || input.value.trim();
+        if(!text || !activeRfqId) return;
+        
+        input.value = '';
+        await db.collection('order_feed').doc(activeRfqId).collection('posts').add({
+            sender: 'buyer',
+            text: text,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    }
+
+    async function uploadFeedFileBuy(event) {
+        const file = event.target.files[0];
+        if(!file || !activeRfqId) return;
+        
+        document.getElementById('buyer-order-feed').innerHTML += `<div class="text-center text-[var(--gold)] text-sm font-bold py-2"><i class="fas fa-spinner fa-spin"></i> Uploading secure media...</div>`;
+        const ref = storage.ref(`order_feed/${activeRfqId}/${Date.now()}_${file.name}`);
+        await ref.put(file);
+        const url = await ref.getDownloadURL();
+        postToFeedBuy(url);
+    }
   </script>
 </body>
 </html>
