@@ -516,15 +516,14 @@
         function addChatMessage(sender, text, type) {
             const history = document.getElementById('chat-history'), msgDiv = document.createElement('div');
             
-            // 🟢 FIX: Clean white backgrounds, custom borders, soft shadows, and forced word-wrapping!
             if (type === 'system') {
                 msgDiv.style.cssText = "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600; overflow-wrap: anywhere; word-break: break-word;";
             } else if (type === 'buyer') {
-                // Buyer (You): Crisp white, shining gold border, soft gold shadow
-                msgDiv.style.cssText = "align-self:flex-end; background:#ffffff; color:#111827; border: 1px solid var(--gold); padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:85%; font-weight:500; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2); overflow-wrap: anywhere; word-break: break-word;";
+                // 🟢 FIX: Buyer (You) - Crisp white, shining gold outer glow, subtle inner gold glow
+                msgDiv.style.cssText = "align-self:flex-end; background:#ffffff; color:#111827; border: 1px solid rgba(212, 175, 55, 0.9); padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:85%; font-weight:500; box-shadow: 0 0 15px rgba(212, 175, 55, 0.45), inset 0 0 10px rgba(212, 175, 55, 0.15); overflow-wrap: anywhere; word-break: break-word;";
             } else {
-                // Factory: Crisp white, neutral grey border, soft grey shadow
-                msgDiv.style.cssText = "align-self:flex-start; background:#ffffff; color:#111827; border: 1px solid #d1d5db; padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:85%; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow-wrap: anywhere; word-break: break-word;";
+                // 🟢 FIX: Factory - Crisp white, shining silver outer glow, subtle inner silver glow
+                msgDiv.style.cssText = "align-self:flex-start; background:#ffffff; color:#111827; border: 1px solid rgba(156, 163, 175, 0.8); padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:85%; box-shadow: 0 0 15px rgba(156, 163, 175, 0.4), inset 0 0 10px rgba(156, 163, 175, 0.15); overflow-wrap: anywhere; word-break: break-word;";
             }
             
             let content = text;
@@ -537,14 +536,13 @@
                 content = `<div class="jumbo-emoji">${text}</div>`;
             } 
             else {
-                // 🟢 FIX: Added word-break to the link tag to trap long URLs
                 content = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: var(--gold-dark); font-weight: bold; text-decoration: underline; word-break: break-all;">$1</a>').replace(/\n/g, '<br>');
             }
             
             msgDiv.innerHTML = content;
             history.appendChild(msgDiv); history.scrollTop = history.scrollHeight;
         }
-
+        
         // 🟢 NEW: Typing Detector Logic
         function handleTyping() {
             if (!currentUser || !targetProduct) return;
