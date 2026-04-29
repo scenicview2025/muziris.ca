@@ -280,8 +280,25 @@
                         </button>
                     </div>
                 </div>
-
             </div>
+
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 mt-8 shadow-sm">
+                <h3 class="text-lg font-bold text-gray-900 brand-font border-b border-gray-100 pb-4 mb-6"><i class="fas fa-comments text-[var(--gold)] mr-2"></i> Order Activity & Updates</h3>
+                
+                <div id="buyer-order-feed" class="flex flex-col gap-4 overflow-y-auto bg-gray-50 border border-gray-100 rounded-xl p-4 md:p-6 mb-6" style="height: 400px;">
+                    <div class="text-center text-gray-400 text-sm py-10 my-auto">Loading timeline...</div>
+                </div>
+                
+                <div class="flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-2 pl-4 focus-within:border-[var(--gold)] transition shadow-sm">
+                    <label for="feed-file-buy" class="cursor-pointer text-gray-400 hover:text-[var(--gold)] transition text-xl">
+                        <i class="fas fa-paperclip"></i>
+                    </label>
+                    <input type="file" id="feed-file-buy" class="hidden" accept="image/*,application/pdf" onchange="uploadFeedFileBuy(event)">
+                    <input type="text" id="feed-input-buy" class="flex-1 outline-none text-sm text-gray-700 bg-transparent" placeholder="Ask for a certificate, upload a reference, or comment..." onkeypress="if(event.key === 'Enter') postToFeedBuy()">
+                    <button class="bg-[var(--gold)] hover:bg-[#b89225] text-black px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest transition" onclick="postToFeedBuy()">Post</button>
+                </div>
+            </div>
+
         </div>
     </div>
   </div>
