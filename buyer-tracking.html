@@ -631,15 +631,21 @@
                 const nameColor = isBuy ? 'text-blue-100' : 'text-gray-500';
                 
                 let content = post.text;
+                let textClass = "text-sm leading-relaxed";
+                
                 if(post.text.startsWith('http')) {
                     if(post.text.includes('.pdf')) content = `<a href="${post.text}" target="_blank" class="underline font-bold"><i class="fas fa-file-pdf"></i> View Attached Document</a>`;
                     else content = `<img src="${post.text}" class="max-w-[200px] rounded-lg cursor-pointer border ${isBuy ? 'border-white/20' : 'border-gray-200'}" onclick="window.open('${post.text}')">`;
+                } 
+                // 🟢 NEW: Check if the string is ONLY emojis (and spaces)
+                else if (/^[\p{Extended_Pictographic}\s]+$/u.test(post.text)) {
+                    textClass = "text-5xl leading-none py-2 text-center";
                 }
                 
                 feedBox.innerHTML += `
                     <div class="${align} ${bg} p-3 md:p-4 rounded-2xl max-w-[85%] md:max-w-[70%] shadow-sm">
                         <div class="text-[10px] font-bold ${nameColor} mb-1 uppercase tracking-widest">${name}</div>
-                        <div class="text-sm leading-relaxed">${content}</div>
+                        <div class="${textClass}">${content}</div>
                     </div>
                 `;
             });
