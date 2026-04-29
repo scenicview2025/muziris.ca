@@ -378,10 +378,11 @@
         renderListView();
       })
       .catch(err => {
-        document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold'>Database Connection Failed.</div>";
+        // 🟢 NEW: Tell the buyer the server is waking up!
+        console.error(err);
+        document.getElementById('loader').innerHTML = `<div style="text-align:center; padding:50px; color:var(--gold); font-weight:bold;"><i class="fas fa-satellite-dish fa-spin" style="margin-right:8px;"></i> Waking up secure server... Please refresh the page in 30 seconds.</div>`;
       });
     }
-
     function renderListView() {
       document.getElementById('loader').style.display = 'none';
       document.getElementById('list-view').style.display = 'block';
