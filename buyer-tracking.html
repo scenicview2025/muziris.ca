@@ -301,6 +301,8 @@
     
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const auth = firebase.auth();
+    const db = firebase.firestore(); 
+    const storage = firebase.storage(); // 🟢 Need storage for attachments
 
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     const urlParams = new URLSearchParams(window.location.search);
