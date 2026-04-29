@@ -565,8 +565,10 @@
         } else {
             document.getElementById('detail-total').innerText = "Pending Validation";
         }
+        
+        // 🟢 Load the activity feed for this specific order!
+        loadOrderFeed(rfq.rfq_id);
     }
-
     // ==========================================
     // 🟢 REAL-TIME UNREAD MESSAGE LISTENER
     // ==========================================
