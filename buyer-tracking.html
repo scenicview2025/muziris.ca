@@ -115,11 +115,15 @@
       .details-grid { grid-template-columns: 1fr; }
     }
 
-    /* 🟢 FIX: Stop shaking and force Native OS Emoji Fonts */
+    /* 🟢 FIX: Force Google's Universal Emoji Font so there are no blank boxes */
         .jumbo-emoji {
             display: inline-block;
-            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
-            /* Note: Animation removed to prevent the Firebase 'Earthquake' re-render glitch */
+            font-family: 'Noto Color Emoji', sans-serif !important;
+        }
+        
+        /* This applies the fix to smaller inline emojis in the chat feed too */
+        #order-feed, #buyer-order-feed {
+            font-family: 'Inter', 'Lato', 'Noto Color Emoji', sans-serif;
         }
   </style>
 </head>
