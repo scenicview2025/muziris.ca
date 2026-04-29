@@ -640,6 +640,7 @@
                 // 🟢 NEW: Check if the string is ONLY emojis (and spaces)
                 else if (/^[\p{Extended_Pictographic}\s]+$/u.test(post.text)) {
                     textClass = "text-5xl leading-none py-2 text-center";
+                    content = `<div class="jumbo-emoji">${content}</div>`; // Wraps it in the animation!
                 }
                 
                 feedBox.innerHTML += `
