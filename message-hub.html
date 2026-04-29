@@ -1131,6 +1131,17 @@
                 content.innerHTML = '<div style="padding:50px; color:var(--alert); text-align:center; width:100%;">Error loading details. Ensure server is connected.</div>';
             }
         }
+
+        // 🟢 NEW: Listen for Emoji Clicks
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+                const input = document.getElementById('reply-input');
+                input.value += event.detail.unicode;
+                input.focus();
+                document.getElementById('emoji-wrapper-sup').style.display = 'none';
+            });
+        });
+        
     </script>
 </body>
 </html>
