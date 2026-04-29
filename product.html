@@ -515,8 +515,22 @@
 
         function addChatMessage(sender, text, type) {
             const history = document.getElementById('chat-history'), msgDiv = document.createElement('div');
-            msgDiv.style.cssText = type === 'system' ? "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600;" : type === 'buyer' ? "align-self:flex-end; background:#f3f4f6; color:#111; padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:80%;" : "align-self:flex-start; background:var(--void); color:#fff; padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:80%;";
-            msgDiv.innerHTML = text.startsWith('http') ? `<a href="${text}" target="_blank"><img src="${text}" style="max-width: 100%; border-radius: 8px;"></a>` : text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: var(--gold-dark); text-decoration: underline;">$1</a>').replace(/\n/g, '<br>');
+            msgDiv.style.cssText = type === 'system' ? "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600;" : type === 'buyer' ? "align-self:flex-end; background:var(--gold); color:#111; padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:80%; font-weight:500; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);" : "align-self:flex-start; background:var(--void); color:#fff; padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:80%;";
+            
+            let content = text;
+            
+            if (text.startsWith('http')) {
+                content = `<a href="${text}" target="_blank"><img src="${text}" style="max-width: 100%; border-radius: 8px;"></a>`;
+            } 
+            // 🟢 NEW: Jumbo Emoji Detection for Product Chat Widget
+            else if (/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji_Modifier}\uFE0F\u200D\s]+$/u.test(text)) {
+                content = `<div class="jumbo-emoji">${text}</div>`;
+            } 
+            else {
+                content = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: var(--text-dark); font-weight: bold; text-decoration: underline;">$1</a>').replace(/\n/g, '<br>');
+            }
+            
+            msgDiv.innerHTML = content;
             history.appendChild(msgDiv); history.scrollTop = history.scrollHeight;
         }
 
