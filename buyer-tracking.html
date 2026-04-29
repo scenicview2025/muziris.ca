@@ -639,12 +639,12 @@
                 const isBuy = post.sender === 'buyer';
                 const align = isBuy ? 'self-end' : 'self-start';
                 
-                // 🟢 PREMIUM LUXURY THEME
-                // Buyer: Rich Slate (Charcoal) with a 3D shadow and delicate gold border
-                // Factory: Frosted off-white gradient with a very subtle gold hint
+                // 🟢 FIX: Hardcoded hex colors to prevent CSS variable conflicts!
+                // Buyer (You): Deep elegant Charcoal (#151922) with crisp white text.
+                // Factory: Pure crisp white with dark gray text.
                 const bg = isBuy 
-                    ? 'bg-[var(--slate)] text-gray-100 border border-[var(--gold)]/40 shadow-lg shadow-black/10' 
-                    : 'bg-gradient-to-b from-white to-gray-50 text-gray-800 border border-[var(--gold)]/30 shadow-md shadow-black/5';
+                    ? 'bg-[#151922] text-white border border-[var(--gold)]/40 shadow-md' 
+                    : 'bg-white text-gray-800 border border-gray-200 shadow-sm';
                 
                 const name = isBuy ? 'You' : 'Factory';
                 const nameColor = isBuy ? 'text-[var(--gold)] tracking-widest drop-shadow-sm' : 'text-gray-500 tracking-widest';
