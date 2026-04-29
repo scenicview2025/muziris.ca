@@ -340,46 +340,67 @@
             });
         }
 
-        // 🟢 CLOUDINARY MEDIA UPLOAD
-        function uploadQCMedia() {
-            const fileInput = document.getElementById('file-qc');
-            const file = fileInput.files[0];
-            if(!file) return;
-
-            const gallery = document.getElementById('qc-gallery');
-            const placeholderId = 'upload_' + Date.now();
-            gallery.innerHTML += `<div class="media-card" id="${placeholderId}" style="display:flex; justify-content:center; align-items:center; color:var(--gold);"><i class="fas fa-spinner fa-spin text-2xl"></i></div>`;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Data = e.target.result.split(',')[1]; 
-                
-                fetch(API_BASE_URL + '/upload-media', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        supplierId: supplierId,
-                        fileName: file.name,
-                        mimeType: file.type,
-                        fileData: base64Data
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.url) {
-                        let isVideo = file.type.includes('video');
-                        let mediaTag = isVideo ? `<video src="${data.url}" muted autoplay loop></video>` : `<img src="${data.url}">`;
-                        document.getElementById(placeholderId).innerHTML = mediaTag;
-                    } else {
-                        document.getElementById(placeholderId).remove();
-                        alert("Upload failed.");
+        // 🟢 REAL-TIME ORDER FEED LOGIC
+        let feedUnsubscribe = null;
+        
+        function loadOrderFeed(rfqId) {
+            const feedBox = document.getElementById('order-feed');
+            if(feedUnsubscribe) feedUnsubscribe();
+            
+            feedUnsubscribe = db.collection('order_feed').doc(rfqId).collection('posts').orderBy('timestamp', 'asc').onSnapshot(snap => {
+                feedBox.innerHTML = '';
+                if(snap.empty) {
+                    feedBox.innerHTML = '<div style="text-align: center; color: #666; font-size: 12px; margin-top: auto; margin-bottom: auto;">No activity yet. Post a production update to notify the buyer!</div>';
+                    return;
+                }
+                snap.forEach(doc => {
+                    const post = doc.data();
+                    const isSup = post.sender === 'supplier';
+                    const align = isSup ? 'flex-end' : 'flex-start';
+                    const bg = isSup ? 'rgba(212,175,55,0.1)' : '#1a1e26';
+                    const border = isSup ? '1px solid rgba(212,175,55,0.3)' : '1px solid #333';
+                    const name = isSup ? 'Factory (You)' : 'Buyer';
+                    const nameColor = isSup ? 'var(--gold)' : '#fff';
+                    
+                    let content = post.text;
+                    if(post.text.startsWith('http')) {
+                        if(post.text.includes('.pdf')) content = `<a href="${post.text}" target="_blank" style="color:var(--blue); text-decoration:underline; font-weight:bold;"><i class="fas fa-file-pdf"></i> View Attached Document</a>`;
+                        else content = `<img src="${post.text}" style="max-width: 200px; border-radius: 6px; cursor:pointer; border:1px solid #444;" onclick="window.open('${post.text}')">`;
                     }
-                }).catch(err => {
-                    document.getElementById(placeholderId).remove();
-                    alert("Network error.");
+                    
+                    feedBox.innerHTML += `
+                        <div style="align-self: ${align}; background: ${bg}; border: ${border}; padding: 10px 15px; border-radius: 8px; max-width: 80%;">
+                            <div style="font-size: 10px; font-weight: bold; color: ${nameColor}; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">${name}</div>
+                            <div style="font-size: 13px; line-height: 1.5; color: #e0e0e0;">${content}</div>
+                        </div>
+                    `;
                 });
-            };
-            reader.readAsDataURL(file);
+                feedBox.scrollTop = feedBox.scrollHeight;
+            });
+        }
+        
+        async function postToFeedSup(textOverride = null) {
+            const input = document.getElementById('feed-input-sup');
+            const text = textOverride || input.value.trim();
+            if(!text || !activeOrderContext) return;
+            
+            input.value = '';
+            await db.collection('order_feed').doc(activeOrderContext.rfq_id).collection('posts').add({
+                sender: 'supplier',
+                text: text,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+
+        async function uploadFeedFileSup(event) {
+            const file = event.target.files[0];
+            if(!file || !activeOrderContext) return;
+            
+            document.getElementById('order-feed').innerHTML += `<div style="text-align:center; color:var(--gold); font-size:12px;"><i class="fas fa-spinner fa-spin"></i> Uploading secure media...</div>`;
+            const ref = storage.ref(`order_feed/${activeOrderContext.rfq_id}/${Date.now()}_${file.name}`);
+            await ref.put(file);
+            const url = await ref.getDownloadURL();
+            postToFeedSup(url);
         }
 
         // 🟢 DOC UPLOAD UI
