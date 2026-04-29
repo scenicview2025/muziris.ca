@@ -657,31 +657,33 @@
                 const isBuy = post.sender === 'buyer';
                 const align = isBuy ? 'self-end' : 'self-start';
                 
-                // 🟢 FIX: Hardcoded hex colors to prevent CSS variable conflicts!
-                // Buyer (You): Deep elegant Charcoal (#151922) with crisp white text.
-                // Factory: Pure crisp white with dark gray text.
-                const bg = isBuy 
-                    ? 'bg-[#151922] text-white border border-[var(--gold)]/40 shadow-md' 
-                    : 'bg-white text-gray-800 border border-gray-200 shadow-sm';
+                // 🟢 NEW: Use the glowing neon CSS classes we defined in the style block
+                const bgClass = isBuy ? 'feed-msg-buyer' : 'feed-msg-factory';
                 
                 const name = isBuy ? 'You' : 'Factory';
-                const nameColor = isBuy ? 'text-[var(--gold)] tracking-widest drop-shadow-sm' : 'text-gray-500 tracking-widest';
+                const nameColor = isBuy ? 'text-[var(--gold-dark)] tracking-widest' : 'text-gray-500 tracking-widest';
                 
                 let content = post.text;
                 let textClass = "text-sm leading-relaxed";
                 
-                if(post.text.startsWith('http')) {
-                    if(post.text.includes('.pdf')) content = `<a href="${post.text}" target="_blank" class="underline font-bold"><i class="fas fa-file-pdf"></i> View Attached Document</a>`;
-                    else content = `<img src="${post.text}" class="max-w-[200px] rounded-lg cursor-pointer border ${isBuy ? 'border-white/20' : 'border-gray-200'}" onclick="window.open('${post.text}')">`;
+                if(post.text.startsWith('http') && !post.text.includes(' ')) {
+                    if(post.text.includes('.pdf')) {
+                        content = `<a href="${post.text}" target="_blank" class="underline font-bold text-[var(--gold-dark)]" style="word-break: break-all;"><i class="fas fa-file-pdf"></i> View Attached Document</a>`;
+                    } else {
+                        content = `<img src="${post.text}" class="max-w-[200px] rounded-lg cursor-pointer border border-gray-200" onclick="window.open('${post.text}')">`;
+                    }
                 } 
-                // 🟢 NEW: Bulletproof check that allows invisible modifiers and skin tones!
                 else if (/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji_Modifier}\uFE0F\u200D\s]+$/u.test(post.text)) {
                     textClass = "text-5xl leading-none py-2 text-center";
-                    content = `<div class="jumbo-emoji">${content}</div>`; // Wraps it in the animation!
+                    content = `<div class="jumbo-emoji">${post.text}</div>`;
+                }
+                else {
+                    // 🟢 FIX: Parse standard text for URLs and force them to wrap
+                    content = post.text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: var(--gold-dark); font-weight: bold; text-decoration: underline; word-break: break-all;">$1</a>').replace(/\n/g, '<br>');
                 }
                 
                 feedBox.innerHTML += `
-                    <div class="${align} ${bg} p-3 md:p-4 rounded-2xl max-w-[85%] md:max-w-[70%] shadow-sm">
+                    <div class="${align} ${bgClass} p-3 md:p-4 rounded-2xl max-w-[85%] md:max-w-[70%]">
                         <div class="text-[10px] font-bold ${nameColor} mb-1 uppercase tracking-widest">${name}</div>
                         <div class="${textClass}">${content}</div>
                     </div>
