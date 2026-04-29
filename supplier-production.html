@@ -403,6 +403,7 @@
                     // 🟢 NEW: Check if the string is ONLY emojis (and spaces)
                     else if (/^[\p{Extended_Pictographic}\s]+$/u.test(post.text)) {
                         textStyle = "font-size: 44px; line-height: 1.2; text-align: center; padding: 5px 0;";
+                        content = `<div class="jumbo-emoji">${content}</div>`; // Wraps it in the animation!
                     }
                     
                     feedBox.innerHTML += `
