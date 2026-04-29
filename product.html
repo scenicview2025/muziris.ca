@@ -582,6 +582,17 @@
             await db.collection('chats').doc(chatId).collection('messages').add({ sender: "buyer", text: fileUrl, timestamp: firebase.firestore.FieldValue.serverTimestamp(), productId: targetProduct.id, productName: targetProduct.name });
             await db.collection('chats').doc(chatId).set({ buyerEmail: currentUser.email, supplierId: targetProduct.supplierId, lastMessage: "📎 Sent an attachment", lastUpdated: firebase.firestore.FieldValue.serverTimestamp(), unreadBySupplier: true }, { merge: true });
         }
+
+    // 🟢 NEW: Listen for Emoji Clicks inside the floating chat
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+                const input = document.getElementById('chat-input');
+                input.value += event.detail.unicode;
+                input.focus();
+                document.getElementById('emoji-wrapper-prod').style.display = 'none';
+            });
+        });
+        
     </script>
 </body>
 </html>
