@@ -217,14 +217,21 @@
             Supplier is typing...
         </div>
 
-        <div style="padding:15px; background:#fff; border-top:1px solid var(--border-light); display:flex; gap:10px; align-items:center;">
+        <div style="padding:15px; background:#fff; border-top:1px solid var(--border-light); display:flex; gap:10px; align-items:center; position: relative;">
+            
+            <div id="emoji-wrapper-prod" style="display: none; position: absolute; bottom: 65px; left: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 10000; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb;">
+                <emoji-picker class="light"></emoji-picker>
+            </div>
+
             <label for="chat-file-upload" style="cursor:pointer; color:#888; font-size:18px; padding:5px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
                 <i class="fas fa-paperclip"></i>
             </label>
             <input type="file" id="chat-file-upload" style="display:none;" accept="image/*,video/*" onchange="uploadChatFile(event)">
             
+            <button onclick="const ew = document.getElementById('emoji-wrapper-prod'); ew.style.display = ew.style.display === 'block' ? 'none' : 'block';" style="background:transparent; border:none; color:#888; font-size:18px; cursor:pointer; padding:5px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'"><i class="far fa-smile"></i></button>
+
             <input type="text" id="chat-input" placeholder="Type a message..." style="flex:1; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; outline:none; font-size:13px;" onkeypress="if(event.key === 'Enter') sendSupplierMessage()" oninput="handleTyping()">
-            <button onclick="sendSupplierMessage()" style="background:var(--void); color:var(--gold); border:none; padding:0 15px; border-radius:8px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+            <button onclick="sendSupplierMessage()" style="background:var(--void); color:var(--gold); border:none; padding:0 15px; border-radius:8px; cursor:pointer; height: 40px;"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
