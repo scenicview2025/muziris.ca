@@ -56,10 +56,13 @@
         .header-prod-id { font-size: 12px; color: var(--gold); font-weight: 600; margin-top: 4px; }
 
         .messages-container { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 70%; padding: 12px 18px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
         
-        /* 🟢 PREMIUM MESSAGE BUBBLES */
-        .msg-buyer { align-self: flex-end; background: var(--gold); color: #111827; border: none; border-bottom-right-radius: 2px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); font-weight: 500; }        .msg-supplier { align-self: flex-start; background: #fff; color: #111827; border: 1px solid #e5e7eb; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        /* 🟢 FIX: Added word-break to trap long URLs inside the bubble */
+        .msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; word-break: break-word; }
+        
+        /* 🟢 PREMIUM MESSAGE BUBBLES - NEON GLOW */
+        .msg-buyer { align-self: flex-end; background: #ffffff; color: #111827; border: 1px solid rgba(212, 175, 55, 0.9); border-bottom-right-radius: 2px; font-weight: 500; box-shadow: 0 0 15px rgba(212, 175, 55, 0.45), inset 0 0 10px rgba(212, 175, 55, 0.15); }
+        .msg-supplier { align-self: flex-start; background: #ffffff; color: #111827; border: 1px solid rgba(156, 163, 175, 0.8); border-bottom-left-radius: 2px; box-shadow: 0 0 15px rgba(156, 163, 175, 0.4), inset 0 0 10px rgba(156, 163, 175, 0.15); }
         .msg-system { align-self: center; background: #fffbeb; color: #d97706; border: 1px solid #fde68a; font-size: 11px; font-weight: 600; padding: 8px 16px; border-radius: 20px; text-align: center; }
         
         .input-area { padding: 20px 30px; background: #fff; border-top: none; display: flex; gap: 15px; align-items: center; }
