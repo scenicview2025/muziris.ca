@@ -175,6 +175,19 @@
     </div>
 
     <script>
+        // 🟢 NEW: Initialize Firebase for the Order Feed
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+            authDomain: "muziris-ac9dd.firebaseapp.com",
+            projectId: "muziris-ac9dd",
+            storageBucket: "muziris-ac9dd.firebasestorage.app",
+            messagingSenderId: "929662963272",
+            appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
         const supplierId = localStorage.getItem('verifiedSupplierId');
         let currentActiveOrders = [];
