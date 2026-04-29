@@ -271,7 +271,7 @@
             }
 
             setMilestone(1);
-            document.getElementById('qc-gallery').innerHTML = ''; // In real app, fetch existing photos
+            loadOrderFeed(rfqId); // 🟢 Loads the specific activity feed for this order
         }
 
         function showList() {
