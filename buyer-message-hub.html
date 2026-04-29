@@ -302,6 +302,10 @@
                         if (msg.text && msg.text.startsWith('https://firebasestorage')) {
                             content = `<a href="${msg.text}" target="_blank"><img src="${msg.text}" style="max-width: 250px; border-radius: 8px; cursor: pointer;"></a>`;
                         }
+                        // 🟢 NEW: Jumbo Emoji Detection (Bulletproof Regex)
+                        else if (/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji_Modifier}\uFE0F\u200D\s]+$/u.test(msg.text)) {
+                            content = `<div class="jumbo-emoji">${content}</div>`;
+                        }
 
                         msgContainer.innerHTML += `
                             <div class="msg msg-${type}">
