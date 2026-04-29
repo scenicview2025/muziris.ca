@@ -260,12 +260,18 @@
                 <button onclick="clearSelectedFile()" style="background:transparent; border:none; color:var(--alert); cursor:pointer; font-size:16px;"><i class="fas fa-times-circle"></i></button>
             </div>
 
-            <div class="input-area" id="input-area" style="visibility:hidden;">
+            <div class="input-area" id="input-area" style="visibility:hidden; position: relative;">
+                <div id="emoji-wrapper-sup" style="display: none; position: absolute; bottom: 85px; left: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); z-index: 100; border-radius: 8px; overflow: hidden; border: 1px solid #333;">
+                    <emoji-picker class="dark"></emoji-picker>
+                </div>
+
                 <label for="supplier-file-upload" style="cursor:pointer; color:#888; font-size:20px; padding:10px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
                     <i class="fas fa-paperclip"></i>
                 </label>
                 <input type="file" id="supplier-file-upload" style="display:none;" accept="image/*,video/*,application/pdf" onchange="handleFileSelect(event)">
                 
+                <button onclick="const ew = document.getElementById('emoji-wrapper-sup'); ew.style.display = ew.style.display === 'block' ? 'none' : 'block';" style="background:transparent; border:none; color:#888; font-size:20px; cursor:pointer; padding:10px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'"><i class="far fa-smile"></i></button>
+
                 <input type="text" id="reply-input" class="chat-input" placeholder="Type your secure reply..." onkeypress="if(event.key === 'Enter') sendReply()" oninput="handleTyping()">
                 <button class="send-btn" id="send-msg-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i></button>
             </div>
