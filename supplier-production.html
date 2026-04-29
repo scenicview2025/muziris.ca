@@ -444,6 +444,13 @@
             postToFeedSup(url);
         }
 
+        function insertEmojiSup(emoji) {
+            const input = document.getElementById('feed-input-sup');
+            input.value += emoji;
+            input.focus();
+            document.getElementById('emoji-picker-sup').style.display = 'none';
+        }
+
         // 🟢 DOC UPLOAD UI
         function handleDocUpload(inputId, btnId) {
             const btn = document.getElementById(btnId);
