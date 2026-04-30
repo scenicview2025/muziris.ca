@@ -10,15 +10,17 @@
     :root {
       --gold: #D4AF37;
       --dark-gold: #b89225;
-      --bg-dark: #07090d;
-      --text-light: #e8e8e8;
-      --text-muted: #a0a0a0;
+      --bg-light: #ffffff;
+      --bg-offwhite: #fafafa;
+      --text-dark: #111827; /* Deep charcoal, softer than pure black */
+      --text-muted: #4b5563;
+      --border-soft: #e5e7eb;
     }
 
     /* ✨ 1. The Ultimate Reset ✨ */
     html {
       box-sizing: border-box;
-      overflow-y: scroll; /* Force the scrollbar to ALWAYS exist, stopping the JS layout jump */
+      overflow-y: scroll; 
       overflow-x: hidden;
     }
     
@@ -30,10 +32,9 @@
       margin: 0;
       padding: 0;
       font-family: 'Lato', sans-serif;
-      background-color: #000;
-      color: var(--text-light);
+      background-color: var(--bg-offwhite);
+      color: var(--text-dark);
       scroll-behavior: smooth;
-      /* Removed overflow declarations from body, they belong on HTML to prevent desktop bugs */
     }
 
     /* --- 1. THE STABLE BACKGROUND VIDEO --- */
@@ -41,42 +42,42 @@
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;   /* ✨ Replaced width: 100% with absolute edge snapping */
-      bottom: 0;  /* ✨ Replaced height: 100% with absolute edge snapping */
+      right: 0;   
+      bottom: 0;  
       z-index: 0; 
       overflow: hidden;
-      pointer-events: none; /* Stops the background from ever interacting with the mouse/scroll */
+      pointer-events: none; 
     }
     
     .fixed-bg video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.9;
+      opacity: 0.85; /* Slightly less opaque so it feels lighter */
     }
 
     .fixed-overlay {
       z-index: 1;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.15); /* Much lighter overlay for the white theme */
     }
 
     /* --- 2. THE SCROLLING CONTENT LAYER --- */
     .scrolling-layer {
       position: relative;
       z-index: 2; 
-      /* ✨ Removed width: 100%. Block elements naturally fill their container perfectly without math errors. */
     }
 
     .content-block {
-      background: var(--bg-dark);
+      background: var(--bg-light);
       padding: 80px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      box-shadow: 0 0 40px rgba(0,0,0,0.8); 
-      /* ✨ Removed width: 100% here as well. Let the browser's native rendering engine handle the bounds. */
+      /* 🟢 Soft, airy drop shadow instead of harsh black */
+      box-shadow: 0 -15px 40px rgba(0,0,0,0.06); 
     }
+
     /* --- CINEMATIC FADE-IN ANIMATION --- */
     .fade-in-up {
       opacity: 0;
@@ -105,27 +106,27 @@
       font-family: 'Cinzel', serif;
       color: var(--gold);
       font-size: 3.8rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 6px;
       text-transform: uppercase;
       margin-bottom: 5px;
-      text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); /* Subtle gold glow */
     }
 
     h2.coming-soon {
       font-family: 'Cinzel', serif;
       font-size: 1.4rem;
       letter-spacing: 4px;
-      font-weight: 400;
+      font-weight: 600;
       margin-top: 0;
-      color: #fff;
+      color: var(--text-dark);
       text-transform: uppercase;
     }
 
     .tagline {
       font-size: 1.3rem;
-      font-weight: 300;
-      color: var(--gold);
+      font-weight: 400;
+      color: var(--dark-gold); /* Darker gold reads better on white */
       font-style: italic;
       margin-top: 10px;
       margin-bottom: 45px;
@@ -137,7 +138,7 @@
       font-size: 1.1rem;
       margin-bottom: 25px;
       color: var(--text-muted);
-      font-weight: 300;
+      font-weight: 400; /* Slightly thicker for white backgrounds */
     }
 
     .divider {
@@ -154,7 +155,7 @@
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
       flex: 1;
       max-width: 120px;
-      opacity: 0.6;
+      opacity: 0.8;
     }
     
     .divider .diamond {
@@ -163,7 +164,7 @@
       font-size: 12px;
     }
 
-    /* --- ACTION BUTTONS --- */
+    /* --- ACTION BUTTONS (🟢 NEON GLOW APPLIED) --- */
     .action-buttons {
       display: flex;
       gap: 20px;
@@ -181,31 +182,35 @@
       font-weight: 700;
       font-size: 1.05rem;
       letter-spacing: 2px;
-      border-radius: 3px;
+      border-radius: 6px;
       text-transform: uppercase;
       transition: all 0.4s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
 
     .primary-btn {
-      background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%);
-      color: #000;
+      background: #ffffff;
+      color: #111827;
+      /* 🟢 The Neon Gold Glass Effect! */
+      border: 1px solid rgba(212, 175, 55, 0.9);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.45), inset 0 0 10px rgba(212, 175, 55, 0.15);
     }
     
     .primary-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-      background: linear-gradient(135deg, #eadd8c 0%, #D4AF37 100%);
+      background: #fdfbf7; /* Very soft warm tint on hover */
+      /* 🟢 Glow expands on hover */
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.6), inset 0 0 15px rgba(212, 175, 55, 0.25);
+      border-color: var(--gold);
     }
 
     .section-title {
       font-family: 'Cinzel', serif;
-      color: var(--text-light);
+      color: var(--text-dark);
       font-size: 1.8rem;
       margin-bottom: 25px;
       letter-spacing: 3px;
       text-transform: uppercase;
-      font-weight: 400;
+      font-weight: 600;
     }
 
     .section-title span {
@@ -225,7 +230,7 @@
       color: var(--text-muted);
       position: relative;
       padding-left: 30px;
-      font-weight: 300;
+      font-weight: 400;
     }
 
     ul.services-list li::before {
@@ -237,21 +242,24 @@
       font-size: 0.9rem;
     }
 
+    /* 🟢 NEON GLOW APPLIED TO CONTACT BOX */
     .contact-box {
-      background: rgba(20, 24, 34, 0.4);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      background: #ffffff;
+      border: 1px solid rgba(212, 175, 55, 0.4);
       padding: 45px 30px;
       border-radius: 12px;
-      margin-top: 30px;
+      margin-top: 40px;
       width: 100%;
       box-sizing: border-box;
       transition: all 0.4s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
     }
     
     .contact-box:hover {
-      background: rgba(20, 24, 34, 0.7);
-      border-color: var(--gold);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-color: rgba(212, 175, 55, 0.9);
+      /* Illuminates on hover */
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(212, 175, 55, 0.1);
+      transform: translateY(-2px);
     }
 
     .contact-links-grid {
@@ -266,37 +274,38 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      color: var(--text-light);
+      color: var(--text-dark);
       text-decoration: none;
-      font-weight: 400;
+      font-weight: 600;
       font-size: 1.05rem;
       transition: all 0.3s ease;
-      padding: 8px 15px;
-      border-radius: 6px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: var(--bg-offwhite);
+      border: 1px solid var(--border-soft);
     }
 
     .contact-link svg {
       width: 18px;
       height: 18px;
-      fill: var(--gold);
+      fill: var(--dark-gold);
       transition: fill 0.3s ease;
     }
 
     .contact-link:hover {
-      color: var(--gold);
-      border-color: rgba(212, 175, 55, 0.3);
-      background: rgba(212, 175, 55, 0.05);
-      transform: translateY(-2px);
+      color: var(--dark-gold);
+      background: #ffffff;
+      border-color: rgba(212, 175, 55, 0.6);
+      box-shadow: 0 0 12px rgba(212, 175, 55, 0.15); /* Soft neon pulse */
     }
 
     footer {
       margin-top: 80px;
       font-size: 0.85rem;
-      color: #555;
+      color: #888;
       letter-spacing: 2px;
       text-transform: uppercase;
+      font-weight: 600;
     }
 
     @media (max-width: 600px) {
@@ -308,7 +317,7 @@
       .contact-links-grid { flex-direction: column; gap: 15px; }
       .contact-link { justify-content: center; }
       .action-buttons { flex-direction: column; }
-      .cta-button { width: 100%; box-sizing: border-box; }
+      .cta-button { width: 100%; box-sizing: border-box; text-align: center; }
     }
   </style>
 </head>
@@ -358,7 +367,7 @@
 
         <div class="contact-box fade-in-up">
           <h3 class="section-title" style="font-size: 1.4rem; margin-top: 0; margin-bottom: 10px;">For Enquiries & Collaborations</h3>
-          <p style="margin-bottom: 0; color: var(--gold); font-style: italic;">Based in Canada, rooted in India</p>
+          <p style="margin-bottom: 0; color: var(--dark-gold); font-style: italic;">Based in Canada, rooted in India</p>
           
           <div class="contact-links-grid">
             <a href="mailto:info@muziris.ca" class="contact-link">
@@ -393,7 +402,7 @@
           entry.target.classList.add('visible');
         }
       });
-    }, { threshold: 0.1 }); // Triggers when 10% of the element is visible
+    }, { threshold: 0.1 }); 
 
     document.querySelectorAll('.fade-in-up').forEach(element => {
       observer.observe(element);
