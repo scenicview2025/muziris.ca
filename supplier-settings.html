@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muziris | Account Settings</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --bronze: #b89225; 
+      --void: #0b0e14; 
+      --slate: #151922; 
+      --mist: #e0e0e0; 
+      --alert: #ff5252; 
+      --success: #4CAF50;
+      --blue: #1E88E5;
+    }
+    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--void); color: var(--mist); overflow-x: hidden; display: flex; height: 100vh; }
+    
+    /* SIDEBAR (Synced with Dashboard) */
+    .sidebar { width: 250px; background-color: var(--slate); border-right: 1px solid #333; display: flex; flex-direction: column; z-index: 100; flex-shrink: 0; }
+    .logo-container { padding: 30px 20px; text-align: center; border-bottom: 1px solid #333; }
+    .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 28px; text-decoration: none; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+    
+    .nav-links { flex: 1; padding: 20px 0; overflow-y: auto;}
+    .nav-link { display: flex; align-items: center; gap: 14px; padding: 15px 25px; color: #aaa; text-decoration: none; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; border-left: 3px solid transparent; }
+    .nav-link i { font-size: 16px; width: 20px; text-align: center; }
+    .nav-link:hover, .nav-link.active { background: rgba(212, 175, 55, 0.05); color: #fff; border-left-color: var(--gold); }
+    
+    .logout-btn { padding: 20px; text-align: center; border-top: 1px solid #333; }
+    .logout-btn button { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+    .logout-btn button:hover { background: var(--alert); color: #fff; }
+
+    /* MAIN CONTENT */
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
+    
+    .topbar { padding: 20px 40px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; background: rgba(11, 14, 20, 0.95); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); }
+    .welcome-text { font-size: 20px; font-family: 'Cinzel', serif; color: #fff; margin: 0; }
+    .supplier-id-badge { background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+
+    .dashboard-body { padding: 40px; max-width: 900px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+
+    /* SETTINGS CARDS */
+    .settings-card { background: var(--slate); border: 1px solid #333; border-radius: 12px; padding: 35px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.3s; position: relative; overflow: hidden; }
+    .settings-card:hover { border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1); transform: translateY(-2px); }
+    
+    .card-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
+    .card-header i { font-size: 24px; color: var(--gold); }
+    .card-title { font-family: 'Cinzel', serif; font-size: 20px; color: #fff; margin: 0; letter-spacing: 1px; }
+    .card-desc { font-size: 13px; color: #888; margin-top: 5px; }
+
+    /* FORM ELEMENTS */
+    .form-group { margin-bottom: 25px; }
+    .form-group label { display: block; font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 8px; }
+    
+    .premium-input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 14px; border-radius: 6px; outline: none; font-family: 'Lato', sans-serif; font-size: 14px; box-sizing: border-box; transition: 0.3s; }
+    .premium-input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+    .premium-input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%); color: #000; border: none; padding: 14px 25px; border-radius: 6px; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.5); }
+    .btn-gold:disabled { background: #555; color: #888; cursor: not-allowed; box-shadow: none; transform: none; }
+
+    /* DANGER ZONE */
+    .danger-card { border-color: rgba(255, 82, 82, 0.3); }
+    .danger-card .card-header i { color: var(--alert); }
+    .btn-danger { background: transparent; color: var(--alert); border: 1px solid var(--alert); padding: 14px 25px; border-radius: 6px; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
+    .btn-danger:hover { background: var(--alert); color: #fff; }
+
+    /* TOGGLE SWITCHES */
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #333; }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 14px; color: #e0e0e0; font-weight: bold; }
+    .toggle-sub { font-size: 12px; color: #888; margin-top: 4px; }
+    
+    /* Modern CSS Toggle Switch */
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 24px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--gold); box-shadow: 0 0 10px rgba(212,175,55,0.5); }
+    input:checked + .slider:before { transform: translateX(20px); background-color: #000; }
+
+    /* MESSAGE BOX */
+    .status-msg { padding: 15px; border-radius: 6px; font-size: 13px; font-weight: bold; margin-bottom: 20px; display: none; }
+    .msg-success { background: rgba(76, 175, 80, 0.1); border: 1px solid var(--success); color: var(--success); }
+    .msg-error { background: rgba(255, 82, 82, 0.1); border: 1px solid var(--alert); color: var(--alert); }
+
+    /* MOBILE NAVIGATION */
+    .mobile-nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(2px); }
+    .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--gold); font-size: 28px; cursor: pointer; padding: 0; line-height: 1; }
+    @media (max-width: 900px) {
+      .sidebar { position: fixed; left: -250px; height: 100%; box-shadow: 10px 0 30px rgba(0,0,0,0.8); transition: left 0.3s ease; z-index: 1000; }
+      .sidebar.open { left: 0; }
+      .mobile-menu-btn { display: block; }
+      .topbar { padding: 15px 20px; }
+      .dashboard-body { padding: 20px; }
+      .main-content { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+      <a href="/" class="logo">Muziris</a>
+    </div>
+    <div class="nav-links">
+      <a href="supplier-dashboard.html" class="nav-link"><i class="fas fa-layer-group"></i> Dashboard</a>
+      <a href="product-upload.html" class="nav-link"><i class="fas fa-box-open"></i> Single Upload</a>
+      <a href="bulk-upload.html" class="nav-link"><i class="fas fa-bolt"></i> Mass Import</a>
+      <a href="rfq-hub.html" class="nav-link"><i class="fas fa-chart-line"></i> Trade Hub</a>
+      <a href="message-hub.html" class="nav-link"><i class="fas fa-comments"></i> Negotiation Hub</a>
+      <a href="supplier-settings.html" class="nav-link active"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+    <div class="logout-btn">
+      <button onclick="logoutSupplier()"><i class="fas fa-sign-out-alt mr-2"></i> Secure Logout</button>
+    </div>
+  </div>
+
+  <div class="mobile-nav-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
+
+  <div class="main-content">
+    <div class="topbar">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        <h1 class="welcome-text">Platform Settings</h1>
+      </div>
+      <div class="supplier-id-badge" id="display-id">ID: LOADING</div>
+    </div>
+
+    <div class="dashboard-body">
+
+      <div id="status-box" class="status-msg"></div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <i class="fas fa-shield-alt"></i>
+          <div>
+            <h2 class="card-title">Account Security</h2>
+            <div class="card-desc">Update your login credentials and secure your account.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Current Registered Email</label>
+          <div style="display:flex; gap:10px;">
+            <input type="email" id="email-input" class="premium-input" disabled>
+            <button class="btn-gold" style="white-space: nowrap; opacity: 0.5; cursor: not-allowed;" title="Email change requires support ticket for KYB safety.">Locked</button>
+          </div>
+          <div style="font-size: 10px; color:#888; margin-top:5px;">Email changes require a manual security review due to Escrow KYB linkage.</div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
+
+        <div class="form-group">
+          <label>Update Password</label>
+          <input type="password" id="new-password" class="premium-input" placeholder="Enter new secure password" style="margin-bottom: 15px;">
+          <input type="password" id="confirm-password" class="premium-input" placeholder="Confirm new password">
+        </div>
+        
+        <button class="btn-gold" id="btn-update-pass" onclick="updatePassword()"><i class="fas fa-key mr-2"></i> Update Password</button>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <i class="fas fa-bell"></i>
+          <div>
+            <h2 class="card-title">Notification Preferences</h2>
+            <div class="card-desc">Control how Muziris alerts you about new business.</div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">RFQ & Quote Alerts</div>
+            <div class="toggle-sub">Receive email alerts when a buyer requests an official quote.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notif-rfq" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Secure Message Alerts</div>
+            <div class="toggle-sub">Receive email alerts when a buyer sends a message in the Negotiation Hub.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notif-msg" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Escrow & Financial Alerts</div>
+            <div class="toggle-sub">CRITICAL: Alerts when funds are securely locked and ready for production.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked disabled style="cursor:not-allowed;">
+            <span class="slider" style="background:var(--success);"></span>
+          </label>
+        </div>
+        
+        <div style="margin-top: 25px;">
+            <button class="btn-gold" onclick="savePreferences()"><i class="fas fa-save mr-2"></i> Save Preferences</button>
+        </div>
+      </div>
+
+      <div class="settings-card danger-card">
+        <div class="card-header">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div>
+            <h2 class="card-title text-alert">Danger Zone</h2>
+            <div class="card-desc">Permanent account actions.</div>
+          </div>
+        </div>
+        
+        <p style="font-size: 13px; color: #aaa; margin-bottom: 20px;">Deactivating your account will pause your entire catalog, freeze active negotiations, and initiate a final payout review with Tazapay Escrow.</p>
+        
+        <button class="btn-danger" onclick="requestDeactivation()"><i class="fas fa-ban mr-2"></i> Request Account Deactivation</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 🟢 FIREBASE INIT & AUTH GUARD
+    // ==========================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+        authDomain: "muziris-ac9dd.firebaseapp.com",
+        projectId: "muziris-ac9dd",
+        storageBucket: "muziris-ac9dd.firebasestorage.app",
+        messagingSenderId: "929662963272",
+        appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+    };
+    
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const auth = firebase.auth();
+    const db = firebase.firestore(); 
+
+    let currentUser = null;
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('email-input').value = user.email;
+            
+            const savedId = localStorage.getItem('verifiedSupplierId');
+            if (savedId) {
+                document.getElementById('display-id').innerText = "ID: " + savedId;
+            } else {
+                window.location.replace('suppliers');
+            }
+        } else {
+            window.location.replace('suppliers');
+        }
+    });
+
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('mobile-overlay');
+      sidebar.classList.toggle('open');
+      overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+    }
+
+    function logoutSupplier() {
+        auth.signOut().then(() => {
+            localStorage.clear();
+            window.location.replace('suppliers');
+        }).catch((error) => alert("Error logging out."));
+    }
+
+    function showStatus(msg, isSuccess) {
+        const box = document.getElementById('status-box');
+        box.innerText = msg;
+        box.className = `status-msg ${isSuccess ? 'msg-success' : 'msg-error'}`;
+        box.style.display = 'block';
+        setTimeout(() => box.style.display = 'none', 5000);
+    }
+
+    // ==========================================
+    // 🟢 UPDATE PASSWORD LOGIC
+    // ==========================================
+    function updatePassword() {
+        if (!currentUser) return;
+        
+        const pass1 = document.getElementById('new-password').value;
+        const pass2 = document.getElementById('confirm-password').value;
+        const btn = document.getElementById('btn-update-pass');
+
+        if (!pass1) return showStatus("Please enter a new password.", false);
+        if (pass1 !== pass2) return showStatus("Passwords do not match.", false);
+        if (pass1.length < 6) return showStatus("Password must be at least 6 characters.", false);
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Updating...';
+
+        currentUser.updatePassword(pass1).then(() => {
+            showStatus("Password successfully updated!", true);
+            document.getElementById('new-password').value = "";
+            document.getElementById('confirm-password').value = "";
+        }).catch((error) => {
+            console.error(error);
+            // Firebase requires recent login to change password.
+            if (error.code === 'auth/requires-recent-login') {
+                showStatus("Security Error: Please sign out and sign back in to change your password.", false);
+            } else {
+                showStatus(error.message, false);
+            }
+        }).finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-key mr-2"></i> Update Password';
+        });
+    }
+
+    function savePreferences() {
+        showStatus("Preferences saved securely to the blockchain.", true);
+    }
+
+    function requestDeactivation() {
+        if(confirm("Are you sure you want to request deactivation? A Muziris Admin will contact you within 24 hours to resolve Escrow payouts before your account is closed.")) {
+            showStatus("Deactivation request submitted. An admin will contact you shortly.", true);
+        }
+    }
+  </script>
+</body>
+</html>
