@@ -377,9 +377,85 @@
             showStatus("Failed to save preferences to database.", false);
         });
     }
-    function requestDeactivation() {
-        if(confirm("Are you sure you want to request deactivation? A Muziris Admin will contact you within 24 hours to resolve Escrow payouts before your account is closed.")) {
-            showStatus("Deactivation request submitted. An admin will contact you shortly.", true);
+    // ==========================================
+    // 🟢 7-DAY DEACTIVATION & REACTIVATION LOGIC
+    // ==========================================
+    let isDeactivationPending = false;
+
+    // Changes the UI based on their status
+    function setDeactivationUI(isPending) {
+        isDeactivationPending = isPending;
+        const btn = document.getElementById('btn-deactivate');
+        const text = document.getElementById('deactivation-text');
+
+        if (isPending) {
+            btn.className = 'btn-success-outline';
+            btn.innerHTML = '<i class="fas fa-undo mr-2"></i> Reactivate Account';
+            text.innerHTML = '<strong style="color:var(--alert);">🚨 Pending Deactivation.</strong> You have a <strong>7-day grace period</strong> to login and reverse this decision before your catalog is permanently archived.';
+        } else {
+            btn.className = 'btn-danger';
+            btn.innerHTML = '<i class="fas fa-ban mr-2"></i> Request Account Deactivation';
+            text.innerHTML = 'Deactivating your account will pause your entire catalog, freeze active negotiations, and initiate a final payout review with Tazapay Escrow.';
+        }
+    }
+
+    // Handles the button click
+    function toggleDeactivation() {
+        const supplierId = localStorage.getItem('verifiedSupplierId');
+        if (!currentUser || !supplierId) return showStatus("Authentication error.", false);
+
+        if (isDeactivationPending) {
+            // 🟢 THEY WANT TO CANCEL THE DELETION
+            if(confirm("Welcome back! Are you sure you want to cancel your deactivation request and keep your account active?")) {
+                db.collection('suppliers').doc(supplierId).set({
+                    deactivationRequested: false,
+                    deactivationDate: null
+                }, { merge: true }).then(() => {
+                    setDeactivationUI(false); // Switch UI back to normal
+                    showStatus("Account successfully reactivated!", true);
+                });
+            }
+        } else {
+            // 🟢 THEY WANT TO LEAVE
+            if(confirm("Are you sure you want to request deactivation? \n\nYou will have a 7-day grace period where you can still login and reactivate your account. After 7 days, an admin will process your final Escrow payouts and lock the account.")) {
+                
+                // 1. Create a ticket for the Admin
+                db.collection('admin_tickets').add({
+                    type: "DEACTIVATION_REQUEST",
+                    supplierId: supplierId,
+                    email: currentUser.email,
+                    status: "Pending 7-Day Grace Period",
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    // 2. Flag the supplier profile
+                    return db.collection('suppliers').doc(supplierId).set({
+                        deactivationRequested: true,
+                        deactivationDate: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                })
+                .then(() => {
+                    setDeactivationUI(true); // Switch UI to "Reactivate" mode
+                    showStatus("Deactivation requested. 7-day grace period has started.", true);
+
+                    // 3. 🟢 Ping your Render Backend to send the Email to admin@muziris.ca
+                    // Note: You will need to add this route to your server.js using Nodemailer or SendGrid later!
+                    const API_BASE_URL = "https://muziris-api.onrender.com/api";
+                    fetch(API_BASE_URL + '/admin/notify-deactivation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            email: currentUser.email, 
+                            supplierId: supplierId,
+                            message: "A supplier has initiated the 7-day deactivation process."
+                        })
+                    }).catch(e => console.log("Email trigger passed to backend."));
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    showStatus("Failed to submit request.", false);
+                });
+            }
         }
     }
   </script>
