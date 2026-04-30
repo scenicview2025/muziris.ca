@@ -229,9 +229,13 @@
           </div>
         </div>
         
-        <p style="font-size: 13px; color: #aaa; margin-bottom: 20px;">Deactivating your account will pause your entire catalog, freeze active negotiations, and initiate a final payout review with Tazapay Escrow.</p>
+        <p id="deactivation-text" style="font-size: 13px; color: #aaa; margin-bottom: 20px;">
+          Deactivating your account will pause your entire catalog, freeze active negotiations, and initiate a final payout review with Tazapay Escrow.
+        </p>
         
-        <button class="btn-danger" onclick="requestDeactivation()"><i class="fas fa-ban mr-2"></i> Request Account Deactivation</button>
+        <button class="btn-danger" id="btn-deactivate" onclick="toggleDeactivation()">
+          <i class="fas fa-ban mr-2"></i> Request Account Deactivation
+        </button>
       </div>
 
     </div>
