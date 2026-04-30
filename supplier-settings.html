@@ -293,31 +293,40 @@
     }
 
     // ==========================================
-    // 🟢 UPDATE PASSWORD LOGIC
+    // 🟢 UPDATE PASSWORD LOGIC (With Re-Auth)
     // ==========================================
     function updatePassword() {
         if (!currentUser) return;
         
+        const currentPass = document.getElementById('current-password').value;
         const pass1 = document.getElementById('new-password').value;
         const pass2 = document.getElementById('confirm-password').value;
         const btn = document.getElementById('btn-update-pass');
 
+        if (!currentPass) return showStatus("Please enter your current password to verify your identity.", false);
         if (!pass1) return showStatus("Please enter a new password.", false);
         if (pass1 !== pass2) return showStatus("Passwords do not match.", false);
         if (pass1.length < 6) return showStatus("Password must be at least 6 characters.", false);
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Updating...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Verifying...';
 
-        currentUser.updatePassword(pass1).then(() => {
+        // 🟢 FIX: Generate credentials with their current password to satisfy Firebase Security
+        const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, currentPass);
+
+        // First, re-authenticate the user behind the scenes
+        currentUser.reauthenticateWithCredential(credential).then(() => {
+            // Once verified, push the new password!
+            return currentUser.updatePassword(pass1);
+        }).then(() => {
             showStatus("Password successfully updated!", true);
+            document.getElementById('current-password').value = "";
             document.getElementById('new-password').value = "";
             document.getElementById('confirm-password').value = "";
         }).catch((error) => {
             console.error(error);
-            // Firebase requires recent login to change password.
-            if (error.code === 'auth/requires-recent-login') {
-                showStatus("Security Error: Please sign out and sign back in to change your password.", false);
+            if (error.code === 'auth/wrong-password') {
+                showStatus("Security Error: Current password is incorrect.", false);
             } else {
                 showStatus(error.message, false);
             }
@@ -327,10 +336,33 @@
         });
     }
 
+    // ==========================================
+    // 🟢 SAVE PREFERENCES TO FIRESTORE
+    // ==========================================
     function savePreferences() {
-        showStatus("Preferences saved securely to the blockchain.", true);
-    }
+        const supplierId = localStorage.getItem('verifiedSupplierId');
+        if (!supplierId) return showStatus("Error: Supplier ID missing.", false);
 
+        const rfqNotif = document.getElementById('notif-rfq').checked;
+        const msgNotif = document.getElementById('notif-msg').checked;
+
+        // 🟢 FIX: Actually save their toggle choices to their database profile
+        db.collection('suppliers').doc(supplierId).set({
+            notifications: {
+                rfqAlerts: rfqNotif,
+                msgAlerts: msgNotif,
+                escrowAlerts: true // Hardcoded to true so they can't disable financial alerts
+            },
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true })
+        .then(() => {
+            showStatus("Preferences saved securely to your profile.", true);
+        })
+        .catch(err => {
+            console.error(err);
+            showStatus("Failed to save preferences to database.", false);
+        });
+    }
     function requestDeactivation() {
         if(confirm("Are you sure you want to request deactivation? A Muziris Admin will contact you within 24 hours to resolve Escrow payouts before your account is closed.")) {
             showStatus("Deactivation request submitted. An admin will contact you shortly.", true);
