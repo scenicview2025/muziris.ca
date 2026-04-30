@@ -8,17 +8,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     :root {
+      /* 🟢 Prime Theme Colors Synced with Catalog */
       --gold: #D4AF37;
       --dark-gold: #b89225;
-      --bg-dark: #07090d;
-      --text-light: #e8e8e8;
-      --text-muted: #a0a0a0;
+      --void: #0b0e14;   /* The rich, premium midnight black */
+      --slate: #151922;  /* Slightly lighter charcoal for cards */
+      --text-light: #f3f4f6; /* Crisp off-white for readability */
+      --text-muted: #9ca3af;
     }
 
-    /* ✨ 1. The Ultimate Reset ✨ */
+    /* ✨ The Ultimate Reset ✨ */
     html {
       box-sizing: border-box;
-      overflow-y: scroll; /* Force the scrollbar to ALWAYS exist, stopping the JS layout jump */
+      overflow-y: scroll; 
       overflow-x: hidden;
     }
     
@@ -30,10 +32,9 @@
       margin: 0;
       padding: 0;
       font-family: 'Lato', sans-serif;
-      background-color: #000;
+      background-color: var(--void);
       color: var(--text-light);
       scroll-behavior: smooth;
-      /* Removed overflow declarations from body, they belong on HTML to prevent desktop bugs */
     }
 
     /* --- 1. THE STABLE BACKGROUND VIDEO --- */
@@ -41,42 +42,43 @@
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;   /* ✨ Replaced width: 100% with absolute edge snapping */
-      bottom: 0;  /* ✨ Replaced height: 100% with absolute edge snapping */
+      right: 0;   
+      bottom: 0;  
       z-index: 0; 
       overflow: hidden;
-      pointer-events: none; /* Stops the background from ever interacting with the mouse/scroll */
+      pointer-events: none; 
     }
     
     .fixed-bg video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.9;
+      opacity: 0.6; /* Darkened slightly to let the neon pop */
     }
 
     .fixed-overlay {
       z-index: 1;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(11, 14, 20, 0.7); /* Deep void overlay */
     }
 
     /* --- 2. THE SCROLLING CONTENT LAYER --- */
     .scrolling-layer {
       position: relative;
       z-index: 2; 
-      /* ✨ Removed width: 100%. Block elements naturally fill their container perfectly without math errors. */
     }
 
     .content-block {
-      background: var(--bg-dark);
+      background: var(--void);
       padding: 80px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      box-shadow: 0 0 40px rgba(0,0,0,0.8); 
-      /* ✨ Removed width: 100% here as well. Let the browser's native rendering engine handle the bounds. */
+      /* Soft top border to separate from the video */
+      border-top: 1px solid rgba(212, 175, 55, 0.1); 
+      box-shadow: 0 -20px 50px rgba(0,0,0,0.8); 
     }
+
     /* --- CINEMATIC FADE-IN ANIMATION --- */
     .fade-in-up {
       opacity: 0;
@@ -105,27 +107,27 @@
       font-family: 'Cinzel', serif;
       color: var(--gold);
       font-size: 3.8rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 6px;
       text-transform: uppercase;
       margin-bottom: 5px;
-      text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+      text-shadow: 0 0 25px rgba(212, 175, 55, 0.4); /* Glowing Gold text */
     }
 
     h2.coming-soon {
       font-family: 'Cinzel', serif;
       font-size: 1.4rem;
       letter-spacing: 4px;
-      font-weight: 400;
+      font-weight: 600;
       margin-top: 0;
-      color: #fff;
+      color: var(--text-light);
       text-transform: uppercase;
     }
 
     .tagline {
       font-size: 1.3rem;
-      font-weight: 300;
-      color: var(--gold);
+      font-weight: 400;
+      color: var(--gold); 
       font-style: italic;
       margin-top: 10px;
       margin-bottom: 45px;
@@ -137,7 +139,7 @@
       font-size: 1.1rem;
       margin-bottom: 25px;
       color: var(--text-muted);
-      font-weight: 300;
+      font-weight: 300; 
     }
 
     .divider {
@@ -154,16 +156,17 @@
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
       flex: 1;
       max-width: 120px;
-      opacity: 0.6;
+      opacity: 0.5;
     }
     
     .divider .diamond {
       color: var(--gold);
       margin: 0 15px;
       font-size: 12px;
+      text-shadow: 0 0 10px var(--gold);
     }
 
-    /* --- ACTION BUTTONS --- */
+    /* --- ACTION BUTTONS (🟢 LUXURY NEON GLOW) --- */
     .action-buttons {
       display: flex;
       gap: 20px;
@@ -181,21 +184,26 @@
       font-weight: 700;
       font-size: 1.05rem;
       letter-spacing: 2px;
-      border-radius: 3px;
+      border-radius: 6px;
       text-transform: uppercase;
       transition: all 0.4s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
 
     .primary-btn {
-      background: linear-gradient(135deg, #D4AF37 0%, #b89225 100%);
-      color: #000;
+      background: var(--void);
+      color: var(--gold);
+      /* 🟢 The Neon Gold Glass Effect on Dark! */
+      border: 1px solid rgba(212, 175, 55, 0.8);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(212, 175, 55, 0.1);
     }
     
     .primary-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-      background: linear-gradient(135deg, #eadd8c 0%, #D4AF37 100%);
+      background: var(--gold); 
+      color: var(--void);
+      /* 🟢 Glow explodes on hover */
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.3);
+      border-color: var(--gold);
     }
 
     .section-title {
@@ -205,11 +213,12 @@
       margin-bottom: 25px;
       letter-spacing: 3px;
       text-transform: uppercase;
-      font-weight: 400;
+      font-weight: 600;
     }
 
     .section-title span {
       color: var(--gold);
+      text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
     }
 
     ul.services-list {
@@ -235,23 +244,27 @@
       left: 0;
       top: 2px;
       font-size: 0.9rem;
+      text-shadow: 0 0 10px var(--gold);
     }
 
+    /* 🟢 NEON GLOW APPLIED TO CONTACT BOX */
     .contact-box {
-      background: rgba(20, 24, 34, 0.4);
+      background: var(--slate);
       border: 1px solid rgba(212, 175, 55, 0.2);
       padding: 45px 30px;
       border-radius: 12px;
-      margin-top: 30px;
+      margin-top: 40px;
       width: 100%;
       box-sizing: border-box;
       transition: all 0.4s ease;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
     }
     
     .contact-box:hover {
-      background: rgba(20, 24, 34, 0.7);
-      border-color: var(--gold);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-color: rgba(212, 175, 55, 0.8);
+      /* Illuminates on hover */
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.1);
+      transform: translateY(-2px);
     }
 
     .contact-links-grid {
@@ -271,9 +284,9 @@
       font-weight: 400;
       font-size: 1.05rem;
       transition: all 0.3s ease;
-      padding: 8px 15px;
-      border-radius: 6px;
-      background: rgba(255,255,255,0.03);
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: var(--void);
       border: 1px solid rgba(255,255,255,0.05);
     }
 
@@ -286,17 +299,18 @@
 
     .contact-link:hover {
       color: var(--gold);
-      border-color: rgba(212, 175, 55, 0.3);
-      background: rgba(212, 175, 55, 0.05);
-      transform: translateY(-2px);
+      border-color: rgba(212, 175, 55, 0.6);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); /* Soft neon pulse */
+      transform: translateY(-1px);
     }
 
     footer {
       margin-top: 80px;
       font-size: 0.85rem;
-      color: #555;
+      color: #666;
       letter-spacing: 2px;
       text-transform: uppercase;
+      font-weight: 600;
     }
 
     @media (max-width: 600px) {
@@ -308,7 +322,7 @@
       .contact-links-grid { flex-direction: column; gap: 15px; }
       .contact-link { justify-content: center; }
       .action-buttons { flex-direction: column; }
-      .cta-button { width: 100%; box-sizing: border-box; }
+      .cta-button { width: 100%; box-sizing: border-box; text-align: center; }
     }
   </style>
 </head>
@@ -393,7 +407,7 @@
           entry.target.classList.add('visible');
         }
       });
-    }, { threshold: 0.1 }); // Triggers when 10% of the element is visible
+    }, { threshold: 0.1 }); 
 
     document.querySelectorAll('.fade-in-up').forEach(element => {
       observer.observe(element);
