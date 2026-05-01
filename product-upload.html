@@ -504,6 +504,7 @@
       document.getElementById('sid').value = savedId;
       document.getElementById('cname').value = savedCompany;
       document.getElementById('ui-currency-label').innerText = "(" + savedCurrency + ")";
+      document.getElementById('ui-sample-curr').innerText = "(" + savedCurrency + ")";
       document.getElementById('ui-currency-text').innerText = savedCurrency;
 
       fetchAPI('getCategoryStructure').then(populateCats);
