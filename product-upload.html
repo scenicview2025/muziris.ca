@@ -1055,7 +1055,7 @@
       reader.onerror = reject;
     });
 
-    // 🟢 UPGRADED: Authentic White Theme Mock-Up Logic
+    // 🟢 UPGRADED: Authentic White Theme Mock-Up Logic (Now with Full Matrix Looping!)
     function generateLivePreview() {
         // 1. Get Basic Info
         const pName = document.getElementById('pName').value || "Untitled Product";
@@ -1073,27 +1073,52 @@
         if (document.getElementById('svc3').checked) servicesArr.push("ODM Design");
         const servicesTxt = servicesArr.join(", ") || "Standard";
 
-        // 3. Extract the FIRST Matrix Row for the preview
+        // 3. Extract ALL Matrix Rows for the preview
         let startingPrice = "0.00";
         let leadTime = "30";
         let inco = "FOB";
-        let vName = "Standard Base";
-        let vVol = "100 - 500 Pcs";
+        
+        const rows = document.querySelectorAll("#priceBody tr");
+        let matrixHtml = "";
 
-        const firstRow = document.querySelector("#priceBody tr");
-        if (firstRow) {
+        if (rows.length > 0) {
+            // Get top level stats from the very first row
+            const firstRow = rows[0];
             startingPrice = firstRow.querySelector('.p-price').value || "0.00";
             leadTime = firstRow.querySelector('.p-lead').value || "30";
             inco = firstRow.querySelector('.p-incoterms').value || "FOB";
             
-            let type = firstRow.querySelector('.p-type').value;
-            let opt = firstRow.querySelector('.p-opt').value;
-            vName = type === 'Standard' ? 'Standard Base' : opt;
+            // Loop through all rows to build the visual table!
+            let currentVariantName = "";
+            
+            rows.forEach((row) => {
+                let type = row.querySelector('.p-type').value;
+                let opt = row.querySelector('.p-opt').value;
+                let min = row.querySelector('.p-min').value || "1";
+                let max = row.querySelector('.p-max').value || "Up";
+                let unit = row.querySelector('.p-unit').value || "Pcs";
+                let price = row.querySelector('.p-price').value || "0.00";
+                
+                // Check if it is a volume tier by seeing if the type select is hidden!
+                let isTier = row.querySelector(".p-type").style.display === "none";
+                
+                let vName = "";
+                if (!isTier) {
+                    vName = type === 'Standard' ? 'Standard' : opt;
+                    currentVariantName = vName; // Save this so child tiers know their parent!
+                } else {
+                    vName = `<span style="color:#9ca3af; font-size:11px;">↳ Tier of ${currentVariantName}</span>`;
+                }
 
-            let min = firstRow.querySelector('.p-min').value || "1";
-            let max = firstRow.querySelector('.p-max').value || "100";
-            let unit = firstRow.querySelector('.p-unit').value || "Pcs";
-            vVol = `${min} - ${max} ${unit}`;
+                matrixHtml += `
+                <div style="display:flex; justify-content:space-between; font-size:13px; color:#111827; font-weight:700; margin-bottom:8px; padding-bottom:8px; border-bottom:1px dashed #f3f4f6;">
+                  <span style="flex:1;">${vName}</span>
+                  <span style="flex:1; text-align:center; color:#6b7280;">${min} - ${max} ${unit}</span>
+                  <span style="flex:1; text-align:right; color:var(--bronze);">$${price}</span>
+                </div>`;
+            });
+        } else {
+            matrixHtml = `<div style="text-align:center; color:#9ca3af; font-size:12px; padding:10px;">No variants added.</div>`;
         }
 
         // 4. Handle Images & Thumbnails
@@ -1111,7 +1136,6 @@
             mockHeroImg.src = heroUrl;
             mockHeroImg.style.display = 'block';
         } else {
-            // Default placeholder if no image is uploaded
             mockHeroImg.src = 'https://placehold.co/400x400/f9fafb/D4AF37.png?text=No+Hero+Image';
         }
 
@@ -1158,9 +1182,8 @@
         document.getElementById('mock-services').innerText = servicesTxt;
         document.getElementById('mock-pack').innerText = packaging;
         
-        document.getElementById('mock-v-name').innerText = vName;
-        document.getElementById('mock-v-vol').innerText = vVol;
-        document.getElementById('mock-v-price').innerText = `$${startingPrice}`;
+        // 🟢 INJECT THE NEW DYNAMIC MATRIX LOOP
+        document.getElementById('mock-matrix-container').innerHTML = matrixHtml;
 
         // 7. Show Modal
         document.getElementById('live-preview-modal').style.display = 'flex';
