@@ -304,6 +304,32 @@
 
           <input type="hidden" name="pricingMatrix" id="pricingString">
 
+          <div style="margin-top:40px; background:rgba(0,0,0,0.2); padding:25px; border-radius:8px; border:1px dashed #444;">
+              <h4 style="color:var(--gold); font-family:'Cinzel', serif; margin-top:0; letter-spacing:1px;">Advanced Trade Specifications <span style="font-family:'Lato', sans-serif; font-size:10px; color:#888;">(Optional but recommended)</span></h4>
+              
+              <div style="display:flex; gap:20px; flex-wrap: wrap; margin-top:15px;">
+                 <div style="flex:1; min-width: 200px;">
+                     <label style="margin-top:0;">HS CODE</label>
+                     <input type="text" id="hsCode" name="hsCode" placeholder="e.g. 8481.80">
+                 </div>
+                 <div style="flex:2; min-width: 250px;">
+                     <label style="margin-top:0;">MATERIAL / COMPOSITION</label>
+                     <input type="text" id="materialComp" name="materialComp" placeholder="e.g. 316L Stainless Steel">
+                 </div>
+              </div>
+
+              <div style="display:flex; gap:20px; flex-wrap: wrap;">
+                 <div style="flex:1; min-width: 200px;">
+                     <label>SAMPLE PRICE <span id="ui-sample-curr" style="color:var(--gold);"></span></label>
+                     <input type="number" id="samplePrice" name="samplePrice" placeholder="e.g. 50.00" step="0.01">
+                 </div>
+                 <div style="flex:2; min-width: 250px;">
+                     <label>PRODUCT CERTIFICATIONS</label>
+                     <input type="text" id="productCerts" name="productCerts" placeholder="e.g. CE, RoHS, FDA, UL Listed">
+                 </div>
+              </div>
+          </div>
+
           <div class="btn-group">
             <button type="button" class="btn-prev" onclick="prevStep(2)">Back</button>
             <button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button>
