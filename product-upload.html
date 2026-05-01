@@ -949,40 +949,55 @@
       }
     }
 
-    // 🟢 SMART VOLUME TIER GENERATOR (Visual Collapsing)
+    // 🟢 SMART VOLUME TIER GENERATOR (Visual Collapsing & Auto-Stacking)
     function cloneRow(btn) {
-      var row = btn.closest("tr");
-      var newRow = row.cloneNode(true);
+      var parentRow = btn.closest("tr");
       
-      // 1. Clear the max quantity and price for the new tier
+      // 1. SCAN DOWN: Find the very last volume tier in this specific group!
+      var lastRowInGroup = parentRow;
+      while (lastRowInGroup.nextElementSibling) {
+          var nextRow = lastRowInGroup.nextElementSibling;
+          // If the next row is a Volume Tier (we know because its button is hidden), keep moving down!
+          var nextBtn = nextRow.querySelector(".btn-vol-tier");
+          if (nextBtn && nextBtn.style.display === "none") {
+              lastRowInGroup = nextRow;
+          } else {
+              break; // We hit a completely new Variant, stop scanning!
+          }
+      }
+
+      var newRow = parentRow.cloneNode(true);
+      
+      // 2. Clear the max quantity and price for the new tier
       newRow.querySelector(".p-max").value = "";
       newRow.querySelector(".p-price").value = "";
       
-      // 2. SMART AUTO-FILL: Calculate the new Min Qty
-      var oldMax = parseInt(row.querySelector(".p-max").value);
+      // 3. SMART AUTO-FILL: Calculate the new Min Qty from the LAST row in the group!
+      var oldMax = parseInt(lastRowInGroup.querySelector(".p-max").value);
       newRow.querySelector(".p-min").value = !isNaN(oldMax) ? (oldMax + 1) : "";
       
-      // 3. Keep the hidden data identical to the parent variant
-      newRow.querySelector(".p-type").value = row.querySelector(".p-type").value;
-      newRow.querySelector(".p-unit").value = row.querySelector(".p-unit").value;
-      newRow.querySelector(".p-incoterms").value = row.querySelector(".p-incoterms").value;
-      newRow.querySelector(".p-sku").value = row.querySelector(".p-sku").value; // Copy SKU silently
+      // 4. Keep the hidden data identical to the parent variant
+      newRow.querySelector(".p-type").value = parentRow.querySelector(".p-type").value;
+      newRow.querySelector(".p-unit").value = parentRow.querySelector(".p-unit").value;
+      newRow.querySelector(".p-incoterms").value = parentRow.querySelector(".p-incoterms").value;
+      newRow.querySelector(".p-sku").value = parentRow.querySelector(".p-sku").value; 
       
-      // 4. VISUAL COLLAPSE: Hide the variant details so it looks like a child tier
+      // 5. VISUAL COLLAPSE: Hide the variant details so it looks like a child tier
       newRow.querySelector(".p-type").style.display = "none";
       newRow.querySelector(".p-opt").style.visibility = "hidden";
       newRow.querySelector(".p-sku").style.visibility = "hidden";
       newRow.querySelector(".p-unit").style.visibility = "hidden";
       newRow.querySelector(".p-incoterms").style.visibility = "hidden";
       newRow.querySelector(".cell-img").style.visibility = "hidden";
-      newRow.querySelector(".btn-vol-tier").style.display = "none"; // Hide button so they only branch from master
+      newRow.querySelector(".btn-vol-tier").style.display = "none"; 
 
-      // 5. Add a visual indicator
+      // 6. Add a visual indicator
       var tierLabel = document.createElement("div");
       tierLabel.innerHTML = "<span style='color:#666; font-size:11px; font-style:italic;'>↳ Vol. Tier</span>";
       newRow.querySelector(".cell-type").appendChild(tierLabel);
       
-      row.parentNode.insertBefore(newRow, row.nextSibling);
+      // 7. Insert the new row at the very bottom of the tier group!
+      lastRowInGroup.parentNode.insertBefore(newRow, lastRowInGroup.nextSibling);
     }
 
     function populateCats(data) {
