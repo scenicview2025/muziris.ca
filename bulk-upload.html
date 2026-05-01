@@ -321,6 +321,12 @@
               servicesString: row["Services"] || "Standard",
               packagingDetails: row["Pkg Details"] || "",
               description: row["Description"] || "",
+              supplierSku: row["SKU"] || "", // 🟢 NEW
+              hsCode: row["HS Code"] || "", // 🟢 NEW
+              materialComp: row["Material"] || "", // 🟢 NEW
+              unitWeight: row["Unit Weight (Kg)"] || "", // 🟢 NEW
+              samplePrice: row["Sample Price"] || "", // 🟢 NEW
+              productCerts: row["Certifications"] || "", // 🟢 NEW
               heroUrl: mediaUrls[(row["Hero Img"] || "").trim()] || "",
               lifeUrl: mediaUrls[(row["Life Img"] || "").trim()] || "",
               detailUrl: mediaUrls[(row["CloseUp Img"] || "").trim()] || "",
