@@ -827,7 +827,12 @@
       try { matrix = typeof dbRow.pricing_matrix === 'string' ? JSON.parse(dbRow.pricing_matrix) : dbRow.pricing_matrix; } catch(e){}
 
       if(matrix && matrix.length > 0){ 
-        matrix.forEach(function(row) { addPriceRowFilled(row); }); 
+        let prevOpt = null; let prevType = null;
+        matrix.forEach(function(row) { 
+            let isTier = (prevOpt === row.opt && prevType === row.type);
+            addPriceRowFilled(row, isTier); 
+            prevOpt = row.opt; prevType = row.type;
+        }); 
       } else { addPriceRow(); }
 
       setServerPreview(dbRow.hero_img, 'preview_img_hero', 'status_img_hero');
