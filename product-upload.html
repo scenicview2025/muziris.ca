@@ -212,8 +212,16 @@
             <option value="">Select Sub-Category</option>
           </select>
 
-          <label>PRODUCT NAME</label>
-          <input type="text" id="pName" name="productName" placeholder="e.g. Premium Ceramic Coffee Mug" required>
+          <div style="display:flex; gap:20px; flex-wrap: wrap;">
+            <div style="flex:2; min-width: 250px;">
+              <label>PRODUCT NAME *</label>
+              <input type="text" id="pName" name="productName" placeholder="e.g. Premium Ceramic Coffee Mug" required>
+            </div>
+            <div style="flex:1; min-width: 200px;">
+              <label>SUPPLIER SKU <span style="text-transform:none; font-size:10px; color:#666;">(Optional)</span></label>
+              <input type="text" id="supplierSku" name="supplierSku" placeholder="e.g. MUG-WHT-01">
+            </div>
+          </div>
           
           <div class="btn-group" style="justify-content: flex-end;">
             <button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button>
