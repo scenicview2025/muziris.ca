@@ -1274,7 +1274,7 @@
            category: formElement.category.value,
            subCategory: formElement.subCategory.value,
            productName: formElement.productName.value,
-           supplierSku: document.getElementById('supplierSku').value, // 🟢 NEW
+           supplierSku: dataList.length > 0 ? dataList[0].sku : "",
            hsCode: document.getElementById('hsCode').value, // 🟢 NEW
            materialComp: document.getElementById('materialComp').value, // 🟢 NEW
            samplePrice: document.getElementById('samplePrice').value, // 🟢 NEW
