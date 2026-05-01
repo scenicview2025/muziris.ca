@@ -212,8 +212,16 @@
             <option value="">Select Sub-Category</option>
           </select>
 
-          <label>PRODUCT NAME</label>
-          <input type="text" id="pName" name="productName" placeholder="e.g. Premium Ceramic Coffee Mug" required>
+          <div style="display:flex; gap:20px; flex-wrap: wrap;">
+            <div style="flex:2; min-width: 250px;">
+              <label>PRODUCT NAME *</label>
+              <input type="text" id="pName" name="productName" placeholder="e.g. Premium Ceramic Coffee Mug" required>
+            </div>
+            <div style="flex:1; min-width: 200px;">
+              <label>SUPPLIER SKU <span style="text-transform:none; font-size:10px; color:#666;">(Optional)</span></label>
+              <input type="text" id="supplierSku" name="supplierSku" placeholder="e.g. MUG-WHT-01">
+            </div>
+          </div>
           
           <div class="btn-group" style="justify-content: flex-end;">
             <button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button>
@@ -295,6 +303,32 @@
           </div>
 
           <input type="hidden" name="pricingMatrix" id="pricingString">
+
+          <div style="margin-top:40px; background:rgba(0,0,0,0.2); padding:25px; border-radius:8px; border:1px dashed #444;">
+              <h4 style="color:var(--gold); font-family:'Cinzel', serif; margin-top:0; letter-spacing:1px;">Advanced Trade Specifications <span style="font-family:'Lato', sans-serif; font-size:10px; color:#888;">(Optional but recommended)</span></h4>
+              
+              <div style="display:flex; gap:20px; flex-wrap: wrap; margin-top:15px;">
+                 <div style="flex:1; min-width: 200px;">
+                     <label style="margin-top:0;">HS CODE</label>
+                     <input type="text" id="hsCode" name="hsCode" placeholder="e.g. 8481.80">
+                 </div>
+                 <div style="flex:2; min-width: 250px;">
+                     <label style="margin-top:0;">MATERIAL / COMPOSITION</label>
+                     <input type="text" id="materialComp" name="materialComp" placeholder="e.g. 316L Stainless Steel">
+                 </div>
+              </div>
+
+              <div style="display:flex; gap:20px; flex-wrap: wrap;">
+                 <div style="flex:1; min-width: 200px;">
+                     <label>SAMPLE PRICE <span id="ui-sample-curr" style="color:var(--gold);"></span></label>
+                     <input type="number" id="samplePrice" name="samplePrice" placeholder="e.g. 50.00" step="0.01">
+                 </div>
+                 <div style="flex:2; min-width: 250px;">
+                     <label>PRODUCT CERTIFICATIONS</label>
+                     <input type="text" id="productCerts" name="productCerts" placeholder="e.g. CE, RoHS, FDA, UL Listed">
+                 </div>
+              </div>
+          </div>
 
           <div class="btn-group">
             <button type="button" class="btn-prev" onclick="prevStep(2)">Back</button>
@@ -470,6 +504,7 @@
       document.getElementById('sid').value = savedId;
       document.getElementById('cname').value = savedCompany;
       document.getElementById('ui-currency-label').innerText = "(" + savedCurrency + ")";
+      document.getElementById('ui-sample-curr').innerText = "(" + savedCurrency + ")";
       document.getElementById('ui-currency-text').innerText = savedCurrency;
 
       fetchAPI('getCategoryStructure').then(populateCats);
@@ -774,6 +809,11 @@
       
       document.getElementById('pid').value = dbRow.product_id;
       document.getElementById('pName').value = dbRow.product_name || "";
+      document.getElementById('supplierSku').value = dbRow.supplier_sku || "";
+      document.getElementById('hsCode').value = dbRow.hs_code || "";
+      document.getElementById('materialComp').value = dbRow.material_composition || "";
+      document.getElementById('samplePrice').value = dbRow.sample_price || "";
+      document.getElementById('productCerts').value = dbRow.product_certs || "";
       document.getElementById('shortTitle').value = dbRow.short_title || ""; 
       document.getElementById('packDetails').value = dbRow.packaging || "";
       document.getElementById('desc').value = dbRow.description || "";
@@ -1184,6 +1224,11 @@
            category: formElement.category.value,
            subCategory: formElement.subCategory.value,
            productName: formElement.productName.value,
+           supplierSku: document.getElementById('supplierSku').value, // 🟢 NEW
+           hsCode: document.getElementById('hsCode').value, // 🟢 NEW
+           materialComp: document.getElementById('materialComp').value, // 🟢 NEW
+           samplePrice: document.getElementById('samplePrice').value, // 🟢 NEW
+           productCerts: document.getElementById('productCerts').value, // 🟢 NEW
            shortTitle: formElement.shortTitle.value,
            packagingDetails: formElement.packagingDetails.value,
            description: formElement.description.value,
