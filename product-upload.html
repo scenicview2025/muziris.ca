@@ -808,6 +808,11 @@
       
       document.getElementById('pid').value = dbRow.product_id;
       document.getElementById('pName').value = dbRow.product_name || "";
+      document.getElementById('supplierSku').value = dbRow.supplier_sku || "";
+      document.getElementById('hsCode').value = dbRow.hs_code || "";
+      document.getElementById('materialComp').value = dbRow.material_composition || "";
+      document.getElementById('samplePrice').value = dbRow.sample_price || "";
+      document.getElementById('productCerts').value = dbRow.product_certs || "";
       document.getElementById('shortTitle').value = dbRow.short_title || ""; 
       document.getElementById('packDetails').value = dbRow.packaging || "";
       document.getElementById('desc').value = dbRow.description || "";
