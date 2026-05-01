@@ -341,6 +341,7 @@
         productsMap[groupNum].pricingMatrix.push({
           type: row["Var Type"] || "Standard",
           opt: row["Var Option"] || "-",
+          sku: row["SKU"] || "", // 🟢 NEW: Pulls the SKU into the Variant Matrix
           unit: row["Unit"] || "Pcs",
           min: row["Min Qty"] || "1",
           max: row["Max Qty"] || "Up",
