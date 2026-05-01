@@ -1088,39 +1088,61 @@
             leadTime = firstRow.querySelector('.p-lead').value || "30";
             inco = firstRow.querySelector('.p-incoterms').value || "FOB";
             
-            // Loop through all rows to build the visual table!
-            let currentVariantName = "";
+            // 🟢 GROUP TIERS BY VARIANT FOR HORIZONTAL DISPLAY
+            let variants = [];
+            let currentVar = null;
             
             rows.forEach((row) => {
                 let type = row.querySelector('.p-type').value;
                 let opt = row.querySelector('.p-opt').value;
                 let min = row.querySelector('.p-min').value || "1";
-                let max = row.querySelector('.p-max').value || "Up";
+                let max = row.querySelector('.p-max').value || "";
                 let unit = row.querySelector('.p-unit').value || "Pcs";
                 let price = row.querySelector('.p-price').value || "0.00";
                 
-                // Check if it is a volume tier by seeing if the type select is hidden!
+                // Is this a volume tier (child) or a new variant (parent)?
                 let isTier = row.querySelector(".p-type").style.display === "none";
                 
-                let vName = "";
                 if (!isTier) {
-                    vName = type === 'Standard' ? 'Standard' : opt;
-                    currentVariantName = vName; // Save this so child tiers know their parent!
-                } else {
-                    vName = `<span style="color:#9ca3af; font-size:11px;">↳ Tier of ${currentVariantName}</span>`;
+                    currentVar = {
+                        name: type === 'Standard' ? 'Standard Base' : opt,
+                        tiers: []
+                    };
+                    variants.push(currentVar);
                 }
-
-                matrixHtml += `
-                <div style="display:flex; justify-content:space-between; font-size:13px; color:#111827; font-weight:700; margin-bottom:8px; padding-bottom:8px; border-bottom:1px dashed #f3f4f6;">
-                  <span style="flex:1;">${vName}</span>
-                  <span style="flex:1; text-align:center; color:#6b7280;">${min} - ${max} ${unit}</span>
-                  <span style="flex:1; text-align:right; color:var(--bronze);">$${price}</span>
-                </div>`;
+                
+                // Add this row's price data into the parent variant's array
+                if (currentVar) {
+                    currentVar.tiers.push({ min, max, unit, price });
+                }
             });
+
+            // 🟢 RENDER THE BEAUTIFUL HORIZONTAL B2B LAYOUT
+            variants.forEach(v => {
+                matrixHtml += `<div style="margin-bottom: 25px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px;">`;
+                matrixHtml += `  <div style="font-size:12px; color:#6b7280; text-transform:uppercase; font-weight:800; margin-bottom:12px; letter-spacing:1px;">VARIANT: <span style="color:#111827;">${v.name}</span></div>`;
+                
+                // Create a horizontal flexbox container for the tiers
+                matrixHtml += `  <div style="display:flex; gap:15px; flex-wrap:wrap;">`;
+                
+                v.tiers.forEach(t => {
+                    // Format text so if max is blank, it shows "≥ 100 Pcs"
+                    let qtyText = (!t.max || t.max.toLowerCase() === "up") ? `≥ ${t.min} ${t.unit}` : `${t.min} - ${t.max} ${t.unit}`;
+                    
+                    matrixHtml += `
+                    <div style="flex:1; min-width:140px; background:#fff; padding:15px; border-radius:8px; border:1px solid #d1d5db; box-shadow:0 1px 3px rgba(0,0,0,0.05); transition: border-color 0.2s;">
+                        <div style="font-size:12px; color:#4b5563; margin-bottom:8px; font-weight:500;">${qtyText}</div>
+                        <div style="font-size:24px; font-weight:900; color:#111827; letter-spacing:-0.5px;">$${t.price}</div>
+                    </div>`;
+                });
+                
+                matrixHtml += `  </div>`;
+                matrixHtml += `</div>`;
+            });
+
         } else {
             matrixHtml = `<div style="text-align:center; color:#9ca3af; font-size:12px; padding:10px;">No variants added.</div>`;
         }
-
         // 4. Handle Images & Thumbnails
         const getFileUrl = (inputName) => {
             const input = document.querySelector(`input[name="${inputName}"]`);
