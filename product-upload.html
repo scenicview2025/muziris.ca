@@ -931,6 +931,39 @@
       }
     }
 
+    // 🟢 NEW: SMART VOLUME TIER GENERATOR
+    function cloneRow(btn) {
+      var row = btn.closest("tr");
+      var newRow = row.cloneNode(true);
+      
+      // 1. Clear the max quantity and price for the new tier
+      newRow.querySelector(".p-max").value = "";
+      newRow.querySelector(".p-price").value = "";
+      
+      // 2. SMART AUTO-FILL: Calculate the new Min Qty based on the previous Max Qty!
+      var oldMax = parseInt(row.querySelector(".p-max").value);
+      newRow.querySelector(".p-min").value = !isNaN(oldMax) ? (oldMax + 1) : "";
+      
+      // 3. Fix select dropdowns (cloneNode doesn't copy selected state in some browsers)
+      newRow.querySelector(".p-type").value = row.querySelector(".p-type").value;
+      newRow.querySelector(".p-unit").value = row.querySelector(".p-unit").value;
+      newRow.querySelector(".p-incoterms").value = row.querySelector(".p-incoterms").value;
+      
+      // 4. Wipe the local image preview status so they know it carried over from the master variant
+      var imgPreview = newRow.querySelector(".var-img-preview");
+      var imgStatus = newRow.querySelector(".var-img-status");
+      var fileInput = newRow.querySelector("input[type='file']");
+      
+      if(imgPreview.style.backgroundImage !== "none" && imgPreview.style.backgroundImage !== "") {
+          imgStatus.innerHTML = "<span style='color:#888; font-size:8px;'>Linked to above</span>";
+          imgStatus.style.display = "block";
+      }
+      fileInput.value = ""; // Clear file input buffer
+      
+      // 5. Insert the new tier directly under the current one!
+      row.parentNode.insertBefore(newRow, row.nextSibling);
+    }
+
     function populateCats(data) {
       var select = document.getElementById("mainCat");
       select.innerHTML = '<option value="">Select Category...</option>'; 
