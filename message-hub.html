@@ -305,10 +305,13 @@
 
             <div class="tool-box ai-box">
                 <h4 class="tool-title ai-title"><i class="fas fa-robot"></i> AI Sales Coach</h4>
-                <div class="tool-desc">Let our AI analyze this conversation and generate psychological sales tactics to help you close the deal.</div>
-                <button class="tool-btn ai-btn" onclick="analyzeChatWithAI()">Analyze Conversation</button>
-                <div id="ai-typing" class="ai-typing">Analyzing buyer sentiment...</div>
-                <div id="ai-result" class="ai-result"></div>
+                
+                <div class="tool-desc" style="display:block;">Let our AI analyze this conversation and generate psychological sales tactics to help you close the deal.</div>
+                
+                <button class="tool-btn ai-btn" onclick="analyzeChatWithAI()" style="display:block; margin-top:10px;">Analyze Conversation</button>
+                
+                <div id="ai-typing" class="ai-typing" style="display:none;">Analyzing buyer sentiment...</div>
+                <div id="ai-result" class="ai-result" style="display:none;"></div>
             </div>
             
             <div class="tool-box">
