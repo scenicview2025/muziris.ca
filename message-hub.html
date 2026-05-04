@@ -1161,6 +1161,35 @@
                 document.getElementById('emoji-wrapper-sup').style.display = 'none';
             });
         });
+
+        // ==========================================
+        // 🟢 5. QUICK REPLIES ENGINE
+        // ==========================================
+        function toggleQuickReply() {
+            const menu = document.getElementById('qr-menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            document.getElementById('emoji-wrapper-sup').style.display = 'none'; // Close emoji menu if open
+        }
+
+        function insertQuickReply(type) {
+            const replyBox = document.getElementById('reply-input');
+            let template = "";
+
+            if (type === 'sample') {
+                template = "Thanks for your interest! To proceed with a sample, please visit our catalog, click 'Request Official Quote', and check the 'Sample Required' box. We will then issue a formal invoice including the sample shipping costs.";
+            } else if (type === 'moq') {
+                template = "Thank you for reaching out. Our standard MOQ for this item is [ENTER MOQ HERE], but we are open to producing a smaller trial order for your first shipment to build a long-term relationship. What volume did you have in mind?";
+            } else if (type === 'custom') {
+                template = "Yes, we fully support Private Label and OEM customization! Could you please share your logo files or tech pack? Once reviewed, our engineering team can confirm the exact customization costs.";
+            } else if (type === 'escrow') {
+                template = "For your security and ours, we process all international orders through the Muziris Escrow platform. Your funds are held safely in North America and only released to us after you receive and inspect the goods.";
+            }
+
+            // Insert text and close menu
+            replyBox.value = template;
+            toggleQuickReply();
+            replyBox.focus();
+        }
         
     </script>
 </body>
