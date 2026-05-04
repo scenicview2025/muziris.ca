@@ -30,8 +30,8 @@
             --border: #2a2f3a;
             --ai-glow: #00e5ff;
        }
-        * { box-sizing: border-box; } /* 🟢 Stops horizontal stretching */
-        body { margin: 0; font-family: 'Lato', sans-serif; background: var(--void); color: var(--mist); height: 100dvh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; position: fixed; } /* 🟢 100dvh fixes the hidden input, position:fixed stops the screen from shaking */
+        * { box-sizing: border-box; } 
+        body { margin: 0; font-family: 'Lato', sans-serif; background: var(--void); color: var(--mist); height: 100dvh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; position: fixed; } 
         
         /* TOP NAV */
         .top-nav { height: 60px; background: var(--slate); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
@@ -59,7 +59,7 @@
         .chat-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #555; background: var(--void); z-index: 10; }
         .chat-header { padding: 20px 30px; background: var(--slate); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .messages-container { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 70%; padding: 12px 18px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
+        .msg { max-width: 70%; padding: 12px 18px; border-radius: 8px; font-size: 14px; line-height: 1.5; font-family: 'Inter', 'Lato', 'Noto Color Emoji', sans-serif;}
         .msg-buyer { align-self: flex-start; background: var(--slate); color: #fff; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
         .msg-supplier { align-self: flex-end; background: rgba(212,175,55,0.1); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); border-bottom-right-radius: 2px; }
         .msg-system { align-self: center; background: rgba(255,82,82,0.1); color: var(--alert); border: 1px solid rgba(255,82,82,0.3); font-size: 11px; font-weight: bold; padding: 8px 15px; text-align: center; max-width: 90%; }
@@ -115,68 +115,39 @@
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
-        /* 🟢 MOBILE RESPONSIVENESS (App-like Sliding UI) */
+        /* MOBILE RESPONSIVENESS */
         @media (max-width: 900px) {
             .top-nav { padding: 0 15px; }
             .hub-title { font-size: 16px; }
-            .escrow-badge { display: none; /* Hide badge to save space */ }
-            
-            /* Stack layout instead of side-by-side */
+            .escrow-badge { display: none; }
             .main-layout { flex-direction: column; overflow: hidden; position: relative; }
-            
-            /* Chat List takes full width initially */
             .chat-list-panel { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; transition: transform 0.3s ease; }
-            
-            /* Chat Window is hidden off-screen to the right */
             .chat-window { width: 100%; height: 100%; position: absolute; top: 0; left: 100%; z-index: 20; transition: transform 0.3s ease; display: flex !important; }
-            
-            /* Add a Mobile Back Button inside the Chat Window */
             .mobile-back-to-list { display: flex !important; align-items: center; color: var(--gold); background: transparent; border: none; font-size: 14px; font-weight: bold; padding: 10px 0; cursor: pointer; }
-            .chat-header { padding: 10px 15px; flex-direction: row; align-items: center; gap: 15px; } /* 🟢 Keeps header thin so input box stays on screen */
-            #chat-header-product { display: none; } /* Hide on mobile to save space */
-            
-            /* Tools Panel is hidden off-screen to the right, slides over chat */
+            .chat-header { padding: 10px 15px; flex-direction: row; align-items: center; gap: 15px; } 
+            #chat-header-product { display: none; } 
             .tools-panel { width: 100%; height: 100%; position: absolute; top: 0; left: 200%; z-index: 30; transition: transform 0.3s ease; border-left: none; background: var(--slate); }
             .mobile-tools-close { display: block !important; background: transparent; border: none; color: var(--gold); font-size: 14px; font-weight: bold; cursor: pointer; padding: 0 0 15px 0; text-align: left; }            .mobile-tools-toggle { display: block !important; position: absolute; top: 15px; right: 15px; background: var(--slate); border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; border-radius: 4px; z-index: 25; cursor: pointer; }
-            
-            /* Shrink inputs and text */
-            /* 🟢 NEW: Forces long URLs to wrap so the screen stops shaking! */
             .msg { max-width: 85%; word-break: break-word; overflow-wrap: anywhere; }
-            
             .input-area { padding: 10px; }
             .chat-input { padding: 10px; }
             .send-btn { padding: 0 15px; height: 40px; }
-            
-            /* Product Modal Fix */
             .product-modal-content { flex-direction: column; height: 90vh; overflow-y: auto; }
             .product-modal-left, .product-modal-right { width: 100%; }
             .product-modal-left { min-height: 250px; }
         }
 
-        /* Helpers to handle desktop vs mobile display states */
         .mobile-back-to-list, .mobile-tools-toggle { display: none; }
         .chat-list-panel.hide-mobile { transform: translateX(-100%); }
         .chat-window.show-mobile { transform: translateX(-100%); }
         .tools-panel.show-mobile { transform: translateX(-200%); }
 
-        /* 🟢 NEW: Training Simulator Styles */
         .chat-item.training { border-left: 3px solid #a855f7; background: rgba(168, 85, 247, 0.05); }
         .chat-item.training:hover, .chat-item.training.active { background: rgba(168, 85, 247, 0.15); border-left: 3px solid #a855f7; }
         .training-badge { background: #a855f7; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 9px; margin-left: 5px; text-transform: uppercase; letter-spacing: 1px; }
-    /* 🟢 NEW: Jumbo Emoji Native Rendering */
-        .jumbo-emoji {
-            display: inline-block;
-            font-family: 'Noto Color Emoji', sans-serif !important;
-            font-size: 44px;
-            line-height: 1.2;
-            text-align: center;
-            padding: 5px 0;
-        }
-        .msg {
-            font-family: 'Inter', 'Lato', 'Noto Color Emoji', sans-serif;
-        }
-
-        /* 🟢 QUICK REPLY MENU STYLES */
+        .jumbo-emoji { display: inline-block; font-family: 'Noto Color Emoji', sans-serif !important; font-size: 44px; line-height: 1.2; text-align: center; padding: 5px 0; }
+        
+        /* QUICK REPLY MENU STYLES */
         .qr-menu { display: none; position: absolute; bottom: 85px; left: 80px; background: var(--slate); border: 1px solid #333; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 105; width: 250px; overflow: hidden; }
         .qr-header { background: #0b0e14; padding: 10px 15px; font-size: 11px; color: var(--gold); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .qr-item { padding: 12px 15px; font-size: 12px; color: #ccc; cursor: pointer; border-bottom: 1px solid #222; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
@@ -188,9 +159,6 @@
 <body>
 
     <script>
-        // ==========================================
-        // 🟢 FIREBASE CONFIGURATION
-        // ==========================================
         const firebaseConfig = {
           apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
           authDomain: "muziris-ac9dd.firebaseapp.com",
@@ -204,16 +172,15 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
         
-        // 🟢 DEFINE THE BACKEND API URL HERE
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
         
         let currentActiveChatId = null;
         let unsubscribeMessages = null;
         let currentProductId = null;
         
-        let unsubscribeChatDoc = null; // 🟢 NEW
-        let isTyping = false;          // 🟢 NEW
-        let typingTimeout = null;      // 🟢 NEW
+        let unsubscribeChatDoc = null; 
+        let isTyping = false;          
+        let typingTimeout = null;      
     </script>
 
     <div class="top-nav">
@@ -305,17 +272,14 @@
 
             <div class="tool-box ai-box">
                 <h4 class="tool-title ai-title"><i class="fas fa-robot"></i> AI Sales Coach</h4>
-                
-                <div class="tool-desc" style="display: block !important; margin-bottom: 15px;">
+                <div class="tool-desc" style="display:block !important; margin-bottom:15px;">
                     Let our AI analyze this conversation and generate psychological sales tactics to help you close the deal.
                 </div>
-                
-                <button class="tool-btn ai-btn" onclick="analyzeChatWithAI()" style="display: block !important; width: 100%; font-size: 12px; padding: 12px;">
+                <button class="tool-btn ai-btn" onclick="analyzeChatWithAI()" style="display:block !important; width:100%; border:1px solid #00e5ff; color:#00e5ff; padding:10px; border-radius:4px; cursor:pointer; background:transparent;">
                     Analyze Conversation
                 </button>
-                
-                <div id="ai-typing" class="ai-typing" style="display: none;">Analyzing buyer sentiment...</div>
-                <div id="ai-result" class="ai-result" style="display: none;"></div>
+                <div id="ai-typing" class="ai-typing" style="display:none;">Analyzing buyer sentiment...</div>
+                <div id="ai-result" class="ai-result" style="display:none;"></div>
             </div>
             
             <div class="tool-box">
@@ -415,9 +379,6 @@
     </div>
 
     <script>
-        // ==========================================
-        // 🟢 1. LOAD CHAT LIST & MASK BUYER ID
-        // ==========================================
         function loadChatList() {
             db.collection('chats')
               .where('supplierId', '==', supplierId)
@@ -425,7 +386,6 @@
               .onSnapshot(snapshot => {
                   const listContainer = document.getElementById('chat-list-container');
                   
-                  // 🟢 NEW: Permanently inject the Training Simulator at the top!
                   const trainingId = `TRAINING_${supplierId}`;
                   const isTrainingActive = currentActiveChatId === trainingId ? 'active' : '';
                   
@@ -438,12 +398,11 @@
                   `;
 
                   snapshot.forEach(doc => {
-                      if (doc.id === trainingId) return; // Prevent duplicating the training chat from DB
+                      if (doc.id === trainingId) return; 
                       const chat = doc.data();
                       const isUnread = chat.unreadBySupplier ? 'display:block;' : 'display:none;';
                       const activeClass = currentActiveChatId === doc.id ? 'active' : '';
 
-                      // SECURE MASKING: Hide raw email
                       let safeName = chat.buyerEmail ? chat.buyerEmail.split('@')[0] : "UNKNOWN";
                       let maskedBuyer = "Buyer: " + safeName.substring(0, 3).toUpperCase() + "***";
 
@@ -456,7 +415,7 @@
                           </div>
                       `;
                   });
-                  listContainer.innerHTML = html; // 🟢 Apply HTML
+                  listContainer.innerHTML = html; 
               }, (error) => {
                   console.error("Firestore Error:", error);
                   if (error.message.includes("requires an index")) {
@@ -465,24 +424,20 @@
               });
         }
 
-        // ==========================================
-        // 🟢 2. OPEN SPECIFIC CHAT
-        // ==========================================
         function openChat(chatId, buyerName, productId) {
-            // 🟢 NEW: If they were in another chat, set them offline there first!
             if (currentActiveChatId && currentActiveChatId !== chatId) {
                 db.collection('chats').doc(currentActiveChatId).set({ supplierOnline: false, supplierTyping: false }, { merge: true });
             }
             
             currentActiveChatId = chatId;
             currentProductId = productId; 
-            loadCalcData(productId); // 🟢 Fetches Live Rates & Markup for this specific chat
+            loadCalcData(productId); 
             
             // Reset AI Tool State
             document.getElementById('ai-result').style.display = 'none';
             document.getElementById('ai-typing').style.display = 'none';
             const aiBtn = document.querySelector('.ai-btn');
-            if (aiBtn) aiBtn.style.display = 'block'; // 🟢 FIX: Brings the button back!
+            if (aiBtn) aiBtn.style.display = 'block'; 
 
             // Update UI State
             document.getElementById('chat-empty-state').style.display = 'none';
@@ -498,13 +453,11 @@
             document.getElementById('chat-header-buyer').innerText = buyerName;
             document.getElementById('chat-header-product').innerText = productId !== 'General Inquiry' ? `Product Ref: ${productId}` : 'General Inquiry';
 
-            // 🟢 NEW: Trigger Mobile Sliding UI
             if (window.innerWidth <= 900) {
                 document.querySelector('.chat-list-panel').classList.add('hide-mobile');
                 document.querySelector('.chat-window').classList.add('show-mobile');
             }
 
-            // 🟢 Tell Firebase the supplier read the chat AND is currently online
             db.collection('chats').doc(chatId).set({ 
                 unreadBySupplier: false,
                 supplierOnline: true 
@@ -513,7 +466,6 @@
             if (unsubscribeMessages) unsubscribeMessages();
             if (unsubscribeChatDoc) unsubscribeChatDoc();
 
-            // 🟢 Listen for Buyer's Online/Typing status
             unsubscribeChatDoc = db.collection('chats').doc(chatId).onSnapshot(doc => {
                 const data = doc.data();
                 if (!data) return;
@@ -561,12 +513,10 @@
                         else if (msg.text && msg.text.startsWith('https://firebasestorage')) {
                             content = `<a href="${msg.text}" target="_blank"><img src="${msg.text}" style="max-width: 100%; border-radius: 8px; cursor: pointer; border: 1px solid #333;"></a>`;
                         } 
-                        // 🟢 NEW: Jumbo Emoji Detection (Bulletproof Regex)
                         else if (/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji_Modifier}\uFE0F\u200D\s]+$/u.test(msg.text)) {
                             content = `<div class="jumbo-emoji">${content}</div>`;
                         } 
                         else {
-                            // 🟢 Detect URLs and make them clickable! Also preserves line breaks.
                             const urlRegex = /(https?:\/\/[^\s]+)/g;
                             content = content.replace(urlRegex, '<a href="$1" target="_blank" style="color: var(--gold); text-decoration: underline; font-weight: bold;">$1</a>');
                             content = content.replace(/\n/g, '<br>');
@@ -582,9 +532,7 @@
                 });
         }
 
-        // 🟢 NEW: Mobile UI Sliding Functions
         function closeMobileChat() {
-            // 🟢 FIX: Tell Firebase the supplier stopped looking at the chat
             if (currentActiveChatId) {
                 db.collection('chats').doc(currentActiveChatId).set({ supplierOnline: false, supplierTyping: false }, { merge: true });
             }
@@ -600,30 +548,23 @@
             toolsPanel.classList.toggle('show-mobile');
         }
 
-        // ==========================================
-        // 🟢 3. SEND MESSAGE & UPLOAD LOGIC (WhatsApp Style)
-        // ==========================================
         let pendingUploadFile = null;
 
-        // 1. Queue the file when selected
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
             pendingUploadFile = file;
             
-            // Show the preview box
             document.getElementById('file-preview-name').innerText = file.name;
             document.getElementById('file-preview-box').style.display = 'flex';
         }
 
-        // 2. Clear the file if they click the 'X'
         function clearSelectedFile() {
             pendingUploadFile = null;
             document.getElementById('supplier-file-upload').value = '';
             document.getElementById('file-preview-box').style.display = 'none';
         }
 
-        // 3. Process everything when they click SEND
         async function sendReply() {
             const input = document.getElementById('reply-input');
             const rawText = input.value.trim();
@@ -632,12 +573,10 @@
             if (!rawText && !pendingUploadFile) return;
             if (!currentActiveChatId) return;
 
-            // UI Loading state (Turns the Send button into a spinner)
             btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
             btn.disabled = true;
 
             try {
-                // 🟢 A. Did they attach a file? Upload it first!
                 if (pendingUploadFile) {
                     const file = pendingUploadFile;
                     const storageRef = storage.ref(`chat_attachments/${currentActiveChatId}/${Date.now()}_${file.name}`);
@@ -654,10 +593,9 @@
                         unreadByBuyer: true
                     }, { merge: true });
                     
-                    clearSelectedFile(); // Hide the preview box
+                    clearSelectedFile(); 
                 }
 
-                // 🟢 B. Did they type text? Send it!
                 if (rawText) {
                     let safeText = rawText;
                     let securityTriggered = false;
@@ -672,7 +610,6 @@
 
                     input.value = ""; 
                     
-                    // 🟢 FIX: Instantly kill the typing animation
                     isTyping = false;
                     clearTimeout(typingTimeout);
 
@@ -688,12 +625,9 @@
                         supplierTyping: false
                     }, { merge: true });
 
-                    // 🟢 NEW: TRAINING BOT AUTO-RESPONDER
                     if (currentActiveChatId === `TRAINING_${supplierId}`) {
-                        // Make the bot show "Online" and "Typing..."
                         db.collection('chats').doc(currentActiveChatId).set({ buyerOnline: true, buyerTyping: true }, { merge: true });
                         
-                        // Wait 3.5 seconds to simulate a human reading it
                         setTimeout(async () => {
                             const botPrompts = [
                                 "Perfect! Can you test the 'Freight Estimator' tool on the right and send me a quote to Toronto, CA?",
@@ -726,16 +660,11 @@
                 console.error(error);
                 alert("Failed to send message or file. Please check your connection.");
             } finally {
-                // Reset the SEND button
                 btn.innerHTML = 'Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i>';
                 btn.disabled = false;
             }
         }
-        // ==========================================
-        // 🟢 4. RIGHT PANEL TOOLS LOGIC
-        // ==========================================
         
-        // --- AI SALES COACH (Now Context-Aware!) ---
         function analyzeChatWithAI() {
             if (!currentActiveChatId) return;
             const btn = document.querySelector('.ai-btn');
@@ -746,7 +675,6 @@
             typing.style.display = 'block';
             resultBox.style.display = 'none';
 
-            // 1. Read the actual chat history from the screen!
             let chatHistory = "";
             const messages = document.querySelectorAll('.messages-container .msg');
             messages.forEach(msg => {
@@ -757,7 +685,6 @@
                 }
             });
 
-            // 2. Send it to the Render Server
             fetch(API_BASE_URL + '/supplier/ai-advisor', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -770,6 +697,7 @@
                     resultBox.innerHTML = data.reply + `<br><br><button onclick="document.getElementById('ai-result').style.display='none'; document.querySelector('.ai-btn').style.display='block';" style="background:transparent; border:none; color:var(--ai-glow); text-decoration:underline; cursor:pointer; font-size:10px;">Dismiss Advice</button>`;
                 } else {
                     resultBox.innerHTML = "Analysis failed. Please try again.";
+                    btn.style.display = 'block';
                 }
                 resultBox.style.display = 'block';
             })
@@ -777,20 +705,18 @@
                 typing.style.display = 'none';
                 resultBox.innerHTML = "Network connection error. Please try again.";
                 resultBox.style.display = 'block';
-                btn.style.display = 'block'; // 🟢 FIX: Brings the button back if it fails!
+                btn.style.display = 'block'; 
             });
         }
-        // --- LIVE CURRENCY & REVERSE MARKUP CALCULATOR ---
+        
         let liveRates = {};
-        let currentMarkup = 20; // Default
+        let currentMarkup = 20; 
 
         async function loadCalcData(productId) {
             try {
-                // 1. Point DIRECTLY to your live Render server
                 const res = await fetch('https://muziris-api.onrender.com/api/negotiation-data', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    // 🟢 THE FIX: Send the supplierId alongside the productId!
                     body: JSON.stringify({ productId: productId, supplierId: supplierId }) 
                 });
                 const data = await res.json();
@@ -799,16 +725,14 @@
                     liveRates = data.rates;
                     currentMarkup = data.markup;
                     
-                    // 🟢 NEW: Grab the exact currencies
                     const supCur = data.supplierCurrency || 'USD';
-                    const buyCur = 'CAD'; // Platform base currency for North American buyers
+                    const buyCur = 'CAD'; 
                     
                     document.getElementById('calc-markup-display').innerText = `Muziris Category Markup: ${currentMarkup}%`;
                     
                     const supSel = document.getElementById('calc-sup-curr');
                     const buySel = document.getElementById('calc-buy-curr');
                     
-                    // 🟢 NEW: Lock the dropdowns and dim them out!
                     supSel.innerHTML = `<option value="${supCur}">My Curr: ${supCur}</option>`;
                     buySel.innerHTML = `<option value="${buyCur}">Buyer: ${buyCur}</option>`;
                     
@@ -830,7 +754,6 @@
                 const supSel = document.getElementById('calc-sup-curr');
                 const buySel = document.getElementById('calc-buy-curr');
                 
-                // Lock fallbacks just in case
                 supSel.innerHTML = `<option value="USD">My Curr: USD</option>`;
                 buySel.innerHTML = `<option value="CAD">Buyer: CAD</option>`;
                 supSel.disabled = true; 
@@ -839,68 +762,48 @@
             
             updateCalc();
         }
-        // MATH 1: Buyer Target -> What Supplier Gets (REVERSE MATH)
+        
         function calcReverse() {
             const ask = parseFloat(document.getElementById('calc-buyer-ask').value) || 0;
             const supCurr = document.getElementById('calc-sup-curr').value;
             const buyCurr = document.getElementById('calc-buy-curr').value;
             
-            // Check if rates exist before calculating
             if(!liveRates[supCurr] || !liveRates[buyCurr] || !ask) { 
                 document.getElementById('calc-sup-get').innerText = "0.00 " + supCurr; 
                 return; 
             }
 
-            // 1. Convert Buyer Ask to Base CAD (Multiply)
             let askCAD = ask * liveRates[buyCurr];
-            
-            // 2. Strip the Muziris Platform Markup (Divide by 1.XX)
             let baseCAD = askCAD / (1 + (currentMarkup / 100));
-            
-            // 3. Convert Base CAD to Supplier's Currency (Divide)
             let supGet = baseCAD / liveRates[supCurr];
 
             document.getElementById('calc-sup-get').innerText = supGet.toFixed(2) + " " + supCurr;
         }
 
-        // MATH 2: Supplier Offer -> What Buyer Pays (FORWARD MATH)
         function calcForward() {
             const offer = parseFloat(document.getElementById('calc-sup-offer').value) || 0;
             const supCurr = document.getElementById('calc-sup-curr').value;
             const buyCurr = document.getElementById('calc-buy-curr').value;
             
-            // Check if rates exist before calculating
             if(!liveRates[supCurr] || !liveRates[buyCurr] || !offer) { 
                 document.getElementById('calc-buy-pay').innerText = "0.00 " + buyCurr; 
                 return; 
             }
 
-            // 1. Convert Supplier Offer to Base CAD (Multiply)
             let baseCAD = offer * liveRates[supCurr];
-            
-            // 2. Add the Muziris Platform Markup (Multiply by 1.XX)
             let finalCAD = baseCAD * (1 + (currentMarkup / 100));
-            
-            // 3. Convert final CAD to Buyer's Currency (Divide)
             let buyPay = finalCAD / liveRates[buyCurr];
 
             document.getElementById('calc-buy-pay').innerText = buyPay.toFixed(2) + " " + buyCurr;
         }
         function updateCalc() { calcReverse(); calcForward(); }
 
-        // --- RFQ & LOGISTICS TOOLS ---
-        
-        // ==========================================
-        // 🟢 CURATED LINE SHEET LOGIC
-        // ==========================================
-        let supplierInventoryCache = []; // Stores the products so search is instant
+        let supplierInventoryCache = []; 
 
-        // 1. Fetch products from the database invisibly in the background
         async function loadSupplierInventoryForSearch() {
             try {
                 const res = await fetch(API_BASE_URL + '/public-catalog', { method: 'POST' });
                 const data = await res.json();
-                // Save only THIS supplier's items into the cache
                 supplierInventoryCache = data.products.filter(p => p.supplierId === supplierId);
                 renderInventoryList(supplierInventoryCache);
             } catch(e) {
@@ -908,7 +811,6 @@
             }
         }
 
-        // 2. Draw the list with checkboxes and view buttons
         function renderInventoryList(products) {
             const container = document.getElementById('supplier-inventory-list');
             if(products.length === 0) {
@@ -918,7 +820,6 @@
             
             let html = '';
             products.forEach(p => {
-                // Shorten name if it's too long
                 let shortName = p.name.length > 25 ? p.name.substring(0, 25) + '...' : p.name;
                 
                 html += `
@@ -938,7 +839,6 @@
             container.innerHTML = html;
         }
 
-        // 3. Search Bar Filter (Fires every time you type a letter)
         function filterSupplierProducts() {
             const query = document.getElementById('product-search-input').value.toLowerCase();
             const filtered = supplierInventoryCache.filter(p => 
@@ -948,7 +848,6 @@
             renderInventoryList(filtered);
         }
 
-        // 🟢 INSTRUCT BUYER TO SUBMIT RFQ VIA CATALOG
         function shareCatalogLink(mode) {
             if (!currentActiveChatId) return alert("Please open a conversation first.");
             
@@ -964,7 +863,6 @@
                 link += `&items=${selectedIds}`;
             }
             
-            // 🟢 The Smart Instructional Message
             const msgText = `🤝 **NEXT STEP: OFFICIAL RFQ**\n\nI have prepared your catalog link. To move forward with our agreed terms, please follow these steps:\n\n` +
                             `1. Click the link below and find your required product(s).\n` +
                             `2. Click **"View in Marketplace"**.\n` +
@@ -976,10 +874,9 @@
            const replyBox = document.getElementById('reply-input');
             replyBox.value = msgText;
             replyBox.focus();
-            document.querySelector('.tools-panel').classList.remove('show-mobile'); // 🟢 NEW: Auto-close tools
+            document.querySelector('.tools-panel').classList.remove('show-mobile'); 
         }
 
-        // 🟢 Instantly drop the Escrow explanation link (Factory Persona)
         function shareEscrowLink() {
             if (!currentActiveChatId) return alert("Please open a conversation first.");
             
@@ -990,7 +887,7 @@
             const replyBox = document.getElementById('reply-input');
             replyBox.value = msgText;
             replyBox.focus();
-            document.querySelector('.tools-panel').classList.remove('show-mobile'); // 🟢 NEW: Auto-close tools
+            document.querySelector('.tools-panel').classList.remove('show-mobile'); 
         }
 
         async function estimateAndInjectLogistics() {
@@ -1002,14 +899,12 @@
 
             if(!weight || !cbm || !dest) return alert("Weight, Volume, and Destination are required to generate a live quote.");
             
-            // 1. UI Loading State
             btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Connecting to Carriers...`;
             btn.disabled = true;
             btn.style.color = "#888";
             btn.style.borderColor = "#555";
 
             try {
-                // 2. Call YOUR secure backend (which securely talks to the Freight Provider)
                 const response = await fetch(API_BASE_URL + '/freight/estimate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1020,7 +915,6 @@
 
                 if (!data.success) throw new Error(data.error);
 
-                // 3. Format the beautifully structured message for the chat using the LIVE API DATA
                 const msg = `🚢 **LIVE FREIGHT ESTIMATE** ✈️\n` +
                             `Routing: ${origin} ➔ ${dest}\n` +
                             `Cargo: ${weight}kg | ${cbm} CBM\n\n` +
@@ -1028,16 +922,14 @@
                             `✈️ **Air Freight:** ~$${data.airRate} USD (Est. ${data.airTransit} Days)\n\n` +
                             `*Note: These are live carrier estimates. Exact landed costs will be locked during the formal dispatch phase. Let me know which mode you prefer!*`;
                 
-                // 4. Inject into the chat box
                 const replyBox = document.getElementById('reply-input');
                 replyBox.value = msg;
                 replyBox.focus();
-                document.querySelector('.tools-panel').classList.remove('show-mobile'); // 🟢 NEW: Auto-close tools
+                document.querySelector('.tools-panel').classList.remove('show-mobile'); 
 
             } catch (error) {
                 alert("Freight API Error: " + error.message);
             } finally {
-                // 5. Reset the Button
                 btn.innerHTML = `<i class="fas fa-satellite-dish"></i> Ping Freight API`;
                 btn.disabled = false;
                 btn.style.color = "var(--blue)";
@@ -1045,7 +937,6 @@
             }
         }
 
-        // 🟢 NEW: Typing Detector Logic
         function handleTyping() {
             if (!currentActiveChatId) return;
 
@@ -1061,7 +952,6 @@
             }, 1500);
         }
 
-        // 🟢 NEW: Set Offline when closing browser tab
         window.addEventListener('beforeunload', () => {
             if (currentActiveChatId) {
                 db.collection('chats').doc(currentActiveChatId).set({ 
@@ -1071,10 +961,8 @@
             }
         });
 
-        // 🟢 NEW: Safely go offline when clicking Back to Dashboard
         async function leaveHub() {
             if (currentActiveChatId) {
-                // Wait for Firebase to register the offline status BEFORE leaving the page
                 await db.collection('chats').doc(currentActiveChatId).set({ 
                     supplierOnline: false, 
                     supplierTyping: false 
@@ -1083,10 +971,9 @@
             window.location.href = "supplier-dashboard.html";
         }
 
-        // Start listening when page loads
         window.onload = () => {
             loadChatList();
-            loadSupplierInventoryForSearch(); // 🟢 Loads the products for the search tool instantly!
+            loadSupplierInventoryForSearch(); 
         };
     </script>
 <div id="productPreviewModal" class="product-modal">
@@ -1095,12 +982,10 @@
     </div>
 
     <script>
-        // 🟢 NEW: FETCH AND DISPLAY PRODUCT DETAILS IN A MODAL
         async function openProductPreview(productId) {
             const modal = document.getElementById('productPreviewModal');
             const content = document.getElementById('productPreviewDetails');
             
-            // Show loading state
             modal.style.display = 'flex';
             content.innerHTML = '<div style="padding:50px; color:#888; text-align:center; width:100%;">Loading product data...</div>';
 
@@ -1113,7 +998,6 @@
                 const product = await res.json();
 
                 if(product && product.product_id) {
-                    // Extract base price safely
                     let priceDisplay = "N/A";
                     try {
                         let matrix = typeof product.pricing_matrix === 'string' ? JSON.parse(product.pricing_matrix) : product.pricing_matrix;
@@ -1162,7 +1046,6 @@
             }
         }
 
-        // 🟢 NEW: Listen for Emoji Clicks
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
                 const input = document.getElementById('reply-input');
@@ -1172,13 +1055,10 @@
             });
         });
 
-        // ==========================================
-        // 🟢 5. QUICK REPLIES ENGINE
-        // ==========================================
         function toggleQuickReply() {
             const menu = document.getElementById('qr-menu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-            document.getElementById('emoji-wrapper-sup').style.display = 'none'; // Close emoji menu if open
+            document.getElementById('emoji-wrapper-sup').style.display = 'none'; 
         }
 
         function insertQuickReply(type) {
@@ -1195,7 +1075,6 @@
                 template = "For your security and ours, we process all international orders through the Muziris Escrow platform. Your funds are held safely in North America and only released to us after you receive and inspect the goods.";
             }
 
-            // Insert text and close menu
             replyBox.value = template;
             toggleQuickReply();
             replyBox.focus();
@@ -1204,5 +1083,3 @@
     </script>
 </body>
 </html>
-
-
