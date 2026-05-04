@@ -474,6 +474,8 @@
             // Reset AI Tool State
             document.getElementById('ai-result').style.display = 'none';
             document.getElementById('ai-typing').style.display = 'none';
+            const aiBtn = document.querySelector('.ai-btn');
+            if (aiBtn) aiBtn.style.display = 'block'; // 🟢 FIX: Brings the button back!
 
             // Update UI State
             document.getElementById('chat-empty-state').style.display = 'none';
