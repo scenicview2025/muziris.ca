@@ -768,8 +768,9 @@
             })
             .catch(err => {
                 typing.style.display = 'none';
-                resultBox.innerHTML = "Network connection error.";
+                resultBox.innerHTML = "Network connection error. Please try again.";
                 resultBox.style.display = 'block';
+                btn.style.display = 'block'; // 🟢 FIX: Brings the button back if it fails!
             });
         }
         // --- LIVE CURRENCY & REVERSE MARKUP CALCULATOR ---
