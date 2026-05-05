@@ -49,6 +49,12 @@
         .modal-close:hover { background: #e5e7eb; color: #111; transform: rotate(90deg); }
         .premium-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid var(--border-light); color: var(--text-dark); border-radius: 8px; outline: none; transition: all 0.2s; font-size: 14px; font-weight: 500; }
         .premium-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
+        /* 🟢 NEW: MULTI-SKU CART STYLES */
+        .cart-float { position: fixed; bottom: 30px; right: 30px; background: var(--void); color: var(--gold); padding: 15px 25px; border-radius: 50px; font-weight: bold; font-family: 'Cinzel', serif; box-shadow: 0 10px 25px rgba(0,0,0,0.2); cursor: pointer; z-index: 1000; border: 1px solid var(--gold); display: none; transition: 0.3s; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px;}
+        .cart-float:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3); background: var(--gold); color: var(--void); }
+        .cart-badge { background: #ff5252; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; font-family: 'Inter', sans-serif; }
+        .btn-add-cart { width: 100%; margin-top: 10px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); color: var(--gold-dark); padding: 8px; border-radius: 6px; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
+        .btn-add-cart:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
