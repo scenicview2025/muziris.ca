@@ -633,12 +633,23 @@
                     if (currentActiveChatId === `TRAINING_${supplierId}`) {
                         db.collection('chats').doc(currentActiveChatId).set({ buyerOnline: true, buyerTyping: true }, { merge: true });
                         
+                        // Wait 3.5 seconds to simulate a human reading it
                         setTimeout(async () => {
                             const botPrompts = [
+                                // Tool Practice
                                 "Perfect! Can you test the 'Freight Estimator' tool on the right and send me a quote to Toronto, CA?",
                                 "Could you practice sending me an Official RFQ invite link using the 'Catalog' tool?",
-                                "I'm nervous about wiring money overseas. Can you click the 'Trust & Escrow' tool to send me the guide?",
-                                "Can you use the 'Reverse Markup Calc' to tell me what my final CAD price would be if you offered $50 base?"
+                                "Can you use the 'Reverse Markup Calc' to tell me what my final CAD price would be if you offered $50 base?",
+                                
+                                // 🟢 NEW: Sparring Mode (Exact Buyer Quick Replies)
+                                "Hello! Could you please provide the final landed price, including estimated shipping, for this product?",
+                                "I am interested in testing the quality first. What is the cost and estimated delivery time for a single sample sent to North America?",
+                                "Do you support Private Label / OEM packaging for this product? If so, what is the required Minimum Order Quantity for custom packaging?",
+                                "I am highly interested in this item, but I would like to place a smaller trial order first to test the market. Are you open to negotiating the MOQ for our first shipment?",
+                                "To protect both parties, I require that we process payment through the Muziris Escrow vault. The funds will be safely held in North America until the goods arrive. Does this work for you?",
+                                "What is your current production lead time for this volume, and how many days do you estimate for freight transit to my location?",
+                                "Can you please provide the necessary compliance and quality certifications (e.g., ISO, CE, FDA) required to legally import this item into North America?",
+                                "Do you allow third-party quality inspections at your factory before the final payment is released? A video tour of the finished cargo works too."
                             ];
                             const botReply = botPrompts[Math.floor(Math.random() * botPrompts.length)];
                             
