@@ -183,6 +183,18 @@
                 
                 <button class="attach-btn" style="border:none; background:transparent;" onclick="const ew = document.getElementById('emoji-wrapper-buy'); ew.style.display = ew.style.display === 'block' ? 'none' : 'block';"><i class="far fa-smile"></i></button>
 
+                <button onclick="toggleQuickReply()" title="Quick Replies" style="background:transparent; border:none; color:var(--gold); font-size:18px; cursor:pointer; padding:10px; transition:0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><i class="fas fa-bolt"></i></button>
+                
+                <div id="qr-menu" class="qr-menu">
+                    <div class="qr-header">
+                        Buyer Quick Replies
+                        <i class="fas fa-times" style="cursor:pointer; color:#888;" onclick="toggleQuickReply()"></i>
+                    </div>
+                    <div class="qr-item" onclick="insertQuickReply('price')"><i class="fas fa-file-invoice-dollar" style="color:var(--success);"></i> Request Landed Price</div>
+                    <div class="qr-item" onclick="insertQuickReply('sample')"><i class="fas fa-box-open" style="color:#a855f7;"></i> Request Sample Info</div>
+                    <div class="qr-item" onclick="insertQuickReply('custom')"><i class="fas fa-paint-brush" style="color:var(--blue);"></i> Ask about Customization</div>
+                    <div class="qr-item" onclick="insertQuickReply('moq')"><i class="fas fa-chart-line" style="color:var(--gold);"></i> Negotiate MOQ</div>
+                </div>
                 <input type="text" id="reply-input" class="chat-input" placeholder="Type a message to the supplier..." onkeypress="if(event.key === 'Enter') sendReply()" oninput="handleTyping()">
                 <button class="send-btn" onclick="sendReply()">Send <i class="fas fa-paper-plane" style="margin-left: 8px;"></i></button>
             </div>
