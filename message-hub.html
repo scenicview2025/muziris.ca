@@ -1075,6 +1075,8 @@
                 template = "Yes, we fully support Private Label and OEM customization! Could you please share your logo files or tech pack? Once reviewed, our engineering team can confirm the exact customization costs.";
             } else if (type === 'escrow') {
                 template = "For your security and ours, we process all international orders through the Muziris Escrow platform. Your funds are held safely in North America and only released to us after you receive and inspect the goods.";
+            } else if (type === 'shipping') {
+                template = "To get an exact shipping cost to your location, please use the Catalog tool to 'Request Official Quote'. Once we receive your delivery address and exact quantities, our logistics team will add the final freight cost to your contract!";
             }
 
             replyBox.value = template;
