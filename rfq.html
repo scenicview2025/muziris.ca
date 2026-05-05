@@ -439,11 +439,33 @@
         }
 
         function updateCalculatedTotal(inputElement) {
+            let row = inputElement.closest('.matrix-row');
             let qty = parseInt(inputElement.value) || 0;
             let unitPrice = parseFloat(inputElement.getAttribute('data-buyerprice')) || 0;
-            inputElement.closest('.matrix-row').querySelector('.v-total-display').innerText = (qty * unitPrice).toFixed(2);
+            row.querySelector('.v-total-display').innerText = (qty * unitPrice).toFixed(2);
+            
+            // Re-calculate the target unit price just in case the buyer changes the quantity!
+            let targetInput = row.querySelector('.v-target');
+            if (targetInput && targetInput.value) {
+                updateTargetUnit(targetInput);
+            }
         }
 
+        // 🟢 NEW: Calculates the Target Unit Price instantly
+        function updateTargetUnit(inputElement) {
+            let row = inputElement.closest('.matrix-row');
+            let qty = parseInt(row.querySelector('.v-qty').value) || 0;
+            let targetTotal = parseFloat(inputElement.value) || 0;
+            let displayDiv = row.querySelector('.target-unit-display');
+            
+            if (qty > 0 && targetTotal > 0) {
+                let unitPrice = (targetTotal / qty).toFixed(2);
+                displayDiv.innerHTML = `Target Unit: <strong style="color: var(--gold-dark);">${activeCurrency} ${unitPrice}</strong>`;
+                displayDiv.style.display = 'block';
+            } else {
+                displayDiv.style.display = 'none';
+            }
+        }
         function toggleShippingAddress() {
             document.getElementById('destination-box').style.display = document.getElementById('rfq-logistics').value === "Muziris Freight" ? "block" : "none";
         }
