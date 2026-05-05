@@ -269,18 +269,48 @@
         let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
         let exchangeRates = {};
 
+        // 🟢 NEW: Google & Microsoft Providers
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        const msProvider = new firebase.auth.OAuthProvider('microsoft.com');
+
         auth.onAuthStateChanged((user) => {
             if (user) {
+                // They are logged in! Hide modal and build the form.
+                document.getElementById('auth-modal').style.display = 'none';
                 document.getElementById('rfq-email').value = user.email;
                 initRFQ(); 
             } else {
-                alert("Security block: You must be signed in to view this contract.");
-                window.location.href = "catalog.html";
+                // They are NOT logged in. Show the modal instead of redirecting!
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('auth-modal').style.display = 'flex';
             }
         });
 
         function goBackToCatalog() {
             window.location.href = "catalog.html";
+        }
+
+        // If they click outside the box, cancel and return to catalog
+        function closeAuthModal(e) {
+            if(e.target.id === 'auth-modal') goBackToCatalog();
+        }
+
+        // 🟢 AUTHENTICATION FUNCTIONS
+        function signInWithGoogle() { auth.signInWithPopup(googleProvider).catch(e => alert(e.message)); }
+        function signInWithMicrosoft() { auth.signInWithPopup(msProvider).catch(e => alert(e.message)); }
+        
+        function signInWithEmail() {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-pass').value;
+            if(!email || !pass) return alert("Enter email and password.");
+            auth.signInWithEmailAndPassword(email, pass).catch(e => alert(e.message));
+        }
+        
+        function signUpWithEmail() {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-pass').value;
+            if(!email || !pass) return alert("Enter email and password.");
+            auth.createUserWithEmailAndPassword(email, pass).then(() => alert("Account created!")).catch(e => alert(e.message));
         }
 
         async function initRFQ() {
