@@ -324,6 +324,45 @@
         let currencySymbols = {};
         let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
 
+        // 🟢 NEW: CART MEMORY LOGIC
+        let rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+
+        function updateCartUI() {
+            const floatingCart = document.getElementById('cart-float');
+            const badge = document.getElementById('cart-badge');
+            if (rfqCart.length > 0) {
+                floatingCart.style.display = 'flex';
+                badge.innerText = rfqCart.length;
+            } else {
+                floatingCart.style.display = 'none';
+            }
+        }
+
+        // Run this immediately so the button appears if they already have items
+        document.addEventListener('DOMContentLoaded', updateCartUI);
+
+        function addToCart(id, name) {
+            if (rfqCart.find(item => item.id === id)) {
+                alert("This product is already in your RFQ Cart!");
+                return;
+            }
+
+            rfqCart.push({ id: id, name: name });
+            localStorage.setItem('muziris_cart', JSON.stringify(rfqCart));
+            updateCartUI();
+            
+            // Visual success feedback on the main button
+            const btn = document.getElementById('main-rfq-btn');
+            btn.innerHTML = '✅ Added to RFQ Cart';
+            btn.style.background = 'var(--gold)';
+            btn.style.color = '#000';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-plus mr-2"></i> Add Another or Submit';
+                btn.style.background = 'var(--void)';
+                btn.style.color = 'var(--gold)';
+            }, 2000);
+        }
+
        window.onload = async function() {
             // Grab the ID from the URL parameters
             const urlParams = new URLSearchParams(window.location.search);
