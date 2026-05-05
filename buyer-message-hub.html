@@ -480,6 +480,16 @@
                 template = "Do you support Private Label / OEM packaging for this product? If so, what is the required Minimum Order Quantity for custom packaging?";
             } else if (type === 'moq') {
                 template = "I am highly interested in this item, but I would like to place a smaller trial order first to test the market. Are you open to negotiating the MOQ for our first shipment?";
+            } 
+            // 🟢 NEW TEMPLATES ADDED BELOW
+            else if (type === 'payment') {
+                template = "To protect both parties, I require that we process payment through the Muziris Escrow vault. The funds will be safely held in North America until the goods arrive. Does this work for you?";
+            } else if (type === 'leadtime') {
+                template = "What is your current production lead time for this volume, and how many days do you estimate for freight transit to my location?";
+            } else if (type === 'certs') {
+                template = "Can you please provide the necessary compliance and quality certifications (e.g., ISO, CE, FDA) required to legally import this item into North America?";
+            } else if (type === 'inspect') {
+                template = "Do you allow third-party quality inspections at your factory before the final payment is released? A video tour of the finished cargo works too.";
             }
 
             // Insert text and close menu
