@@ -282,6 +282,18 @@
         let targetProducts = []; // The actual product data from the database
         let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
         let exchangeRates = {};
+        
+        // 🟢 NEW: Global Variable for the Phone Library
+        let globalPhoneInput;
+
+        // Wake up the library and attach it to the input field
+        document.addEventListener("DOMContentLoaded", function() {
+            const phoneInputField = document.querySelector("#rfq-phone");
+            globalPhoneInput = window.intlTelInput(phoneInputField, {
+                preferredCountries: ["ca", "us", "gb", "au"], // Puts top B2B markets at the top of the list
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            });
+        });
 
         // 🟢 NEW: Google & Microsoft Providers
         const googleProvider = new firebase.auth.GoogleAuthProvider();
