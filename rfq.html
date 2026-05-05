@@ -235,7 +235,9 @@
         const auth = firebase.auth();
         
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
-        let targetProduct = null;
+        let cartItems = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+        let currentSupplierGroup = null; // The supplier we are currently checking out
+        let targetProducts = []; // The actual product data from the database
         let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
         let exchangeRates = {};
 
@@ -250,46 +252,52 @@
         });
 
         function goBackToCatalog() {
-            if(targetProduct && targetProduct.id) {
-                window.location.href = `catalog.html?id=${targetProduct.id}`;
-            } else {
-                window.location.href = "catalog.html";
-            }
+            window.location.href = "catalog.html";
         }
 
         async function initRFQ() {
+            // Fallback: If they clicked "Request Quote" without using the cart, grab the URL ID
             const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
+            const fallbackId = urlParams.get('id');
             
-            if(!productId) {
-                alert("Invalid contract link.");
+            if (cartItems.length === 0 && fallbackId) {
+                cartItems = [{ id: fallbackId, name: "Product" }];
+            }
+
+            if (cartItems.length === 0) {
+                alert("Your Quote Cart is empty.");
                 window.location.href = "catalog.html";
                 return;
             }
 
             try {
+                // Load Currencies
                 const currRes = await fetch(API_BASE_URL + '/public-currencies');
                 const currData = await currRes.json();
                 if(currData.success) {
-                    currData.currencies.forEach(item => {
-                        exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
-                    });
+                    currData.currencies.forEach(item => { exchangeRates[item.currency] = parseFloat(item.live_cad_rate); });
                 }
 
+                // Load Entire Catalog
                 const prodRes = await fetch(API_BASE_URL + '/public-catalog', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({}) 
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) 
                 });
                 const prodData = await prodRes.json();
                 
-                targetProduct = prodData.products.find(p => p.id === productId);
+                // 1. Find all full product details for items in the cart
+                let allCartProducts = prodData.products.filter(p => cartItems.some(cartItem => cartItem.id === p.id));
                 
-                if(!targetProduct) {
-                    alert("Product no longer available.");
+                if(allCartProducts.length === 0) {
+                    alert("Products no longer available.");
+                    localStorage.removeItem('muziris_cart');
                     window.location.href = "catalog.html";
                     return;
                 }
+
+                // 2. Group by Supplier! We only checkout ONE supplier at a time.
+                // Grab the supplier of the FIRST item in the cart.
+                currentSupplierGroup = allCartProducts[0].supplierId;
+                targetProducts = allCartProducts.filter(p => p.supplierId === currentSupplierGroup);
 
                 buildForm();
 
@@ -312,37 +320,53 @@
             document.getElementById('loader').style.display = 'none';
             document.getElementById('rfq-container').classList.remove('hidden');
 
-            // 🟢 PSYCHOLOGY UI: Fetch the hero image and inject it into the background blur!
-            if (targetProduct.hero) {
-                document.getElementById('dynamic-blur-bg').style.backgroundImage = `url('${targetProduct.hero}')`;
+            // Set Background to the first product's image
+            if (targetProducts.length > 0 && targetProducts[0].hero) {
+                document.getElementById('dynamic-blur-bg').style.backgroundImage = `url('${targetProducts[0].hero}')`;
             }
 
-            document.getElementById('rfq-product-id').value = targetProduct.id;
-            document.getElementById('rfq-product-name').value = targetProduct.name + " (" + targetProduct.id + ")";
+            // Update Header to show Multi-Item info
+            let titleNames = targetProducts.map(p => p.name).join(' + ');
+            let titleIds = targetProducts.map(p => p.id).join(', ');
             
+            document.getElementById('rfq-product-id').value = "MULTI-SKU-BUNDLE";
+            document.getElementById('rfq-product-name').value = "Multi-Item Quote: " + titleNames;
+
             const vContainer = document.getElementById('rfq-variants-container');
             vContainer.innerHTML = ""; 
             
-            targetProduct.variants.forEach((v) => {
-                let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
-                let convertedPrice = convertPrice(v.priceCAD);
+            // Loop through EVERY product going to this specific supplier
+            targetProducts.forEach(product => {
                 
+                // Add a visual header for each product in the cart
                 vContainer.innerHTML += `
-                <div class="matrix-row flex-col md:flex-row">
-                    <div class="flex-[2] w-full text-sm">
-                        <strong class="text-gray-900 font-bold">${varName}</strong>
-                        <span class="text-gray-500 text-[11px] mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
+                    <div style="background:var(--void); color:var(--gold); padding:10px 15px; margin-top:15px; margin-bottom:10px; border-radius:4px; font-weight:bold; font-size:12px; text-transform:uppercase; letter-spacing:1px; display:flex; justify-content:space-between; align-items:center;">
+                        <span><i class="fas fa-box mr-2"></i> ${product.name}</span>
+                        <span style="color:#888; font-size:10px;">ID: ${product.id}</span>
                     </div>
-                    <div class="flex-1 w-full">
-                        <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
-                    </div>
-                    <div class="flex-1 w-full text-center text-base font-bold font-mono text-[var(--text-dark)]">
-                        <span class="text-xs mr-1 font-sans text-gray-400 font-bold">${activeCurrency}</span><span class="v-total-display">0.00</span>
-                    </div>
-                    <div class="flex-[1.2] w-full">
-                        <input type="number" step="0.01" class="v-target premium-input matrix-input py-2 text-xs" placeholder="Optional Target Price per Pc: ${activeCurrency}">
-                    </div>
-                </div>`;
+                `;
+
+                product.variants.forEach((v) => {
+                    let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
+                    let convertedPrice = convertPrice(v.priceCAD);
+                    
+                    vContainer.innerHTML += `
+                    <div class="matrix-row flex-col md:flex-row">
+                        <div class="flex-[2] w-full text-sm">
+                            <strong class="text-gray-900 font-bold">${varName}</strong>
+                            <span class="text-gray-500 text-[11px] mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
+                        </div>
+                        <div class="flex-1 w-full">
+                            <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                        </div>
+                        <div class="flex-1 w-full text-center text-base font-bold font-mono text-[var(--text-dark)]">
+                            <span class="text-xs mr-1 font-sans text-gray-400 font-bold">${activeCurrency}</span><span class="v-total-display">0.00</span>
+                        </div>
+                        <div class="flex-[1.2] w-full">
+                            <input type="number" step="0.01" class="v-target premium-input matrix-input py-2 text-xs" placeholder="Optional Target Price: ${activeCurrency}">
+                        </div>
+                    </div>`;
+                });
             });
         }
 
@@ -368,6 +392,8 @@
                 if (qty > 0) {
                    let unitPriceBuyer = parseFloat(qtyInput.getAttribute('data-buyerprice')) || 0;
                    requestedVariants.push({
+                     productId: qtyInput.getAttribute('data-productid'),
+                     productName: qtyInput.getAttribute('data-productname'),
                      variantId: qtyInput.getAttribute('data-vid'),
                      variantName: qtyInput.getAttribute('data-vname'),
                      currentPriceBuyer: (qty * unitPriceBuyer).toFixed(2),
@@ -377,13 +403,13 @@
                 }
             });
 
-            if(requestedVariants.length === 0) return alert("Please enter a quantity for at least one matrix variant.");
+            if(requestedVariants.length === 0) return alert("Please enter a quantity for at least one item to proceed.");
 
             btn.innerHTML = "<i class='fas fa-circle-notch fa-spin mr-2'></i> TRANSMITTING..."; 
             btn.disabled = true;
 
             const rfqData = {
-                productId: document.getElementById('rfq-product-id').value,
+                productId: "MULTI-SKU-BUNDLE", // Tells the server it's a bundled order
                 productName: document.getElementById('rfq-product-name').value,
                 requestedVariants: requestedVariants, 
                 customization: document.getElementById('rfq-customization').value || "N/A", 
@@ -401,7 +427,7 @@
 
             fetch(API_BASE_URL + '/buyer/track', {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ email: rfqData.email, actionType: 'submit_rfq', targetId: rfqData.productId, duration: 0 })
+                body: JSON.stringify({ email: rfqData.email, actionType: 'submit_rfq', targetId: 'MULTI-SKU', duration: 0 })
             }).catch(() => {});
 
             fetch(API_BASE_URL + '/submit-rfq', { 
@@ -410,8 +436,25 @@
             .then(res => res.json())
             .then(resp => {
                 if(resp.success) {
+                    
+                    // Remove the items we just submitted from the Cart memory
+                    cartItems = cartItems.filter(item => !targetProducts.some(p => p.id === item.id));
+                    localStorage.setItem('muziris_cart', JSON.stringify(cartItems));
+
                     document.getElementById('rfq-container').style.display = 'none';
                     document.getElementById('success-modal').style.display = 'flex';
+                    
+                    // If they have more items in the cart from a DIFFERENT supplier...
+                    if (cartItems.length > 0) {
+                        document.querySelector('#success-modal p').innerText = `Your request to Supplier ${currentSupplierGroup} was sent successfully! You still have items in your cart from other suppliers. Click below to continue checking out.`;
+                        document.querySelector('#success-modal button').innerText = "Continue Checkout";
+                        document.querySelector('#success-modal button').onclick = () => window.location.reload();
+                    } else {
+                        document.querySelector('#success-modal p').innerText = "Your complete sourcing request has been securely transmitted. The factory will review your matrix and contact you shortly with a finalized quotation.";
+                        document.querySelector('#success-modal button').innerText = "Return to Catalog";
+                        document.querySelector('#success-modal button').onclick = () => window.location.href = "catalog.html";
+                    }
+
                 } else {
                     alert("ERROR: " + resp.error);
                     btn.innerHTML = "Submit Sourcing Request"; 
