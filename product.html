@@ -424,11 +424,10 @@
                 rfqBtn.style.backgroundColor = '#e5e7eb'; rfqBtn.style.color = '#6b7280'; rfqBtn.style.cursor = 'not-allowed';
                 rfqBtn.onclick = null; 
             } else {
-                rfqBtn.innerHTML = 'Request Official Quote';
+                rfqBtn.innerHTML = '<i class="fas fa-plus mr-2"></i> Add to RFQ Cart';
                 rfqBtn.style.backgroundColor = 'var(--void)'; rfqBtn.style.color = 'var(--gold)'; rfqBtn.style.cursor = 'pointer';
                 rfqBtn.onclick = () => {
-                    if (!currentUser) { pendingRfqTrigger = true; openAuthModal(); } 
-                    else window.location.href = `rfq.html?id=${targetProduct.id}`;
+                    addToCart(targetProduct.id, targetProduct.name);
                 }; 
             }
 
