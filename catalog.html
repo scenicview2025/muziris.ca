@@ -223,6 +223,48 @@
         window.currentSlides = {}; 
         let searchTimeout;
 
+        // 🟢 NEW: CART MEMORY LOGIC
+        let rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+
+        function updateCartUI() {
+            const floatingCart = document.getElementById('cart-float');
+            const badge = document.getElementById('cart-badge');
+            if (rfqCart.length > 0) {
+                floatingCart.style.display = 'flex';
+                badge.innerText = rfqCart.length;
+            } else {
+                floatingCart.style.display = 'none';
+            }
+        }
+
+        // Run this immediately so the button appears if they already have items
+        document.addEventListener('DOMContentLoaded', updateCartUI);
+
+        function addToCart(event, id, name) {
+            event.stopPropagation(); // Stops the card from redirecting!
+            
+            if (rfqCart.find(item => item.id === id)) {
+                alert("This product is already in your RFQ Cart!");
+                return;
+            }
+
+            rfqCart.push({ id: id, name: name });
+            localStorage.setItem('muziris_cart', JSON.stringify(rfqCart));
+            updateCartUI();
+            
+            // Visual success feedback
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ Added to RFQ';
+            btn.style.background = 'var(--gold)';
+            btn.style.color = '#000';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = 'rgba(212, 175, 55, 0.1)';
+                btn.style.color = 'var(--gold-dark)';
+            }, 1500);
+        }
+
         const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
 
         async function loadLiveCurrencies() {
