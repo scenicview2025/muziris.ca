@@ -521,8 +521,9 @@
             btn.innerHTML = "<i class='fas fa-circle-notch fa-spin mr-2'></i> TRANSMITTING..."; 
             btn.disabled = true;
 
-            // 🟢 Capture the phone number
-            let phoneVal = document.getElementById('rfq-phone').value;
+            // 🟢 Capture the secure phone number WITH the correct country code attached!
+            let phoneVal = globalPhoneInput.getNumber(); // This grabs the full +1 or +44 format
+            if (!phoneVal) phoneVal = document.getElementById('rfq-phone').value; // Fallback if plugin fails
             let companyVal = document.getElementById('rfq-company').value;
 
             const rfqData = {
