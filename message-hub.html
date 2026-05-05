@@ -241,14 +241,17 @@
                 
                 <div id="qr-menu" class="qr-menu">
                     <div class="qr-header">
-                        Quick Replies
+                        Supplier Quick Replies
                         <i class="fas fa-times" style="cursor:pointer; color:#888;" onclick="toggleQuickReply()"></i>
                     </div>
-                    <div class="qr-item" onclick="insertQuickReply('sample')"><i class="fas fa-box-open" style="color:#a855f7;"></i> Sample Request Instructions</div>
-                    <div class="qr-item" onclick="insertQuickReply('moq')"><i class="fas fa-chart-line" style="color:var(--blue);"></i> MOQ Negotiation</div>
-                    <div class="qr-item" onclick="insertQuickReply('custom')"><i class="fas fa-paint-brush" style="color:var(--success);"></i> Customization / OEM</div>
-                    <div class="qr-item" onclick="insertQuickReply('escrow')"><i class="fas fa-shield-alt" style="color:var(--gold);"></i> Payment & Escrow</div>
-                    <div class="qr-item" onclick="insertQuickReply('shipping')"><i class="fas fa-ship" style="color:#00e5ff;"></i> Exact Shipping Quote</div>
+                    <div class="qr-item" onclick="insertQuickReply('sample')"><i class="fas fa-box-open" style="color:#a855f7; width:16px;"></i> Sample Request Instructions</div>
+                    <div class="qr-item" onclick="insertQuickReply('moq')"><i class="fas fa-chart-line" style="color:var(--blue); width:16px;"></i> MOQ Negotiation</div>
+                    <div class="qr-item" onclick="insertQuickReply('custom')"><i class="fas fa-paint-brush" style="color:var(--success); width:16px;"></i> Customization / OEM</div>
+                    <div class="qr-item" onclick="insertQuickReply('escrow')"><i class="fas fa-shield-alt" style="color:var(--gold); width:16px;"></i> Pitch the Escrow Trust</div>
+                    <div class="qr-item" onclick="insertQuickReply('price')"><i class="fas fa-file-invoice-dollar" style="color:var(--success); width:16px;"></i> Explain Landed Price</div>
+                    <div class="qr-item" onclick="insertQuickReply('leadtime')"><i class="fas fa-clock" style="color:#ff5252; width:16px;"></i> Quote Lead Times</div>
+                    <div class="qr-item" onclick="insertQuickReply('certs')"><i class="fas fa-certificate" style="color:var(--gold); width:16px;"></i> Confirm Certifications</div>
+                    <div class="qr-item" onclick="insertQuickReply('inspect')"><i class="fas fa-search" style="color:var(--blue); width:16px;"></i> Welcome Inspections</div>
                 </div>
 
                 <input type="text" id="reply-input" class="chat-input" placeholder="Type your secure reply..." onkeypress="if(event.key === 'Enter') sendReply()" oninput="handleTyping()">
