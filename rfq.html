@@ -164,22 +164,26 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <span class="form-label flex gap-1">Freight Strategy <span class="text-red-500">*</span></span>
-                    <select id="rfq-logistics" onchange="toggleShippingAddress()" class="premium-input cursor-pointer" required>
+                    <select id="rfq-logistics" onchange="document.getElementById('destination-box').style.display = this.value ? 'block' : 'none';" class="premium-input cursor-pointer" required>
                         <option value="">Select Routing...</option>
                         <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF)</option>
                         <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB)</option>
                     </select>
                 </div>
                 <div id="destination-box" style="display:none;">
-                    <span class="form-label">Final Destination Hub</span>
-                    <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON">
+                    <span class="form-label flex gap-1">Final Destination Hub <span class="text-red-500">*</span></span>
+                    <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON" required>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <span class="form-label flex gap-1">Registered Entity <span class="text-red-500">*</span></span>
                     <input type="text" id="rfq-company" class="premium-input" placeholder="Company Ltd." required>
+                </div>
+                <div>
+                    <span class="form-label flex gap-1">Direct Phone <span class="text-red-500">*</span></span>
+                    <input type="tel" id="rfq-phone" class="premium-input" placeholder="+1 (555) 000-0000" required>
                 </div>
                 <div>
                     <span class="form-label flex gap-1">Authorized Email <span class="text-red-500">*</span></span>
