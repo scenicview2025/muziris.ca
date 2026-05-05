@@ -1076,10 +1076,20 @@
                 template = "Thank you for reaching out. Our standard MOQ for this item is [ENTER MOQ HERE], but we are open to producing a smaller trial order for your first shipment to build a long-term relationship. What volume did you have in mind?";
             } else if (type === 'custom') {
                 template = "Yes, we fully support Private Label and OEM customization! Could you please share your logo files or tech pack? Once reviewed, our engineering team can confirm the exact customization costs.";
-            } else if (type === 'escrow') {
-                template = "For your security and ours, we process all international orders through the Muziris Escrow platform. Your funds are held safely in North America and only released to us after you receive and inspect the goods.";
-            } else if (type === 'shipping') {
-                template = "To get an exact shipping cost to your location, please use the Catalog tool to 'Request Official Quote'. Once we receive your delivery address and exact quantities, our logistics team will add the final freight cost to your contract!";
+            } 
+            // 🟢 YOUR NEW TRANSPARENCY PITCH
+            else if (type === 'escrow') {
+                template = "Unlike other platforms that push for risky wire transfers, we value complete transparency. Our process is simple: we negotiate here, you submit an RFQ, we send a formal quote, and your payment is held securely in the Muziris Escrow Vault. We do not get paid until you receive and review the product. It is the most trusted B2B platform in the world.";
+            } 
+            // 🟢 NEW COUNTERS TO BUYER QUESTIONS
+            else if (type === 'price') {
+                template = "To give you the exact final landed price (including freight), I just need you to use the Catalog tool to submit an Official RFQ with your delivery address. Our logistics team will calculate the lowest shipping rate and send you the final contract!";
+            } else if (type === 'leadtime') {
+                template = "Our current production lead time is typically [X] to [Y] days after the Escrow is funded. Once dispatched, ocean freight usually takes 25-35 days, while air freight takes 5-8 days.";
+            } else if (type === 'certs') {
+                template = "Yes, we maintain strict compliance standards. We will provide all necessary certifications for North American import along with the commercial invoice during the shipping phase.";
+            } else if (type === 'inspect') {
+                template = "Absolutely. We stand by our quality. You are welcome to arrange a third-party inspection (like SGS) at our facility, or we can provide a detailed video walkthrough of your cargo before it leaves the factory.";
             }
 
             replyBox.value = template;
