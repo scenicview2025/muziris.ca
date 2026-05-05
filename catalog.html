@@ -427,6 +427,11 @@
                         <div class="mt-auto">
                             <p class="text-lg md:text-xl font-extrabold text-gray-900 font-mono leading-none">${currencySymbols[activeCurrency] || '$'}${displayPrice} <span class="text-[10px] text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
                             <p class="text-[10px] text-gray-500 font-medium mt-1">MOQ: ${moq}</p>
+                            
+                            <button class="btn-add-cart" onclick="addToCart(event, '${p.id}', '${p.name.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-plus"></i> Add to RFQ
+                            </button>
+                            
                         </div>
                     </div>
                 </div>`;
