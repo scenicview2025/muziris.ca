@@ -122,17 +122,15 @@
             <p class="text-sm text-gray-500 font-medium">Specify your volume requirements and logistics to receive a final landed quote.</p>
         </div>
 
-        <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="space-y-8">
-            <div>
-                <span class="form-label">Sourcing Target</span>
-                <input type="text" id="rfq-product-name" class="premium-input target-box" readonly>
-                <input type="hidden" id="rfq-product-id">
-            </div>
+        <input type="hidden" id="rfq-product-id">
+        <input type="hidden" id="rfq-product-name">
 
-            <div>
-                <span class="form-label flex items-center gap-1">Volume Configuration & Negotiation <span class="text-red-500">*</span></span>
-                <div class="matrix-container">
-                    <div class="matrix-header hidden md:flex">
+        <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="flex flex-col lg:flex-row gap-10">
+            
+            <div class="lg:w-[60%] flex-shrink-0">
+                <span class="form-label flex items-center gap-1 mb-4">Volume Configuration & Negotiation <span class="text-red-500">*</span></span>
+                <div class="matrix-container" style="border: none; padding: 0; background: transparent;">
+                    <div class="matrix-header hidden md:flex border-b border-gray-200 pb-3 mb-0">
                         <div class="flex-[2]">Matrix Details</div>
                         <div class="flex-1 text-center">Req. Qty</div>
                         <div class="flex-1 text-center">Est. Total</div>
@@ -142,80 +140,87 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <span class="form-label">Customization Request</span>
-                    <input type="text" id="rfq-customization" class="premium-input" placeholder="e.g. Logo print, custom color">
-                </div>
-                <div>
-                    <span class="form-label">Sample Request</span>
-                    <select id="rfq-sample" class="premium-input cursor-pointer">
-                        <option value="No Sample Needed">No Sample Needed</option>
-                        <option value="Pre-production Sample">Pre-production Sample required</option>
-                    </select>
-                </div>
-            </div>
+            <div class="lg:w-[40%] space-y-6 bg-[#fcfcfc] p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm lg:sticky lg:top-8 h-fit">
+                
+                <h3 class="font-bold text-gray-900 uppercase tracking-widest text-sm border-b border-gray-200 pb-3 mb-4 brand-font">Order Details</h3>
 
-            <div class="compliance-box p-6">
-                <div class="compliance-title mb-4">Compliance & Media Evidence</div>
-                <div class="flex flex-col sm:flex-row gap-6">
-                    <label class="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-gray-800 hover:text-black">
-                        <input type="checkbox" id="req-certs" value="Yes" checked class="luxury-checkbox"> Factory Certifications
-                    </label>
-                    <label class="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-gray-800 hover:text-black">
-                        <input type="checkbox" id="req-video" value="Yes" checked class="luxury-checkbox"> Production Video
-                    </label>
-                    <label class="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-gray-800 hover:text-black">
-                        <input type="checkbox" id="req-photos" value="Yes" class="luxury-checkbox"> Unedited Photos
-                    </label>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <span class="form-label flex gap-1">Freight Strategy <span class="text-red-500">*</span></span>
-                    <select id="rfq-logistics" onchange="document.getElementById('destination-box').style.display = this.value ? 'block' : 'none';" class="premium-input cursor-pointer" required>
-                        <option value="">Select Routing...</option>
-                        <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF)</option>
-                        <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB)</option>
-                    </select>
-                </div>
-                <div id="destination-box" style="display:none;">
-                    <span class="form-label flex gap-1">Final Destination Hub <span class="text-red-500">*</span></span>
-                    <input type="text" id="rfq-destination" class="premium-input" placeholder="e.g. Toronto, ON" required>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <span class="form-label flex gap-1">Registered Entity <span class="text-red-500">*</span></span>
-                    <input type="text" id="rfq-company" class="premium-input" placeholder="Company Ltd." required>
-                </div>
-                <div>
-                    <span class="form-label flex gap-1">Direct Phone <span class="text-red-500">*</span></span>
-                    <input type="tel" id="rfq-phone" class="premium-input" style="padding-left: 55px !important;" placeholder="555-000-0000" required>
-                </div>
-                <div>
-                    <span class="form-label flex gap-1">Authorized Email <span class="text-red-500">*</span></span>
-                    <div class="relative">
-                        <input type="email" id="rfq-email" class="premium-input bg-gray-50 text-gray-500 pr-10" readonly required>
-                        <i class="fas fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <div class="grid grid-cols-1 gap-5">
+                    <div>
+                        <span class="form-label">Customization Request</span>
+                        <input type="text" id="rfq-customization" class="premium-input bg-white" placeholder="e.g. Logo print, custom color">
+                    </div>
+                    
+                    <div>
+                        <span class="form-label">Sample Request</span>
+                        <select id="rfq-sample" class="premium-input cursor-pointer bg-white">
+                            <option value="No Sample Needed">No Sample Needed</option>
+                            <option value="Pre-production Sample">Pre-production Sample required</option>
+                        </select>
                     </div>
                 </div>
-            </div>
 
-            <div>
-                <span class="form-label">Technical Notes / Addendums</span>
-                <textarea id="rfq-notes" rows="3" class="premium-input" placeholder="Specify Pantone color match, precise dimensions, print details... Includes professional requests..."></textarea>
-            </div>
-
-            <div class="pt-4 border-t border-gray-100">
-                <button type="submit" id="btn-submit-rfq" class="btn-solid-gold py-4 w-full text-base">
-                    Submit Sourcing Request
-                </button>
-                <div class="text-center text-[11px] text-gray-500 mt-4 tracking-[0.05em] font-medium flex items-center justify-center gap-1.5">
-                    <i class="fas fa-lock text-[var(--gold-dark)]"></i> Verified Secure Sourcing
+                <div class="compliance-box p-5 border border-gold-border rounded-xl">
+                    <div class="compliance-title mb-3 text-[10px]">Compliance Evidence</div>
+                    <div class="flex flex-col gap-3">
+                        <label class="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-gray-800 hover:text-black">
+                            <input type="checkbox" id="req-certs" value="Yes" checked class="luxury-checkbox"> Factory Certifications
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-gray-800 hover:text-black">
+                            <input type="checkbox" id="req-video" value="Yes" checked class="luxury-checkbox"> Production Video
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-gray-800 hover:text-black">
+                            <input type="checkbox" id="req-photos" value="Yes" class="luxury-checkbox"> Unedited Photos
+                        </label>
+                    </div>
                 </div>
+
+                <div class="grid grid-cols-1 gap-5">
+                    <div>
+                        <span class="form-label flex gap-1">Freight Strategy <span class="text-red-500">*</span></span>
+                        <select id="rfq-logistics" onchange="document.getElementById('destination-box').style.display = this.value ? 'block' : 'none';" class="premium-input cursor-pointer bg-white" required>
+                            <option value="">Select Routing...</option>
+                            <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF)</option>
+                            <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB)</option>
+                        </select>
+                    </div>
+                    <div id="destination-box" style="display:none;">
+                        <span class="form-label flex gap-1">Final Destination Hub <span class="text-red-500">*</span></span>
+                        <input type="text" id="rfq-destination" class="premium-input bg-white" placeholder="e.g. Toronto, ON" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-5 border-t border-gray-200 pt-5 mt-2">
+                    <div>
+                        <span class="form-label flex gap-1">Registered Entity <span class="text-red-500">*</span></span>
+                        <input type="text" id="rfq-company" class="premium-input bg-white" placeholder="Company Ltd." required>
+                    </div>
+                    <div>
+                        <span class="form-label flex gap-1">Direct Phone <span class="text-red-500">*</span></span>
+                        <input type="tel" id="rfq-phone" class="premium-input bg-white" style="padding-left: 55px !important;" placeholder="555-000-0000" required>
+                    </div>
+                    <div>
+                        <span class="form-label flex gap-1">Authorized Email <span class="text-red-500">*</span></span>
+                        <div class="relative">
+                            <input type="email" id="rfq-email" class="premium-input bg-gray-100 text-gray-400 pr-10 border-gray-200" readonly required>
+                            <i class="fas fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="form-label">Technical Notes / Addendums</span>
+                    <textarea id="rfq-notes" rows="2" class="premium-input bg-white" placeholder="Specify Pantone color match, dimensions..."></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" id="btn-submit-rfq" class="btn-solid-gold py-4 w-full text-sm">
+                        Submit Sourcing Request
+                    </button>
+                    <div class="text-center text-[10px] text-gray-500 mt-3 tracking-[0.05em] font-medium flex items-center justify-center gap-1.5">
+                        <i class="fas fa-lock text-[var(--gold-dark)]"></i> Verified Secure Sourcing
+                    </div>
+                </div>
+
             </div>
         </form>
     </div>
