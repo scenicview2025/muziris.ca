@@ -449,6 +449,35 @@
             });
         });
 
+        // ==========================================
+        // 🟢 6. QUICK REPLIES ENGINE (BUYER SIDE)
+        // ==========================================
+        function toggleQuickReply() {
+            const menu = document.getElementById('qr-menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            document.getElementById('emoji-wrapper-buy').style.display = 'none'; // Close emoji menu if open
+        }
+
+        function insertQuickReply(type) {
+            const replyBox = document.getElementById('reply-input');
+            let template = "";
+
+            if (type === 'price') {
+                template = "Hello! Could you please provide the final landed price, including estimated shipping, for this product?";
+            } else if (type === 'sample') {
+                template = "I am interested in testing the quality first. What is the cost and estimated delivery time for a single sample sent to North America?";
+            } else if (type === 'custom') {
+                template = "Do you support Private Label / OEM packaging for this product? If so, what is the required Minimum Order Quantity for custom packaging?";
+            } else if (type === 'moq') {
+                template = "I am highly interested in this item, but I would like to place a smaller trial order first to test the market. Are you open to negotiating the MOQ for our first shipment?";
+            }
+
+            // Insert text and close menu
+            replyBox.value = template;
+            toggleQuickReply();
+            replyBox.focus();
+        }
+
     </script>
 </body>
 </html>
