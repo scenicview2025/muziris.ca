@@ -499,6 +499,10 @@
             btn.innerHTML = "<i class='fas fa-circle-notch fa-spin mr-2'></i> TRANSMITTING..."; 
             btn.disabled = true;
 
+            // 🟢 Capture the phone number
+            let phoneVal = document.getElementById('rfq-phone').value;
+            let companyVal = document.getElementById('rfq-company').value;
+
             const rfqData = {
                 productId: "MULTI-SKU-BUNDLE", // Tells the server it's a bundled order
                 productName: document.getElementById('rfq-product-name').value,
@@ -510,7 +514,8 @@
                 reqPhotos: document.getElementById('req-photos').checked ? "Yes" : "No",
                 logistics: document.getElementById('rfq-logistics').value,
                 destination: document.getElementById('rfq-destination').value,
-                company: document.getElementById('rfq-company').value,
+                // 🟢 HACK: Combine the Company Name and Phone Number so it saves flawlessly in the DB
+                company: companyVal + " (Ph: " + phoneVal + ")",
                 email: document.getElementById('rfq-email').value,
                 notes: document.getElementById('rfq-notes').value,
                 currency: activeCurrency
