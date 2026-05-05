@@ -414,7 +414,8 @@
                             <span class="text-xs mr-1 font-sans text-gray-400 font-bold">${activeCurrency}</span><span class="v-total-display">0.00</span>
                         </div>
                         <div class="flex-[1.2] w-full">
-                            <input type="number" step="0.01" class="v-target premium-input matrix-input py-2 text-xs" placeholder="Optional Target Price: ${activeCurrency}">
+                            <input type="number" step="0.01" class="v-target premium-input matrix-input py-2 text-xs" placeholder="Optional Target Total: ${activeCurrency}" oninput="updateTargetUnit(this)">
+                            <div class="target-unit-display" style="display: none; text-align: center; font-size: 11px; color: #888; margin-top: 6px; font-weight: 500;"></div>
                         </div>
                     </div>`;
                 });
