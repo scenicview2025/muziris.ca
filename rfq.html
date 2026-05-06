@@ -32,8 +32,10 @@
             margin: 0; 
             padding: 0;
             width: 100%;
-            height: 100vh;
-            overflow: hidden; /* 🟢 Locks the main window from scrolling! */
+        }
+        /* 🟢 ONLY lock scrolling on Desktop screens. Let mobile scroll naturally! */
+        @media (min-width: 1024px) {
+            body { height: 100vh; overflow: hidden; }
         }
 
         /* 🟢 LUXURY SCROLLBARS FOR THE INNER PANELS */
