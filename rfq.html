@@ -378,12 +378,22 @@
                     let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
                     let convertedPrice = convertPrice(v.priceCAD);
                     
+                    // 🟢 NEW: Fallback logic. If the supplier didn't upload a specific variant image, we use the main product image so the UI never looks broken!
+                    let vImage = v.image || product.hero || 'MC.png';
+
                     variantHtml += `
-                    <div class="flex flex-col md:flex-row gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row">
-                        <div class="w-full md:w-[35%] text-sm">
-                            <strong class="text-gray-900 font-bold">${varName}</strong>
-                            <span class="text-gray-500 text-[11px] mt-1 block">Unit Rate: ${convertedPrice} ${activeCurrency} / ${v.unit}</span>
+                    <div class="flex flex-col md:flex-row gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center">
+                        
+                        <div class="w-full md:w-[35%] flex items-center gap-3">
+                            <div class="w-10 h-10 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
+                                <img src="${vImage}" class="max-w-full max-h-full object-cover rounded-sm">
+                            </div>
+                            <div class="flex flex-col justify-center min-w-0">
+                                <strong class="text-gray-900 font-bold text-sm truncate block">${varName}</strong>
+                                <span class="text-gray-500 text-[10px] font-medium mt-0.5 block tracking-wide">Rate: ${convertedPrice} ${activeCurrency}</span>
+                            </div>
                         </div>
+
                         <div class="w-full md:w-[20%]">
                             <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
                         </div>
