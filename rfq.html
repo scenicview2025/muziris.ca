@@ -374,12 +374,43 @@
             
             targetProducts.forEach(product => {
                 let variantHtml = '';
+                
+                // 🟢 1. GROUP THE FLAT DATABASE ROWS INTO ALIBABA TIERS
+                let groupedVariants = {};
                 product.variants.forEach((v) => {
                     let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
-                    let convertedPrice = convertPrice(v.priceCAD);
+                    if (!groupedVariants[varName]) {
+                        groupedVariants[varName] = {
+                            vid: v.varId,
+                            unit: v.unit,
+                            image: v.image || product.hero || 'MC.png',
+                            tiers: []
+                        };
+                    }
+                    // Parse 'Up' or blank max strings to Infinity for the math engine
+                    let maxVal = (v.max && v.max.toLowerCase() !== "up") ? parseInt(v.max) : Infinity;
+                    groupedVariants[varName].tiers.push({ min: parseInt(v.min) || 1, max: maxVal, priceCAD: parseFloat(v.priceCAD) || 0 });
+                });
+
+                // 🟢 2. RENDER THE GROUPED VARIANTS
+                Object.keys(groupedVariants).forEach(varName => {
+                    let v = groupedVariants[varName];
                     
-                    // 🟢 NEW: Fallback logic. If the supplier didn't upload a specific variant image, we use the main product image so the UI never looks broken!
-                    let vImage = v.image || product.hero || 'MC.png';
+                    // Build the Alibaba-style pricing UI
+                    let tierUI = `<div class="flex gap-3 mt-1.5 border-t border-gray-100 pt-1.5">`;
+                    v.tiers.forEach((t, index) => {
+                        let qtyLabel = t.max === Infinity ? `≥ ${t.min}` : `${t.min}-${t.max}`;
+                        tierUI += `
+                            <div class="flex flex-col transition-all duration-200" id="tier-ui-${v.vid}-${index}">
+                                <span class="text-[9px] text-gray-500 leading-none mb-0.5">${qtyLabel} ${v.unit}</span>
+                                <span class="text-[11px] font-bold text-gray-900 leading-tight">${activeCurrency} ${convertPrice(t.priceCAD)}</span>
+                            </div>
+                        `;
+                    });
+                    tierUI += `</div>`;
+                    
+                    // The highest price is the default starting point
+                    let startingPrice = convertPrice(v.tiers[0].priceCAD);
 
                     variantHtml += `
                     <div class="flex flex-col md:flex-row gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center">
