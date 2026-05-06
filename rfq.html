@@ -543,13 +543,13 @@
                     let price = tierBox.querySelector('.tier-price');
 
                     if (idx === activeIndex) {
-                        // 🟢 ACTIVE STATE: Fixed dimensions (w-68px, h-64px) for perfect squares
-                        tierBox.className = "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-110 opacity-100 bg-[var(--gold-light)] border border-[var(--gold-border)] shadow-md z-10 origin-center mx-1";
+                        // 🟢 ACTIVE STATE: Added `order-first` so this box instantly jumps to the front of the line!
+                        tierBox.className = "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-110 opacity-100 bg-[var(--gold-light)] border border-[var(--gold-border)] shadow-md z-10 origin-center mx-1 order-first";
                         label.className = "tier-label text-[9px] text-[var(--gold-dark)] leading-[1.1] mb-1 font-bold transition-colors";
                         price.className = "tier-price text-[11px] font-black text-[var(--gold-dark)] leading-none transition-colors";
                     } else {
-                        // 🔴 INACTIVE STATE: Fixed dimensions (w-68px, h-64px) for perfect squares
-                        tierBox.className = "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-90 opacity-40 bg-gray-50 border border-transparent z-0 origin-center mx-0";
+                        // 🔴 INACTIVE STATE: Removed order-first so it slides to the right
+                        tierBox.className = "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-90 opacity-40 bg-gray-50 border border-transparent z-0 origin-center mx-0 order-none";
                         label.className = "tier-label text-[9px] text-gray-400 leading-[1.1] mb-1 transition-colors";
                         price.className = "tier-price text-[10px] font-bold text-gray-500 leading-none transition-colors";
                     }
