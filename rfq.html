@@ -430,9 +430,9 @@
                     let safeTiers = encodeURIComponent(JSON.stringify(v.tiers));
 
                     variantHtml += `
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center px-2">
+                    <div class="flex flex-col md:flex-row gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center">
                         
-                        <div class="col-span-5 flex items-start gap-3 min-w-0 pr-4">
+                        <div class="w-full md:w-[35%] flex items-start gap-3">
                             <div class="w-10 h-10 mt-1 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
                                 <img src="${v.image}" class="max-w-full max-h-full object-cover rounded-sm">
                             </div>
@@ -441,16 +441,14 @@
                                 ${tierUI} </div>
                         </div>
 
-                        <div class="col-span-2">
-                            <input type="number" min="0" class="v-qty premium-input matrix-input py-2 w-full text-center" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.vid}" data-vname="${varName}" data-tiers="${safeTiers}" data-buyerprice="${startingPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                        <div class="w-full md:w-[20%]">
+                            <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.vid}" data-vname="${varName}" data-tiers="${safeTiers}" data-buyerprice="${startingPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
                         </div>
-                        
-                        <div class="col-span-2 text-center text-base font-bold font-mono text-[var(--text-dark)]">
+                        <div class="w-full md:w-[15%] text-center text-base font-bold font-mono text-[var(--text-dark)] mt-2 md:mt-0">
                             <span class="text-xs mr-1 font-sans text-gray-400 font-bold">${activeCurrency}</span><span class="v-total-display">0.00</span>
                         </div>
-
-                        <div class="col-span-3 relative">
-                            <input type="number" step="0.01" class="v-target premium-input matrix-input py-2 text-xs w-full text-center" placeholder="Target Total: ${activeCurrency}" oninput="updateTargetUnit(this)">
+                        <div class="w-full md:w-[30%] relative">
+                            <input type="number" step="0.01" class="v-target premium-input matrix-input py-2 text-xs" placeholder="Target Total: ${activeCurrency}" oninput="updateTargetUnit(this)">
                             <div class="target-unit-display hidden absolute top-full left-0 right-0 text-center text-[10px] text-[var(--gold-dark)] mt-1 font-bold"></div>
                         </div>
                     </div>`;
