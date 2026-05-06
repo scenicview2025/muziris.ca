@@ -137,16 +137,25 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <span class="form-label flex gap-1">Freight Strategy <span class="text-red-500">*</span></span>
-                        <select id="rfq-logistics" onchange="document.getElementById('destination-box').style.display = this.value ? 'block' : 'none';" class="premium-input cursor-pointer shadow-sm" required>
-                            <option value="">Select Routing...</option>
-                            <option value="Muziris Freight">Muziris Managed Freight (DDP/CIF)</option>
-                            <option value="Own Forwarder">Buyer Managed Forwarder (EXW/FOB)</option>
+                        <span class="form-label flex gap-1">Freight Strategy (Incoterms) <span class="text-red-500">*</span></span>
+                        <select id="rfq-logistics" onchange="document.getElementById('destination-box').style.display = (this.value === 'DDP' || this.value === 'CIF') ? 'block' : 'none';" class="premium-input cursor-pointer shadow-sm" required>
+                            <option value="">Select exact terms...</option>
+                            
+                            <optgroup label="Muziris Managed Freight">
+                                <option value="DDP">DDP (Delivered to Door - Duties Paid)</option>
+                                <option value="CIF">CIF (Delivered to Port - Buyer clears customs)</option>
+                            </optgroup>
+                            
+                            <optgroup label="Buyer Managed Freight">
+                                <option value="FOB">FOB (Free On Board - Supplier loads ship)</option>
+                                <option value="EXW">EXW (Ex Works - Buyer picks up at factory)</option>
+                            </optgroup>
                         </select>
                     </div>
+                    
                     <div id="destination-box" style="display:none;">
-                        <span class="form-label flex gap-1">Final Destination Hub <span class="text-red-500">*</span></span>
-                        <input type="text" id="rfq-destination" class="premium-input shadow-sm" placeholder="e.g. Toronto, ON" required>
+                        <span class="form-label flex gap-1">Destination City / Port <span class="text-red-500">*</span></span>
+                        <input type="text" id="rfq-destination" class="premium-input shadow-sm bg-gray-50 focus:bg-white transition-colors" placeholder="e.g. Port of Los Angeles, or Toronto Warehouse">
                     </div>
                 </div>
 
