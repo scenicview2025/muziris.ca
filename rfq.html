@@ -542,16 +542,16 @@
                 btn.disabled = false; 
             });
         }
-        // 🟢 NEW: Custom Delete Modal Logic
+        // 🟢 BULLETPROOF DELETE MODAL LOGIC
         let itemToRemove = null;
 
         function triggerRemoveFromCart(productId) {
-            itemToRemove = productId;
+            itemToRemove = String(productId); // Force strict string type
             document.getElementById('delete-modal').style.display = 'flex';
         }
 
-        function closeDeleteModal(e, force = false) {
-            if (force || e.target.id === 'delete-modal') {
+        function closeDeleteModal(e, force) {
+            if (force === true || e.target.id === 'delete-modal') {
                 document.getElementById('delete-modal').style.display = 'none';
                 itemToRemove = null;
             }
@@ -560,19 +560,20 @@
         function confirmRemoveItem() {
             if (!itemToRemove) return;
             
-            // Filter out the deleted item
-            cartItems = cartItems.filter(item => item.id !== itemToRemove);
+            // Filter out the deleted item using strict string comparison
+            cartItems = cartItems.filter(item => String(item.id) !== itemToRemove);
             
             // Save the new array back to the browser memory
             localStorage.setItem('muziris_cart', JSON.stringify(cartItems));
             
             document.getElementById('delete-modal').style.display = 'none';
             
-            // If the cart is now empty, kick them to the catalog. Otherwise, refresh the page to redraw the cart!
             if(cartItems.length === 0) {
+                // Cart is empty, back to catalog
                 window.location.href = 'catalog.html';
             } else {
-                window.location.reload();
+                // 🟢 THE FIX: Strip the ?id= parameter from the URL so the item doesn't resurrect itself!
+                window.location.href = window.location.pathname; 
             }
         }
     </script>
