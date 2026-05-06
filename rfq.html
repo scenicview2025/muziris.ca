@@ -396,7 +396,8 @@
                 Object.keys(groupedVariants).forEach(varName => {
                     let v = groupedVariants[varName];
                     
-                    let tierUI = `<div class="flex gap-1 mt-2 pt-2 border-t border-gray-100 items-center">`;
+                    // 🟢 THE UX FIX: Added 'flex-wrap' so extra tiers safely drop to the next row!
+                    let tierUI = `<div class="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-gray-100 items-center">`;
                     v.tiers.forEach((t, index) => {
                         let qtyLabel = t.max === Infinity ? `≥ ${t.min}` : `${t.min}-${t.max}`;
                         
