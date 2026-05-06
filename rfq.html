@@ -396,11 +396,11 @@
                 Object.keys(groupedVariants).forEach(varName => {
                     let v = groupedVariants[varName];
                     
-                    // Create a neat text list of all available tiers to show the buyer
+                    // 🟢 THE UX FIX: A clean, perfectly aligned two-column mini-table!
                     let allTiersText = v.tiers.map(t => {
                         let qtyLabel = t.max === Infinity ? `≥${t.min}` : `${t.min}-${t.max}`;
-                        return `<span class="whitespace-nowrap">${qtyLabel}: <strong class="text-gray-500">${convertPrice(t.priceCAD)}</strong></span>`;
-                    }).join('<span class="mx-1.5 text-gray-300">|</span>');
+                        return `<div class="flex justify-between items-center w-[120px] leading-tight"><span class="text-gray-400">${qtyLabel}</span> <span class="font-bold text-gray-600">${activeCurrency} ${convertPrice(t.priceCAD)}</span></div>`;
+                    }).join('');
 
                     // Set up the default values for the Golden Box
                     let defaultTier = v.tiers[0];
@@ -411,19 +411,19 @@
                     variantHtml += `
                     <div class="flex flex-col md:flex-row gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center">
                         
-                        <div class="w-full md:w-[35%] flex items-center gap-3">
-                            <div class="w-11 h-11 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
+                        <div class="w-full md:w-[35%] flex items-center gap-4">
+                            <div class="w-12 h-12 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
                                 <img src="${v.image}" class="max-w-full max-h-full object-cover rounded-sm">
                             </div>
                             
-                            <div class="flex-1 min-w-0 flex flex-col justify-center pr-2">
-                                <strong class="text-gray-900 font-bold text-sm truncate block mb-1">${varName}</strong>
-                                <div class="flex flex-wrap text-[9px] text-gray-400 leading-tight font-mono w-full">
+                            <div class="flex-1 min-w-0 flex flex-col justify-center border-r border-gray-100 pr-3 mr-1">
+                                <strong class="text-gray-900 font-bold text-sm truncate block mb-1.5">${varName}</strong>
+                                <div class="flex flex-col gap-1 text-[9px] font-mono w-full">
                                     ${allTiersText}
                                 </div>
                             </div>
 
-                            <div class="w-[75px] h-[44px] flex-shrink-0 bg-[var(--gold-light)] border border-[var(--gold-border)] rounded-md flex flex-col justify-center items-center shadow-sm transition-all duration-200">
+                            <div class="w-[75px] h-[48px] flex-shrink-0 bg-[var(--gold-light)] border border-[var(--gold-border)] rounded-md flex flex-col justify-center items-center shadow-sm transition-all duration-200">
                                 <span class="active-tier-label text-[8px] text-[var(--gold-dark)] uppercase font-bold leading-none mb-1 text-center w-full truncate px-1">${defaultLabel}</span>
                                 <span class="active-tier-price text-[11px] font-black text-[var(--gold-dark)] leading-none">${activeCurrency} ${defaultPrice}</span>
                             </div>
