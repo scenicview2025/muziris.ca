@@ -508,8 +508,9 @@
                 productId: "MULTI-SKU-BUNDLE", 
                 productName: document.getElementById('rfq-product-name').value,
                 requestedVariants: requestedVariants, 
-                customization: document.getElementById('rfq-customization').value || "N/A", 
-                sample: document.getElementById('rfq-sample').value,
+                // 🟢 CHANGED: We tell the database to look inside the variants array for these details now!
+                customization: "Per Product (See Variants)", 
+                sample: "Per Product (See Variants)",
                 reqCerts: document.getElementById('req-certs').checked ? "Yes" : "No",
                 reqVideo: document.getElementById('req-video').checked ? "Yes" : "No",
                 reqPhotos: document.getElementById('req-photos').checked ? "Yes" : "No",
