@@ -523,28 +523,24 @@
             // 🟢 4. Update the visual total
             row.querySelector('.v-total-display').innerText = (qty * finalUnitPrice).toFixed(2);
             
-            // 🟢 5. The "iPhone" Dynamic Magnification Effect!
-            let vid = inputElement.getAttribute('data-vid');
-            tiers.forEach((t, idx) => {
-                let tierBox = document.getElementById(`tier-ui-${vid}-${idx}`);
-                if (tierBox) {
-                    let label = tierBox.querySelector('.tier-label');
-                    let price = tierBox.querySelector('.tier-price');
-
-                    // 🟢 THE FIX: Removed the '&& qty >= t.min' check! Now it ALWAYS highlights the active tier!
-                    if (idx === activeIndex) {
-                        // 🟢 ACTIVE STATE: Pop out, bounce to 110% scale, turn Gold, add luxury shadow
-                        tierBox.className = "flex flex-col justify-center px-3 py-2 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-110 opacity-100 bg-[var(--gold-light)] border border-[var(--gold-border)] shadow-md z-10 origin-center mx-1";
-                        label.className = "tier-label text-[9px] text-[var(--gold-dark)] leading-none mb-0.5 font-bold transition-colors";
-                        price.className = "tier-price text-[12px] font-black text-[var(--gold-dark)] leading-tight transition-colors";
-                    } else {
-                        // 🔴 INACTIVE STATE: Shrink back to 90%, dim out, turn gray, drop to background
-                        tierBox.className = "flex flex-col justify-center px-2 py-1.5 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-90 opacity-40 bg-gray-50 border border-transparent z-0 origin-center mx-0";
-                        label.className = "tier-label text-[9px] text-gray-400 leading-none mb-0.5 transition-colors";
-                        price.className = "tier-price text-[11px] font-bold text-gray-500 leading-tight transition-colors";
-                    }
-                }
-            });
+            // 🟢 5. THE UX FIX: Update the text inside the locked Golden Square
+            let labelElement = row.querySelector('.active-tier-label');
+            let priceElement = row.querySelector('.active-tier-price');
+            
+            let activeTier = tiers[activeIndex];
+            // Fix Infinity which becomes null in JSON parsing
+            let maxValDisplay = (activeTier.max === null || !activeTier.max) ? Infinity : activeTier.max;
+            let newLabel = maxValDisplay === Infinity ? `≥${activeTier.min} ${activeTier.unit || 'Pcs'}` : `${activeTier.min}-${activeTier.max} ${activeTier.unit || 'Pcs'}`;
+            
+            labelElement.innerText = newLabel;
+            priceElement.innerText = `${activeCurrency} ${finalUnitPrice}`;
+            
+            // Add a tiny, subtle CSS pulse effect to the square so the buyer's eye catches the discount unlocking
+            let goldenBox = labelElement.parentElement;
+            goldenBox.classList.add('scale-105', 'bg-yellow-50');
+            setTimeout(() => {
+                goldenBox.classList.remove('scale-105', 'bg-yellow-50');
+            }, 200);
             
             let targetInput = row.querySelector('.v-target');
             if (targetInput && targetInput.value) { updateTargetUnit(targetInput); }
