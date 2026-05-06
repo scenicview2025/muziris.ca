@@ -411,11 +411,11 @@
                             
                             <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-6 h-6 rounded bg-[var(--gold-light)] text-[var(--gold-dark)] flex items-center justify-center border border-[var(--gold-border)] flex-shrink-0"><i class="fas fa-box-open text-[10px]"></i></div>
-                                    <h4 class="font-bold text-gray-900 text-sm tracking-wide truncate">${product.name}</h4>
+                                    <div class="w-8 h-8 rounded-full bg-[var(--gold-light)] text-[var(--gold-dark)] flex items-center justify-center shadow-sm border border-[var(--gold-border)] flex-shrink-0"><i class="fas fa-box-open text-xs"></i></div>
+                                    <h4 class="font-bold text-gray-900 text-base tracking-wide truncate">${product.name}</h4>
                                 </div>
                                 <div class="flex items-center gap-4 pl-2 flex-shrink-0">
-                                    <span class="text-gray-400 text-[9px] font-bold tracking-widest font-mono hidden sm:inline">ID: ${product.id}</span>
+                                    <span class="bg-gray-50 border border-gray-200 text-gray-500 px-3 py-1.5 rounded-md text-[10px] font-bold tracking-widest font-mono shadow-inner hidden sm:block">ID: ${product.id}</span>
                                     
                                     <button type="button" onclick="event.preventDefault(); triggerRemoveFromCart('${product.id}')" class="w-8 h-8 rounded-full bg-red-50 text-red-400 hover:bg-red-500 hover:text-white flex justify-center items-center transition shadow-sm" title="Remove Item">
                                         <i class="fas fa-trash-alt text-[11px]"></i>
@@ -424,6 +424,11 @@
                             </div>
                             
                             ${variantHtml}
+                            
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <input type="text" class="p-note premium-input shadow-sm text-xs bg-gray-50 hover:bg-white focus:bg-white transition-colors" data-productid="${product.id}" placeholder="Specific notes for ${product.name.replace(/'/g, "\\'")} (e.g. Pantone colors, packaging)...">
+                            </div>
+
                         </div>
                     </div>
                 `;
