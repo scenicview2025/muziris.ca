@@ -495,15 +495,19 @@
             
             // 🟢 1. Unpack the tiers from the HTML
             let tiers = JSON.parse(decodeURIComponent(inputElement.getAttribute('data-tiers')));
-            let activePriceCAD = tiers[0].priceCAD; // Default to most expensive tier
+            let activePriceCAD = tiers[0].priceCAD; // Default fallback
             let activeIndex = 0;
 
-            // 🟢 2. Find the tier the buyer unlocked
+            // 🟢 2. The BULLETPROOF Math Engine
             if (qty > 0) {
                 for (let i = 0; i < tiers.length; i++) {
-                    if (qty >= tiers[i].min) {
+                    // JSON formatting deletes "Infinity". We must convert null/blank back to Infinity so the highest tier works!
+                    let maxLimit = (tiers[i].max === null || !tiers[i].max) ? Infinity : parseInt(tiers[i].max);
+                    
+                    // We check BOTH min and max so database sorting order never breaks the math!
+                    if (qty >= tiers[i].min && qty <= maxLimit) {
                         activePriceCAD = tiers[i].priceCAD;
-                        activeIndex = i; // Track which tier is active for UI highlighting
+                        activeIndex = i; 
                     }
                 }
             }
