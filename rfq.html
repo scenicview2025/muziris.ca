@@ -396,54 +396,41 @@
                 Object.keys(groupedVariants).forEach(varName => {
                     let v = groupedVariants[varName];
                     
-                    let tierUI = `<div class="flex gap-1 mt-2 pt-2 border-t border-gray-100 items-center">`;
-                    v.tiers.forEach((t, index) => {
-                        let qtyLabel = t.max === Infinity ? `≥ ${t.min}` : `${t.min}-${t.max}`;
-                        
-                        // 🟢 THE FIX: Make the very first tier active/popped-out by default when the page loads!
-                        let isActive = index === 0;
-                        
-                        let boxClass = isActive 
-                            ? "flex flex-col justify-center px-3 py-2 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-110 opacity-100 bg-[var(--gold-light)] border border-[var(--gold-border)] shadow-md z-10 origin-center mx-1" 
-                            : "flex flex-col justify-center px-2 py-1.5 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-90 opacity-40 bg-gray-50 border border-transparent z-0 origin-center mx-0";
-                        
-                        let labelClass = isActive 
-                            ? "tier-label text-[9px] text-[var(--gold-dark)] leading-none mb-0.5 font-bold transition-colors" 
-                            : "tier-label text-[9px] text-gray-400 leading-none mb-0.5 transition-colors";
-                            
-                        let priceClass = isActive 
-                            ? "tier-price text-[12px] font-black text-[var(--gold-dark)] leading-tight transition-colors" 
-                            : "tier-price text-[11px] font-bold text-gray-500 leading-tight transition-colors";
+                    // Create a neat text list of all available tiers to show the buyer
+                    let allTiersText = v.tiers.map(t => {
+                        let qtyLabel = t.max === Infinity ? `≥${t.min}` : `${t.min}-${t.max}`;
+                        return `<span class="whitespace-nowrap">${qtyLabel}: <strong class="text-gray-500">${convertPrice(t.priceCAD)}</strong></span>`;
+                    }).join('<span class="mx-1.5 text-gray-300">|</span>');
 
-                        tierUI += `
-                            <div id="tier-ui-${v.vid}-${index}" class="${boxClass}">
-                                <span class="${labelClass}">${qtyLabel} ${v.unit}</span>
-                                <span class="${priceClass}">${activeCurrency} ${convertPrice(t.priceCAD)}</span>
-                            </div>
-                        `;
-                    });
-                    tierUI += `</div>`;
-                    
-                    // The highest price is the default starting point
-                    let startingPrice = convertPrice(v.tiers[0].priceCAD);
-
-                    // Pack the tiers safely into the HTML element so JS can read it on-the-fly
+                    // Set up the default values for the Golden Box
+                    let defaultTier = v.tiers[0];
+                    let defaultLabel = defaultTier.max === Infinity ? `≥${defaultTier.min} ${v.unit}` : `${defaultTier.min}-${defaultTier.max} ${v.unit}`;
+                    let defaultPrice = convertPrice(defaultTier.priceCAD);
                     let safeTiers = encodeURIComponent(JSON.stringify(v.tiers));
 
                     variantHtml += `
                     <div class="flex flex-col md:flex-row gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center">
                         
-                        <div class="w-full md:w-[35%] flex items-start gap-3">
-                            <div class="w-10 h-10 mt-1 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
+                        <div class="w-full md:w-[35%] flex items-center gap-3">
+                            <div class="w-11 h-11 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
                                 <img src="${v.image}" class="max-w-full max-h-full object-cover rounded-sm">
                             </div>
-                            <div class="flex flex-col justify-center min-w-0 w-full">
-                                <strong class="text-gray-900 font-bold text-sm truncate block">${varName}</strong>
-                                ${tierUI} </div>
+                            
+                            <div class="flex-1 min-w-0 flex flex-col justify-center pr-2">
+                                <strong class="text-gray-900 font-bold text-sm truncate block mb-1">${varName}</strong>
+                                <div class="flex flex-wrap text-[9px] text-gray-400 leading-tight font-mono w-full">
+                                    ${allTiersText}
+                                </div>
+                            </div>
+
+                            <div class="w-[75px] h-[44px] flex-shrink-0 bg-[var(--gold-light)] border border-[var(--gold-border)] rounded-md flex flex-col justify-center items-center shadow-sm transition-all duration-200">
+                                <span class="active-tier-label text-[8px] text-[var(--gold-dark)] uppercase font-bold leading-none mb-1 text-center w-full truncate px-1">${defaultLabel}</span>
+                                <span class="active-tier-price text-[11px] font-black text-[var(--gold-dark)] leading-none">${activeCurrency} ${defaultPrice}</span>
+                            </div>
                         </div>
 
                         <div class="w-full md:w-[20%]">
-                            <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.vid}" data-vname="${varName}" data-tiers="${safeTiers}" data-buyerprice="${startingPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                            <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.vid}" data-vname="${varName}" data-tiers="${safeTiers}" data-buyerprice="${defaultPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
                         </div>
                         <div class="w-full md:w-[15%] text-center text-base font-bold font-mono text-[var(--text-dark)] mt-2 md:mt-0">
                             <span class="text-xs mr-1 font-sans text-gray-400 font-bold">${activeCurrency}</span><span class="v-total-display">0.00</span>
