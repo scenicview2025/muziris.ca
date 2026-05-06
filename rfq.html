@@ -492,13 +492,49 @@
         function updateCalculatedTotal(inputElement) {
             let row = inputElement.closest('.matrix-row');
             let qty = parseInt(inputElement.value) || 0;
-            let unitPrice = parseFloat(inputElement.getAttribute('data-buyerprice')) || 0;
-            row.querySelector('.v-total-display').innerText = (qty * unitPrice).toFixed(2);
+            
+            // 🟢 1. Unpack the tiers from the HTML
+            let tiers = JSON.parse(decodeURIComponent(inputElement.getAttribute('data-tiers')));
+            let activePriceCAD = tiers[0].priceCAD; // Default to most expensive tier
+            let activeIndex = 0;
+
+            // 🟢 2. Find the tier the buyer unlocked
+            if (qty > 0) {
+                for (let i = 0; i < tiers.length; i++) {
+                    if (qty >= tiers[i].min) {
+                        activePriceCAD = tiers[i].priceCAD;
+                        activeIndex = i; // Track which tier is active for UI highlighting
+                    }
+                }
+            }
+            
+            // Convert to the buyer's local currency
+            let finalUnitPrice = convertPrice(activePriceCAD);
+            
+            // 🟢 3. Update the hidden dataset so the submit payload gets the right price!
+            inputElement.setAttribute('data-buyerprice', finalUnitPrice);
+            
+            // 🟢 4. Update the visual total
+            row.querySelector('.v-total-display').innerText = (qty * finalUnitPrice).toFixed(2);
+            
+            // 🟢 5. Highlight the active Alibaba tier in the UI!
+            let vid = inputElement.getAttribute('data-vid');
+            tiers.forEach((t, idx) => {
+                let tierBox = document.getElementById(`tier-ui-${vid}-${idx}`);
+                if (tierBox) {
+                    if (idx === activeIndex && qty >= t.min) {
+                        tierBox.classList.add('text-[var(--gold-dark)]');
+                        tierBox.classList.remove('opacity-50');
+                    } else {
+                        tierBox.classList.remove('text-[var(--gold-dark)]');
+                        tierBox.classList.add('opacity-50'); // Dim the unused tiers
+                    }
+                }
+            });
             
             let targetInput = row.querySelector('.v-target');
             if (targetInput && targetInput.value) { updateTargetUnit(targetInput); }
         }
-
         function updateTargetUnit(inputElement) {
             let row = inputElement.closest('.matrix-row');
             let qty = parseInt(row.querySelector('.v-qty').value) || 0;
