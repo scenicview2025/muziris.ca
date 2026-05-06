@@ -89,8 +89,8 @@
         .luxury-checkbox:checked { background-color: var(--gold); border-color: var(--gold); }
         .luxury-checkbox:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
-        /* 🟢 THE FIX: max-width 100% and !important forces the browser to obey */
-        .rfq-content { background: #ffffff; width: 96% !important; max-width: 100% !important; min-height: 90vh; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); padding: 40px 50px; position: relative; animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1); margin: 0 auto;}
+        /* 🟢 EDGE-TO-EDGE SPLIT SCREEN */
+        .rfq-content { background: transparent; width: 100vw; height: 100vh; padding: 0; margin: 0; position: relative; animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex;}
         @keyframes modalSlide { from { transform: translateY(30px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
         
         .modal-close { position: absolute; top: 24px; right: 24px; width: 40px; height: 40px; background: #f3f4f6; color: #6b7280; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: all 0.2s ease; }
