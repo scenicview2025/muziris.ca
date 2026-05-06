@@ -396,14 +396,16 @@
                 Object.keys(groupedVariants).forEach(varName => {
                     let v = groupedVariants[varName];
                     
-                    // Build the Alibaba-style pricing UI
-                    let tierUI = `<div class="flex gap-3 mt-1.5 border-t border-gray-100 pt-1.5">`;
+                    // 🟢 THE UX FIX: Upgraded container with spacing to allow the "spring" bounce without clipping
+                    let tierUI = `<div class="flex gap-1 mt-2 pt-2 border-t border-gray-100 items-center">`;
                     v.tiers.forEach((t, index) => {
                         let qtyLabel = t.max === Infinity ? `≥ ${t.min}` : `${t.min}-${t.max}`;
+                        
+                        // We wrap each tier in a "pill" that is shrunken and dimmed by default
                         tierUI += `
-                            <div class="flex flex-col transition-all duration-200" id="tier-ui-${v.vid}-${index}">
-                                <span class="text-[9px] text-gray-500 leading-none mb-0.5">${qtyLabel} ${v.unit}</span>
-                                <span class="text-[11px] font-bold text-gray-900 leading-tight">${activeCurrency} ${convertPrice(t.priceCAD)}</span>
+                            <div id="tier-ui-${v.vid}-${index}" class="flex flex-col justify-center px-2 py-1.5 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-90 opacity-50 bg-gray-50 border border-transparent origin-center relative">
+                                <span class="tier-label text-[9px] text-gray-400 leading-none mb-0.5 transition-colors">${qtyLabel} ${v.unit}</span>
+                                <span class="tier-price text-[11px] font-bold text-gray-500 leading-tight transition-colors">${activeCurrency} ${convertPrice(t.priceCAD)}</span>
                             </div>
                         `;
                     });
