@@ -114,32 +114,34 @@
     </div>
 
     <div id="rfq-container" class="rfq-content hidden">
-        <div class="modal-close" onclick="goBackToCatalog()"><i class="fas fa-times"></i></div>
-        
-        <div class="text-center mb-10 border-b border-gray-100 pb-8">
-            <h2 class="text-3xl font-bold text-gray-900 uppercase tracking-[0.1em] mb-2 brand-font">Initiate Sourcing Contract</h2>
-            <p class="text-sm text-gray-500 font-medium">Specify your volume requirements and logistics to receive a final landed quote.</p>
-        </div>
-
         <input type="hidden" id="rfq-product-id">
         <input type="hidden" id="rfq-product-name">
 
-        <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="flex flex-col lg:flex-row gap-10">
+        <form id="rfqForm" onsubmit="event.preventDefault(); submitRFQ();" class="flex flex-col lg:flex-row w-full h-full m-0 p-0">
             
-            <div class="flex-1 min-w-0">
-                <span class="form-label flex items-center gap-1 mb-4">Volume Configuration & Negotiation <span class="text-red-500">*</span></span>
+            <div class="flex-1 overflow-y-auto px-8 py-10 lg:px-20 lg:py-16 relative z-10" style="background: rgba(255,255,255,0.4); padding-bottom: 100px;">
+                
+                <button type="button" onclick="goBackToCatalog()" class="mb-10 text-[var(--gold-dark)] font-bold text-xs tracking-widest uppercase hover:text-black transition flex items-center gap-2">
+                    <i class="fas fa-arrow-left"></i> Back to Catalog
+                </button>
+
+                <div class="mb-10 pb-6 border-b border-gray-300">
+                    <h2 class="text-3xl font-bold text-gray-900 uppercase tracking-[0.1em] mb-2 brand-font">Initiate Sourcing Contract</h2>
+                    <p class="text-sm text-gray-700 font-medium">Specify your volume requirements and logistics to receive a final landed quote.</p>
+                </div>
+
                 <div class="matrix-container" style="border: none; padding: 0; background: transparent;">
-                    <div class="matrix-header hidden md:flex border-b border-gray-200 pb-3 mb-0">
-                        <div class="flex-[2]">Matrix Details</div>
-                        <div class="flex-1 text-center">Req. Qty</div>
-                        <div class="flex-1 text-center">Est. Total</div>
-                        <div class="flex-[1.2] text-center">Target Total</div>
+                    <div class="matrix-header hidden md:flex border-b border-gray-400 pb-3 mb-0">
+                        <div class="flex-[2] text-gray-800">Matrix Details</div>
+                        <div class="flex-1 text-center text-gray-800">Req. Qty</div>
+                        <div class="flex-1 text-center text-gray-800">Est. Total</div>
+                        <div class="flex-[1.2] text-center text-gray-800">Target Total</div>
                     </div>
                     <div id="rfq-variants-container"></div>
                 </div>
             </div>
 
-            <div class="lg:w-[400px] xl:w-[450px] flex-shrink-0 space-y-6 bg-[#fcfcfc] p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm lg:sticky lg:top-8 h-fit">
+            <div class="w-full lg:w-[450px] xl:w-[500px] flex-shrink-0 bg-white border-l border-gray-200 shadow-2xl overflow-y-auto p-8 lg:p-10 relative z-20 space-y-6">
                 
                 <h3 class="font-bold text-gray-900 uppercase tracking-widest text-sm border-b border-gray-200 pb-3 mb-4 brand-font">Order Details</h3>
 
