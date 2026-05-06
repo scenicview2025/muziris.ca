@@ -471,14 +471,21 @@
                 
                 if (qty > 0) {
                    let unitPriceBuyer = parseFloat(qtyInput.getAttribute('data-buyerprice')) || 0;
+                   let prodId = qtyInput.getAttribute('data-productid');
+                   
+                   // 🟢 NEW: Grab the specific note for this product
+                   let noteInput = document.querySelector(`.p-note[data-productid="${prodId}"]`);
+                   let pNote = noteInput ? noteInput.value : "";
+
                    requestedVariants.push({
-                     productId: qtyInput.getAttribute('data-productid'),
+                     productId: prodId,
                      productName: qtyInput.getAttribute('data-productname'),
                      variantId: qtyInput.getAttribute('data-vid'),
                      variantName: qtyInput.getAttribute('data-vname'),
                      currentPriceBuyer: (qty * unitPriceBuyer).toFixed(2),
                      quantity: qty,
-                     targetPriceBuyer: targetInput.value ? parseFloat(targetInput.value).toFixed(2) : ""
+                     targetPriceBuyer: targetInput.value ? parseFloat(targetInput.value).toFixed(2) : "",
+                     productNote: pNote // 🟢 Added to the JSON payload!
                    });
                 }
             });
