@@ -542,21 +542,37 @@
                 btn.disabled = false; 
             });
         }
-        // 🟢 NEW: Remove individual items from the cart
-        function removeFromCart(productId) {
-            if(confirm("Remove this item from your RFQ?")) {
-                // Filter out the deleted item
-                cartItems = cartItems.filter(item => item.id !== productId);
-                
-                // Save the new array back to the browser memory
-                localStorage.setItem('muziris_cart', JSON.stringify(cartItems));
-                
-                // If the cart is now empty, kick them to the catalog. Otherwise, refresh the page to redraw the cart!
-                if(cartItems.length === 0) {
-                    window.location.href = 'catalog.html';
-                } else {
-                    window.location.reload();
-                }
+        // 🟢 NEW: Custom Delete Modal Logic
+        let itemToRemove = null;
+
+        function triggerRemoveFromCart(productId) {
+            itemToRemove = productId;
+            document.getElementById('delete-modal').style.display = 'flex';
+        }
+
+        function closeDeleteModal(e, force = false) {
+            if (force || e.target.id === 'delete-modal') {
+                document.getElementById('delete-modal').style.display = 'none';
+                itemToRemove = null;
+            }
+        }
+
+        function confirmRemoveItem() {
+            if (!itemToRemove) return;
+            
+            // Filter out the deleted item
+            cartItems = cartItems.filter(item => item.id !== itemToRemove);
+            
+            // Save the new array back to the browser memory
+            localStorage.setItem('muziris_cart', JSON.stringify(cartItems));
+            
+            document.getElementById('delete-modal').style.display = 'none';
+            
+            // If the cart is now empty, kick them to the catalog. Otherwise, refresh the page to redraw the cart!
+            if(cartItems.length === 0) {
+                window.location.href = 'catalog.html';
+            } else {
+                window.location.reload();
             }
         }
     </script>
