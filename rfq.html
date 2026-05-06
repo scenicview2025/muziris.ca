@@ -475,9 +475,10 @@
                    let unitPriceBuyer = parseFloat(qtyInput.getAttribute('data-buyerprice')) || 0;
                    let prodId = qtyInput.getAttribute('data-productid');
                    
-                   // 🟢 NEW: Grab the specific note for this product
+                   // 🟢 NEW: Grab all specific requirements for this product
                    let noteInput = document.querySelector(`.p-note[data-productid="${prodId}"]`);
-                   let pNote = noteInput ? noteInput.value : "";
+                   let customInput = document.querySelector(`.p-custom[data-productid="${prodId}"]`);
+                   let sampleInput = document.querySelector(`.p-sample[data-productid="${prodId}"]`);
 
                    requestedVariants.push({
                      productId: prodId,
@@ -487,7 +488,9 @@
                      currentPriceBuyer: (qty * unitPriceBuyer).toFixed(2),
                      quantity: qty,
                      targetPriceBuyer: targetInput.value ? parseFloat(targetInput.value).toFixed(2) : "",
-                     productNote: pNote // 🟢 Added to the JSON payload!
+                     productNote: noteInput ? noteInput.value : "",
+                     customization: customInput ? customInput.value : "",
+                     sample: sampleInput ? sampleInput.value : "No Sample Needed"
                    });
                 }
             });
