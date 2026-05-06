@@ -412,21 +412,23 @@
                     // The highest price is the default starting point
                     let startingPrice = convertPrice(v.tiers[0].priceCAD);
 
+                    // Pack the tiers safely into the HTML element so JS can read it on-the-fly
+                    let safeTiers = encodeURIComponent(JSON.stringify(v.tiers));
+
                     variantHtml += `
                     <div class="flex flex-col md:flex-row gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center">
                         
-                        <div class="w-full md:w-[35%] flex items-center gap-3">
-                            <div class="w-10 h-10 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
-                                <img src="${vImage}" class="max-w-full max-h-full object-cover rounded-sm">
+                        <div class="w-full md:w-[35%] flex items-start gap-3">
+                            <div class="w-10 h-10 mt-1 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
+                                <img src="${v.image}" class="max-w-full max-h-full object-cover rounded-sm">
                             </div>
-                            <div class="flex flex-col justify-center min-w-0">
+                            <div class="flex flex-col justify-center min-w-0 w-full">
                                 <strong class="text-gray-900 font-bold text-sm truncate block">${varName}</strong>
-                                <span class="text-gray-500 text-[10px] font-medium mt-0.5 block tracking-wide">Rate: ${convertedPrice} ${activeCurrency}</span>
-                            </div>
+                                ${tierUI} </div>
                         </div>
 
                         <div class="w-full md:w-[20%]">
-                            <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.varId}" data-vname="${varName}" data-buyerprice="${convertedPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                            <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.vid}" data-vname="${varName}" data-tiers="${safeTiers}" data-buyerprice="${startingPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
                         </div>
                         <div class="w-full md:w-[15%] text-center text-base font-bold font-mono text-[var(--text-dark)] mt-2 md:mt-0">
                             <span class="text-xs mr-1 font-sans text-gray-400 font-bold">${activeCurrency}</span><span class="v-total-display">0.00</span>
