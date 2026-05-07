@@ -199,6 +199,9 @@
         let rfqs = Array.isArray(rfqData) ? rfqData : [];
         let inventory = Array.isArray(inventoryData) ? inventoryData : [];
 
+        // 🟢 THE FIX: Save the RFQs to the global window object so the "View Summary" button can find the math!
+        window.supplierRfqs = rfqs;
+
         if (rfqs.length === 0 && inventory.length === 0) {
           renderEmptyState();
           return;
