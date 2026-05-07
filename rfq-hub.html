@@ -46,6 +46,12 @@
     .chart-container { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
     .section-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: 18px; margin-top: 0; margin-bottom: 20px; }
 
+    /* 🟢 NEW: SUMMARY MODAL STYLES */
+    .summary-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+    .summary-box { background: var(--slate); border: 1px solid var(--gold); border-radius: 8px; width: 90%; max-width: 500px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); position: relative; max-height: 85vh; overflow-y: auto; }
+    .summary-close { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; transition: 0.3s; }
+    .summary-close:hover { color: #fff; }
+
     /* TABLE SECTION */
     .table-container { background: var(--slate); border: 1px solid #333; border-radius: 8px; padding: 25px; overflow-x: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
     table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
