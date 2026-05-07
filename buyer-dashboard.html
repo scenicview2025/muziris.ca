@@ -405,7 +405,8 @@
 
       orders.forEach(rfq => {
         // Categories
-        let isNegotiating = ['Pending Supplier', 'Supplier Clarification', 'Quote Sent', 'Buyer Counter-Offer', 'Supplier Replied'].includes(rfq.status);
+        // 🟢 THE FIX: Added the missing backend statuses so the KPIs track perfectly!
+        let isNegotiating = ['Pending Supplier', 'Supplier Clarification', 'Pending Freight', 'Pending Admin Approval', 'Quote Sent', 'Buyer Counter-Offer'].includes(rfq.status);
         let isProduction = ['Funded Escrow', 'In Production'].includes(rfq.status);
         let isTransit = ['Pending Freight Payment', 'Shipped'].includes(rfq.status);
         let isDelivered = ['Completed', 'Delivered', 'Hold Period'].includes(rfq.status);
@@ -415,7 +416,7 @@
         if(isTransit) countTransit++;
         if(isDelivered) countDeliver++;
 
-        if(rfq.status !== 'Cancelled' && rfq.status !== 'Completed') activeCount++;
+        if(rfq.status !== 'Cancelled' && rfq.status !== 'Completed' && rfq.status !== 'Refunded') activeCount++;
 
         // Financials (Total Locked)
         if(isProduction || isTransit || rfq.status === 'Hold Period') {
