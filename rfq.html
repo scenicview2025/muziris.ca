@@ -616,6 +616,7 @@
                      productName: qtyInput.getAttribute('data-productname'),
                      variantId: qtyInput.getAttribute('data-vid'),
                      variantName: qtyInput.getAttribute('data-vname'),
+                     image: qtyInput.getAttribute('data-image'), // 🟢 THE FIX: Sends the specific image to the database!
                      currentPriceBuyer: (qty * unitPriceBuyer).toFixed(2),
                      quantity: qty,
                      targetPriceBuyer: targetInput.value ? parseFloat(targetInput.value).toFixed(2) : "",
