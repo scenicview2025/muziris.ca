@@ -513,9 +513,12 @@
                  `;
              }
 
-             // 🟢 THE MAGIC: Inject the Product Name (for multi-SKU clarity) and the Notes HTML
+             let vImage = v.image || 'MC.png'; // Fallback just in case
+
+             // 🟢 THE MAGIC: Inject the Image Thumbnail, Product Name, and Notes HTML
              vCont.innerHTML += `
                 <div class="variant-row">
+                  <div style="width:65px; height:65px; border-radius:6px; flex-shrink:0; background: #fff url('${vImage}') center/cover no-repeat; border:1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.5);"></div>
                   <div class="v-details">
                     <div style="font-size:10px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;"><i class="fas fa-box" style="margin-right:4px;"></i> ${v.productName || 'Product'}</div>
                     <div style="color:var(--gold); font-weight:bold; margin-bottom:5px; font-size: 16px;">${v.variantName}</div>
