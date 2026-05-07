@@ -539,26 +539,22 @@
             <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 40px;">Additional Commercial Fees (Tooling, Samples & Misc)</h3>            <p style="font-size:12px; color:#888; margin-bottom: 20px;">Provide flat-fee costs for any additional requirements. Leave as 0 if not applicable.</p>
             
             <div class="dynamic-section" style="border-left: 3px solid #1E88E5;">
-              <h4 style="color: #1E88E5; margin-top: 0; margin-bottom: 5px;">📦 Physical Sample + Express Courier</h4>
-              <p style="font-size:11px; color:#aaa; margin-bottom:15px;">Use Marginal Pricing: The 1st sample absorbs the DHL/FedEx base rate. Additional units in the same box cost much less.</p>
+              <h4 style="color: #1E88E5; margin-top: 0; margin-bottom: 5px;">📦 Consolidated Physical Samples + Express Courier</h4>
+              <p style="font-size:11px; color:#aaa; margin-bottom:15px;">If the buyer requested samples for multiple products, pack them into a SINGLE DHL/FedEx box to save them money on shipping.</p>
               
-              <div class="grid-3">
+              <div class="grid-2">
                 <div>
-                  <label>Cost for 1st Sample (${supCurr})</label>
-                  <input type="number" step="0.01" id="fee-sample-base" placeholder="Item + Shipping" value="0" required>
+                  <label>Total Cost of Sample Items (${supCurr})</label>
+                  <input type="number" step="0.01" id="fee-sample-items" value="0" required oninput="calculateTotal()">
                 </div>
                 <div>
-                  <label>Cost per EXTRA Sample (${supCurr})</label>
-                  <input type="number" step="0.01" id="fee-sample-extra" placeholder="Item cost only" value="0" required>
-                </div>
-                <div>
-                  <label>Max Samples Allowed</label>
-                  <input type="number" id="fee-sample-max" value="3" min="1" max="10" required>
+                  <label>Consolidated Courier Shipping (${supCurr})</label>
+                  <input type="number" step="0.01" id="fee-sample-shipping" placeholder="e.g. DHL / FedEx" value="0" required oninput="calculateTotal()">
                 </div>
               </div>
               <div style="margin-top: 15px;">
                   <label>Sample Description & Lead Time</label>
-                  <input type="text" id="fee-sample-note" placeholder="e.g. Random color, ships via DHL in 3 days...">
+                  <input type="text" id="fee-sample-note" placeholder="e.g. 1 Red Shirt and 1 Blue Mug shipping together via DHL in 3 days...">
               </div>
             </div>
             <div class="dynamic-section" style="border-left: 3px solid #D4AF37;">
