@@ -701,11 +701,10 @@
           warranty: document.getElementById('spec-warranty') ? document.getElementById('spec-warranty').value : "",
           supplierNotes: document.getElementById('spec-notes') ? document.getElementById('spec-notes').value : ""
         },
+        // 🟢 THE FIX: Capturing CBM and Total Weight for the Freight Forwarder
         masterCarton: {
-          length: document.getElementById('box-l').value || document.getElementById('pal-l').value,
-          width: document.getElementById('box-w').value || document.getElementById('pal-w').value,
-          height: document.getElementById('box-h').value || document.getElementById('pal-h').value,
-          weightKG: document.getElementById('box-kg').value || document.getElementById('pal-kg').value,
+          totalCBM: document.getElementById('box-cbm') ? document.getElementById('box-cbm').value : "",
+          weightKG: document.getElementById('box-kg').value || document.getElementById('pal-kg').value || document.getElementById('fcl-kg').value,
           totalCartons: document.getElementById('box-qty').value || document.getElementById('pal-qty').value
         },
         counterOffers: counterOffers,
