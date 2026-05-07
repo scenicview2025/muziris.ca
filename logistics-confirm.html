@@ -664,11 +664,13 @@
       const custFeeInput = document.getElementById('fee-cust');
       const custNoteInput = document.getElementById('note-cust');
       
-      // 🟢 NEW: Grab the Marginal Sample inputs
-      const sampBaseInput = document.getElementById('fee-sample-base');
-      const sampExtraInput = document.getElementById('fee-sample-extra');
-      const sampMaxInput = document.getElementById('fee-sample-max');
+      // 🟢 THE FIX: Grab the Consolidated Sample inputs
+      const sampItemsInput = document.getElementById('fee-sample-items');
+      const sampShippingInput = document.getElementById('fee-sample-shipping');
       const sampNoteInput = document.getElementById('fee-sample-note');
+      
+      // Add the items cost and the shipping cost together to get the Grand Total for the Sample Box!
+      let totalSampleCost = (sampItemsInput ? parseFloat(sampItemsInput.value) || 0 : 0) + (sampShippingInput ? parseFloat(sampShippingInput.value) || 0 : 0);
       
       const videoLinkInput = document.getElementById('link-video');
       const supplierReplyInput = document.getElementById('supplier-reply');
