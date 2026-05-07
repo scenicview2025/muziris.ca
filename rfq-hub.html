@@ -147,6 +147,14 @@
     </div>
   </div>
 
+  <div id="summary-modal">
+    <div class="summary-box">
+      <div class="summary-close" onclick="document.getElementById('summary-modal').style.display='none'">×</div>
+      <h3 style="color:var(--gold); font-family:'Cinzel', serif; margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">Contract Summary</h3>
+      <div id="summary-content"></div>
+    </div>
+  </div>
+
   <script>
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     let supplierCurrency = "USD";
