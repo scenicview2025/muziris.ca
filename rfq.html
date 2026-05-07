@@ -343,11 +343,10 @@
                     return;
                 }
 
-                currentSupplierGroup = allCartProducts[0].supplierId;
-                targetProducts = allCartProducts.filter(p => p.supplierId === currentSupplierGroup);
+                // 🟢 THE UX FIX: Keep ALL products in the cart! No more filtering!
+                targetProducts = allCartProducts;
 
                 buildForm();
-
             } catch (e) {
                 console.error(e);
                 alert("Network error. Please try again.");
