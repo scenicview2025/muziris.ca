@@ -571,14 +571,25 @@
         let exactLedgerTotal = parseFloat(rfq.tazapay_total_charged || 0);
         let itemsHtml = "";
 
+        // 🟢 MULTI-SKU FIX: Unpack the variants array so we can match the IDs to the real product names!
+        let variants = [];
+        try { variants = typeof rfq.variants_requested === 'string' ? JSON.parse(rfq.variants_requested) : (rfq.variants_requested || []); } catch(e){}
+
         if (q && q.finalQuoteItems) {
             q.finalQuoteItems.forEach(item => {
+                let vMatch = variants.find(v => v.variantId === item.variantId) || {};
                 let itemTotal = parseFloat(item.finalBuyerPrice || item.supplierTotalRaw || 0);
+                
+                // Securely grab the names, falling back to legacy data if it's an old order
+                let pName = vMatch.productName || rfq.product_name || 'Product';
+                let vName = vMatch.variantName || item.variantName || 'Standard';
+                let vQty = vMatch.quantity || item.quantity || 1;
+
                 itemsHtml += `
                     <div class="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
                         <div>
-                            <div class="text-sm font-bold text-gray-900">${item.variantName}</div>
-                            <div class="text-xs text-gray-500">Qty: ${item.quantity}</div>
+                            <div class="text-sm font-bold text-gray-900">${pName}</div>
+                            <div class="text-xs text-gray-500">Var: ${vName} <span class="mx-1">•</span> Qty: ${vQty}</div>
                         </div>
                         <div class="font-mono font-bold text-gray-700">$${itemTotal.toFixed(2)}</div>
                     </div>
