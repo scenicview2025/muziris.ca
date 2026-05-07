@@ -410,15 +410,83 @@
     }
 
     function openRfq(rfqId, status) {
-      // Check against the new database schema status
-      if (status === 'Pending Supplier Quote' || status === 'Pending Supplier') {
+      if (status === 'Pending Supplier Quote' || status === 'Pending Supplier' || status === 'Supplier Clarification') {
         localStorage.setItem('currentActionRfq', rfqId);
-        
-        // 🟢 Redirects the supplier to your beautiful Quotation Portal!
-        window.location.href = 'quotation-portal.html?rfq=' + rfqId; 
+        window.location.href = 'logistics-confirm.html?rfq=' + rfqId; 
       } else {
-        alert("This RFQ is currently: " + status + "\n\nYou have already submitted your portion of the contract. Awaiting next steps.");
+        // 🟢 THE FIX: Instead of a boring alert, show the beautiful summary modal!
+        showRfqSummary(rfqId, status);
       }
+    }
+
+    function showRfqSummary(rfqId, currentStatus) {
+        const rfq = window.supplierRfqs.find(r => r.rfq_id === rfqId);
+        if(!rfq) return;
+
+        let quote = {};
+        try { quote = typeof rfq.supplier_quote === 'string' ? JSON.parse(rfq.supplier_quote) : (rfq.supplier_quote || {}); } catch(e){}
+        
+        let variants = [];
+        try { variants = typeof rfq.variants_requested === 'string' ? JSON.parse(rfq.variants_requested) : (rfq.variants_requested || []); } catch(e){}
+
+        let itemsHtml = '';
+        let grandTotal = 0;
+
+        // Loop through and build the receipt items
+        if (quote.finalQuoteItems) {
+            quote.finalQuoteItems.forEach(item => {
+                let vMatch = variants.find(v => v.variantId === item.variantId) || {};
+                let priceRaw = parseFloat(item.supplierTotalRaw || 0);
+                grandTotal += priceRaw;
+                
+                itemsHtml += `
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid #222; padding:10px 0; font-size:13px;">
+                        <span style="color:#ccc;">${vMatch.productName || 'Product'} <br><span style="font-size:11px; color:#888;">${vMatch.variantName} (x${vMatch.quantity || 1})</span></span>
+                        <strong style="color:#fff;">${supplierCurrency} ${priceRaw.toFixed(2)}</strong>
+                    </div>
+                `;
+            });
+        }
+
+        let feesHtml = '';
+        if (quote.extraFees) {
+            let sampleFee = parseFloat(quote.extraFees.sampleFee || 0);
+            let custFee = parseFloat(quote.extraFees.customizationFee || 0);
+            let otherFee = parseFloat(quote.extraFees.otherFee || 0);
+            
+            if (sampleFee > 0) { grandTotal += sampleFee; feesHtml += `<div style="display:flex; justify-content:space-between; padding:10px 0; font-size:12px; color:#888;"><span>Sample & Courier</span><span>${supplierCurrency} ${sampleFee.toFixed(2)}</span></div>`; }
+            if (custFee > 0) { grandTotal += custFee; feesHtml += `<div style="display:flex; justify-content:space-between; padding:10px 0; font-size:12px; color:#888;"><span>Customization / Tooling</span><span>${supplierCurrency} ${custFee.toFixed(2)}</span></div>`; }
+            if (otherFee > 0) { grandTotal += otherFee; feesHtml += `<div style="display:flex; justify-content:space-between; padding:10px 0; font-size:12px; color:#888;"><span>Misc Fees</span><span>${supplierCurrency} ${otherFee.toFixed(2)}</span></div>`; }
+        }
+
+        let displayStatus = currentStatus;
+        if (currentStatus === 'Pending Freight' || currentStatus === 'Pending Admin Approval') displayStatus = "Quote Sent";
+        if (currentStatus === 'Buyer Counter-Offer') displayStatus = "Buyer Reviewing";
+
+        let html = `
+            <div style="margin-bottom: 20px;">
+                <div style="font-size:12px; color:#888; text-transform:uppercase; margin-bottom:5px;">Order Reference</div>
+                <div style="color:var(--gold); font-weight:bold; font-size:18px; font-family:monospace;">${rfq.rfq_id}</div>
+                <div style="display:inline-block; margin-top:5px; background:rgba(30,136,229,0.1); color:var(--blue); border:1px solid var(--blue); padding:4px 8px; border-radius:4px; font-size:10px; font-weight:bold; text-transform:uppercase;">● ${displayStatus}</div>
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px; background:#0b0e14; padding:15px; border-radius:6px; border:1px solid #333;">
+                <div><span style="color:#888; font-size:11px; text-transform:uppercase;">Buyer</span><br><strong style="color:#fff; font-size:13px;">${rfq.buyer_company}</strong></div>
+                <div><span style="color:#888; font-size:11px; text-transform:uppercase;">Destination</span><br><strong style="color:#fff; font-size:13px;">${rfq.destination}</strong></div>
+            </div>
+
+            <h4 style="color:#fff; border-bottom:1px solid #333; padding-bottom:8px; margin-bottom:10px;">Quoted Items</h4>
+            ${itemsHtml || '<div style="color:#666; font-style:italic;">No items quoted yet.</div>'}
+            ${feesHtml}
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:15px; border-top:1px dashed #444;">
+                <span style="color:var(--gold); font-weight:bold; text-transform:uppercase; letter-spacing:1px;">Total Quoted Value</span>
+                <strong style="color:var(--gold); font-size:20px;">${supplierCurrency} ${grandTotal.toFixed(2)}</strong>
+            </div>
+        `;
+
+        document.getElementById('summary-content').innerHTML = html;
+        document.getElementById('summary-modal').style.display = 'flex';
     }
 
     // 🟢 NEW: Trigger Phase 2 Logistics
