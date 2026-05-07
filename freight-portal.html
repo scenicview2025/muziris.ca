@@ -140,7 +140,7 @@
           document.getElementById('ui-hs').innerText = quote.hsCode || 'Not provided';
           document.getElementById('ui-hazmat').innerText = quote.hazmat || 'No';
 
-          // 3. Smart Parsing for Load Types & Dimensions
+          // 3. Smart Parsing for Load Types & Dimensions (Now CBM-Aware)
           let loadType = quote.loadType || 'loose'; // Default to loose if old data
           
           if (loadType === 'fcl' || quote.fclSize) {
@@ -157,10 +157,20 @@
           else {
               document.getElementById('ui-loadtype').innerText = "Loose Master Cartons";
               document.getElementById('ui-kg').innerText = (quote.masterCarton ? quote.masterCarton.weightKG : "0") + " kg";
-              let dims = quote.masterCarton ? `${quote.masterCarton.length}x${quote.masterCarton.width}x${quote.masterCarton.height} cm (${quote.masterCarton.totalCartons} Cartons)` : 'N/A';
+              
+              // 🟢 THE FIX: Handle the new CBM format for Multi-SKU consolidated cargo!
+              let dims = 'N/A';
+              if (quote.masterCarton) {
+                  if (quote.masterCarton.totalCBM) {
+                      // It's a new Multi-SKU order! Display the Total Volume in CBM
+                      dims = `${quote.masterCarton.totalCBM} CBM (${quote.masterCarton.totalCartons} Cartons)`;
+                  } else if (quote.masterCarton.length) {
+                      // Legacy Support for old single-box orders
+                      dims = `${quote.masterCarton.length}x${quote.masterCarton.width}x${quote.masterCarton.height} cm (${quote.masterCarton.totalCartons} Cartons)`;
+                  }
+              }
               document.getElementById('ui-dims').innerText = dims;
           }
-
           // 4. Commercial Value extraction
           let buyerValue = quote.calculatedBuyerTotals ? parseFloat(quote.calculatedBuyerTotals.productTotalBuyer) : 0;
           document.getElementById('ui-value').innerText = "$" + buyerValue.toFixed(2) + " CAD";
