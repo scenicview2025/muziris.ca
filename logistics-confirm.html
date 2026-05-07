@@ -432,6 +432,12 @@
               realProductId = variants[0].productId;
           }
 
+          // 🟢 THE MULTI-SKU FIX: If it's a multi-item bundle, grab the real product ID from the first variant!
+          let realProductId = data.product_id;
+          if (realProductId === "MULTI-SKU-BUNDLE" && variants.length > 0) {
+              realProductId = variants[0].productId;
+          }
+
           // We use the real product ID to ask the server for the exact hero image!
           fetch(API_BASE_URL + '/get-product-details', {
               method: 'POST',
