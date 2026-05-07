@@ -589,10 +589,8 @@
       const item = window.supplierInventory.find(p => p.product_id === productId);
       if(!item) return;
 
-      let rfqCount = 0;
-      if(window.supplierRfqs) {
-         rfqCount = window.supplierRfqs.filter(r => r.product_id === productId).length;
-      }
+      // 🟢 THE FIX: Instantly grab the lifetime count calculated by the server!
+      let rfqCount = item.rfqCount || 0;
       
       let realViews = item.views ? parseInt(item.views) : 0;
 
