@@ -250,9 +250,23 @@
 
         // Table Row Generation & Two-Phase Logic
         let statusClass = "status-pending";
-        let actionBtn = `<button onclick="openRfq('${rfq.rfq_id}', '${rfq.status}')" class="btn-view">View</button>`;
+        
+        // 🟢 THE UX FIX: Translate internal backend statuses into friendly Supplier statuses!
+        let displayStatus = rfq.status;
+        if (rfq.status === 'Pending Freight' || rfq.status === 'Pending Admin Approval') {
+            displayStatus = "Quote Sent";
+        } else if (rfq.status === 'Buyer Counter-Offer') {
+            displayStatus = "Buyer Reviewing";
+        }
+        
+        let actionBtn = `<button onclick="openRfq('${rfq.rfq_id}', '${rfq.status}')" class="btn-view">View Summary</button>`;
+        
+        // If they need to quote, highlight the button in solid Gold
+        if (rfq.status === 'Pending Supplier' || rfq.status === 'Supplier Clarification') {
+            actionBtn = `<button onclick="openRfq('${rfq.rfq_id}', '${rfq.status}')" class="btn-view" style="background:var(--gold); color:#000;">Submit Quote</button>`;
+        }
 
-        if (['Pending Freight', 'Quote Sent', 'Pending Freight Payment'].includes(rfq.status)) {
+        if (['Pending Freight', 'Quote Sent', 'Pending Admin Approval', 'Pending Freight Payment', 'Buyer Counter-Offer'].includes(rfq.status)) {
             statusClass = "status-process";
         } else if (isWon) {
             statusClass = "status-won";
@@ -260,7 +274,7 @@
             statusClass = "status-lost";
         }
 
-        // 🟢 NEW: Phase 2 Logistics Trigger for Supplier
+        // Phase 2 Logistics Trigger for Supplier
         if (rfq.status === 'In Production') {
             statusClass = "status-process";
             actionBtn = `<button onclick="requestFreightPickup('${rfq.rfq_id}')" class="btn-view" style="background:var(--blue); color:#fff; border-color:var(--blue); font-weight:bold;">📦 Request Freight Pickup</button>`;
@@ -275,7 +289,7 @@
             <td style="font-weight:bold; color:#fff;">${rfq.product_name}</td>
             <td>${rfq.buyer_company}</td>
             <td>${rfq.destination}</td>
-            <td><span class="status-badge ${statusClass}">${rfq.status}</span></td>
+            <td><span class="status-badge ${statusClass}">${displayStatus}</span></td>
             <td>${actionBtn}</td>
           </tr>
         `;
