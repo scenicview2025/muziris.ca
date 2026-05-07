@@ -354,15 +354,45 @@
           document.getElementById('table-prod').innerHTML = prodHtml;
         }
         
-        if (valFreight > 0) {
+        // 🟢 MULTI-OPTION FREIGHT RENDERER
+        if (freight.options && freight.options.length > 0) {
           document.getElementById('card-freight').style.display = 'block';
-          document.getElementById('price-freight').innerText = formatCurrency(valFreight, 'CAD');
-          document.getElementById('freight-details').innerHTML = `
-            <strong>Estimated Shipping Plan :</strong> ${freight.shipMode || 'Standard'}<br>
-            <strong>Carrier :</strong> ${freight.shipCarrier || 'Assigned by Muziris'}<br>
-            <strong>Estimated Transit :</strong> ${freight.transitTime ? freight.transitTime + ' Days' : 'TBD'}
-          `;
+          
+          // Generate the Dropdown Options
+          let selectHtml = '';
+          freight.options.forEach((opt, index) => {
+              selectHtml += `<option value="${opt.finalFreightBuyer}" data-mode="${opt.mode}" data-time="${opt.transitTime}">${opt.mode} (${opt.transitTime} Days) - $${opt.finalFreightBuyer}</option>`;
+          });
+          document.getElementById('freight-selector').innerHTML = selectHtml;
+          
+          // Set the default to the first option
+          updateFreightSelection(); 
         }
+
+        // Initialize Calculation
+        calculateTotal();
+      } catch (err) {
+        console.error('RFQ load failed', err);
+        document.getElementById('loading').innerText = "SERVER CONNECTION FAILED.";
+      }
+    }
+
+    // 🟢 ADD THIS HELPER FUNCTION RIGHT BELOW loadRfq()
+    window.updateFreightSelection = function() {
+        let selector = document.getElementById('freight-selector');
+        if (!selector || selector.options.length === 0) return;
+        
+        let selectedOption = selector.options[selector.selectedIndex];
+        
+        valFreight = parseFloat(selector.value || 0); // Update the global variable!
+        document.getElementById('price-freight').innerText = formatCurrency(valFreight, 'CAD');
+        
+        document.getElementById('freight-details').innerHTML = `
+            <strong>Routing:</strong> ${rfqData.supplier_quote && typeof rfqData.supplier_quote === 'string' ? JSON.parse(rfqData.supplier_quote).freightData?.shipPol : (rfqData.supplier_quote?.freightData?.shipPol || 'TBD')}<br>
+            <strong>Estimated Transit:</strong> ${selectedOption.getAttribute('data-time')} Days
+        `;
+        calculateTotal(); // Recalculate the Grand Total instantly!
+    };
 
         // Initialize Calculation
         calculateTotal();
