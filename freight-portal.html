@@ -186,6 +186,11 @@
       const btn = document.getElementById('btn-submit');
       btn.innerText = "CALCULATING FINAL MARGINS..."; btn.disabled = true;
 
+      // 🟢 THE FIX: Combine POL and POD so the buyer sees the exact ocean/air routing!
+      let pol = document.getElementById('ship-pol').value;
+      let pod = document.getElementById('ship-pod').value;
+      let combinedRouting = `${pol} ➔ ${pod}`;
+
       const payload = {
         rfqId: rfqId,
         freightCost: document.getElementById('freight-cost').value,
@@ -193,7 +198,7 @@
         transitTime: document.getElementById('transit-time').value,
         shipMode: document.getElementById('ship-mode').value,
         shipCarrier: document.getElementById('ship-carrier').value,
-        shipPol: document.getElementById('ship-pol').value
+        shipPol: combinedRouting // Saves "Shenzhen ➔ Vancouver" into the database!
       };
 
       fetch(API_BASE_URL + '/submit-freight-quote', { 
