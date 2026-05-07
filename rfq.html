@@ -664,21 +664,16 @@
             .then(res => res.json())
             .then(resp => {
                 if(resp.success) {
-                    cartItems = cartItems.filter(item => !targetProducts.some(p => p.id === item.id));
-                    localStorage.setItem('muziris_cart', JSON.stringify(cartItems));
+                    // 🟢 THE UX FIX: Since the backend handles all suppliers at once, clear the whole cart!
+                    cartItems = [];
+                    localStorage.removeItem('muziris_cart');
 
                     document.getElementById('rfq-container').style.display = 'none';
                     document.getElementById('success-modal').style.display = 'flex';
                     
-                    if (cartItems.length > 0) {
-                        document.querySelector('#success-modal p').innerText = `Your request to Supplier ${currentSupplierGroup} was sent successfully! You still have items in your cart from other suppliers. Click below to continue checking out.`;
-                        document.querySelector('#success-modal button').innerText = "Continue Checkout";
-                        document.querySelector('#success-modal button').onclick = () => window.location.reload();
-                    } else {
-                        document.querySelector('#success-modal p').innerText = "Your complete sourcing request has been securely transmitted. The factory will review your matrix and contact you shortly with a finalized quotation.";
-                        document.querySelector('#success-modal button').innerText = "Return to Catalog";
-                        document.querySelector('#success-modal button').onclick = () => window.location.href = "catalog.html";
-                    }
+                    document.querySelector('#success-modal p').innerText = "Your multi-supplier sourcing request has been securely transmitted. The respective factories will review your requirements and contact you shortly.";
+                    document.querySelector('#success-modal button').innerText = "Return to Catalog";
+                    document.querySelector('#success-modal button').onclick = () => window.location.href = "catalog.html";
 
                 } else {
                     alert("ERROR: " + resp.error);
