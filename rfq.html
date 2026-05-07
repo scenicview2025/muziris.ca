@@ -611,6 +611,7 @@
                    let sampleInput = document.querySelector(`.p-sample[data-productid="${prodId}"]`);
 
                    requestedVariants.push({
+                     supplierId: qtyInput.getAttribute('data-supplierid'), // 🟢 VITAL FOR BACKEND SPLIT!
                      productId: prodId,
                      productName: qtyInput.getAttribute('data-productname'),
                      variantId: qtyInput.getAttribute('data-vid'),
