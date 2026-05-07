@@ -173,19 +173,33 @@
       const btn = document.getElementById('btn-submit');
       btn.innerText = "CALCULATING FINAL MARGINS..."; btn.disabled = true;
 
-      // 🟢 THE FIX: Combine POL and POD so the buyer sees the exact ocean/air routing!
-      let pol = document.getElementById('ship-pol').value;
-      let pod = document.getElementById('ship-pod').value;
-      let combinedRouting = `${pol} ➔ ${pod}`;
+      // 🟢 THE FIX: Package multiple options into an Array!
+      let options = [];
+      
+      // Push Option 1 (Required)
+      options.push({ 
+          mode: document.getElementById('opt1-mode').value, 
+          time: document.getElementById('opt1-time').value, 
+          cost: document.getElementById('opt1-cost').value 
+      });
+      
+      // Push Option 2 (If provided)
+      if (document.getElementById('opt2-cost').value > 0) {
+          options.push({ 
+              mode: document.getElementById('opt2-mode').value, 
+              time: document.getElementById('opt2-time').value, 
+              cost: document.getElementById('opt2-cost').value 
+          });
+      }
+
+      // Combine the route
+      let combinedRouting = `${document.getElementById('ship-pol').value} ➔ ${document.getElementById('ship-pod').value}`;
 
       const payload = {
         rfqId: rfqId,
-        freightCost: document.getElementById('freight-cost').value,
         freightCurrency: document.getElementById('freight-currency').value,
-        transitTime: document.getElementById('transit-time').value,
-        shipMode: document.getElementById('ship-mode').value,
-        shipCarrier: document.getElementById('ship-carrier').value,
-        shipPol: combinedRouting // Saves "Shenzhen ➔ Vancouver" into the database!
+        shipPol: combinedRouting,
+        freightOptions: options // 🟢 Sends the Array to server.js!
       };
 
       fetch(API_BASE_URL + '/submit-freight-quote', { 
