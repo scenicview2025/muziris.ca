@@ -146,13 +146,15 @@
 
     <div class="module-card" id="card-freight" style="display:none;">
       <label class="module-header">
-        <input type="checkbox" id="chk-freight">
+        <input type="checkbox" id="chk-freight" onchange="calculateTotal()">
         <h3>3. Muziris Managed Freight</h3>
         <div class="module-price" id="price-freight">$0.00</div>
       </label>
       <div class="module-body">
-        <div id="freight-details">
-            </div>
+        <label style="font-size:11px; color:var(--text-muted); font-weight:bold; text-transform:uppercase;">Select Shipping Route</label>
+        <select id="freight-selector" style="width:100%; padding:12px; margin-bottom:15px; border-radius:6px; border:1px solid var(--border-color); font-size:14px; font-weight:bold;" onchange="updateFreightSelection()"></select>
+        
+        <div id="freight-details" style="font-size:12px; color:var(--text-main); margin-bottom:15px;"></div>
         <div class="disclaimer-box">
             <strong>⚠️ ESTIMATED PRICING:</strong> Global freight markets are volatile. The price shown is an active market estimate based on current container/air rates. 
             <strong>This price is not final.</strong> If you choose to fund freight today, any market variance at the actual time of shipping will be credited or billed as a true-up adjustment.
