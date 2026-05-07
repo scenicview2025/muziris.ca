@@ -371,133 +371,152 @@
             const vContainer = document.getElementById('rfq-variants-container');
             vContainer.innerHTML = ""; 
             
-            targetProducts.forEach(product => {
-                let variantHtml = '';
+            // 🟢 1. GROUP PRODUCTS BY SUPPLIER FOR THE "AMAZON" EXPERIENCE
+            let supplierGroups = {};
+            targetProducts.forEach(p => {
+                if (!supplierGroups[p.supplierId]) supplierGroups[p.supplierId] = [];
+                supplierGroups[p.supplierId].push(p);
+            });
+
+            let packageCounter = 1;
+
+            // 🟢 2. RENDER EACH SUPPLIER'S PACKAGE
+            Object.keys(supplierGroups).forEach(supplierId => {
+                let supplierProducts = supplierGroups[supplierId];
                 
-                // 🟢 1. GROUP THE FLAT DATABASE ROWS INTO ALIBABA TIERS
-                let groupedVariants = {};
-                product.variants.forEach((v) => {
-                    let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
-                    if (!groupedVariants[varName]) {
-                        groupedVariants[varName] = {
-                            vid: v.varId,
-                            unit: v.unit,
-                            image: v.image || product.hero || 'MC.png',
-                            tiers: []
-                        };
-                    }
-                    // Parse 'Up' or blank max strings to Infinity for the math engine
-                    let maxVal = (v.max && v.max.toLowerCase() !== "up") ? parseInt(v.max) : Infinity;
-                    groupedVariants[varName].tiers.push({ min: parseInt(v.min) || 1, max: maxVal, priceCAD: parseFloat(v.priceCAD) || 0 });
-                });
-
-                // 🟢 2. RENDER THE GROUPED VARIANTS
-                Object.keys(groupedVariants).forEach(varName => {
-                    let v = groupedVariants[varName];
-                    
-                    let tierUI = `<div class="flex gap-1 mt-2 pt-2 border-t border-gray-100 items-center">`;
-                    v.tiers.forEach((t, index) => {
-                        let qtyLabel = t.max === Infinity ? `≥ ${t.min}` : `${t.min}-${t.max}`;
-                        
-                        // 🟢 Make the very first tier active/popped-out by default when the page loads!
-                        let isActive = index === 0;
-                        
-                        // 🟢 THE UX FIX: Added `order-first` to the active class, and `order-none` to inactive!
-                        let boxClass = isActive 
-                            ? "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-110 opacity-100 bg-[var(--gold-light)] border border-[var(--gold-border)] shadow-md z-10 origin-center mx-1 order-first" 
-                            : "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-90 opacity-40 bg-gray-50 border border-transparent z-0 origin-center mx-0 order-none";
-                        
-                        let labelClass = isActive 
-                            ? "tier-label text-[9px] text-[var(--gold-dark)] leading-[1.1] mb-1 font-bold transition-colors" 
-                            : "tier-label text-[9px] text-gray-400 leading-[1.1] mb-1 transition-colors";
-                            
-                        let priceClass = isActive 
-                            ? "tier-price text-[11px] font-black text-[var(--gold-dark)] leading-none transition-colors" 
-                            : "tier-price text-[10px] font-bold text-gray-500 leading-none transition-colors";
-
-                        tierUI += `
-                            <div id="tier-ui-${v.vid}-${index}" class="${boxClass}">
-                                <span class="${labelClass}">${qtyLabel} ${v.unit}</span>
-                                <span class="${priceClass}">${activeCurrency} ${convertPrice(t.priceCAD)}</span>
-                            </div>
-                        `;
-                    });
-                    tierUI += `</div>`;
-
-                    let startingPrice = convertPrice(v.tiers[0].priceCAD);
-                    let safeTiers = encodeURIComponent(JSON.stringify(v.tiers));
-
-                    variantHtml += `
-                    <div class="flex flex-col md:flex-row gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center">
-                        
-                        <div class="w-full md:w-[35%] flex items-start gap-3">
-                            <div class="w-10 h-10 mt-1 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
-                                <img src="${v.image}" class="max-w-full max-h-full object-cover rounded-sm">
-                            </div>
-                            <div class="flex flex-col justify-center min-w-0 w-full">
-                                <strong class="text-gray-900 font-bold text-sm truncate block">${varName}</strong>
-                                ${tierUI} </div>
-                        </div>
-
-                        <div class="w-full md:w-[20%]">
-                            <input type="number" min="0" class="v-qty premium-input matrix-input py-2" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.vid}" data-vname="${varName}" data-tiers="${safeTiers}" data-buyerprice="${startingPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
-                        </div>
-                        <div class="w-full md:w-[15%] text-center text-base font-bold font-mono text-[var(--text-dark)] mt-2 md:mt-0">
-                            <span class="text-xs mr-1 font-sans text-gray-400 font-bold">${activeCurrency}</span><span class="v-total-display">0.00</span>
-                        </div>
-                        <div class="w-full md:w-[30%] relative">
-                            <input type="number" step="0.01" class="v-target premium-input matrix-input py-2 text-xs" placeholder="Target Total: ${activeCurrency}" oninput="updateTargetUnit(this)">
-                            <div class="target-unit-display hidden absolute top-full left-0 right-0 text-center text-[10px] text-[var(--gold-dark)] mt-1 font-bold"></div>
-                        </div>
-                    </div>`;
-                });
-
+                // Inject the Dispatch Group Header
                 vContainer.innerHTML += `
-                    <div class="flex flex-col md:flex-row gap-5 md:gap-8 mt-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                        <div class="w-full md:w-32 flex-shrink-0 bg-[#f8f9fa] border border-gray-100 rounded-xl overflow-hidden p-3 flex justify-center items-center h-32 md:h-auto object-cover">
-                            <img src="${product.hero || 'MC.png'}" class="max-w-full max-h-full mix-blend-multiply">
+                    <div class="mt-10 mb-4 animate-[fadeIn_0.5s_ease]">
+                        <div class="inline-flex items-center gap-2 bg-gray-900 text-[var(--gold)] px-4 py-2.5 rounded-t-lg text-[10px] font-bold uppercase tracking-widest shadow-sm">
+                            <i class="fas fa-shipping-fast"></i> Dispatch Group ${packageCounter}: Supplier ${supplierId}
                         </div>
-                        <div class="flex-1 min-w-0 flex flex-col justify-center">
-                            
-                            <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-8 h-8 rounded-full bg-[var(--gold-light)] text-[var(--gold-dark)] flex items-center justify-center shadow-sm border border-[var(--gold-border)] flex-shrink-0"><i class="fas fa-box-open text-xs"></i></div>
-                                    <h4 class="font-bold text-gray-900 text-base tracking-wide truncate">${product.name}</h4>
-                                </div>
-                                <div class="flex items-center gap-4 pl-2 flex-shrink-0">
-                                    <span class="bg-gray-50 border border-gray-200 text-gray-500 px-3 py-1.5 rounded-md text-[10px] font-bold tracking-widest font-mono shadow-inner hidden sm:block">ID: ${product.id}</span>
-                                    
-                                    <button type="button" onclick="event.preventDefault(); triggerRemoveFromCart('${product.id}')" class="w-8 h-8 rounded-full bg-red-50 text-red-400 hover:bg-red-500 hover:text-white flex justify-center items-center transition shadow-sm" title="Remove Item">
-                                        <i class="fas fa-trash-alt text-[11px]"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            ${variantHtml}
-                            
-                            <div class="mt-5 pt-5 border-t border-gray-100">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                    <div>
-                                        <span class="form-label text-[9px]">Customization</span>
-                                        <input type="text" class="p-custom premium-input shadow-sm text-xs bg-gray-50 hover:bg-white focus:bg-white transition-colors py-2" data-productid="${product.id}" placeholder="e.g. Logo print, engrave...">
-                                    </div>
-                                    <div>
-                                        <span class="form-label text-[9px]">Sample Requirement</span>
-                                        <select class="p-sample premium-input shadow-sm text-xs bg-gray-50 hover:bg-white focus:bg-white transition-colors py-2 cursor-pointer" data-productid="${product.id}">
-                                            <option value="No Sample Needed">No Sample Needed</option>
-                                            <option value="Pre-production Sample">Pre-production Sample Required</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span class="form-label text-[9px]">Technical Notes</span>
-                                    <input type="text" class="p-note premium-input shadow-sm text-xs bg-gray-50 hover:bg-white focus:bg-white transition-colors py-2" data-productid="${product.id}" placeholder="Specific notes (e.g. Pantone colors, packaging)...">
-                                </div>
-                            </div>
-
-                        </div>
+                        <div class="h-[3px] w-full bg-gray-900 rounded-b-sm shadow-sm"></div>
                     </div>
                 `;
+                
+                packageCounter++;
+
+                supplierProducts.forEach(product => {
+                    let variantHtml = '';
+                    
+                    // GROUP THE FLAT DATABASE ROWS INTO ALIBABA TIERS
+                    let groupedVariants = {};
+                    product.variants.forEach((v) => {
+                        let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
+                        if (!groupedVariants[varName]) {
+                            groupedVariants[varName] = { vid: v.varId, unit: v.unit, image: v.image || product.hero || 'MC.png', tiers: [] };
+                        }
+                        let maxVal = (v.max && v.max.toLowerCase() !== "up") ? parseInt(v.max) : Infinity;
+                        groupedVariants[varName].tiers.push({ min: parseInt(v.min) || 1, max: maxVal, priceCAD: parseFloat(v.priceCAD) || 0 });
+                    });
+
+                    // RENDER THE GROUPED VARIANTS
+                    Object.keys(groupedVariants).forEach(varName => {
+                        let v = groupedVariants[varName];
+                        
+                        let tierUI = `<div class="flex gap-1 mt-2 pt-2 border-t border-gray-100 items-center">`;
+                        v.tiers.forEach((t, index) => {
+                            let qtyLabel = t.max === Infinity ? `≥ ${t.min}` : `${t.min}-${t.max}`;
+                            let isActive = index === 0;
+                            
+                            let boxClass = isActive 
+                                ? "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-110 opacity-100 bg-[var(--gold-light)] border border-[var(--gold-border)] shadow-md z-10 origin-center mx-1 order-first" 
+                                : "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-90 opacity-40 bg-gray-50 border border-transparent z-0 origin-center mx-0 order-none";
+                            
+                            let labelClass = isActive 
+                                ? "tier-label text-[9px] text-[var(--gold-dark)] leading-[1.1] mb-1 font-bold transition-colors" 
+                                : "tier-label text-[9px] text-gray-400 leading-[1.1] mb-1 transition-colors";
+                                
+                            let priceClass = isActive 
+                                ? "tier-price text-[11px] font-black text-[var(--gold-dark)] leading-none transition-colors" 
+                                : "tier-price text-[10px] font-bold text-gray-500 leading-none transition-colors";
+
+                            tierUI += `
+                                <div id="tier-ui-${v.vid}-${index}" class="${boxClass}">
+                                    <span class="${labelClass}">${qtyLabel} ${v.unit}</span>
+                                    <span class="${priceClass}">${activeCurrency} ${convertPrice(t.priceCAD)}</span>
+                                </div>
+                            `;
+                        });
+                        tierUI += `</div>`;
+
+                        let startingPrice = convertPrice(v.tiers[0].priceCAD);
+                        let safeTiers = encodeURIComponent(JSON.stringify(v.tiers));
+
+                        // 🟢 ADDED data-supplierid TO THE INPUT SO THE BACKEND CAN GRAB IT!
+                        variantHtml += `
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0 matrix-row items-center px-2">
+                            
+                            <div class="col-span-5 flex items-start gap-3 min-w-0 pr-4">
+                                <div class="w-10 h-10 mt-1 flex-shrink-0 bg-white border border-gray-200 rounded-md overflow-hidden flex justify-center items-center p-0.5 shadow-sm">
+                                    <img src="${v.image}" class="max-w-full max-h-full object-cover rounded-sm">
+                                </div>
+                                <div class="flex flex-col justify-center min-w-0 w-full">
+                                    <strong class="text-gray-900 font-bold text-sm truncate block">${varName}</strong>
+                                    ${tierUI} 
+                                </div>
+                            </div>
+
+                            <div class="col-span-2">
+                                <input type="number" min="0" class="v-qty premium-input matrix-input py-2 w-full text-center" data-supplierid="${product.supplierId}" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.vid}" data-vname="${varName}" data-tiers="${safeTiers}" data-buyerprice="${startingPrice}" placeholder="Req. Qty" oninput="updateCalculatedTotal(this)">
+                            </div>
+                            
+                            <div class="col-span-2 text-center text-base font-bold font-mono text-[var(--text-dark)]">
+                                <span class="text-xs mr-1 font-sans text-gray-400 font-bold">${activeCurrency}</span><span class="v-total-display">0.00</span>
+                            </div>
+
+                            <div class="col-span-3 relative">
+                                <input type="number" step="0.01" class="v-target premium-input matrix-input py-2 text-xs w-full text-center" placeholder="Target Total: ${activeCurrency}" oninput="updateTargetUnit(this)">
+                                <div class="target-unit-display hidden absolute top-full left-0 right-0 text-center text-[10px] text-[var(--gold-dark)] mt-1 font-bold"></div>
+                            </div>
+                        </div>`;
+                    });
+
+                    vContainer.innerHTML += `
+                        <div class="flex flex-col md:flex-row gap-5 md:gap-8 mb-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                            <div class="w-full md:w-32 flex-shrink-0 bg-[#f8f9fa] border border-gray-100 rounded-xl overflow-hidden p-3 flex justify-center items-center h-32 md:h-auto object-cover">
+                                <img src="${product.hero || 'MC.png'}" class="max-w-full max-h-full mix-blend-multiply">
+                            </div>
+                            <div class="flex-1 min-w-0 flex flex-col justify-center">
+                                
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="w-8 h-8 rounded-full bg-[var(--gold-light)] text-[var(--gold-dark)] flex items-center justify-center shadow-sm border border-[var(--gold-border)] flex-shrink-0"><i class="fas fa-box-open text-xs"></i></div>
+                                        <h4 class="font-bold text-gray-900 text-base tracking-wide truncate">${product.name}</h4>
+                                    </div>
+                                    <div class="flex items-center gap-4 pl-2 flex-shrink-0">
+                                        <span class="bg-gray-50 border border-gray-200 text-gray-500 px-3 py-1.5 rounded-md text-[10px] font-bold tracking-widest font-mono shadow-inner hidden sm:block">ID: ${product.id}</span>
+                                        <button type="button" onclick="event.preventDefault(); triggerRemoveFromCart('${product.id}')" class="w-8 h-8 rounded-full bg-red-50 text-red-400 hover:bg-red-500 hover:text-white flex justify-center items-center transition shadow-sm" title="Remove Item">
+                                            <i class="fas fa-trash-alt text-[11px]"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                ${variantHtml}
+                                
+                                <div class="mt-5 pt-5 border-t border-gray-100">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <span class="form-label text-[9px]">Customization</span>
+                                            <input type="text" class="p-custom premium-input shadow-sm text-xs bg-gray-50 hover:bg-white focus:bg-white transition-colors py-2" data-productid="${product.id}" placeholder="e.g. Logo print, engrave...">
+                                        </div>
+                                        <div>
+                                            <span class="form-label text-[9px]">Sample Requirement</span>
+                                            <select class="p-sample premium-input shadow-sm text-xs bg-gray-50 hover:bg-white focus:bg-white transition-colors py-2 cursor-pointer" data-productid="${product.id}">
+                                                <option value="No Sample Needed">No Sample Needed</option>
+                                                <option value="Pre-production Sample">Pre-production Sample Required</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="form-label text-[9px]">Technical Notes</span>
+                                        <input type="text" class="p-note premium-input shadow-sm text-xs bg-gray-50 hover:bg-white focus:bg-white transition-colors py-2" data-productid="${product.id}" placeholder="Specific notes (e.g. Pantone colors, packaging)...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
             });
         }
 
