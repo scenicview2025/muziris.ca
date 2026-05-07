@@ -68,47 +68,34 @@
     </div>
 
     <form id="freightForm" onsubmit="event.preventDefault(); submitFreightQuote();">
-      <h3 style="color:var(--gold); font-size: 14px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:10px;">1. Shipping Solution</h3>
-      <div class="grid-2">
-        <div>
-          <label>Mode of Transport</label>
-          <select id="ship-mode">
-            <option value="Sea Freight (LCL)">Sea Freight (LCL)</option>
-            <option value="Sea Freight (FCL)">Sea Freight (Full Container)</option>
-            <option value="Air Freight (Standard)">Air Freight (Standard)</option>
-            <option value="Air Express (Courier)">Air Express (Courier)</option>
-            <option value="Road Freight">Road Freight</option>
-          </select>
-        </div>
-        <div>
-          <label>Carrier / Steamship Line</label>
-          <input type="text" id="ship-carrier" placeholder="e.g. Maersk / DHL / MSC" required>
-        </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label>Quotation Currency</label>
+        <select id="freight-currency">
+          <option value="USD">USD ($)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+        </select>
       </div>
 
-      <h3 style="color:var(--gold); font-size: 14px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:10px; margin-top:30px;">2. Pricing & Timing</h3>
-      <div class="grid-2">
-        <div>
-          <label>Quotation Currency</label>
-          <select id="freight-currency">
-            <option value="USD">USD ($)</option>
-            <option value="CAD">CAD ($)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="GBP">GBP (£)</option>
-          </select>
-        </div>
-        <div>
-          <label>Muziris Net Freight Cost</label>
-          <input type="number" step="0.01" id="freight-cost" placeholder="0.00" required>
-        </div>
+      <h3 style="color:var(--gold); font-size: 14px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:10px;">1. Express Option (Air / Courier)</h3>
+      <div class="grid-3" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 15px;">
+        <div><label>Mode & Carrier</label><input type="text" id="opt1-mode" placeholder="e.g. DHL Express Air" required></div>
+        <div><label>Est. Days</label><input type="number" id="opt1-time" placeholder="e.g. 5" required></div>
+        <div><label>Net Cost</label><input type="number" step="0.01" id="opt1-cost" placeholder="0.00" required></div>
       </div>
-      <div class="grid-2">
+
+      <h3 style="color:#1E88E5; font-size: 14px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:10px; margin-top:30px;">2. Economy Option (Ocean / Ground) <span style="color:#888; font-size:10px; text-transform:none;">*Optional</span></h3>
+      <div class="grid-3" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 15px;">
+        <div><label>Mode & Carrier</label><input type="text" id="opt2-mode" placeholder="e.g. Maersk LCL Ocean"></div>
+        <div><label>Est. Days</label><input type="number" id="opt2-time" placeholder="e.g. 35"></div>
+        <div><label>Net Cost</label><input type="number" step="0.01" id="opt2-cost" placeholder="0.00"></div>
+      </div>
+      
+      <div class="grid-2" style="margin-top:30px; border-top:1px solid #333; padding-top:20px;">
         <div><label>Port of Loading (POL)</label><input type="text" id="ship-pol" placeholder="e.g. Shenzhen (Yantian)" required></div>
         <div><label>Port of Discharge (POD)</label><input type="text" id="ship-pod" placeholder="e.g. Vancouver / LAX" required></div>
-      </div>
-      <div style="margin-top: 20px;">
-        <label>Est. Transit Time (Days)</label>
-        <input type="number" id="transit-time" placeholder="e.g. 14" required>
       </div>
 
       <button type="submit" class="btn-submit" id="btn-submit">SECURE ROUTE & DISPATCH TO BUYER</button>
