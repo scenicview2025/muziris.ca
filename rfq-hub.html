@@ -273,7 +273,9 @@
       inventory.forEach(item => {
         // Only count views for products that are actually Live
         if (item.status === 'LIVE' || item.status === 'ACTIVE') {
-           let itemRfqCount = rfqs.filter(r => r.product_id === item.product_id).length;
+           
+           // 🟢 THE FIX: Ask the backend for the exact Lifetime RFQ count (which already includes Multi-SKU bundles!)
+           let itemRfqCount = item.rfqCount || 0;
            
            // Base views derived from product ID to be deterministic, plus massive boosts for any RFQs received
            let itemViews = (String(item.product_id).charCodeAt(0) * 3) + 14 + (itemRfqCount * 22);
