@@ -500,6 +500,18 @@
                  `;
              }
 
+             // 🟢 THE UX FIX: Build a micro-details box if the buyer requested customizations for this specific variant
+             let specificNotesHtml = '';
+             if(v.customization || (v.sample && v.sample !== 'No Sample Needed') || v.productNote) {
+                 specificNotesHtml = `
+                    <div style="width: 100%; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333; font-size: 12px; color: #aaa; line-height: 1.6; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 4px;">
+                        ${v.customization && v.customization !== 'N/A' && v.customization !== '' && v.customization !== 'Per Product (See Variants)' ? `<strong style="color:var(--blue);">Customization:</strong> <span style="color:#fff;">${v.customization}</span><br>` : ''}
+                        ${v.sample && v.sample !== 'No Sample Needed' && v.sample !== 'Per Product (See Variants)' ? `<strong style="color:#4CAF50;">Sample:</strong> <span style="color:#fff;">${v.sample}</span><br>` : ''}
+                        ${v.productNote && v.productNote !== '' ? `<strong style="color:var(--gold);">Technical Note:</strong> <span style="color:#fff;">${v.productNote}</span>` : ''}
+                    </div>
+                 `;
+             }
+
              // 🟢 THE MAGIC: Inject the Product Name (for multi-SKU clarity) and the Notes HTML
              vCont.innerHTML += `
                 <div class="variant-row">
