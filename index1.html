@@ -23,27 +23,12 @@
         --border-light: #e5e7eb;
     }
 
-    body { 
-        background-color: #FAFAFA; 
-        color: var(--text-dark); 
-        font-family: 'Inter', sans-serif; 
-        -webkit-font-smoothing: antialiased; 
-        overflow-x: hidden; 
-    }
-    
+    body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     .brand-font { font-family: 'Cinzel', serif; }
     
-    /* 🟢 Glass Header (Crisp White over Video) */
-    .glass-header { 
-        background: rgba(255, 255, 255, 0.95); 
-        backdrop-filter: blur(12px); 
-        -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(0,0,0,0.05); 
-        position: fixed; 
-        width: 100%; 
-        top: 0; 
-        z-index: 100; 
-    }
+    /* 🟢 Pre-Header & Header */
+    .pre-header { background: var(--void); color: var(--gold); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-align: center; padding: 8px 20px; z-index: 101; position: relative; }
+    .glass-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; transition: all 0.3s ease; }
     
     /* 🟢 Buttons */
     .btn-solid-gold { background-color: #d1b046; color: #000000; border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); display: inline-flex; align-items: center; justify-content: center;}
@@ -52,32 +37,41 @@
     .btn-outline-white { background: transparent; border: 1px solid rgba(255,255,255,0.4); color: #fff; transition: all 0.3s ease; border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; display: inline-flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
     .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-2px); }
 
-    /* 🟢 Cards */
+    /* 🟢 Cards & Hover Effects */
     .feature-card { background: #ffffff; border: 1px solid var(--border-light); border-radius: 16px; transition: 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
     .feature-card:hover { border-color: rgba(212, 175, 55, 0.3); transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
 
-    /* 🟢 Floating Elements */
+    .category-card { position: relative; border-radius: 16px; overflow: hidden; height: 250px; cursor: pointer; transition: 0.4s; }
+    .category-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+    .category-card:hover img { transform: scale(1.05); }
+    .category-card::after { content:''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,14,20,0.9), transparent); }
+    .category-content { position: absolute; bottom: 20px; left: 20px; z-index: 10; }
+
+    /* 🟢 Animations */
     .float-element { animation: float 6s ease-in-out infinite; }
     @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+    
+    .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
 
     /* 🟢 AUTH MODAL STYLING */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11, 14, 20, 0.8); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px;}
-    .auth-content { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); padding: 40px; position: relative; animation: modalSlide 0.3s ease; text-align: center; border: 1px solid rgba(0,0,0,0.1); }
-    @keyframes modalSlide { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11, 14, 20, 0.8); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px;}
+    .auth-content { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); padding: 40px; position: relative; text-align: center; border: 1px solid rgba(0,0,0,0.1); }
     .modal-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; background: #f3f4f6; color: #6b7280; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: all 0.2s ease; }
     .modal-close:hover { background: #e5e7eb; color: #111; transform: rotate(90deg); }
-
     .premium-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid var(--border-light); color: var(--text-dark); border-radius: 8px; outline: none; transition: all 0.2s; font-size: 14px; font-weight: 500; }
     .premium-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
-
     .btn-sso { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; background: #fff; border: 1px solid #d1d5db; color: #374151; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .btn-sso:hover { background: #f9fafb; border-color: #9ca3af; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <header class="glass-header">
+  <div class="pre-header">
+    <i class="fas fa-shield-alt mr-2"></i> Muziris V1.0 is Live | 100% Escrow Protection on All Orders
+  </div>
+
+  <header class="glass-header" id="main-header">
     <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <h1 class="text-2xl font-bold tracking-[0.15em] text-gray-900 brand-font uppercase m-0 leading-none">Muziris</h1>
@@ -85,6 +79,7 @@
       
       <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-gray-500">
         <a href="#how-it-works" class="hover:text-black transition">How it Works</a>
+        <a href="#showcase" class="hover:text-black transition">Industries</a>
         <a href="catalog.html" class="hover:text-black transition">Global Catalog</a>
         <a href="suppliers" class="text-[var(--gold-dark)] hover:text-black transition">Factory Login</a>
       </div>
@@ -100,20 +95,19 @@
     </div>
   </header>
 
-  <main class="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
-    
-    <div class="absolute inset-0 z-0">
-      <video autoplay loop muted playsinline class="w-full h-full object-cover">
+  <main class="relative min-h-[85vh] flex items-center pt-10 overflow-hidden">
+    <div class="absolute inset-0 z-0 bg-black">
+      <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-80">
         <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">
       </video>
-      <div class="absolute inset-0 bg-gradient-to-b from-[#0b0e14]/90 via-[#0b0e14]/70 to-[#FAFAFA]"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#0b0e14]/90 via-[#0b0e14]/60 to-[#FAFAFA]"></div>
     </div>
 
-    <div class="max-w-[1400px] mx-auto w-full px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10 py-20">
+    <div class="max-w-[1400px] mx-auto w-full px-6 relative z-10 py-20 text-center lg:text-left flex flex-col lg:flex-row items-center gap-16">
       
-      <div class="space-y-8 text-center lg:text-left">
+      <div class="w-full lg:w-3/5 space-y-8 fade-up">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--gold)]/20 border border-[var(--gold)]/40 text-[var(--gold)] text-[10px] font-bold uppercase tracking-widest mb-2 backdrop-blur-sm shadow-[0_0_15px_rgba(212,175,55,0.3)]">
-          <i class="fas fa-shield-check"></i> Enterprise Escrow Activated
+          <i class="fas fa-check-circle"></i> B2B Enterprise Ready
         </div>
         
         <h1 class="text-5xl lg:text-7xl font-bold text-white brand-font leading-tight drop-shadow-lg">
@@ -122,28 +116,39 @@
         </h1>
         
         <p class="text-lg text-gray-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium drop-shadow-md">
-          Muziris is the world's most secure B2B manufacturing platform. We connect enterprise buyers with verified global factories, protecting every dollar in our automated milestone escrow vault.
+          Connect directly with verified global factories. We protect your capital in an automated milestone escrow vault until your goods are successfully delivered.
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-          <a href="catalog.html" class="btn-solid-gold px-8 py-4 w-full sm:w-auto text-sm">
-            Explore Global Catalog
-          </a>
-          <a href="suppliers" class="btn-outline-white px-8 py-4 w-full sm:w-auto text-sm">
-            Apply as a Factory
-          </a>
-        </div>
-
-        <div class="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-4 pt-8 text-[11px] text-gray-300 font-bold uppercase tracking-widest">
-          <div class="flex items-center gap-2"><i class="fas fa-check-circle text-[var(--gold)] text-base drop-shadow-md"></i> Verified Suppliers</div>
-          <div class="flex items-center gap-2"><i class="fas fa-check-circle text-[var(--gold)] text-base drop-shadow-md"></i> Bank-Grade Escrow</div>
-          <div class="flex items-center gap-2"><i class="fas fa-check-circle text-[var(--gold)] text-base drop-shadow-md"></i> DDP Logistics</div>
+        <div class="pt-4 w-full max-w-xl mx-auto lg:mx-0 relative z-20">
+          <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('master-search').value);" class="relative">
+            <div class="absolute -top-8 left-4 flex gap-6 text-[11px] font-bold uppercase tracking-widest text-gray-300">
+              <span class="text-[var(--gold)] border-b-2 border-[var(--gold)] pb-1 cursor-pointer">Products</span>
+              <span class="hover:text-white cursor-pointer transition">Manufacturers</span>
+            </div>
+            <div class="flex items-center bg-white rounded-full p-2 pl-6 shadow-[0_10px_40px_rgba(0,0,0,0.5)] border-2 border-transparent focus-within:border-[var(--gold)] transition-all h-16">
+              <i class="fas fa-search text-gray-400 text-xl"></i>
+              <input type="text" id="master-search" class="w-full bg-transparent border-none outline-none px-4 text-gray-800 placeholder-gray-400 font-medium text-base h-full" placeholder="What are you sourcing today?">
+              <div class="px-4 text-gray-300 hover:text-[var(--gold)] cursor-pointer transition border-r border-gray-200">
+                  <i class="fas fa-camera"></i>
+              </div>
+              <button type="submit" class="bg-[var(--void)] hover:bg-gray-900 text-[var(--gold)] px-8 h-full rounded-full font-bold text-sm tracking-widest uppercase transition-all shadow-md ml-2 flex items-center gap-2">
+                Search
+              </button>
+            </div>
+          </form>
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-5 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+            <span>Trending:</span>
+            <a href="catalog.html?category=Apparel" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Textiles</a>
+            <a href="catalog.html?category=Electronics" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Electronics</a>
+            <a href="catalog.html?category=Packaging" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Packaging</a>
+            <span class="mx-2 text-gray-600">|</span>
+            <a href="suppliers" class="text-white hover:text-[var(--gold)] underline transition">Apply as a Factory</a>
+          </div>
         </div>
       </div>
 
-      <div class="relative hidden lg:block float-element">
+      <div class="w-full lg:w-2/5 hidden lg:block float-element relative fade-up">
         <div class="absolute inset-0 bg-gradient-to-tr from-[var(--gold)]/20 to-transparent rounded-2xl blur-3xl transform rotate-3"></div>
-        
         <div class="bg-white/95 backdrop-blur-md border border-gray-100 rounded-3xl p-8 shadow-2xl relative z-10">
           <div class="flex justify-between items-center border-b border-gray-100 pb-5 mb-5">
             <div class="text-[var(--gold-dark)] brand-font font-bold tracking-widest text-lg">MUZIRIS LEDGER</div>
@@ -153,10 +158,6 @@
             <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
               <div><div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Contract ID</div><div class="font-mono text-gray-900 font-bold text-lg">RFQ-99284A</div></div>
               <div class="text-right"><div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Status</div><div class="text-[#10b981] font-bold text-xs bg-[#10b981]/10 px-3 py-1.5 rounded-md uppercase tracking-widest border border-[#10b981]/20">Funded Escrow</div></div>
-            </div>
-            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
-              <div><div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Supplier</div><div class="font-bold text-gray-900 text-base">Premium Ceramics Ltd.</div></div>
-              <div class="text-right"><div class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Total Value</div><div class="font-mono text-[var(--gold-dark)] font-bold text-xl">$12,450.00</div></div>
             </div>
             <div class="p-5 bg-[#f0f9ff] border border-[#bae6fd] rounded-xl mt-6 flex items-start gap-4 shadow-inner">
               <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm border border-[#e0f2fe]"><i class="fas fa-lock text-[#0ea5e9]"></i></div>
@@ -168,19 +169,38 @@
           </div>
         </div>
       </div>
-
     </div>
   </main>
 
-  <section id="how-it-works" class="py-24 px-6 bg-[#FAFAFA] relative z-10">
-    <div class="max-w-[1400px] mx-auto">
+  <section class="bg-white py-16 border-b border-gray-100 relative z-20 shadow-sm">
+    <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center divide-x divide-gray-100 fade-up">
+      <div>
+        <div class="text-4xl font-bold text-gray-900 font-mono mb-2">1,200+</div>
+        <div class="text-xs text-gray-500 uppercase tracking-widest font-bold">Verified Factories</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-gray-900 font-mono mb-2">$50M+</div>
+        <div class="text-xs text-gray-500 uppercase tracking-widest font-bold">Secured in Escrow</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-gray-900 font-mono mb-2">35+</div>
+        <div class="text-xs text-gray-500 uppercase tracking-widest font-bold">Countries Served</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-gray-900 font-mono mb-2">0%</div>
+        <div class="text-xs text-gray-500 uppercase tracking-widest font-bold">Risk to Capital</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="py-24 px-6 bg-[#FAFAFA]">
+    <div class="max-w-[1400px] mx-auto fade-up">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 brand-font mb-4">The New Standard in B2B Trade</h2>
         <p class="text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed">We eliminated the risk of international sourcing by placing a bank-grade escrow vault between enterprise buyers and global factories.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
         <div class="feature-card p-10 text-center relative overflow-hidden">
           <div class="w-20 h-20 mx-auto bg-[var(--gold)]/10 border border-[var(--gold)]/20 rounded-2xl flex items-center justify-center mb-6">
             <i class="fas fa-search-location text-3xl text-[var(--gold-dark)]"></i>
@@ -206,15 +226,105 @@
           <h3 class="text-xl font-bold text-gray-900 mb-3 brand-font">3. Inspect & Release</h3>
           <p class="text-sm text-gray-500 leading-relaxed font-medium">The goods are shipped via our integrated logistics network. Funds are only released to the factory 7 days after you successfully receive the order.</p>
         </div>
-
       </div>
     </div>
   </section>
 
-  <footer class="bg-[var(--void)] py-16 px-6 border-t border-[var(--gold)]/20">
+  <section id="showcase" class="py-24 px-6 bg-white border-t border-gray-100">
+    <div class="max-w-[1400px] mx-auto fade-up">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-900 brand-font mb-2">Explore Industries</h2>
+          <p class="text-gray-500 font-medium">Source direct from the source. No middlemen.</p>
+        </div>
+        <a href="catalog.html" class="text-[var(--gold-dark)] font-bold text-sm uppercase tracking-widest hover:underline mt-4 md:mt-0">View All Categories &rarr;</a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="category-card" onclick="window.location.href='catalog.html?category=Apparel'">
+          <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=800" alt="Apparel">
+          <div class="category-content">
+            <h3 class="text-white font-bold text-xl brand-font">Apparel & Textiles</h3>
+            <p class="text-gray-300 text-xs uppercase tracking-widest mt-1">120+ Suppliers</p>
+          </div>
+        </div>
+        <div class="category-card" onclick="window.location.href='catalog.html?category=Electronics'">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" alt="Electronics">
+          <div class="category-content">
+            <h3 class="text-white font-bold text-xl brand-font">Consumer Electronics</h3>
+            <p class="text-gray-300 text-xs uppercase tracking-widest mt-1">85+ Suppliers</p>
+          </div>
+        </div>
+        <div class="category-card" onclick="window.location.href='catalog.html?category=Home'">
+          <img src="https://images.unsplash.com/photo-1583847268964-b28ce8f31586?auto=format&fit=crop&q=80&w=800" alt="Home Goods">
+          <div class="category-content">
+            <h3 class="text-white font-bold text-xl brand-font">Home & Garden</h3>
+            <p class="text-gray-300 text-xs uppercase tracking-widest mt-1">200+ Suppliers</p>
+          </div>
+        </div>
+        <div class="category-card" onclick="window.location.href='catalog.html?category=Packaging'">
+          <img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&q=80&w=800" alt="Packaging">
+          <div class="category-content">
+            <h3 class="text-white font-bold text-xl brand-font">Custom Packaging</h3>
+            <p class="text-gray-300 text-xs uppercase tracking-widest mt-1">50+ Suppliers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 px-6 bg-[#FAFAFA]">
+    <div class="max-w-[1400px] mx-auto text-center fade-up">
+      <h2 class="text-3xl font-bold text-gray-900 brand-font mb-16">Trusted by Enterprise Procurement</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative">
+          <i class="fas fa-quote-left text-4xl text-gray-100 absolute top-6 right-6"></i>
+          <div class="flex text-[var(--gold)] mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="text-gray-600 italic mb-6">"Before Muziris, vetting overseas factories was a nightmare. The escrow system completely removed our anxiety about wiring large down payments."</p>
+          <div>
+            <div class="font-bold text-gray-900">Sarah Jenkins</div>
+            <div class="text-xs text-gray-500 uppercase tracking-widest mt-1">Director of Sourcing, RetailCo</div>
+          </div>
+        </div>
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative">
+          <i class="fas fa-quote-left text-4xl text-gray-100 absolute top-6 right-6"></i>
+          <div class="flex text-[var(--gold)] mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="text-gray-600 italic mb-6">"The integrated DDP logistics saved us 15% on freight. We just accept the contract and Muziris handles the customs clearance and final delivery."</p>
+          <div>
+            <div class="font-bold text-gray-900">Michael Chang</div>
+            <div class="text-xs text-gray-500 uppercase tracking-widest mt-1">Procurement Manager, TechFlow</div>
+          </div>
+        </div>
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative">
+          <i class="fas fa-quote-left text-4xl text-gray-100 absolute top-6 right-6"></i>
+          <div class="flex text-[var(--gold)] mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="text-gray-600 italic mb-6">"As a supplier, getting verified on Muziris opened up the North American market for us. Buyers trust us immediately because of the escrow."</p>
+          <div>
+            <div class="font-bold text-gray-900">David Lin</div>
+            <div class="text-xs text-gray-500 uppercase tracking-widest mt-1">VP of Sales, Shenzen Mfg.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 px-6 bg-[var(--void)] border-t border-[var(--gold)]/20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8ed716d408?auto=format&fit=crop&q=80&w=2000')] opacity-10 bg-cover bg-center mix-blend-overlay"></div>
+    <div class="max-w-4xl mx-auto text-center relative z-10 fade-up">
+      <h2 class="text-4xl md:text-5xl font-bold text-white brand-font mb-6">Ready to scale your supply chain?</h2>
+      <p class="text-lg text-gray-400 mb-10">Join thousands of businesses sourcing globally without the risk.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button onclick="openAuthModal()" class="btn-solid-gold px-10 py-5 text-sm">Create Buyer Account</button>
+        <a href="suppliers" class="btn-outline-white px-10 py-5 text-sm">Apply as Supplier</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-[#05070a] py-16 px-6 border-t border-gray-900">
     <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
       <div class="text-[var(--gold)] brand-font font-bold tracking-widest text-2xl">MUZIRIS</div>
-      <div class="text-sm text-gray-400 text-center md:text-left font-medium">
+      <div class="text-sm text-gray-500 text-center md:text-left font-medium">
         &copy; 2026 Muziris International. All rights reserved. <br>
         <span class="text-[10px] uppercase tracking-widest mt-2 block text-gray-600 font-bold">Secure B2B Infrastructure</span>
       </div>
@@ -304,7 +414,6 @@
                 </a>
               `;
 
-              // Sync to Backend silently
               fetch(API_BASE_URL + '/buyer/auth', {
                   method: 'POST',
                   headers: {'Content-Type': 'application/json'},
@@ -313,48 +422,42 @@
           }
       });
 
-      function openAuthModal() {
-          document.getElementById('auth-modal').style.display = 'flex';
-      }
+      function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
+      function closeModal(e, modalId) { if(e.target.id === modalId || e.target.closest('.modal-close')) document.getElementById(modalId).style.display = 'none'; }
 
-      function closeModal(e, modalId) {
-          if(e.target.id === modalId || e.target.closest('.modal-close')) {
-              document.getElementById(modalId).style.display = 'none';
-          }
-      }
-
-      function signInWithGoogle() {
-          auth.signInWithPopup(googleProvider).then(() => {
-              document.getElementById('auth-modal').style.display = 'none';
-          }).catch(error => alert("Google Sign-In Error: " + error.message));
-      }
-
-      function signInWithMicrosoft() {
-          auth.signInWithPopup(msProvider).then(() => {
-              document.getElementById('auth-modal').style.display = 'none';
-          }).catch(error => alert("Microsoft Sign-In Error: " + error.message));
-      }
-
+      function signInWithGoogle() { auth.signInWithPopup(googleProvider).then(() => { document.getElementById('auth-modal').style.display = 'none'; }).catch(error => alert("Error: " + error.message)); }
+      function signInWithMicrosoft() { auth.signInWithPopup(msProvider).then(() => { document.getElementById('auth-modal').style.display = 'none'; }).catch(error => alert("Error: " + error.message)); }
+      
       function signInWithEmail() {
           const email = document.getElementById('auth-email').value;
           const pass = document.getElementById('auth-pass').value;
           if(!email || !pass) return alert("Please enter both email and password.");
-          
-          auth.signInWithEmailAndPassword(email, pass).then(() => {
-              document.getElementById('auth-modal').style.display = 'none';
-          }).catch(error => alert("Sign-In Error: " + error.message));
+          auth.signInWithEmailAndPassword(email, pass).then(() => { document.getElementById('auth-modal').style.display = 'none'; }).catch(error => alert("Error: " + error.message));
       }
 
       function signUpWithEmail() {
           const email = document.getElementById('auth-email').value;
           const pass = document.getElementById('auth-pass').value;
-          if(!email || !pass) return alert("Please enter both email and password to create an account.");
-          
-          auth.createUserWithEmailAndPassword(email, pass).then(() => {
-              document.getElementById('auth-modal').style.display = 'none';
-              alert("Account created successfully!");
-          }).catch(error => alert("Sign-Up Error: " + error.message));
+          if(!email || !pass) return alert("Please enter both email and password.");
+          auth.createUserWithEmailAndPassword(email, pass).then(() => { 
+              document.getElementById('auth-modal').style.display = 'none'; alert("Account created successfully!"); 
+          }).catch(error => alert("Error: " + error.message));
       }
+
+      // 🟢 SCROLL ANIMATION OBSERVER
+      document.addEventListener("DOMContentLoaded", function() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, { threshold: 0.1 }); 
+
+        document.querySelectorAll('.fade-up').forEach(element => {
+          observer.observe(element);
+        });
+      });
   </script>
 
   <script src="muziris-bot.js"></script>
