@@ -532,6 +532,18 @@
               document.getElementById('auth-modal').style.display = 'none'; alert("Account created successfully!"); 
           }).catch(error => alert("Error: " + error.message));
       }
+    // 🟢 MEGA MENU INTERACTION LOGIC
+      function switchMegaPanel(panelId, element) {
+          // Remove active class from all sidebar items
+          document.querySelectorAll('.mega-cat-item').forEach(el => el.classList.remove('active'));
+          // Add active class to hovered item
+          element.classList.add('active');
+          
+          // Hide all right-side panels
+          document.querySelectorAll('.mega-panel').forEach(el => el.classList.remove('active'));
+          // Show the matching panel
+          document.getElementById(panelId).classList.add('active');
+      }
 
       // 🟢 SCROLL ANIMATION OBSERVER
       document.addEventListener("DOMContentLoaded", function() {
@@ -547,6 +559,7 @@
           observer.observe(element);
         });
       });
+    
   </script>
 
   <script src="muziris-bot.js"></script>
