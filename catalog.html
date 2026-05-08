@@ -314,6 +314,12 @@
         const urlCategory = urlParams.get('category');
         const urlSubCat = urlParams.get('sub');
 
+        // 🟢 THE UX FIX: Grab the instructions sent from the Homepage!
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlSearch = urlParams.get('search');
+        const urlCategory = urlParams.get('category');
+        const urlSubCat = urlParams.get('sub');
+
         window.onload = async function() {
             await loadLiveCurrencies(); 
             fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
