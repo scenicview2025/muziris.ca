@@ -97,13 +97,82 @@
         <h1 class="text-2xl font-bold tracking-[0.15em] text-gray-900 brand-font uppercase m-0 leading-none">Muziris</h1>
       </div>
       
-      <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-gray-500">
+      <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-gray-500 h-full relative">
+        
+        <div class="nav-group h-full flex items-center cursor-pointer">
+          <span class="hover:text-black transition flex items-center gap-2"><i class="fas fa-bars text-sm"></i> All Categories</span>
+          
+          <div class="mega-menu-container text-left cursor-default shadow-2xl">
+            <div class="mega-sidebar">
+              <div class="mega-cat-item active" onmouseenter="switchMegaPanel('panel-apparel', this)">Apparel & Textiles <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-electronics', this)">Consumer Electronics <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-home', this)">Home & Garden <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-packaging', this)">Packaging & Print <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-health', this)">Health & Medical <i class="fas fa-chevron-right"></i></div>
+            </div>
+            
+            <div class="mega-content">
+              
+              <div id="panel-apparel" class="mega-panel active">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Apparel & Textiles</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Mens'"><div class="subcat-icon"><i class="fas fa-tshirt"></i></div><div class="subcat-name">Men's Clothing</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Womens'"><div class="subcat-icon"><i class="fas fa-female"></i></div><div class="subcat-name">Women's Clothing</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Activewear'"><div class="subcat-icon"><i class="fas fa-running"></i></div><div class="subcat-name">Activewear</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Footwear'"><div class="subcat-icon"><i class="fas fa-shoe-prints"></i></div><div class="subcat-name">Footwear</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Accessories'"><div class="subcat-icon"><i class="fas fa-glasses"></i></div><div class="subcat-name">Accessories</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-electronics" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Consumer Electronics</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics&sub=Audio'"><div class="subcat-icon"><i class="fas fa-headphones"></i></div><div class="subcat-name">Audio & Video</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics&sub=SmartHome'"><div class="subcat-icon"><i class="fas fa-home"></i></div><div class="subcat-name">Smart Home</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics&sub=Mobile'"><div class="subcat-icon"><i class="fas fa-mobile-alt"></i></div><div class="subcat-name">Mobile Accessories</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics&sub=Computers'"><div class="subcat-icon"><i class="fas fa-laptop"></i></div><div class="subcat-name">Computers</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-home" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Home & Garden</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home&sub=Furniture'"><div class="subcat-icon"><i class="fas fa-couch"></i></div><div class="subcat-name">Furniture</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home&sub=Decor'"><div class="subcat-icon"><i class="fas fa-paint-roller"></i></div><div class="subcat-name">Home Decor</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home&sub=Kitchen'"><div class="subcat-icon"><i class="fas fa-utensils"></i></div><div class="subcat-name">Kitchen & Dining</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-packaging" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Packaging & Print</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging&sub=Boxes'"><div class="subcat-icon"><i class="fas fa-box"></i></div><div class="subcat-name">Custom Boxes</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging&sub=Bags'"><div class="subcat-icon"><i class="fas fa-shopping-bag"></i></div><div class="subcat-name">Bags & Totes</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging&sub=Labels'"><div class="subcat-icon"><i class="fas fa-tags"></i></div><div class="subcat-name">Labels & Stickers</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-health" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Health & Medical</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health&sub=Supplies'"><div class="subcat-icon"><i class="fas fa-first-aid"></i></div><div class="subcat-name">Medical Supplies</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health&sub=PersonalCare'"><div class="subcat-icon"><i class="fas fa-pump-soap"></i></div><div class="subcat-name">Personal Care</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
         <a href="#how-it-works" class="hover:text-black transition">How it Works</a>
-        <a href="#showcase" class="hover:text-black transition">Industries</a>
         <a href="catalog.html" class="hover:text-black transition">Global Catalog</a>
         <a href="suppliers" class="text-[var(--gold-dark)] hover:text-black transition">Factory Login</a>
       </div>
-
       <div class="flex items-center gap-4" id="auth-buttons">
         <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
             <i class="far fa-user text-lg"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-[10px]">Buyer Login</span>
