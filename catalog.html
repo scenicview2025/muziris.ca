@@ -324,6 +324,7 @@
                 document.getElementById('loader').style.display = 'none';
                 if(data.products) {
                     allProducts = data.products.reverse(); 
+                    window.globalCategories = data.categories; // 🟢 CRITICAL: SAVES THE CATEGORY LIST FOR THE HUB!
                     renderCategories(data.categories); // Draws the new Accordion
                     
                     // Route the logic cleanly
@@ -352,6 +353,7 @@
                 document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
             });
         };
+
         function trackBehavior(actionType, targetId) {
             fetch(API_BASE_URL + '/buyer/track', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ email: currentUser ? currentUser.email : 'Anonymous', actionType: actionType, targetId: targetId, duration: 0 }) }).catch(e => console.log("Skip"));
         }
