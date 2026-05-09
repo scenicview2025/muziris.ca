@@ -56,16 +56,52 @@
 </head>
 <body>
 
-    <header class="glass-header">
-        <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between gap-8">
-            <h1 class="text-2xl font-bold tracking-widest text-black brand-font uppercase cursor-pointer flex-shrink-0" onclick="window.location.href='catalog.html'">Muziris</h1>
-            
-            <div class="flex items-center gap-4 md:gap-6 text-gray-600 flex-shrink-0">
-                <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-sm">
-                    <i class="far fa-user text-lg"></i> <span id="auth-btn-text">Sign In</span>
-                </button>
-            </div>
+    <header class="glass-header" id="main-header">
+      <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <h1 class="text-2xl font-bold tracking-[0.15em] text-gray-900 brand-font uppercase m-0 leading-none cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
         </div>
+        
+        <div class="hidden md:block flex-1 max-w-xl mx-8">
+            <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('nav-search').value);" class="relative w-full">
+                <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="nav-search" placeholder="Search enterprise catalog..." class="w-full bg-[#f3f4f6] border border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] text-sm rounded-full py-2.5 pl-10 pr-4 outline-none transition-all">
+            </form>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-gray-500 h-full relative">
+          
+          <div class="nav-group h-full flex items-center cursor-pointer">
+            <span class="hover:text-black transition flex items-center gap-2"><i class="fas fa-bars text-sm"></i> Categories</span>
+            
+            <div class="mega-menu-container text-left cursor-default shadow-2xl">
+              <div class="mega-sidebar">
+                <div class="mega-cat-item active" onmouseenter="switchMegaPanel('panel-agri', this)">Agriculture, Food & Beverage <i class="fas fa-chevron-right"></i></div>
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-apparel', this)">Apparel, Textiles & Accessories <i class="fas fa-chevron-right"></i></div>
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-electronics', this)">Consumer Electronics & Appliances <i class="fas fa-chevron-right"></i></div>
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-packaging', this)">Packaging & Printing <i class="fas fa-chevron-right"></i></div>
+                </div>
+              
+              <div class="mega-content overflow-y-auto">
+                <div id="panel-agri" class="mega-panel active">
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Agriculture, Food & Beverage</h3>
+                  <div class="subcat-grid">
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  </div>
+                </div>
+                </div>
+            </div>
+          </div>
+          
+          <a href="catalog.html" class="hover:text-black transition">Catalog</a>
+        </div>
+
+        <div class="flex items-center gap-4 ml-4" id="auth-buttons">
+          <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
+              <i class="far fa-user text-lg"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-[10px]">Buyer Login</span>
+          </button>
+        </div>
+      </div>
     </header>
 
     <div id="loader" class="text-center py-32 w-full">
