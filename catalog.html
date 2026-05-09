@@ -387,6 +387,82 @@
             nav.innerHTML = html;
         }
 
+        function filterCat(catName, btnElement) {
+            // 1. Visual Reset
+            document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('[id^="sublist-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="icon-"]').forEach(el => el.style.transform = 'rotate(0deg)');
+            if(document.getElementById('searchInput')) document.getElementById('searchInput').value = ""; 
+
+            // 2. Global Catalog Reset
+            if (catName === 'All') {
+                document.getElementById('btn-cat-all').classList.add('active');
+                document.getElementById('current-category-title').innerText = 'Global Catalog';
+                renderGrid(allProducts, 'All');
+                trackBehavior('click_category', 'All');
+                return;
+            }
+
+            // 3. Specific Category Expansion
+            let safeId = catName.replace(/[^a-zA-Z0-9]/g, '');
+            let headEl = btnElement || document.getElementById('cat-head-' + safeId);
+            
+            if (headEl) headEl.classList.add('active');
+            
+            let sublist = document.getElementById('sublist-' + safeId);
+            let icon = document.getElementById('icon-' + safeId);
+            if (sublist) {
+                sublist.classList.remove('hidden');
+                if(icon) icon.style.transform = 'rotate(180deg)';
+            }
+
+            // 4. Render The Beautiful Category Hub!
+            document.getElementById('current-category-title').innerText = catName;
+            renderCategoryHub(catName); 
+            trackBehavior('click_category', catName);
+        }
+
+        function filterSubCat(catName, subCatName, btnElement) {
+            // Remove active ONLY from sub-links, keep the parent main link active
+            let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
+            let sublist = document.getElementById('sublist-' + safeCatId);
+            if(sublist) {
+                sublist.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+            }
+            
+            if (btnElement) btnElement.classList.add('active');
+
+            document.getElementById('current-category-title').innerText = `${catName} - ${subCatName}`;
+            renderGrid(allProducts.filter(p => p.category === catName && p.subCategory === subCatName), subCatName);
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            clearTimeout(searchTimeout);
+            if(query.length > 2) searchTimeout = setTimeout(() => trackBehavior('search', query), 1000);
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || p.id.toLowerCase().includes(query));
+            renderGrid(filtered, 'Search Results');
+        }
+
+        document.getElementById('searchInput').addEventListener('input', handleSearch);
+
+        function changeSlide(pid, direction, maxIndex) {
+            if (window.currentSlides[pid] === undefined) window.currentSlides[pid] = 0;
+            let current = window.currentSlides[pid];
+            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-100', 'opacity-0');
+            document.getElementById(`img-${pid}-${current}`).classList.replace('z-10', 'z-0');
+            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('w-4', 'w-2');
+            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('opacity-100', 'opacity-40');
+            
+            current = (current + direction + maxIndex) % maxIndex;
+            window.currentSlides[pid] = current;
+            
+            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-0', 'opacity-100');
+            document.getElementById(`img-${pid}-${current}`).classList.replace('z-0', 'z-10');
+            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('w-2', 'w-4');
+            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('opacity-40', 'opacity-100');
+        }
+
         // 🟢 1. REUSABLE PRODUCT CARD GENERATOR
         function createProductCardHtml(p) {
             let displayPrice = convertPrice(p.startingPriceCAD);
@@ -466,7 +542,6 @@
             const area = document.getElementById('catalog-dynamic-area');
             const emptyState = document.getElementById('empty-state');
             
-            // Get all subcategories that actually have products in them
             const subCats = window.globalCategories[catName] || [];
             const catProducts = allProducts.filter(p => p.category === catName);
             
@@ -485,7 +560,6 @@
             html += `<div class="flex gap-4 md:gap-8 overflow-x-auto pb-6 mb-8 scrollbar-hide" style="scroll-snap-type: x mandatory;">`;
             subCats.forEach(sub => {
                 let subProds = catProducts.filter(p => p.subCategory === sub);
-                // Dynamically grab the first product's image to use as the icon!
                 let img = subProds.length > 0 && subProds[0].hero ? subProds[0].hero : 'MC.png';
                 let safeSubId = sub.replace(/[^a-zA-Z0-9]/g, '');
                 let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
@@ -519,7 +593,6 @@
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">`;
                     
-                    // Show a maximum of 4 products per subcategory row!
                     subProds.slice(0, 4).forEach(p => {
                         html += createProductCardHtml(p);
                     });
