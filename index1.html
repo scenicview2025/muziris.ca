@@ -110,204 +110,250 @@
           
           <div class="mega-menu-container text-left cursor-default shadow-2xl">
             <div class="mega-sidebar">
-              <div class="mega-cat-item active" onmouseenter="switchMegaPanel('panel-apparel', this)">Apparel & Textiles <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-electronics', this)">Consumer Electronics <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-home', this)">Home & Garden <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-packaging', this)">Packaging & Print <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-health', this)">Health & Medical <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item active" onmouseenter="switchMegaPanel('panel-agri', this)">Agriculture, Food & Beverage <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-apparel', this)">Apparel, Textiles & Accessories <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-auto', this)">Automotive & Transportation <i class="fas fa-chevron-right"></i></div>
               <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-beauty', this)">Beauty & Personal Care <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-jewelry', this)">Jewelry & Watches <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-vehicles', this)">Vehicles & Parts <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-machinery', this)">Machinery & Industrial <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-tools', this)">Tools & Hardware <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-chemicals', this)">Chemicals & Raw Materials <i class="fas fa-chevron-right"></i></div>
               <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-construction', this)">Construction & Real Estate <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-energy', this)">Energy & Environment <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-sports', this)">Sports & Outdoors <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-toys', this)">Toys & Hobbies <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-gifts', this)">Gifts & Crafts <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-office', this)">Office & School Supplies <i class="fas fa-chevron-right"></i></div>
-              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-food', this)">Food & Beverage <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-electronics', this)">Consumer Electronics & Appliances <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-electrical', this)">Electrical & Renewable Energy <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-components', this)">Electronic Components & IoT <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-fabrication', this)">Fabrication & B2B Services <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-health', this)">Health & Medical <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-home', this)">Home Decor, Garden & Furniture <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-machinery', this)">Industrial Machinery & Equipment <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-jewelry', this)">Jewelry, Eyewear & Watches <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-metals', this)">Minerals, Metals & Metallurgy <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-packaging', this)">Packaging & Printing <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-sports', this)">Sports, Toys & Hobbies <i class="fas fa-chevron-right"></i></div>
+              <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-tools', this)">Tools, Hardware & Safety <i class="fas fa-chevron-right"></i></div>
             </div>
             
             <div class="mega-content overflow-y-auto">
               
-              <div id="panel-apparel" class="mega-panel active">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Apparel & Textiles</h3>
+              <div id="panel-agri" class="mega-panel active">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Agriculture, Food & Beverage</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Mens'"><div class="subcat-icon"><i class="fas fa-tshirt"></i></div><div class="subcat-name">Men's Clothing</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Womens'"><div class="subcat-icon"><i class="fas fa-female"></i></div><div class="subcat-name">Women's Clothing</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Activewear'"><div class="subcat-icon"><i class="fas fa-running"></i></div><div class="subcat-name">Activewear</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Footwear'"><div class="subcat-icon"><i class="fas fa-shoe-prints"></i></div><div class="subcat-name">Footwear</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel&sub=Accessories'"><div class="subcat-icon"><i class="fas fa-glasses"></i></div><div class="subcat-name">Accessories</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Fresh %26 Processed Produce'"><div class="subcat-icon"><i class="fas fa-apple-alt"></i></div><div class="subcat-name">Fresh Produce</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Grains %26 Cereals'"><div class="subcat-icon"><i class="fas fa-seedling"></i></div><div class="subcat-name">Grains & Cereals</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Spices %26 Condiments'"><div class="subcat-icon"><i class="fas fa-pepper-hot"></i></div><div class="subcat-name">Spices & Condiments</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Coffee, Tea %26 Beverages'"><div class="subcat-icon"><i class="fas fa-coffee"></i></div><div class="subcat-name">Coffee & Tea</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Meat %26 Seafood'"><div class="subcat-icon"><i class="fas fa-fish"></i></div><div class="subcat-name">Meat & Seafood</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
-              <div id="panel-electronics" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Consumer Electronics</h3>
+              <div id="panel-apparel" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Apparel, Textiles & Accessories</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics&sub=Audio'"><div class="subcat-icon"><i class="fas fa-headphones"></i></div><div class="subcat-name">Audio & Video</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics&sub=SmartHome'"><div class="subcat-icon"><i class="fas fa-home"></i></div><div class="subcat-name">Smart Home</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics&sub=Mobile'"><div class="subcat-icon"><i class="fas fa-mobile-alt"></i></div><div class="subcat-name">Mobile Accessories</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics&sub=Computers'"><div class="subcat-icon"><i class="fas fa-laptop"></i></div><div class="subcat-name">Computers</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronics'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Men\\'s %26 Women\\'s Clothing'"><div class="subcat-icon"><i class="fas fa-tshirt"></i></div><div class="subcat-name">Clothing</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Sportswear %26 Activewear'"><div class="subcat-icon"><i class="fas fa-running"></i></div><div class="subcat-name">Sportswear</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Footwear %26 Accessories'"><div class="subcat-icon"><i class="fas fa-shoe-prints"></i></div><div class="subcat-name">Footwear</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Luggage, Bags %26 Cases'"><div class="subcat-icon"><i class="fas fa-suitcase"></i></div><div class="subcat-name">Luggage & Bags</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Fabrics %26 Raw Textiles'"><div class="subcat-icon"><i class="fas fa-scroll"></i></div><div class="subcat-name">Fabrics</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
-              <div id="panel-home" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Home & Garden</h3>
+              <div id="panel-auto" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Automotive & Transportation</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home&sub=Furniture'"><div class="subcat-icon"><i class="fas fa-couch"></i></div><div class="subcat-name">Furniture</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home&sub=Decor'"><div class="subcat-icon"><i class="fas fa-paint-roller"></i></div><div class="subcat-name">Home Decor</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home&sub=Kitchen'"><div class="subcat-icon"><i class="fas fa-utensils"></i></div><div class="subcat-name">Kitchen & Dining</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                </div>
-              </div>
-
-              <div id="panel-packaging" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Packaging & Print</h3>
-                <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging&sub=Boxes'"><div class="subcat-icon"><i class="fas fa-box"></i></div><div class="subcat-name">Custom Boxes</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging&sub=Bags'"><div class="subcat-icon"><i class="fas fa-shopping-bag"></i></div><div class="subcat-name">Bags & Totes</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging&sub=Labels'"><div class="subcat-icon"><i class="fas fa-tags"></i></div><div class="subcat-name">Labels & Stickers</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                </div>
-              </div>
-
-              <div id="panel-health" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Health & Medical</h3>
-                <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health&sub=Supplies'"><div class="subcat-icon"><i class="fas fa-first-aid"></i></div><div class="subcat-name">Medical Supplies</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health&sub=Equipment'"><div class="subcat-icon"><i class="fas fa-heartbeat"></i></div><div class="subcat-name">Equipment</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health&sub=Mobility'"><div class="subcat-icon"><i class="fas fa-wheelchair"></i></div><div class="subcat-name">Mobility Aids</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=Auto Parts %26 Spares'"><div class="subcat-icon"><i class="fas fa-cogs"></i></div><div class="subcat-name">Auto Parts</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=Truck %26 Heavy Duty Parts'"><div class="subcat-icon"><i class="fas fa-truck"></i></div><div class="subcat-name">Heavy Duty Parts</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=EV Components %26 Charging'"><div class="subcat-icon"><i class="fas fa-charging-station"></i></div><div class="subcat-name">EV Components</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=Car Care %26 Accessories'"><div class="subcat-icon"><i class="fas fa-spray-can"></i></div><div class="subcat-name">Car Care</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=Motorcycles, ATVs %26 Scooters'"><div class="subcat-icon"><i class="fas fa-motorcycle"></i></div><div class="subcat-name">Motorcycles</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
               <div id="panel-beauty" class="mega-panel">
                 <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Beauty & Personal Care</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty&sub=Skincare'"><div class="subcat-icon"><i class="fas fa-spa"></i></div><div class="subcat-name">Skincare</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty&sub=Makeup'"><div class="subcat-icon"><i class="fas fa-magic"></i></div><div class="subcat-name">Makeup & Tools</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty&sub=Haircare'"><div class="subcat-icon"><i class="fas fa-cut"></i></div><div class="subcat-name">Hair Care</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Skincare %26 Cosmetics'"><div class="subcat-icon"><i class="fas fa-spa"></i></div><div class="subcat-name">Skincare</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Haircare %26 Wigs'"><div class="subcat-icon"><i class="fas fa-cut"></i></div><div class="subcat-name">Haircare</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Bath %26 Body Care'"><div class="subcat-icon"><i class="fas fa-bath"></i></div><div class="subcat-name">Bath & Body</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Perfume %26 Fragrance'"><div class="subcat-icon"><i class="fas fa-spray-can"></i></div><div class="subcat-name">Fragrance</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Packaging for Cosmetics'"><div class="subcat-icon"><i class="fas fa-box"></i></div><div class="subcat-name">Cosmetic Packaging</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
-              <div id="panel-jewelry" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Jewelry, Eyewear & Watches</h3>
+              <div id="panel-chemicals" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Chemicals & Raw Materials</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry&sub=Fine'"><div class="subcat-icon"><i class="fas fa-gem"></i></div><div class="subcat-name">Fine Jewelry</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry&sub=Watches'"><div class="subcat-icon"><i class="fas fa-clock"></i></div><div class="subcat-name">Watches</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry&sub=Eyewear'"><div class="subcat-icon"><i class="fas fa-glasses"></i></div><div class="subcat-name">Eyewear</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                </div>
-              </div>
-
-              <div id="panel-vehicles" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Vehicles & Parts</h3>
-                <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Vehicles&sub=AutoParts'"><div class="subcat-icon"><i class="fas fa-cogs"></i></div><div class="subcat-name">Auto Parts</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Vehicles&sub=Motorcycle'"><div class="subcat-icon"><i class="fas fa-motorcycle"></i></div><div class="subcat-name">Motorcycle Parts</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Vehicles&sub=EV'"><div class="subcat-icon"><i class="fas fa-charging-station"></i></div><div class="subcat-name">EV Accessories</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Vehicles'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                </div>
-              </div>
-
-              <div id="panel-machinery" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Machinery & Industrial</h3>
-                <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Machinery&sub=Manufacturing'"><div class="subcat-icon"><i class="fas fa-industry"></i></div><div class="subcat-name">Manufacturing</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Machinery&sub=Agriculture'"><div class="subcat-icon"><i class="fas fa-tractor"></i></div><div class="subcat-name">Agriculture</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Machinery&sub=Packaging'"><div class="subcat-icon"><i class="fas fa-box-open"></i></div><div class="subcat-name">Packaging Machinery</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Machinery'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                </div>
-              </div>
-
-              <div id="panel-tools" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Tools & Hardware</h3>
-                <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools&sub=HandTools'"><div class="subcat-icon"><i class="fas fa-hammer"></i></div><div class="subcat-name">Hand Tools</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools&sub=PowerTools'"><div class="subcat-icon"><i class="fas fa-tools"></i></div><div class="subcat-name">Power Tools</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools&sub=Safety'"><div class="subcat-icon"><i class="fas fa-hard-hat"></i></div><div class="subcat-name">Safety Equipment</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Basic Organic Chemicals'"><div class="subcat-icon"><i class="fas fa-flask"></i></div><div class="subcat-name">Organic Chemicals</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Inorganic Chemicals'"><div class="subcat-icon"><i class="fas fa-vial"></i></div><div class="subcat-name">Inorganic Chemicals</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Polymers %26 Resins'"><div class="subcat-icon"><i class="fas fa-cubes"></i></div><div class="subcat-name">Polymers</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Dyes %26 Pigments'"><div class="subcat-icon"><i class="fas fa-palette"></i></div><div class="subcat-name">Dyes & Pigments</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Agrochemicals %26 Fertilizers'"><div class="subcat-icon"><i class="fas fa-leaf"></i></div><div class="subcat-name">Agrochemicals</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
               <div id="panel-construction" class="mega-panel">
                 <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Construction & Real Estate</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction&sub=Materials'"><div class="subcat-icon"><i class="fas fa-building"></i></div><div class="subcat-name">Building Materials</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction&sub=Bathroom'"><div class="subcat-icon"><i class="fas fa-bath"></i></div><div class="subcat-name">Bathroom Fixtures</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction&sub=Lighting'"><div class="subcat-icon"><i class="fas fa-lightbulb"></i></div><div class="subcat-name">Lighting</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=Building Materials %26 Cement'"><div class="subcat-icon"><i class="fas fa-building"></i></div><div class="subcat-name">Building Materials</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=Tiles, Flooring %26 Surfaces'"><div class="subcat-icon"><i class="fas fa-border-all"></i></div><div class="subcat-name">Tiles & Flooring</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=Doors, Windows %26 Glass'"><div class="subcat-icon"><i class="fas fa-door-open"></i></div><div class="subcat-name">Doors & Windows</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=Kitchen %26 Bath Fixtures'"><div class="subcat-icon"><i class="fas fa-faucet"></i></div><div class="subcat-name">Kitchen & Bath</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=HVAC %26 Plumbing Systems'"><div class="subcat-icon"><i class="fas fa-fan"></i></div><div class="subcat-name">HVAC Systems</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
-              <div id="panel-energy" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Energy & Environment</h3>
+              <div id="panel-electronics" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Consumer Electronics & Appliances</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Energy&sub=Solar'"><div class="subcat-icon"><i class="fas fa-solar-panel"></i></div><div class="subcat-name">Solar Energy</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Energy&sub=Batteries'"><div class="subcat-icon"><i class="fas fa-battery-full"></i></div><div class="subcat-name">Batteries</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Energy&sub=Generators'"><div class="subcat-icon"><i class="fas fa-bolt"></i></div><div class="subcat-name">Generators</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Energy'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Mobile Phones %26 Accessories'"><div class="subcat-icon"><i class="fas fa-mobile-alt"></i></div><div class="subcat-name">Mobile Accessories</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Computers %26 IT Hardware'"><div class="subcat-icon"><i class="fas fa-laptop"></i></div><div class="subcat-name">Computers & IT</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Smart Home %26 IoT Devices'"><div class="subcat-icon"><i class="fas fa-network-wired"></i></div><div class="subcat-name">Smart Home</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Audio %26 Video Equipment'"><div class="subcat-icon"><i class="fas fa-headphones"></i></div><div class="subcat-name">Audio & Video</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Home %26 Kitchen Appliances'"><div class="subcat-icon"><i class="fas fa-blender"></i></div><div class="subcat-name">Home Appliances</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-electrical" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Electrical & Renewable Energy</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Solar Panels %26 Wind Power'"><div class="subcat-icon"><i class="fas fa-solar-panel"></i></div><div class="subcat-name">Solar Panels</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Batteries %26 Energy Storage'"><div class="subcat-icon"><i class="fas fa-battery-full"></i></div><div class="subcat-name">Batteries</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Lighting Solutions %26 LEDs'"><div class="subcat-icon"><i class="fas fa-lightbulb"></i></div><div class="subcat-name">Lighting Solutions</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Cables, Wires %26 Switches'"><div class="subcat-icon"><i class="fas fa-plug"></i></div><div class="subcat-name">Cables & Wires</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Motors, Pumps %26 Drives'"><div class="subcat-icon"><i class="fas fa-cogs"></i></div><div class="subcat-name">Motors & Pumps</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-components" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Electronic Components & IoT</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=PCBs %26 PCBA'"><div class="subcat-icon"><i class="fas fa-microchip"></i></div><div class="subcat-name">PCBs & PCBA</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=Sensors %26 Integrated Circuits'"><div class="subcat-icon"><i class="fas fa-memory"></i></div><div class="subcat-name">Sensors & ICs</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=Connectors %26 Terminals'"><div class="subcat-icon"><i class="fas fa-link"></i></div><div class="subcat-name">Connectors</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=Displays %26 Signage'"><div class="subcat-icon"><i class="fas fa-tv"></i></div><div class="subcat-name">Displays</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=Telecommunications %26 RF'"><div class="subcat-icon"><i class="fas fa-broadcast-tower"></i></div><div class="subcat-name">Telecom & RF</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-fabrication" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Fabrication & B2B Services</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=CNC Machining Services'"><div class="subcat-icon"><i class="fas fa-cogs"></i></div><div class="subcat-name">CNC Machining</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=Sheet Metal Fabrication'"><div class="subcat-icon"><i class="fas fa-gavel"></i></div><div class="subcat-name">Sheet Metal</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=Injection Molding %26 Casting'"><div class="subcat-icon"><i class="fas fa-cube"></i></div><div class="subcat-name">Injection Molding</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=3D Printing %26 Prototyping'"><div class="subcat-icon"><i class="fas fa-print"></i></div><div class="subcat-name">3D Printing</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=Inspection %26 Certification'"><div class="subcat-icon"><i class="fas fa-check-double"></i></div><div class="subcat-name">Inspections</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-health" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Health & Medical</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Professional Medical Devices'"><div class="subcat-icon"><i class="fas fa-stethoscope"></i></div><div class="subcat-name">Medical Devices</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Hospital Furniture %26 Supplies'"><div class="subcat-icon"><i class="fas fa-procedures"></i></div><div class="subcat-name">Hospital Furniture</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Consumables %26 Disposables'"><div class="subcat-icon"><i class="fas fa-syringe"></i></div><div class="subcat-name">Disposables</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Mobility %26 Rehab Aids'"><div class="subcat-icon"><i class="fas fa-wheelchair"></i></div><div class="subcat-name">Mobility Aids</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Dietary Supplements'"><div class="subcat-icon"><i class="fas fa-pills"></i></div><div class="subcat-name">Dietary Supplements</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-home" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Home Decor, Garden & Furniture</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Residential Furniture'"><div class="subcat-icon"><i class="fas fa-couch"></i></div><div class="subcat-name">Residential Furniture</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Commercial %26 Office Furniture'"><div class="subcat-icon"><i class="fas fa-chair"></i></div><div class="subcat-name">Office Furniture</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Home Decor %26 Crafts'"><div class="subcat-icon"><i class="fas fa-paint-roller"></i></div><div class="subcat-name">Home Decor</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Kitchenware %26 Tableware'"><div class="subcat-icon"><i class="fas fa-utensils"></i></div><div class="subcat-name">Kitchenware</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Pet Supplies %26 Food'"><div class="subcat-icon"><i class="fas fa-paw"></i></div><div class="subcat-name">Pet Supplies</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-machinery" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Industrial Machinery & Equipment</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Manufacturing %26 Processing'"><div class="subcat-icon"><i class="fas fa-industry"></i></div><div class="subcat-name">Manufacturing</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Packaging Machinery'"><div class="subcat-icon"><i class="fas fa-box-open"></i></div><div class="subcat-name">Packaging Machinery</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Agricultural Machinery'"><div class="subcat-icon"><i class="fas fa-tractor"></i></div><div class="subcat-name">Agricultural Tech</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Construction %26 Heavy Equipment'"><div class="subcat-icon"><i class="fas fa-truck-pickup"></i></div><div class="subcat-name">Heavy Equipment</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Material Handling %26 Conveyors'"><div class="subcat-icon"><i class="fas fa-pallet"></i></div><div class="subcat-name">Material Handling</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-jewelry" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Jewelry, Eyewear & Watches</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Fine Jewelry %26 Gemstones'"><div class="subcat-icon"><i class="fas fa-gem"></i></div><div class="subcat-name">Fine Jewelry</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Fashion %26 Imitation Jewelry'"><div class="subcat-icon"><i class="fas fa-ring"></i></div><div class="subcat-name">Fashion Jewelry</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Watches %26 Timepieces'"><div class="subcat-icon"><i class="fas fa-clock"></i></div><div class="subcat-name">Watches</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Eyewear %26 Accessories'"><div class="subcat-icon"><i class="fas fa-glasses"></i></div><div class="subcat-name">Eyewear</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Jewelry Packaging %26 Display'"><div class="subcat-icon"><i class="fas fa-box"></i></div><div class="subcat-name">Packaging</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-metals" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Minerals, Metals & Metallurgy</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Steel %26 Iron Products'"><div class="subcat-icon"><i class="fas fa-gavel"></i></div><div class="subcat-name">Steel & Iron</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Aluminum %26 Copper'"><div class="subcat-icon"><i class="fas fa-coins"></i></div><div class="subcat-name">Aluminum & Copper</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Precious %26 Semi-Precious Metals'"><div class="subcat-icon"><i class="fas fa-gem"></i></div><div class="subcat-name">Precious Metals</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Non-Metallic Minerals'"><div class="subcat-icon"><i class="fas fa-cube"></i></div><div class="subcat-name">Non-Metallic Minerals</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Coir %26 Natural Fibers'"><div class="subcat-icon"><i class="fas fa-leaf"></i></div><div class="subcat-name">Natural Fibers</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                </div>
+              </div>
+
+              <div id="panel-packaging" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Packaging & Printing</h3>
+                <div class="subcat-grid">
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Corrugated Boxes %26 Cartons'"><div class="subcat-icon"><i class="fas fa-box"></i></div><div class="subcat-name">Corrugated Boxes</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Paper %26 Paperboard'"><div class="subcat-icon"><i class="fas fa-file-alt"></i></div><div class="subcat-name">Paperboard</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Glass %26 Plastic Bottles'"><div class="subcat-icon"><i class="fas fa-wine-bottle"></i></div><div class="subcat-name">Bottles</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Flexible Packaging'"><div class="subcat-icon"><i class="fas fa-shopping-bag"></i></div><div class="subcat-name">Flexible Packaging</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Commercial Printing Services'"><div class="subcat-icon"><i class="fas fa-print"></i></div><div class="subcat-name">Commercial Printing</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
               <div id="panel-sports" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Sports & Outdoors</h3>
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Sports, Toys & Hobbies</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports&sub=Fitness'"><div class="subcat-icon"><i class="fas fa-dumbbell"></i></div><div class="subcat-name">Fitness & Gym</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports&sub=Camping'"><div class="subcat-icon"><i class="fas fa-campground"></i></div><div class="subcat-name">Camping & Hiking</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports&sub=Water'"><div class="subcat-icon"><i class="fas fa-swimmer"></i></div><div class="subcat-name">Water Sports</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Fitness %26 Body Building'"><div class="subcat-icon"><i class="fas fa-dumbbell"></i></div><div class="subcat-name">Fitness & Gym</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Outdoor %26 Water Sports'"><div class="subcat-icon"><i class="fas fa-swimmer"></i></div><div class="subcat-name">Outdoor Sports</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Educational Toys %26 Games'"><div class="subcat-icon"><i class="fas fa-puzzle-piece"></i></div><div class="subcat-name">Educational Toys</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Baby Care %26 Clothing'"><div class="subcat-icon"><i class="fas fa-baby"></i></div><div class="subcat-name">Baby Care</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Corporate Gifts %26 Crafts'"><div class="subcat-icon"><i class="fas fa-gift"></i></div><div class="subcat-name">Gifts & Crafts</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
-              <div id="panel-toys" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Toys & Hobbies</h3>
+              <div id="panel-tools" class="mega-panel">
+                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Tools, Hardware & Safety</h3>
                 <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Toys&sub=Educational'"><div class="subcat-icon"><i class="fas fa-puzzle-piece"></i></div><div class="subcat-name">Educational Toys</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Toys&sub=Action'"><div class="subcat-icon"><i class="fas fa-robot"></i></div><div class="subcat-name">Action Figures</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Toys&sub=Outdoor'"><div class="subcat-icon"><i class="fas fa-bicycle"></i></div><div class="subcat-name">Outdoor Play</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Toys'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                </div>
-              </div>
-
-              <div id="panel-gifts" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Gifts & Crafts</h3>
-                <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Gifts&sub=Festive'"><div class="subcat-icon"><i class="fas fa-gift"></i></div><div class="subcat-name">Festive Supplies</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Gifts&sub=Party'"><div class="subcat-icon"><i class="fas fa-glass-cheers"></i></div><div class="subcat-name">Party Supplies</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Gifts&sub=Crafts'"><div class="subcat-icon"><i class="fas fa-palette"></i></div><div class="subcat-name">Arts & Crafts</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Gifts'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                </div>
-              </div>
-
-              <div id="panel-office" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Office & School Supplies</h3>
-                <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Office&sub=Stationery'"><div class="subcat-icon"><i class="fas fa-paperclip"></i></div><div class="subcat-name">Stationery</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Office&sub=Furniture'"><div class="subcat-icon"><i class="fas fa-chair"></i></div><div class="subcat-name">Office Furniture</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Office&sub=Presentation'"><div class="subcat-icon"><i class="fas fa-chalkboard"></i></div><div class="subcat-name">Presentation Boards</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Office'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                </div>
-              </div>
-
-              <div id="panel-food" class="mega-panel">
-                <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Food & Beverage</h3>
-                <div class="subcat-grid">
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Food&sub=Snacks'"><div class="subcat-icon"><i class="fas fa-cookie"></i></div><div class="subcat-name">Snacks & Confectionery</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Food&sub=Beverages'"><div class="subcat-icon"><i class="fas fa-coffee"></i></div><div class="subcat-name">Beverages</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Food&sub=Ingredients'"><div class="subcat-icon"><i class="fas fa-leaf"></i></div><div class="subcat-name">Raw Ingredients</div></div>
-                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Food'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Hand %26 Power Tools'"><div class="subcat-icon"><i class="fas fa-tools"></i></div><div class="subcat-name">Hand & Power Tools</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Fasteners %26 Screws'"><div class="subcat-icon"><i class="fas fa-screwdriver"></i></div><div class="subcat-name">Fasteners</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Safety %26 PPE Equipment'"><div class="subcat-icon"><i class="fas fa-hard-hat"></i></div><div class="subcat-name">Safety & PPE</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Testing %26 Measuring Instruments'"><div class="subcat-icon"><i class="fas fa-ruler"></i></div><div class="subcat-name">Measuring Instruments</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Welding %26 Soldering Supplies'"><div class="subcat-icon"><i class="fas fa-fire"></i></div><div class="subcat-name">Welding Supplies</div></div>
+                  <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
                 </div>
               </div>
 
             </div>
           </div>
         </div>
+
         <a href="#how-it-works" class="hover:text-black transition">How it Works</a>
+        <a href="#showcase" class="hover:text-black transition">Industries</a>
         <a href="catalog.html" class="hover:text-black transition">Global Catalog</a>
         <a href="suppliers" class="text-[var(--gold-dark)] hover:text-black transition">Factory Login</a>
       </div>
