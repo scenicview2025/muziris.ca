@@ -441,7 +441,12 @@
             viewStartTime = Date.now();
             
             document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
-            document.getElementById('pp-breadcrumb-cat').innerText = targetProduct.category;
+            // 🟢 SMOOTH BREADCRUMBS: Let them click back to the Sub-Category!
+            document.getElementById('pp-breadcrumb-cat').innerHTML = `
+                <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}" class="hover:text-black hover:underline transition">${targetProduct.category}</a> 
+                <span class="mx-2 text-gray-300">/</span> 
+                <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}&sub=${encodeURIComponent(targetProduct.subCategory)}" class="hover:text-black hover:underline transition">${targetProduct.subCategory}</a>
+            `;
             document.getElementById('pp-title').innerText = targetProduct.name;
             document.getElementById('pp-card-sup-name').innerText = targetProduct.companyName || "Verified Factory";
             document.getElementById('pp-supplier-link').onclick = () => window.location.href = 'factory.html?id=' + targetProduct.supplierId;
