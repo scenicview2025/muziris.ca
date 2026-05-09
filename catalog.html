@@ -387,143 +387,149 @@
             nav.innerHTML = html;
         }
 
-        function filterCat(catName, btnElement) {
-            // 1. Visual Reset
-            document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('[id^="sublist-"]').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('[id^="icon-"]').forEach(el => el.style.transform = 'rotate(0deg)');
-            document.getElementById('searchInput').value = ""; 
+        // 🟢 1. REUSABLE PRODUCT CARD GENERATOR
+        function createProductCardHtml(p) {
+            let displayPrice = convertPrice(p.startingPriceCAD);
+            let moq = p.variants && p.variants.length > 0 ? p.variants[0].min : 'Contact';
+            let imgs = [p.hero, ...p.gallery].filter(Boolean);
+            if(imgs.length === 0) imgs = ['MC.png'];
 
-            // 2. Global Catalog Reset
-            if (catName === 'All') {
-                document.getElementById('btn-cat-all').classList.add('active');
-                document.getElementById('current-category-title').innerText = 'Global Catalog';
-                renderGrid(allProducts, 'All');
-                trackBehavior('click_category', 'All');
-                return;
+            let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
+            if (p.status === 'PAUSED') {
+                sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
+            } else {
+                sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
             }
 
-            // 3. Specific Category Expansion
-            let safeId = catName.replace(/[^a-zA-Z0-9]/g, '');
-            let headEl = btnElement || document.getElementById('cat-head-' + safeId);
-            
-            if (headEl) headEl.classList.add('active');
-            
-            let sublist = document.getElementById('sublist-' + safeId);
-            let icon = document.getElementById('icon-' + safeId);
-            if (sublist) {
-                sublist.classList.remove('hidden');
-                if(icon) icon.style.transform = 'rotate(180deg)';
+            let cardClass = p.status === 'PAUSED' ? 'product-card opacity-60' : 'product-card';
+            imgs.forEach((img, i) => {
+                let activeClass = i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0';
+                sliderHtml += `<img src="${img}" class="img-layer absolute inset-0 ${activeClass}" id="img-${p.id}-${i}" loading="lazy" onerror="this.src='MC.png'">`;
+            });
+
+            if(imgs.length > 1) {
+                sliderHtml += `
+                    <button class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', -1, ${imgs.length})"><i class="fas fa-chevron-left text-[10px] text-gray-800"></i></button>
+                    <button class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', 1, ${imgs.length})"><i class="fas fa-chevron-right text-[10px] text-gray-800"></i></button>
+                    <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">`;
+                imgs.forEach((_, i) => {
+                    let dotClass = i === 0 ? 'w-4 opacity-100' : 'w-2 opacity-40';
+                    sliderHtml += `<div class="h-2 bg-white rounded-full transition-all duration-300 shadow-sm ${dotClass}" id="dot-${p.id}-${i}"></div>`;
+                });
+                sliderHtml += `</div>`;
             }
+            sliderHtml += `</div>`;
 
-            // 4. Render Grid
-            document.getElementById('current-category-title').innerText = catName;
-            renderGrid(allProducts.filter(p => p.category === catName), catName);
-            trackBehavior('click_category', catName);
+            let safeSlug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+            return `
+            <div class="${cardClass}" onclick="window.location.href='product.html?item=${safeSlug}&id=${p.id}'">
+                <div class="img-container">${sliderHtml}</div>
+                <div class="p-4 flex flex-col flex-1">
+                    <p class="text-[9px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1 truncate">${p.category}</p>
+                    <h3 class="text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2 h-10 mb-3">${p.name}</h3>
+                    <div class="mt-auto">
+                        <p class="text-lg md:text-xl font-extrabold text-gray-900 font-mono leading-none">${currencySymbols[activeCurrency] || '$'}${displayPrice} <span class="text-[10px] text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
+                        <p class="text-[10px] text-gray-500 font-medium mt-1">MOQ: ${moq}</p>
+                        <button class="btn-add-cart" onclick="addToCart(event, '${p.id}', '${p.name.replace(/'/g, "\\'")}')">
+                            <i class="fas fa-plus"></i> Add to RFQ
+                        </button>
+                    </div>
+                </div>
+            </div>`;
         }
 
-        function filterSubCat(catName, subCatName, btnElement) {
-            // Remove active ONLY from sub-links, keep the parent main link active
-            let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
-            let sublist = document.getElementById('sublist-' + safeCatId);
-            if(sublist) {
-                sublist.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-            }
-            
-            if (btnElement) btnElement.classList.add('active');
-
-            document.getElementById('current-category-title').innerText = `${catName} - ${subCatName}`;
-            renderGrid(allProducts.filter(p => p.category === catName && p.subCategory === subCatName), subCatName);
-        }
-        function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            clearTimeout(searchTimeout);
-            if(query.length > 2) searchTimeout = setTimeout(() => trackBehavior('search', query), 1000);
-            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || p.id.toLowerCase().includes(query));
-            renderGrid(filtered, 'Search Results');
-        }
-
-        document.getElementById('searchInput').addEventListener('input', handleSearch);
-
-        function changeSlide(pid, direction, maxIndex) {
-            if (window.currentSlides[pid] === undefined) window.currentSlides[pid] = 0;
-            let current = window.currentSlides[pid];
-            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-100', 'opacity-0');
-            document.getElementById(`img-${pid}-${current}`).classList.replace('z-10', 'z-0');
-            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('w-4', 'w-2');
-            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('opacity-100', 'opacity-40');
-            
-            current = (current + direction + maxIndex) % maxIndex;
-            window.currentSlides[pid] = current;
-            
-            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-0', 'opacity-100');
-            document.getElementById(`img-${pid}-${current}`).classList.replace('z-0', 'z-10');
-            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('w-2', 'w-4');
-            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('opacity-40', 'opacity-100');
-        }
-
+        // 🟢 2. STANDARD FLAT GRID (Used for Search Results, "Global Catalog", and Sub-Categories)
         function renderGrid(products) {
-            const grid = document.getElementById('productGrid');
+            const area = document.getElementById('catalog-dynamic-area');
             const emptyState = document.getElementById('empty-state');
-            grid.innerHTML = "";
             document.getElementById('product-count').innerText = products.length;
 
-            if(products.length === 0) { emptyState.classList.remove('hidden'); return; }
+            if(products.length === 0) { 
+                area.innerHTML = ''; 
+                emptyState.classList.remove('hidden'); 
+                return; 
+            }
             emptyState.classList.add('hidden');
 
+            let gridHtml = `<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">`;
             products.forEach(p => {
-                let displayPrice = convertPrice(p.startingPriceCAD);
-                let moq = p.variants && p.variants.length > 0 ? p.variants[0].min : 'Contact';
-                let imgs = [p.hero, ...p.gallery].filter(Boolean);
-                if(imgs.length === 0) imgs = ['MC.png'];
+                gridHtml += createProductCardHtml(p);
+            });
+            gridHtml += `</div>`;
+            
+            area.innerHTML = gridHtml;
+        }
 
-                let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
-                if (p.status === 'PAUSED') {
-                    sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
-                } else {
-                    sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
-                }
+        // 🟢 3. THE NEW ENTERPRISE CATEGORY HUB (Used ONLY when a Main Category is clicked)
+        function renderCategoryHub(catName) {
+            const area = document.getElementById('catalog-dynamic-area');
+            const emptyState = document.getElementById('empty-state');
+            
+            // Get all subcategories that actually have products in them
+            const subCats = window.globalCategories[catName] || [];
+            const catProducts = allProducts.filter(p => p.category === catName);
+            
+            document.getElementById('product-count').innerText = catProducts.length;
 
-                let cardClass = p.status === 'PAUSED' ? 'product-card opacity-60' : 'product-card';
-                imgs.forEach((img, i) => {
-                    let activeClass = i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0';
-                    sliderHtml += `<img src="${img}" class="img-layer absolute inset-0 ${activeClass}" id="img-${p.id}-${i}" loading="lazy" onerror="this.src='MC.png'">`;
-                });
+            if(catProducts.length === 0) { 
+                area.innerHTML = ''; 
+                emptyState.classList.remove('hidden'); 
+                return; 
+            }
+            emptyState.classList.add('hidden');
 
-                if(imgs.length > 1) {
-                    sliderHtml += `
-                        <button class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', -1, ${imgs.length})"><i class="fas fa-chevron-left text-[10px] text-gray-800"></i></button>
-                        <button class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', 1, ${imgs.length})"><i class="fas fa-chevron-right text-[10px] text-gray-800"></i></button>
-                        <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">`;
-                    imgs.forEach((_, i) => {
-                        let dotClass = i === 0 ? 'w-4 opacity-100' : 'w-2 opacity-40';
-                        sliderHtml += `<div class="h-2 bg-white rounded-full transition-all duration-300 shadow-sm ${dotClass}" id="dot-${p.id}-${i}"></div>`;
-                    });
-                    sliderHtml += `</div>`;
-                }
-                sliderHtml += `</div>`;
+            let html = '';
 
-                // 🟢 Generate the Static-Friendly SEO slug from the product name
-                let safeSlug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-
-                grid.innerHTML += `
-                <div class="${cardClass}" onclick="window.location.href='product.html?item=${safeSlug}&id=${p.id}'">
-                    <div class="img-container">${sliderHtml}</div>
-                    <div class="p-4 flex flex-col flex-1">
-                        <p class="text-[9px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1 truncate">${p.category}</p>
-                        <h3 class="text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2 h-10 mb-3">${p.name}</h3>
-                        <div class="mt-auto">
-                            <p class="text-lg md:text-xl font-extrabold text-gray-900 font-mono leading-none">${currencySymbols[activeCurrency] || '$'}${displayPrice} <span class="text-[10px] text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
-                            <p class="text-[10px] text-gray-500 font-medium mt-1">MOQ: ${moq}</p>
-                            
-                            <button class="btn-add-cart" onclick="addToCart(event, '${p.id}', '${p.name.replace(/'/g, "\\'")}')">
-                                <i class="fas fa-plus"></i> Add to RFQ
-                            </button>
-                            
-                        </div>
+            // --- A: TOP CIRCULAR NAVIGATION ---
+            html += `<div class="flex gap-4 md:gap-8 overflow-x-auto pb-6 mb-8 scrollbar-hide" style="scroll-snap-type: x mandatory;">`;
+            subCats.forEach(sub => {
+                let subProds = catProducts.filter(p => p.subCategory === sub);
+                // Dynamically grab the first product's image to use as the icon!
+                let img = subProds.length > 0 && subProds[0].hero ? subProds[0].hero : 'MC.png';
+                let safeSubId = sub.replace(/[^a-zA-Z0-9]/g, '');
+                let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
+                
+                html += `
+                <div class="flex flex-col items-center gap-3 cursor-pointer min-w-[80px] md:min-w-[100px] flex-shrink-0 group" style="scroll-snap-align: start;" 
+                     onclick="let btn = document.getElementById('sub-link-${safeCatId}-${safeSubId}'); filterSubCat('${catName}', '${sub.replace(/'/g, "\\'")}', btn);">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-gray-200 group-hover:border-[var(--gold)] group-hover:shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all overflow-hidden bg-white p-1">
+                        <img src="${img}" class="w-full h-full rounded-full object-cover mix-blend-multiply" onerror="this.src='MC.png'">
                     </div>
+                    <span class="text-[10px] md:text-xs text-center font-bold text-gray-700 leading-tight group-hover:text-[var(--gold-dark)] transition-colors">${sub}</span>
                 </div>`;
             });
+            html += `</div>`;
+
+            // --- B: THE GROUPED "AISLE" ROWS ---
+            html += `<div class="flex flex-col gap-14">`;
+            subCats.forEach(sub => {
+                let subProds = catProducts.filter(p => p.subCategory === sub);
+                if (subProds.length > 0) {
+                    let safeSubId = sub.replace(/[^a-zA-Z0-9]/g, '');
+                    let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
+                    html += `
+                    <div>
+                        <div class="flex justify-between items-end border-b border-gray-200 pb-3 mb-6">
+                            <h3 class="text-xl md:text-2xl font-bold brand-font text-gray-900">${sub}</h3>
+                            <button class="text-[var(--gold-dark)] text-[10px] md:text-xs font-bold uppercase tracking-widest hover:text-black transition" 
+                                    onclick="let btn = document.getElementById('sub-link-${safeCatId}-${safeSubId}'); filterSubCat('${catName}', '${sub.replace(/'/g, "\\'")}', btn); window.scrollTo(0,0);">
+                                View More <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">`;
+                    
+                    // Show a maximum of 4 products per subcategory row!
+                    subProds.slice(0, 4).forEach(p => {
+                        html += createProductCardHtml(p);
+                    });
+
+                    html += `</div></div>`;
+                }
+            });
+            html += `</div>`;
+
+            area.innerHTML = html;
         }
     </script>
 </body>
