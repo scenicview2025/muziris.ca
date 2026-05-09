@@ -308,7 +308,7 @@
             handleSearch(); 
         }
 
-        // 🟢 THE UX FIX: Grab the instructions sent from the Homepage! (NO DUPLICATES)
+        // 🟢 THE UX FIX: Grab the instructions sent from the Homepage!
         const urlParams = new URLSearchParams(window.location.search);
         const urlSearch = urlParams.get('search');
         const urlCategory = urlParams.get('category');
@@ -321,50 +321,25 @@
                 document.getElementById('loader').style.display = 'none';
                 if(data.products) {
                     allProducts = data.products.reverse(); 
-                    renderCategories(data.categories);
+                    renderCategories(data.categories); // Draws the new Accordion
                     
-                    let filteredProducts = [...allProducts];
-                    let gridTitle = 'All';
-
-                    // 🟢 1. Check if the Master Search Bar was used
+                    // Route the logic cleanly
                     if (urlSearch) {
-                        const searchLower = urlSearch.toLowerCase();
-                        filteredProducts = filteredProducts.filter(p => 
-                            (p.name && p.name.toLowerCase().includes(searchLower)) || 
-                            (p.category && p.category.toLowerCase().includes(searchLower)) ||
-                            (p.subCategory && p.subCategory.toLowerCase().includes(searchLower)) || // FIXED: subCategory
-                            (p.id && p.id.toLowerCase().includes(searchLower))
-                        );
-                        // Put the search term into the catalog's search bar so the user sees it
-                        if(document.getElementById('searchInput')) document.getElementById('searchInput').value = urlSearch;
-                        gridTitle = 'Search Results';
-                    }
-
-                    // 🟢 2. Check if the Mega-Menu Category was clicked
-                    if (urlCategory) {
-                        filteredProducts = filteredProducts.filter(p => p.category === urlCategory);
-                        document.getElementById('current-category-title').innerText = urlCategory;
-                        gridTitle = urlCategory;
-                        
-                        // Visually highlight the sidebar category to match the filter
+                        document.getElementById('searchInput').value = urlSearch;
+                        handleSearch(); // Reuse our search function
+                    } else if (urlCategory && urlSubCat) {
+                        filterCat(urlCategory); // Expands the menu and highlights main category
                         setTimeout(() => {
-                            document.querySelectorAll('.sidebar-link').forEach(b => {
-                                if(b.innerText === urlCategory) {
-                                    document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
-                                    b.classList.add('active');
-                                }
-                            });
-                        }, 100);
+                            let safeCatId = urlCategory.replace(/[^a-zA-Z0-9]/g, '');
+                            let safeSubId = urlSubCat.replace(/[^a-zA-Z0-9]/g, '');
+                            let subBtn = document.getElementById(`sub-link-${safeCatId}-${safeSubId}`);
+                            filterSubCat(urlCategory, urlSubCat, subBtn);
+                        }, 50);
+                    } else if (urlCategory) {
+                        filterCat(urlCategory); // Expands menu and renders category
+                    } else {
+                        filterCat('All'); // Default load
                     }
-
-                    // 🟢 3. Check if a specific Sub-Category was clicked
-                    if (urlSubCat) {
-                        filteredProducts = filteredProducts.filter(p => p.subCategory === urlSubCat); // FIXED: subCategory
-                        document.getElementById('current-category-title').innerText = `${urlCategory} - ${urlSubCat}`;
-                    }
-
-                    // Render the newly filtered list!
-                    renderGrid(filteredProducts, gridTitle);
 
                 } else {
                     document.getElementById('productGrid').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
@@ -374,7 +349,6 @@
                 document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
             });
         };
-
         function trackBehavior(actionType, targetId) {
             fetch(API_BASE_URL + '/buyer/track', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ email: currentUser ? currentUser.email : 'Anonymous', actionType: actionType, targetId: targetId, duration: 0 }) }).catch(e => console.log("Skip"));
         }
