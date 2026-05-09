@@ -308,13 +308,7 @@
             handleSearch(); 
         }
 
-        // 🟢 THE UX FIX: Grab the instructions sent from the Homepage!
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlSearch = urlParams.get('search');
-        const urlCategory = urlParams.get('category');
-        const urlSubCat = urlParams.get('sub');
-
-        // 🟢 THE UX FIX: Grab the instructions sent from the Homepage!
+        // 🟢 THE UX FIX: Grab the instructions sent from the Homepage! (NO DUPLICATES)
         const urlParams = new URLSearchParams(window.location.search);
         const urlSearch = urlParams.get('search');
         const urlCategory = urlParams.get('category');
@@ -338,11 +332,11 @@
                         filteredProducts = filteredProducts.filter(p => 
                             (p.name && p.name.toLowerCase().includes(searchLower)) || 
                             (p.category && p.category.toLowerCase().includes(searchLower)) ||
-                            (p.sub_category && p.sub_category.toLowerCase().includes(searchLower)) ||
+                            (p.subCategory && p.subCategory.toLowerCase().includes(searchLower)) || // FIXED: subCategory
                             (p.id && p.id.toLowerCase().includes(searchLower))
                         );
                         // Put the search term into the catalog's search bar so the user sees it
-                        document.getElementById('searchInput').value = urlSearch;
+                        if(document.getElementById('searchInput')) document.getElementById('searchInput').value = urlSearch;
                         gridTitle = 'Search Results';
                     }
 
@@ -365,15 +359,20 @@
 
                     // 🟢 3. Check if a specific Sub-Category was clicked
                     if (urlSubCat) {
-                        filteredProducts = filteredProducts.filter(p => p.sub_category === urlSubCat);
+                        filteredProducts = filteredProducts.filter(p => p.subCategory === urlSubCat); // FIXED: subCategory
                         document.getElementById('current-category-title').innerText = `${urlCategory} - ${urlSubCat}`;
                     }
 
                     // Render the newly filtered list!
                     renderGrid(filteredProducts, gridTitle);
 
-                } else document.getElementById('productGrid').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
-            }).catch(err => document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>");
+                } else {
+                    document.getElementById('productGrid').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
+                }
+            }).catch(err => {
+                console.error(err);
+                document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
+            });
         };
 
         function trackBehavior(actionType, targetId) {
