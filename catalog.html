@@ -385,22 +385,79 @@
             return (cadPrice / exchangeRates[activeCurrency]).toFixed(2);
         }
 
+        // 🟢 THE FIX: Dynamic Accordion Sidebar Logic!
         function renderCategories(catObj) {
             const nav = document.getElementById('categoryNav');
-            nav.innerHTML = `<span id="btn-cat-all" class="sidebar-link active" onclick="filterCat('All', this)">Global Catalog</span>`;
-            for (const cat in catObj) nav.innerHTML += `<span class="sidebar-link" onclick="filterCat('${cat}', this)">${cat}</span>`;
+            let html = `<div id="btn-cat-all" class="sidebar-link active font-bold mb-3 cursor-pointer" onclick="filterCat('All', this)">🌍 Global Catalog</div>`;
+            
+            for (const cat in catObj) {
+                let safeId = cat.replace(/[^a-zA-Z0-9]/g, '');
+                html += `
+                <div class="mb-1">
+                    <div class="sidebar-link flex justify-between items-center cursor-pointer" id="cat-head-${safeId}" onclick="filterCat('${cat}', this)">
+                        <span class="truncate pr-2">${cat}</span>
+                        <i class="fas fa-chevron-down text-[10px] opacity-40 transition-transform duration-300" id="icon-${safeId}"></i>
+                    </div>
+                    <div id="sublist-${safeId}" class="hidden flex-col pl-4 mt-1 border-l-2 border-[var(--gold)] ml-2 space-y-1">`;
+                
+                catObj[cat].forEach(sub => {
+                    let safeSubId = sub.replace(/[^a-zA-Z0-9]/g, '');
+                    html += `<div class="sidebar-link text-xs py-2 cursor-pointer" id="sub-link-${safeId}-${safeSubId}" onclick="event.stopPropagation(); filterSubCat('${cat}', '${sub.replace(/'/g, "\\'")}', this)">${sub}</div>`;
+                });
+                
+                html += `</div></div>`;
+            }
+            nav.innerHTML = html;
         }
 
         function filterCat(catName, btnElement) {
+            // 1. Visual Reset
             document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
+            document.querySelectorAll('[id^="sublist-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="icon-"]').forEach(el => el.style.transform = 'rotate(0deg)');
             document.getElementById('searchInput').value = ""; 
-            document.getElementById('current-category-title').innerText = catName === 'All' ? 'Global Catalog' : catName;
+
+            // 2. Global Catalog Reset
+            if (catName === 'All') {
+                document.getElementById('btn-cat-all').classList.add('active');
+                document.getElementById('current-category-title').innerText = 'Global Catalog';
+                renderGrid(allProducts, 'All');
+                trackBehavior('click_category', 'All');
+                return;
+            }
+
+            // 3. Specific Category Expansion
+            let safeId = catName.replace(/[^a-zA-Z0-9]/g, '');
+            let headEl = btnElement || document.getElementById('cat-head-' + safeId);
+            
+            if (headEl) headEl.classList.add('active');
+            
+            let sublist = document.getElementById('sublist-' + safeId);
+            let icon = document.getElementById('icon-' + safeId);
+            if (sublist) {
+                sublist.classList.remove('hidden');
+                if(icon) icon.style.transform = 'rotate(180deg)';
+            }
+
+            // 4. Render Grid
+            document.getElementById('current-category-title').innerText = catName;
+            renderGrid(allProducts.filter(p => p.category === catName), catName);
             trackBehavior('click_category', catName);
-            if(catName === 'All') renderGrid(allProducts, 'All');
-            else renderGrid(allProducts.filter(p => p.category === catName), catName);
         }
 
+        function filterSubCat(catName, subCatName, btnElement) {
+            // Remove active ONLY from sub-links, keep the parent main link active
+            let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
+            let sublist = document.getElementById('sublist-' + safeCatId);
+            if(sublist) {
+                sublist.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+            }
+            
+            if (btnElement) btnElement.classList.add('active');
+
+            document.getElementById('current-category-title').innerText = `${catName} - ${subCatName}`;
+            renderGrid(allProducts.filter(p => p.category === catName && p.subCategory === subCatName), subCatName);
+        }
         function handleSearch() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             clearTimeout(searchTimeout);
