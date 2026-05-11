@@ -263,10 +263,16 @@
     <div class="max-w-[1400px] mx-auto fade-up">
       <div class="flex flex-col md:flex-row justify-between items-end mb-10">
         <div>
-          <h2 class="text-3xl font-bold text-gray-900 brand-font mb-2"><i class="fas fa-bolt text-[var(--gold)] mr-2"></i> Live Market Exchange</h2>
-          <p class="text-gray-500 font-medium">Real-time B2B wholesale listings fresh from the factory floor.</p>
+          <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight mb-2 flex items-center gap-3">
+            <span class="relative flex h-4 w-4">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
+            </span>
+            Live Market Exchange
+          </h2>
+          <p class="text-gray-500 font-medium text-lg">Real-time B2B wholesale listings fresh from the factory floor.</p>
         </div>
-        <a href="catalog.html" class="text-[var(--gold-dark)] font-bold text-sm uppercase tracking-widest hover:underline mt-4 md:mt-0">View All Listings &rarr;</a>
+        <a href="catalog.html" class="text-[var(--gold-dark)] font-bold text-sm uppercase tracking-widest hover:underline mt-4 md:mt-0 transition-colors hover:text-black">View All Listings &rarr;</a>
       </div>
       
       <div id="live-showcase-grid" class="flex gap-6 overflow-x-auto pb-8 hide-scrollbar" style="scroll-snap-type: x mandatory;">
