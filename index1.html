@@ -103,7 +103,7 @@
   </div>
 
   <header class="glass-header" id="main-header">
-    <div class="w-full px-6 lg:px-12 h-20 flex items-center justify-between">
+    <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <h1 class="text-2xl font-bold tracking-[0.15em] text-gray-900 brand-font uppercase m-0 leading-none cursor-pointer" onclick="window.location.reload()">Muziris</h1>
       </div>
@@ -358,31 +358,13 @@
         <a href="catalog.html" class="hover:text-black transition">Global Catalog</a>
         <a href="suppliers" class="text-[var(--gold-dark)] hover:text-black transition">Factory Login</a>
       </div>
-      <div class="flex items-center gap-4 md:gap-6 flex-shrink-0" id="header-actions">
-        <div class="relative hidden md:block" id="customCurrencyDropdown">
-            <div class="bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer" id="currencyBtn">
-                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
-                <div class="flex items-center gap-2" id="activeCurrencyDisplay">
-                    <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200" alt="Flag">
-                    <span class="text-sm font-bold text-gray-900">CAD</span>
-                </div>
-                <i class="fas fa-chevron-down text-[10px] text-gray-500 ml-1"></i>
-            </div>
-            
-            <div id="currencyMenu" class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
-                <div class="py-2 max-h-72 overflow-y-auto" id="currencyList">
-                    </div>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-4" id="auth-buttons">
-            <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
-                <i class="far fa-user text-lg"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-[10px]">Buyer Login</span>
-            </button>
-            <a href="catalog.html" class="hidden md:flex btn-solid-gold px-6 py-3 rounded-lg text-[11px] items-center gap-2">
-              Start Sourcing <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
+      <div class="flex items-center gap-4" id="auth-buttons">
+        <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
+            <i class="far fa-user text-lg"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-[10px]">Buyer Login</span>
+        </button>
+        <a href="catalog.html" class="hidden md:flex btn-solid-gold px-6 py-3 rounded-lg text-[11px] items-center gap-2">
+          Start Sourcing <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
     </div>
   </header>
@@ -392,13 +374,12 @@
       <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-80">
         <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">
       </video>
-      <div class="absolute inset-0 bg-gradient-to-r from-[#0b0e14] via-[#0b0e14]/80 to-transparent"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-[#FAFAFA] via-transparent to-transparent opacity-90"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#0b0e14]/90 via-[#0b0e14]/60 to-[#FAFAFA]"></div>
     </div>
 
-    <div class="max-w-[1400px] mx-auto w-full px-6 relative z-10 py-24 flex flex-col justify-center text-left">
+    <div class="max-w-[1400px] mx-auto w-full px-6 relative z-10 py-24 flex flex-col items-center justify-center text-center">
       
-      <div class="w-full max-w-2xl space-y-8">
+      <div class="w-full max-w-4xl space-y-8 fade-up flex flex-col items-center">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--gold)]/20 border border-[var(--gold)]/40 text-[var(--gold)] text-[10px] font-bold uppercase tracking-widest mb-2 backdrop-blur-sm shadow-[0_0_15px_rgba(212,175,55,0.3)]">
           <i class="fas fa-check-circle"></i> B2B Enterprise Ready
         </div>
@@ -408,11 +389,11 @@
           <span class="text-[var(--gold)]" style="text-shadow: 0 0 30px rgba(212,175,55,0.4);">Zero Risk.</span>
         </h1>
         
-        <p class="text-lg text-gray-300 leading-relaxed font-medium drop-shadow-md">
+        <p class="text-lg text-gray-300 max-w-2xl leading-relaxed font-medium drop-shadow-md">
           Connect directly with verified global factories. We protect your capital in an automated milestone escrow vault until your goods are successfully delivered.
         </p>
 
-        <div class="pt-4 w-full relative z-20">
+        <div class="pt-4 w-full max-w-2xl relative z-20">
           <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('master-search').value);" class="relative">
             <div class="absolute -top-8 left-4 flex gap-6 text-[11px] font-bold uppercase tracking-widest text-gray-300">
               <span class="text-[var(--gold)] border-b-2 border-[var(--gold)] pb-1 cursor-pointer">Products</span>
@@ -421,24 +402,16 @@
             <div class="flex items-center bg-white rounded-full p-2 pl-6 shadow-[0_10px_40px_rgba(0,0,0,0.5)] border-2 border-transparent focus-within:border-[var(--gold)] transition-all h-16">
               <i class="fas fa-search text-gray-400 text-xl"></i>
               <input type="text" id="master-search" class="w-full bg-transparent border-none outline-none px-4 text-gray-800 placeholder-gray-400 font-medium text-base h-full" placeholder="What are you sourcing today?">
-              
-              <div class="px-4 text-gray-300 hover:text-[var(--gold)] cursor-pointer transition border-r border-gray-200">
-                  <i class="fas fa-camera"></i>
-              </div>
-
               <button type="submit" class="bg-[var(--void)] hover:bg-gray-900 text-[var(--gold)] px-8 h-full rounded-full font-bold text-sm tracking-widest uppercase transition-all shadow-md ml-2 flex items-center gap-2">
                 Search
               </button>
             </div>
           </form>
-          
-          <div class="flex flex-wrap items-center justify-start gap-3 pt-5 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-5 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
             <span>Trending:</span>
             <a href="catalog.html?category=Apparel, Textiles %26 Accessories" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Textiles</a>
             <a href="catalog.html?category=Consumer Electronics %26 Appliances" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Electronics</a>
             <a href="catalog.html?category=Packaging %26 Printing" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Packaging</a>
-            <span class="mx-2 text-gray-600">|</span>
-            <a href="suppliers" class="text-white hover:text-[var(--gold)] underline transition">Apply as a Factory</a>
           </div>
         </div>
       </div>
@@ -804,51 +777,6 @@
               document.getElementById('auth-modal').style.display = 'none'; alert("Account created successfully!"); 
           }).catch(error => alert("Error: " + error.message));
       }
-
-      // 🟢 MARKET & CURRENCY ENGINE
-      let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
-      const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
-
-      async function loadLiveCurrencies() {
-          try {
-              const res = await fetch(API_BASE_URL + '/public-currencies');
-              const data = await res.json();
-              if (data.success) {
-                  const dropdownList = document.getElementById('currencyList');
-                  dropdownList.innerHTML = ''; 
-                  data.currencies.forEach(item => {
-                      const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
-                      const btn = document.createElement('button');
-                      btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
-                      btn.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="flex-1">${item.country}</span><span class="text-gray-400 text-xs font-bold">${item.currency}</span>`;
-                      btn.onclick = () => selectCurrency(item.currency, flagCode);
-                      dropdownList.appendChild(btn);
-                  });
-                  
-                  // Set initial display
-                  const initialFlag = flagMap[activeCurrency] || activeCurrency.substring(0,2).toLowerCase();
-                  selectCurrency(activeCurrency, initialFlag);
-              }
-          } catch (e) { console.error("Currency load failed:", e); }
-      }
-
-      function selectCurrency(curr, flagCode) {
-          activeCurrency = curr; 
-          localStorage.setItem('muziris_active_currency', curr);
-          document.getElementById('activeCurrencyDisplay').innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="text-sm font-bold text-gray-900">${curr}</span>`;
-          document.getElementById('currencyMenu').classList.add('hidden');
-      }
-
-      // Dropdown Click Handlers
-      document.getElementById('currencyBtn')?.addEventListener('click', (e) => { 
-          e.stopPropagation(); 
-          document.getElementById('currencyMenu').classList.toggle('hidden'); 
-      });
-      window.addEventListener('click', (e) => { 
-          if(!e.target.closest('#customCurrencyDropdown')) {
-              document.getElementById('currencyMenu')?.classList.add('hidden'); 
-          }
-      });
       
       // 🟢 MEGA MENU INTERACTION LOGIC
       function switchMegaPanel(panelId, element) {
@@ -863,58 +791,8 @@
           document.getElementById(panelId).classList.add('active');
       }
 
-      // 🟢 MARKET & CURRENCY ENGINE
-      let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
-      const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
-
-      async function loadLiveCurrencies() {
-          try {
-              const res = await fetch(API_BASE_URL + '/public-currencies');
-              const data = await res.json();
-              if (data.success) {
-                  const dropdownList = document.getElementById('currencyList');
-                  dropdownList.innerHTML = ''; 
-                  data.currencies.forEach(item => {
-                      const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
-                      const btn = document.createElement('button');
-                      btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
-                      btn.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="flex-1">${item.country}</span><span class="text-gray-400 text-xs font-bold">${item.currency}</span>`;
-                      btn.onclick = () => selectCurrency(item.currency, flagCode);
-                      dropdownList.appendChild(btn);
-                  });
-                  
-                  // Set initial display
-                  const initialFlag = flagMap[activeCurrency] || activeCurrency.substring(0,2).toLowerCase();
-                  selectCurrency(activeCurrency, initialFlag);
-              }
-          } catch (e) { console.error("Currency load failed:", e); }
-      }
-
-      function selectCurrency(curr, flagCode) {
-          activeCurrency = curr; 
-          localStorage.setItem('muziris_active_currency', curr);
-          document.getElementById('activeCurrencyDisplay').innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="text-sm font-bold text-gray-900">${curr}</span>`;
-          document.getElementById('currencyMenu').classList.add('hidden');
-      }
-
-      // Dropdown Click Handlers
-      document.getElementById('currencyBtn')?.addEventListener('click', (e) => { 
-          e.stopPropagation(); 
-          document.getElementById('currencyMenu').classList.toggle('hidden'); 
-      });
-      window.addEventListener('click', (e) => { 
-          if(!e.target.closest('#customCurrencyDropdown')) {
-              document.getElementById('currencyMenu')?.classList.add('hidden'); 
-          }
-      });
-
-      // 🟢 LIVE MARKET SHOWCASE & CURRENCY LOADER
+      // 🟢 LIVE MARKET SHOWCASE (Database Fetch Engine)
       document.addEventListener('DOMContentLoaded', async () => {
-          
-          // 1. Load the Currencies Instantly
-          await loadLiveCurrencies(); 
-
-          // 2. Load the Live Market Products
           try {
               const res = await fetch('https://muziris-api.onrender.com/api/public-catalog', {
                   method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({})
@@ -925,6 +803,7 @@
                   const grid = document.getElementById('live-showcase-grid');
                   grid.innerHTML = '';
                   
+                  // Grab the 8 most recently added products from the database
                   const showcaseProducts = data.products.slice(0, 8);
                   
                   showcaseProducts.forEach(p => {
@@ -972,7 +851,9 @@
           observer.observe(element);
         });
       });
+    
   </script>
+
   <script src="muziris-bot.js"></script>
   <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -987,3 +868,4 @@
   </script>
 </body>
 </html>
+
