@@ -358,31 +358,13 @@
         <a href="catalog.html" class="hover:text-black transition">Global Catalog</a>
         <a href="suppliers" class="text-[var(--gold-dark)] hover:text-black transition">Factory Login</a>
       </div>
-      <div class="flex items-center gap-4 md:gap-6 flex-shrink-0" id="header-actions">
-        <div class="relative hidden md:block" id="customCurrencyDropdown">
-            <div class="bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer" id="currencyBtn">
-                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
-                <div class="flex items-center gap-2" id="activeCurrencyDisplay">
-                    <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200" alt="Flag">
-                    <span class="text-sm font-bold text-gray-900">CAD</span>
-                </div>
-                <i class="fas fa-chevron-down text-[10px] text-gray-500 ml-1"></i>
-            </div>
-            
-            <div id="currencyMenu" class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
-                <div class="py-2 max-h-72 overflow-y-auto" id="currencyList">
-                    </div>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-4" id="auth-buttons">
-            <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
-                <i class="far fa-user text-lg"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-[10px]">Buyer Login</span>
-            </button>
-            <a href="catalog.html" class="hidden md:flex btn-solid-gold px-6 py-3 rounded-lg text-[11px] items-center gap-2">
-              Start Sourcing <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
+      <div class="flex items-center gap-4" id="auth-buttons">
+        <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
+            <i class="far fa-user text-lg"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-[10px]">Buyer Login</span>
+        </button>
+        <a href="catalog.html" class="hidden md:flex btn-solid-gold px-6 py-3 rounded-lg text-[11px] items-center gap-2">
+          Start Sourcing <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
     </div>
   </header>
