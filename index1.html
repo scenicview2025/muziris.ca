@@ -863,6 +863,51 @@
           document.getElementById(panelId).classList.add('active');
       }
 
+      // 🟢 MARKET & CURRENCY ENGINE
+      let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
+      const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
+
+      async function loadLiveCurrencies() {
+          try {
+              const res = await fetch(API_BASE_URL + '/public-currencies');
+              const data = await res.json();
+              if (data.success) {
+                  const dropdownList = document.getElementById('currencyList');
+                  dropdownList.innerHTML = ''; 
+                  data.currencies.forEach(item => {
+                      const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
+                      const btn = document.createElement('button');
+                      btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
+                      btn.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="flex-1">${item.country}</span><span class="text-gray-400 text-xs font-bold">${item.currency}</span>`;
+                      btn.onclick = () => selectCurrency(item.currency, flagCode);
+                      dropdownList.appendChild(btn);
+                  });
+                  
+                  // Set initial display
+                  const initialFlag = flagMap[activeCurrency] || activeCurrency.substring(0,2).toLowerCase();
+                  selectCurrency(activeCurrency, initialFlag);
+              }
+          } catch (e) { console.error("Currency load failed:", e); }
+      }
+
+      function selectCurrency(curr, flagCode) {
+          activeCurrency = curr; 
+          localStorage.setItem('muziris_active_currency', curr);
+          document.getElementById('activeCurrencyDisplay').innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="text-sm font-bold text-gray-900">${curr}</span>`;
+          document.getElementById('currencyMenu').classList.add('hidden');
+      }
+
+      // Dropdown Click Handlers
+      document.getElementById('currencyBtn')?.addEventListener('click', (e) => { 
+          e.stopPropagation(); 
+          document.getElementById('currencyMenu').classList.toggle('hidden'); 
+      });
+      window.addEventListener('click', (e) => { 
+          if(!e.target.closest('#customCurrencyDropdown')) {
+              document.getElementById('currencyMenu')?.classList.add('hidden'); 
+          }
+      });
+
       // 🟢 LIVE MARKET SHOWCASE & CURRENCY LOADER
       document.addEventListener('DOMContentLoaded', async () => {
           
@@ -912,7 +957,7 @@
               document.getElementById('live-showcase-grid').innerHTML = '<p class="text-red-400 text-sm font-medium w-full text-center py-10">Unable to sync live market.</p>';
           }
       });
-    
+
       // 🟢 SCROLL ANIMATION OBSERVER
       document.addEventListener("DOMContentLoaded", function() {
         const observer = new IntersectionObserver((entries) => {
@@ -927,9 +972,7 @@
           observer.observe(element);
         });
       });
-    
   </script>
-
   <script src="muziris-bot.js"></script>
   <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
