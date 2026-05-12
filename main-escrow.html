@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Escrow Vault | Muziris Secure Sourcing</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #b89225;
+        --void: #0b0e14;
+    }
+    body { background-color: #FAFAFA; color: #111827; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .brand-font { font-family: 'Cinzel', serif; }
+    
+    .pre-header { background: var(--void); color: var(--gold); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-align: center; padding: 8px 20px; z-index: 101; position: relative; }
+    .glass-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+    
+    .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    
+    .vault-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .vault-card:hover { transform: translateY(-5px); border-color: rgba(212, 175, 55, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <div class="pre-header">
+    <i class="fas fa-shield-alt mr-2"></i> Source With Confidence. Succeed With Certainty. <span class="mx-2 opacity-50">|</span> 100% Escrow Protected Contracts
+  </div>
+
+  <header class="glass-header" id="main-header">
+    <div class="w-full px-6 lg:px-12 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <h1 class="text-2xl font-bold tracking-[0.15em] text-gray-900 brand-font uppercase cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
+      </div>
+      
+      <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-gray-500 h-full relative">
+        <a href="index1.html" class="hover:text-black transition">Home</a>
+        <a href="escrow.html" class="text-[var(--gold-dark)] hover:text-black transition">Escrow Vault</a>
+        <a href="logistics.html" class="hover:text-black transition">Global Logistics</a>
+        <a href="catalog.html" class="hover:text-black transition">Verified Ledger</a>
+        <a href="suppliers" class="hover:text-black transition">Supplier Hub</a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <a href="catalog.html" class="hidden md:flex bg-[var(--gold)] hover:bg-[#c2a138] text-black font-bold px-6 py-3 rounded-lg text-[11px] uppercase tracking-widest transition">
+          Start Sourcing &rarr;
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="bg-[var(--void)] text-white py-32 px-6 relative overflow-hidden border-b border-[var(--gold)]/20">
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&q=80&w=2000')] opacity-10 bg-cover bg-center mix-blend-luminosity"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[var(--void)] via-transparent to-transparent"></div>
+    
+    <div class="max-w-4xl mx-auto text-center relative z-10 fade-up">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-[10px] font-bold uppercase tracking-widest mb-6">
+        <i class="fas fa-lock"></i> Financial Infrastructure
+      </div>
+      <h1 class="text-5xl lg:text-7xl font-bold brand-font leading-tight mb-6">
+        Absolute Security.<br><span class="text-[var(--gold)] italic">Zero Capital Risk.</span>
+      </h1>
+      <p class="text-xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed">
+        The Muziris Escrow Vault acts as an impenetrable financial bridge between enterprise buyers and global manufacturers. Your funds are never released until your exact standards are met.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-24 px-6 bg-[#FAFAFA]">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="text-center mb-16 fade-up">
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight mb-4">How The Ledger Protects You</h2>
+        <p class="text-gray-500 font-medium text-lg">A flawless milestone system designed to guarantee victory.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-up">
+        <div class="vault-card p-10 relative">
+          <div class="text-[var(--gold)]/10 text-8xl font-bold brand-font absolute top-4 right-6 pointer-events-none">1</div>
+          <div class="w-14 h-14 bg-gray-900 text-[var(--gold)] rounded-xl flex items-center justify-center text-2xl mb-8 shadow-md">
+            <i class="fas fa-file-signature"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Fund The Contract</h3>
+          <p class="text-gray-500 text-sm leading-relaxed font-medium">Once terms are agreed, you deposit the capital into the Muziris Vault. The factory is notified that the funds are secured, giving them the confidence to begin production.</p>
+        </div>
+
+        <div class="vault-card p-10 relative">
+          <div class="text-[var(--gold)]/10 text-8xl font-bold brand-font absolute top-4 right-6 pointer-events-none">2</div>
+          <div class="w-14 h-14 bg-gray-900 text-[var(--gold)] rounded-xl flex items-center justify-center text-2xl mb-8 shadow-md">
+            <i class="fas fa-search-dollar"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Production & Inspection</h3>
+          <p class="text-gray-500 text-sm leading-relaxed font-medium">Your capital remains locked in Canada. The factory manufactures your goods. Before shipping, optional third-party verification ensures the quality matches your exact RFQ.</p>
+        </div>
+
+        <div class="vault-card p-10 relative">
+          <div class="text-[var(--gold)]/10 text-8xl font-bold brand-font absolute top-4 right-6 pointer-events-none">3</div>
+          <div class="w-14 h-14 bg-[var(--gold)] text-gray-900 rounded-xl flex items-center justify-center text-2xl mb-8 shadow-md border border-[var(--gold-dark)]">
+            <i class="fas fa-check-double"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Delivery & Release</h3>
+          <p class="text-gray-500 text-sm leading-relaxed font-medium">The goods are shipped via our DDP logistics network directly to your warehouse. Only after successful destination delivery are the funds finally released to the supplier.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 px-6 bg-white border-y border-gray-100">
+    <div class="max-w-[1000px] mx-auto text-center fade-up">
+      <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-8">Enterprise-Grade Financial Infrastructure</h3>
+      <div class="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 grayscale">
+        <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fas fa-university text-3xl"></i> Neutral Holding</div>
+        <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fas fa-shield-check text-3xl"></i> 256-Bit Encrypted</div>
+        <div class="flex items-center gap-2 font-bold text-xl text-gray-800"><i class="fas fa-gavel text-3xl"></i> Legally Binding</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 px-6 bg-[var(--void)] text-center fade-up">
+    <h2 class="text-3xl lg:text-4xl font-bold text-white brand-font mb-6">Experience Risk-Free Sourcing</h2>
+    <p class="text-gray-400 mb-10 max-w-xl mx-auto">Open your buyer account today and gain immediate access to the Muziris Vault and our verified global ledger.</p>
+    <a href="catalog.html" class="inline-flex bg-[var(--gold)] hover:bg-[#c2a138] text-black font-bold px-10 py-4 rounded-lg text-xs uppercase tracking-widest transition shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+      Open Enterprise Account
+    </a>
+  </section>
+
+  <footer class="bg-[#05070a] py-16 px-6 border-t border-gray-900">
+    <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="text-[var(--gold)] brand-font font-bold tracking-widest text-2xl">MUZIRIS</div>
+      <div class="text-sm text-gray-500 text-center md:text-left font-medium">
+        &copy; 2026 Muziris International. All rights reserved. <br>
+        <span class="text-[10px] uppercase tracking-widest mt-2 block text-gray-600 font-bold">Secure B2B Infrastructure</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simple Scroll Observer for fade-ups
+    document.addEventListener("DOMContentLoaded", function() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 }); 
+      document.querySelectorAll('.fade-up').forEach(element => {
+        observer.observe(element);
+      });
+    });
+  </script>
+</body>
+</html>
