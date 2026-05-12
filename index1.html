@@ -863,8 +863,13 @@
           document.getElementById(panelId).classList.add('active');
       }
 
-      // 🟢 LIVE MARKET SHOWCASE (Database Fetch Engine)
+      // 🟢 LIVE MARKET SHOWCASE & CURRENCY LOADER
       document.addEventListener('DOMContentLoaded', async () => {
+          
+          // 1. Load the Currencies Instantly
+          await loadLiveCurrencies(); 
+
+          // 2. Load the Live Market Products
           try {
               const res = await fetch('https://muziris-api.onrender.com/api/public-catalog', {
                   method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({})
@@ -875,7 +880,6 @@
                   const grid = document.getElementById('live-showcase-grid');
                   grid.innerHTML = '';
                   
-                  // Grab the 8 most recently added products from the database
                   const showcaseProducts = data.products.slice(0, 8);
                   
                   showcaseProducts.forEach(p => {
@@ -908,7 +912,7 @@
               document.getElementById('live-showcase-grid').innerHTML = '<p class="text-red-400 text-sm font-medium w-full text-center py-10">Unable to sync live market.</p>';
           }
       });
-
+    
       // 🟢 SCROLL ANIMATION OBSERVER
       document.addEventListener("DOMContentLoaded", function() {
         const observer = new IntersectionObserver((entries) => {
