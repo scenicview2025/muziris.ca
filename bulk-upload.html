@@ -279,14 +279,19 @@
         logProgress(`Uploading ${file.name}...`);
         
         try {
-          const base64Data = await readFileAsBase64(file);
+          // 🟢 NEW: Use the compressor instead of the standard reader
+          const base64Data = await readAndCompressImage(file);
+          
+          // 🟢 NEW: Since we converted PNGs to JPEGs, we extract the new MimeType from the string
+          const actualMimeType = base64Data.split(';')[0].split(':')[1];
+
           const response = await fetch(API_BASE_URL + '/upload-media', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               supplierId: supId,
               fileName: file.name,
-              mimeType: file.type,
+              mimeType: actualMimeType, // Send the updated type to Cloudinary
               fileData: base64Data.split(',')[1] 
             })
           });
