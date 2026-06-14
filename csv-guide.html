@@ -68,15 +68,15 @@
     }
     .copy-btn:hover { background: var(--gold); color: #000; }
 
-    /* Google Translate White & Blue Theme Overrides */
+    /* Google Translate Muziris Theme Overrides (Dark & Gold) */
     .goog-te-gadget-simple {
-      background-color: #ffffff !important;
-      border: 1px solid #007BFF !important; /* Clean Blue Border */
+      background-color: #151922 !important; /* Dark Dashboard Background */
+      border: 1px solid var(--gold) !important; /* Muziris Gold Border */
       border-radius: 4px !important;
-      padding: 5px !important;
+      padding: 6px 12px !important;
     }
     .goog-te-gadget-simple span {
-      color: #007BFF !important; /* Clean Blue Text */
+      color: var(--gold) !important; /* Muziris Gold Text */
       font-family: 'Lato', sans-serif !important;
       font-size: 12px !important;
       letter-spacing: 1px !important;
@@ -86,6 +86,7 @@
     .goog-te-gadget-icon {
       display: none !important;
     }
+    
     /* Completely hide the Google Translate top banner and empty space */
     .goog-te-banner-frame,
     .skiptranslate > iframe {
@@ -94,6 +95,15 @@
     body {
       top: 0px !important;
       position: static !important;
+    }
+    
+    /* Hide the annoying popup tooltip when hovering over translated text */
+    #goog-gt-tt, .goog-te-balloon-frame {
+      display: none !important;
+    }
+    .goog-text-highlight {
+      background-color: transparent !important;
+      box-shadow: none !important;
     }
     
     /* Hide the annoying popup tooltip when hovering over translated text */
