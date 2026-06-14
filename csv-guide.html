@@ -123,6 +123,35 @@
       </div>
 
       <div class="card">
+        <h2>How Volume Tiers Work (The Box & Folder Method)</h2>
+        <p style="color: #aaa; font-size: 14px; margin-top: 0; line-height: 1.6;">
+          Because spreadsheets are flat, the Muziris engine uses a "Box and Folder" method to stack your rows into beautiful, interactive volume discount tiers.
+        </p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          
+        </div>
+
+        <ul class="rules-list">
+          <li><strong>1. The Master Box (Item Group Number):</strong> <br>
+            Think of the <code>Item Group Number</code> as a large shipping box. Every time you type a "1" in this column, the system puts that row inside Box #1. This tells the system: <em>"Everything in Box 1 is the exact same base product. Only show one main listing on the website."</em>
+          </li>
+          
+          <li style="margin-top: 15px;"><strong>2. The Folders (Var Option):</strong> <br>
+            Once the system opens Box #1, it looks at the <code>Var Option</code> column to create folders. If it sees "Red - Small", it makes a folder. If it sees "Blue - Small", it makes a separate folder. Each folder represents a unique, selectable variant button on the live page.
+          </li>
+          
+          <li style="margin-top: 15px;"><strong>3. The Volume Tiers (Min Qty & Price):</strong> <br>
+            Finally, the system opens the "Red - Small" folder. If it sees <strong>three rows</strong> that all say "Red - Small", it knows these aren't new products. Instead, it stacks them perfectly as Volume Discount Tiers!
+          </li>
+        </ul>
+
+        <div class="alert" style="margin-top: 25px; margin-bottom: 0;">
+          <strong>How to do it in your CSV:</strong> Simply duplicate the variant's row, keep the Item Group Number and Var Option exactly the same, and only change the <code>Min Qty</code>, <code>Max Qty</code>, and <code>Price</code> columns. For your final highest tier, leave the Max Qty blank or type "Up".
+        </div>
+      </div>
+
+      <div class="card">
         <h2>2. Acceptable Values Explorer</h2>
         <p style="color: #aaa; font-size: 14px; margin-top: 0;">To prevent database errors, your text must match our exact system categories. Select an option and click "Copy" to paste it perfectly into your CSV.</p>
         
