@@ -86,11 +86,23 @@
     .goog-te-gadget-icon {
       display: none !important;
     }
-    .goog-te-banner-frame.skiptranslate {
+    /* Completely hide the Google Translate top banner and empty space */
+    .goog-te-banner-frame,
+    .skiptranslate > iframe {
       display: none !important;
     }
     body {
-      top: 0px !important; 
+      top: 0px !important;
+      position: static !important;
+    }
+    
+    /* Hide the annoying popup tooltip when hovering over translated text */
+    #goog-gt-tt, .goog-te-balloon-frame {
+      display: none !important;
+    }
+    .goog-text-highlight {
+      background-color: transparent !important;
+      box-shadow: none !important;
     }
     
     /* 🟢 SMARTPHONE & TABLET RESPONSIVENESS */
