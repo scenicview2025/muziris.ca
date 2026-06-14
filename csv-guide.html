@@ -361,6 +361,8 @@
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({
         pageLanguage: 'en',
+        // This line restricts the dropdown to specific language codes
+        includedLanguages: 'en,hi,bn,te,mr,ta,ur,gu,kn,ml,pa',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
       }, 'google_translate_element');
     }
