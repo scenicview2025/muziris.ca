@@ -67,6 +67,31 @@
       white-space: nowrap;
     }
     .copy-btn:hover { background: var(--gold); color: #000; }
+
+    /* Google Translate Dark Theme Overrides */
+    .goog-te-gadget-simple {
+      background-color: #151922 !important;
+      border: 1px solid var(--gold) !important;
+      border-radius: 4px !important;
+      padding: 5px !important;
+    }
+    .goog-te-gadget-simple span {
+      color: var(--gold) !important;
+      font-family: 'Lato', sans-serif !important;
+      font-size: 12px !important;
+      letter-spacing: 1px !important;
+      text-transform: uppercase !important;
+    }
+    .goog-te-gadget-icon {
+      display: none !important; /* Hides the default Google icon for a cleaner look */
+    }
+    /* Hide the top banner Google adds when translating */
+    .goog-te-banner-frame.skiptranslate {
+      display: none !important;
+    }
+    body {
+      top: 0px !important; 
+    }
     
     /* 🟢 SMARTPHONE & TABLET RESPONSIVENESS */
     @media (max-width: 768px) {
