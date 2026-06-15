@@ -949,7 +949,7 @@
       }
     }
 
-    // 🟢 SMART VOLUME TIER GENERATOR (Visual Collapsing & Auto-Stacking)
+    // 🟢 SMART VOLUME TIER GENERATOR (Visual Collapsing & Safe Auto-Stacking)
     function cloneRow(btn) {
       var parentRow = btn.closest("tr");
       
@@ -972,9 +972,17 @@
       newRow.querySelector(".p-max").value = "";
       newRow.querySelector(".p-price").value = "";
       
-      // 3. SMART AUTO-FILL: Calculate the new Min Qty from the LAST row in the group!
-      var oldMax = parseInt(lastRowInGroup.querySelector(".p-max").value);
-      newRow.querySelector(".p-min").value = !isNaN(oldMax) ? (oldMax + 1) : "";
+      // 3. 🟢 FIXED SMART AUTO-FILL: Safely calculate the new Min Qty
+      var oldMaxRaw = lastRowInGroup.querySelector(".p-max").value.trim();
+      var oldMaxInt = parseInt(oldMaxRaw);
+      
+      // If the old max is a real number, add 1. If it's blank or says "Up", leave the new min blank!
+      if (!isNaN(oldMaxInt) && oldMaxRaw !== "") {
+          newRow.querySelector(".p-min").value = oldMaxInt + 1;
+      } else {
+          newRow.querySelector(".p-min").value = "";
+          newRow.querySelector(".p-min").placeholder = "Qty";
+      }
       
       // 4. Keep the hidden data identical to the parent variant
       newRow.querySelector(".p-type").value = parentRow.querySelector(".p-type").value;
