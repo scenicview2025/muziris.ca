@@ -420,20 +420,7 @@
   </div>
 
   <script>
-    // Global Debugger: Catches silent script crashes
-window.onerror = function (message, source, lineno, colno, error) {
-  alert("⚠️ SILENT CRASH DETECTED:\n\n" + 
-        "Error: " + message + "\n" + 
-        "Line: " + lineno + "\n" + 
-        "File: " + source);
-  
-  // Bring the button back to life if it froze during loading
-  const btn = document.getElementById('btn');
-  const loader = document.getElementById('loading');
-  if (btn) { btn.disabled = false; btn.innerText = "UPLOAD TO GLOBAL LEDGER"; }
-  if (loader) { loader.style.display = 'none'; }
-  return false;
-};
+    
     // 🚀 CONNECTED TO RENDER ENTERPRISE SERVER
     const API_BASE_URL = "https://muziris-api.onrender.com/api";
     var catData = {};
