@@ -1459,6 +1459,54 @@ window.onerror = function (message, source, lineno, colno, error) {
       url.searchParams.delete('edit');
       window.history.pushState({}, '', url);
     }
+
+    async function submitForm(formElement) {
+  const btn = document.getElementById('btn');
+  const loader = document.getElementById('loading');
+
+  try {
+    // 1. Lock UI & Show loading state
+    btn.disabled = true;
+    btn.innerText = "ENCRYPTING...";
+    loader.style.display = 'block';
+
+    console.log("Gathering form data...");
+    const formData = new FormData(formElement);
+
+    // 2. Append your stacked catalog files array safely
+    if (window.accumulatedCatalogFiles && window.accumulatedCatalogFiles.length > 0) {
+      window.accumulatedCatalogFiles.forEach((file, index) => {
+        formData.append('catalog_files', file);
+      });
+    }
+
+    console.log("Sending payload to Render Enterprise Server...");
+    const response = await fetch(`${API_BASE_URL}/products/upload`, {
+      method: 'POST',
+      body: formData // Form data auto-handles multipart boundaries for images
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || `Server responded with status ${response.status}`);
+    }
+
+    // 3. Success State
+    document.getElementById('form-container').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+
+  } catch (error) {
+    // 4. Critical Recovery Catch: Prevents the button from freezing up
+    console.error("Upload failed:", error);
+    alert("❌ UPLOAD FAILED:\n\n" + error.message);
+    
+    // Reset your buttons so the user can try again
+    btn.disabled = false;
+    btn.innerText = "UPLOAD TO GLOBAL LEDGER";
+    loader.style.display = 'none';
+  }
+}
   </script>
 
   <script src="muziris-bot.js"></script>
