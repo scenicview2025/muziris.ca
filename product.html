@@ -156,10 +156,26 @@
           <a href="catalog.html" class="hover:text-black transition">Catalog</a>
         </div>
 
-        <div class="flex items-center gap-4 ml-4" id="auth-buttons">
-          <button onclick="openAuthModal()" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
-              <i class="far fa-user text-lg"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-[10px]">Buyer Login</span>
-          </button>
+        <div class="flex items-center gap-4 md:gap-6 text-gray-600 flex-shrink-0 ml-4">
+            <div class="relative hidden md:block" id="customCurrencyDropdown">
+                <div class="bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer" id="currencyBtn">
+                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
+                    <div class="flex items-center gap-2" id="activeCurrencyDisplay">
+                        <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200">
+                        <span class="text-sm font-bold text-gray-900">CAD</span>
+                    </div>
+                    <i class="fas fa-chevron-down text-[10px] text-gray-500 ml-1"></i>
+                </div>
+                
+                <div id="currencyMenu" class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
+                    <div class="py-2 max-h-72 overflow-y-auto" id="currencyList">
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="openAuthModal()" id="auth-buttons" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
+                <i class="far fa-user text-lg"></i> <span id="auth-btn-text" class="uppercase tracking-widest text-[10px]">Buyer Login</span>
+            </button>
         </div>
       </div>
     </header>
@@ -466,25 +482,49 @@
             
             if(!productId) { window.location.href = 'catalog.html'; return; }
 
+            async function fetchWithTimeout(url, options = {}, timeout = 8000) {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), timeout);
+                try {
+                    const response = await fetch(url, { ...options, signal: controller.signal });
+                    return await response.json();
+                } finally {
+                    clearTimeout(timer);
+                }
+            }
+
             try {
-                const currRes = await fetch(API_BASE_URL + '/public-currencies');
-                const currData = await currRes.json();
-                if(currData.success) {
-                    currData.currencies.forEach(item => {
+                const [currData, prodData] = await Promise.allSettled([
+                    fetchWithTimeout(API_BASE_URL + '/public-currencies'),
+                    fetchWithTimeout(API_BASE_URL + '/public-catalog', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    })
+                ]);
+
+                if (currData.status === 'fulfilled' && currData.value.success) {
+                    currData.value.currencies.forEach(item => {
                         exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
                         currencySymbols[item.currency] = item.symbol || '$';
                     });
                 }
 
-                const prodRes = await fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
-                const prodData = await prodRes.json();
-                
-                targetProduct = prodData.products.find(p => p.id === productId);
-                if(!targetProduct) { window.location.href = 'catalog.html'; return; }
+                if (prodData.status === 'fulfilled' && prodData.value.products) {
+                    targetProduct = prodData.value.products.find(p => p.id === productId);
+                }
+
+                if (!targetProduct) {
+                    window.location.href = 'catalog.html';
+                    return;
+                }
 
                 renderProductPage();
             } catch (e) {
-                alert("Network Error"); window.location.href = 'catalog.html';
+                console.error('Product load failed:', e);
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('product-page-view').classList.remove('hidden');
+                document.getElementById('pp-title').innerText = 'Unable to load product';
             }
         };
 
@@ -495,13 +535,14 @@
         }
 
         function renderProductPage() {
+            if (!targetProduct) return;
+
             document.getElementById('loader').style.display = 'none';
             document.getElementById('product-page-view').classList.remove('hidden');
             
             viewStartTime = Date.now();
             
             document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
-            // 🟢 SMOOTH BREADCRUMBS: Let them click back to the Sub-Category!
             document.getElementById('pp-breadcrumb-cat').innerHTML = `
                 <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}" class="hover:text-black hover:underline transition">${targetProduct.category}</a> 
                 <span class="mx-2 text-gray-300">/</span> 
@@ -538,18 +579,34 @@
                 let mediaHtml = isPdf ? `<iframe src="${targetProduct.pdf}#toolbar=0" class="w-full h-[800px] border-0"></iframe>` 
                 : targetProduct.pdf.split(',').map((u, i) => `<img src="${u.trim()}" class="w-full h-auto block m-0 p-0">`).join('');
                 catalogContainer.innerHTML = `<div class="mt-8 pt-8 border-t border-gray-100"><h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-gray-900">Product Details</h3><div class="w-full overflow-hidden bg-white flex flex-col">${mediaHtml}</div></div>`;
+            } else {
+                catalogContainer.innerHTML = '';
             }
 
             document.getElementById('pp-main-img').src = targetProduct.hero || 'MC.png';
             const thumbRow = document.getElementById('pp-thumbs');
+            thumbRow.innerHTML = '';
             let allImgs = [targetProduct.hero, ...targetProduct.gallery].filter(Boolean);
             allImgs.forEach((url, idx) => {
-                let activeClass = idx === 0 ? 'border-[var(--gold)] opacity-100 shadow-sm' : 'border-transparent opacity-50 hover:opacity-100';
-                thumbRow.innerHTML += `<img class="w-14 h-14 md:w-16 md:h-16 object-cover border-2 rounded-lg cursor-pointer transition-all bg-white ${activeClass}" src="${url}" onclick="document.getElementById('pp-main-img').src='${url}'; document.querySelectorAll('#pp-thumbs img').forEach(t=>{t.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-sm'); t.classList.add('border-transparent', 'opacity-50')}); this.classList.remove('border-transparent', 'opacity-50'); this.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-sm');">`;
+                const thumb = document.createElement('img');
+                thumb.src = url;
+                thumb.alt = `Product image ${idx + 1}`;
+                thumb.className = `w-14 h-14 md:w-16 md:h-16 object-cover rounded-lg cursor-pointer transition-all bg-white ${idx === 0 ? 'border-2 border-[var(--gold)] opacity-100 shadow-sm' : 'border-2 border-transparent opacity-50 hover:opacity-100'}`;
+                thumb.onclick = () => {
+                    document.getElementById('pp-main-img').src = url;
+                    document.querySelectorAll('#pp-thumbs img').forEach(t => {
+                        t.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+                        t.classList.add('border-transparent', 'opacity-50');
+                    });
+                    thumb.classList.remove('border-transparent', 'opacity-50');
+                    thumb.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+                };
+                thumbRow.appendChild(thumb);
             });
 
             const tBody = document.getElementById('pp-pricing-body');
-            targetProduct.variants.forEach(v => {
+            tBody.innerHTML = '';
+            (targetProduct.variants || []).forEach(v => {
                 tBody.innerHTML += `<tr class="hover:bg-gray-50 transition"><td class="py-3 px-4">${v.type === "Standard" ? "Standard Base" : v.type+': '+v.opt}</td><td class="py-3 px-4 text-gray-500">${v.min} - ${v.max} ${v.unit}</td><td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)]">${currencySymbols[activeCurrency] || '$'}${convertPrice(v.priceCAD)}</td></tr>`;
             });
         }
@@ -768,7 +825,56 @@
                 document.getElementById('emoji-wrapper-prod').style.display = 'none';
             });
         });
+
+        // ==========================================
+        // 🟢 DYNAMIC MARKET DROPDOWN LOGIC
+        // ==========================================
+        const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
+
+        function loadLiveCurrenciesDropdown() {
+            fetch(API_BASE_URL + '/public-currencies').then(res => res.json()).then(data => {
+                if (data.success) {
+                    const dropdownList = document.getElementById('currencyList');
+                    if(!dropdownList) return;
+                    dropdownList.innerHTML = ''; 
+                    data.currencies.forEach(item => {
+                        const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
+                        const btn = document.createElement('button');
+                        btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
+                        btn.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="flex-1">${item.country}</span><span class="text-gray-400 text-xs font-bold">${item.currency}</span>`;
+                        btn.onclick = () => { selectCurrency(item.currency, flagCode); updateCurrency(); };
+                        dropdownList.appendChild(btn);
+                    });
+                    
+                    if (activeCurrency) {
+                        const initialFlag = flagMap[activeCurrency] || activeCurrency.substring(0,2).toLowerCase();
+                        selectCurrency(activeCurrency, initialFlag);
+                    }
+                }
+            }).catch(e => console.log("Currency UI Load Error"));
+        }
+
+        function selectCurrency(curr, flagCode) {
+            activeCurrency = curr; 
+            localStorage.setItem('muziris_active_currency', curr);
+            const display = document.getElementById('activeCurrencyDisplay');
+            if(display) display.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="text-sm font-bold text-gray-900">${curr}</span>`;
+            document.getElementById('currencyMenu')?.classList.add('hidden');
+        }
+
+        document.getElementById('currencyBtn')?.addEventListener('click', (e) => { 
+            e.stopPropagation(); 
+            document.getElementById('currencyMenu')?.classList.toggle('hidden'); 
+        });
+        window.addEventListener('click', (e) => { 
+            if(!e.target.closest('#customCurrencyDropdown')) document.getElementById('currencyMenu')?.classList.add('hidden'); 
+        });
+
+        function updateCurrency() {
+            document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
+            if(typeof renderProductPage === 'function' && targetProduct) {
+                renderProductPage();
+            }
+        }
         
-    </script>
-</body>
-</html>
+        document.addEventListener('DOMContentLoaded', loadLiveCurrenciesDropdown);
