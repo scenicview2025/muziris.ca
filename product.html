@@ -561,6 +561,24 @@
             }
         });
 
+        // 🟢 MEGA MENU HOVER LOGIC
+        function switchMegaPanel(panelId, element) {
+            // 1. Remove active state from all sidebar items
+            document.querySelectorAll('.mega-cat-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            // 2. Add active state to the item you are hovering over
+            element.classList.add('active');
+
+            // 3. Hide all content panels
+            document.querySelectorAll('.mega-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            // 4. Show the target panel
+            const targetPanel = document.getElementById(panelId);
+            if(targetPanel) targetPanel.classList.add('active');
+        }
+
         // ==========================================
         // 🟢 LIVE CHAT LOGIC
         // ==========================================
