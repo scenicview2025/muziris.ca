@@ -475,23 +475,29 @@
             }, 2000);
         }
 
-       window.onload = async function() {
-            // Grab the ID from the URL parameters
+       // 👻 GHOSTBUSTER FIX: Instant Initialization 
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log("🚀 Ghostbuster Engine Started!");
+            
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
             
-            if(!productId) { window.location.href = 'catalog.html'; return; }
+            if(!productId) { 
+                console.log("❌ No Product ID in URL.");
+                window.location.href = 'catalog.html'; 
+                return; 
+            }
+
+            console.log("📦 Fetching Product ID:", productId);
 
             async function fetchWithTimeout(url, options = {}, timeout = 8000) {
                 const controller = new AbortController();
                 const timer = setTimeout(() => controller.abort(), timeout);
                 try {
                     const response = await fetch(url, { ...options, signal: controller.signal });
-                    
                     if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                        throw new Error(`Backend rejected request! Status: ${response.status}`);
                     }
-                    
                     return await response.json();
                 } finally {
                     clearTimeout(timer);
@@ -508,6 +514,9 @@
                     })
                 ]);
 
+                console.log("🌐 API Response - Currency:", currData.status);
+                console.log("🌐 API Response - Product:", prodData.status);
+
                 if (currData.status === 'fulfilled' && currData.value.success) {
                     currData.value.currencies.forEach(item => {
                         exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
@@ -520,18 +529,24 @@
                 }
 
                 if (!targetProduct) {
-                    throw new Error("Product not found in database."); 
+                    // Check if the promise rejected so we can pull the exact error message
+                    if (prodData.status === 'rejected') throw new Error(prodData.reason.message);
+                    throw new Error("Product ID not found in the live database."); 
                 }
 
+                console.log("✅ Product loaded successfully!");
                 renderProductPage();
+
             } catch (e) {
-                console.error('Product load failed:', e);
+                console.error('🚨 Product load FATAL ERROR:', e);
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('product-page-view').classList.remove('hidden');
                 document.getElementById('pp-title').innerText = 'Unable to load product';
+                // Print the exact error directly onto the webpage screen!
+                document.getElementById('pp-desc').innerText = 'Error details: ' + e.message;
             }
-        };
-
+        });
+        
         function convertPrice(cadPrice) {
             if(!cadPrice || isNaN(cadPrice)) return "0.00";
             if (activeCurrency === "CAD" || !exchangeRates[activeCurrency]) return parseFloat(cadPrice).toFixed(2);
