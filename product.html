@@ -497,6 +497,7 @@
                     clearTimeout(timer);
                 }
             }
+
             try {
                 const [currData, prodData] = await Promise.allSettled([
                     fetchWithTimeout(API_BASE_URL + '/public-currencies'),
@@ -519,8 +520,7 @@
                 }
 
                 if (!targetProduct) {
-                    window.location.href = 'catalog.html';
-                    return;
+                    throw new Error("Product not found in database."); 
                 }
 
                 renderProductPage();
