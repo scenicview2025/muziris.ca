@@ -487,12 +487,16 @@
                 const timer = setTimeout(() => controller.abort(), timeout);
                 try {
                     const response = await fetch(url, { ...options, signal: controller.signal });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
                     return await response.json();
                 } finally {
                     clearTimeout(timer);
                 }
             }
-
             try {
                 const [currData, prodData] = await Promise.allSettled([
                     fetchWithTimeout(API_BASE_URL + '/public-currencies'),
