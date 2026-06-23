@@ -453,32 +453,13 @@
         // Run this immediately so the button appears if they already have items
         document.addEventListener('DOMContentLoaded', updateCartUI);
 
-        function addToCart(id, name) {
-            if (rfqCart.find(item => item.id === id)) {
-                alert("This product is already in your RFQ Cart!");
-                return;
-            }
-
-            rfqCart.push({ id: id, name: name });
-            localStorage.setItem('muziris_cart', JSON.stringify(rfqCart));
-            updateCartUI();
+        window.onload = async function() {
+            console.log("🚀 Engine Started!");
             
-            // Visual success feedback on the main button
-            const btn = document.getElementById('main-rfq-btn');
-            btn.innerHTML = '✅ Added to RFQ Cart';
-            btn.style.background = 'var(--gold)';
-            btn.style.color = '#000';
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-plus mr-2"></i> Add Another or Submit';
-                btn.style.background = 'var(--void)';
-                btn.style.color = 'var(--gold)';
-            }, 2000);
-        }
+            // 1. Fire the Dropdown immediately
+            loadLiveCurrenciesDropdown();
 
-       // 👻 GHOSTBUSTER FIX: Instant Initialization 
-        document.addEventListener('DOMContentLoaded', async () => {
-            console.log("🚀 Ghostbuster Engine Started!");
-            
+            // 2. Grab the ID from the URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
             
@@ -529,7 +510,6 @@
                 }
 
                 if (!targetProduct) {
-                    // Check if the promise rejected so we can pull the exact error message
                     if (prodData.status === 'rejected') throw new Error(prodData.reason.message);
                     throw new Error("Product ID not found in the live database."); 
                 }
@@ -542,10 +522,9 @@
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('product-page-view').classList.remove('hidden');
                 document.getElementById('pp-title').innerText = 'Unable to load product';
-                // Print the exact error directly onto the webpage screen!
                 document.getElementById('pp-desc').innerText = 'Error details: ' + e.message;
             }
-        });
+        };
         
         function convertPrice(cadPrice) {
             if(!cadPrice || isNaN(cadPrice)) return "0.00";
