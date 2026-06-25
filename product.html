@@ -608,7 +608,6 @@
             });
 
             const tBody = document.getElementById('pp-pricing-body');
-            // Remove Tailwind's divide-y class so it doesn't break our merged cells
             tBody.className = "text-gray-900 font-medium"; 
             
             // 1. Group variants by their name
@@ -621,27 +620,72 @@
                 groupedVariants[variantName].push(v);
             });
 
-            // 2. Build the visually merged table
+            // 🟢 NEW: 2. Build the Advanced Visual Swatch Selector (E-commerce Circles)
+            let swatchesHtml = '';
+            let hasSwatches = false;
+            
+            for (const [variantName, tiers] of Object.entries(groupedVariants)) {
+                const varImg = tiers[0].img;
+                if (varImg && varImg.trim() !== '' && varImg.startsWith('http')) {
+                    hasSwatches = true;
+                    const cleanImg = varImg.replace(/'/g, "\\'"); // Safety catch
+                    
+                    // Builds beautiful circular hover-swatches with tiny labels
+                    swatchesHtml += `
+                        <div class="flex flex-col items-center gap-2 cursor-pointer group" onclick="document.getElementById('pp-main-img').src='${cleanImg}';">
+                            <div class="p-0.5 rounded-full border-2 border-transparent group-hover:border-[var(--gold)] transition-all duration-300">
+                                <img src="${cleanImg}" class="w-10 h-10 md:w-12 md:h-12 object-cover rounded-full shadow-sm" title="${variantName}" onerror="this.style.display='none'">
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest text-center w-16 truncate" title="${variantName}">${tiers[0].opt || variantName}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            // Inject the Swatches dynamically above the Volume Matrix
+            let oldSwatchContainer = document.getElementById('advanced-variant-swatches');
+            if (oldSwatchContainer) oldSwatchContainer.remove(); // Clear old ones on currency refresh
+            
+            if (hasSwatches) {
+                const matrixDiv = tBody.closest('.mb-8');
+                matrixDiv.insertAdjacentHTML('beforebegin', `
+                    <div id="advanced-variant-swatches" class="mb-8">
+                        <h3 class="text-[11px] font-bold uppercase text-gray-900 mb-4 tracking-widest">Select Variant</h3>
+                        <div class="flex flex-wrap gap-4 items-start">
+                            ${swatchesHtml}
+                        </div>
+                    </div>
+                `);
+            }
+
+            // 3. Build the visually merged table (with clickable images!)
             let tableHtml = '';
             for (const [variantName, tiers] of Object.entries(groupedVariants)) {
+                
+                const varImg = tiers[0].img;
+                let imgHtml = '';
+                if (varImg && varImg.trim() !== '' && varImg.startsWith('http')) {
+                    const cleanImg = varImg.replace(/'/g, "\\'");
+                    // The table image is now clickable and hovers gold!
+                    imgHtml = `<img src="${cleanImg}" class="w-10 h-10 object-cover rounded bg-gray-50 border border-gray-200 mr-3 flex-shrink-0 cursor-pointer hover:border-[var(--gold)] transition" onclick="document.getElementById('pp-main-img').src='${cleanImg}';" title="Click to view" onerror="this.style.display='none'">`;
+                }
+
                 tiers.forEach((v, index) => {
-                    // Create a thicker border at the bottom of each variant group for clean separation
                     const isLastInGroup = index === tiers.length - 1;
                     const rowBorder = isLastInGroup ? 'border-b border-gray-200' : 'border-b border-gray-50';
-                    
-                    // 🟢 FIX: Force the max volume of the last tier to always be "Up"
                     const displayMax = isLastInGroup ? 'Up' : v.max;
                     
                     tableHtml += `<tr class="hover:bg-gray-50 transition">`;
                     
-                    // Only print the Variant Name on the very first row of the group, spanning downwards
                     if (index === 0) {
                         tableHtml += `<td class="py-4 px-4 bg-white border-b border-gray-200 align-middle shadow-[1px_0_0_0_#f3f4f6]" rowspan="${tiers.length}">
-                                        <div class="font-bold text-gray-900">${variantName}</div>
+                                        <div class="flex items-center">
+                                            ${imgHtml}
+                                            <span class="font-bold text-gray-900">${variantName}</span>
+                                        </div>
                                       </td>`;
                     }
                     
-                    // Print the volumes and prices normally using displayMax
                     tableHtml += `<td class="py-3 px-4 text-gray-600 ${rowBorder}">${v.min} - ${displayMax} ${v.unit}</td>`;
                     tableHtml += `<td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)] ${rowBorder}">${currencySymbols[activeCurrency] || '$'}${convertPrice(v.priceCAD)}</td>`;
                     tableHtml += `</tr>`;
