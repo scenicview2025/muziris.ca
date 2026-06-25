@@ -629,6 +629,9 @@
                     const isLastInGroup = index === tiers.length - 1;
                     const rowBorder = isLastInGroup ? 'border-b border-gray-200' : 'border-b border-gray-50';
                     
+                    // 🟢 FIX: Force the max volume of the last tier to always be "Up"
+                    const displayMax = isLastInGroup ? 'Up' : v.max;
+                    
                     tableHtml += `<tr class="hover:bg-gray-50 transition">`;
                     
                     // Only print the Variant Name on the very first row of the group, spanning downwards
@@ -638,8 +641,8 @@
                                       </td>`;
                     }
                     
-                    // Print the volumes and prices normally
-                    tableHtml += `<td class="py-3 px-4 text-gray-600 ${rowBorder}">${v.min} - ${v.max} ${v.unit}</td>`;
+                    // Print the volumes and prices normally using displayMax
+                    tableHtml += `<td class="py-3 px-4 text-gray-600 ${rowBorder}">${v.min} - ${displayMax} ${v.unit}</td>`;
                     tableHtml += `<td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)] ${rowBorder}">${currencySymbols[activeCurrency] || '$'}${convertPrice(v.priceCAD)}</td>`;
                     tableHtml += `</tr>`;
                 });
