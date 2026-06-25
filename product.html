@@ -544,9 +544,9 @@
                 }
 
                 if (prodData.status === 'fulfilled' && prodData.value.products) {
-                    targetProduct = prodData.value.products.find(p => p.id === productId);
+                    allProducts = prodData.value.products; // 🟢 Save the full list
+                    targetProduct = allProducts.find(p => p.id === productId);
                 }
-
                 if (!targetProduct) {
                     if (prodData.status === 'rejected') throw new Error(prodData.reason.message);
                     throw new Error("Product ID not found in the live database."); 
