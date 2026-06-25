@@ -629,8 +629,12 @@
                 <span class="mx-2 text-gray-300">/</span> 
                 <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}&sub=${encodeURIComponent(targetProduct.subCategory)}" class="hover:text-black hover:underline transition">${targetProduct.subCategory}</a>
             `;
-            // 🟢 FIX: Use the Supplier's rich SEO Title (fallback to short name if missing)
-            const displayTitle = targetProduct.title || targetProduct.name;
+            
+            // 🟢 DIAGNOSTIC: This prints the exact database object to your browser console so you can check the field names!
+            console.log("📦 Full Product Data from Database:", targetProduct);
+
+            // 🟢 FIX: Check multiple possible database field names just in case!
+            const displayTitle = targetProduct.title || targetProduct.seoTitle || targetProduct.longTitle || targetProduct.productTitle || targetProduct.name;
             
             document.getElementById('pp-title').innerText = displayTitle;
             
