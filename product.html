@@ -512,30 +512,25 @@
         // Run this immediately so the button appears if they already have items
         document.addEventListener('DOMContentLoaded', updateCartUI);
 
-        // 🟢 FIX: Putting the addToCart function back in with the new wording!
+        // 🟢 INSTANT REDIRECT TO RFQ PAGE
         function addToCart(id, name) {
-            if (rfqCart.find(item => item.id === id)) {
-                alert("This product is already in your Quote Cart!");
-                return;
+            // Check if it's already in the cart; if not, add it to memory
+            if (!rfqCart.find(item => item.id === id)) {
+                rfqCart.push({ id: id, name: name });
+                localStorage.setItem('muziris_cart', JSON.stringify(rfqCart));
             }
-
-            rfqCart.push({ id: id, name: name });
-            localStorage.setItem('muziris_cart', JSON.stringify(rfqCart));
-            updateCartUI();
             
-            // Visual success feedback on the main button
+            // Change the button to a quick loading state so the buyer knows it's working
             const btn = document.getElementById('main-rfq-btn');
-            // 🟢 Changed success messages to match new terminology
-            btn.innerHTML = '✅ Added to Quote List';
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Opening Quote Form...';
             btn.style.background = 'var(--gold)';
             btn.style.color = '#000';
+            
+            // Teleport the user to the RFQ page!
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-list mr-2"></i> View List or Add More';
-                btn.style.background = 'var(--void)';
-                btn.style.color = 'var(--gold)';
-            }, 2000);
+                window.location.href = 'rfq.html';
+            }, 300);
         }
-
         window.onload = async function() {
             console.log("🚀 Engine Started!");
             
