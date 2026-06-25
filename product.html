@@ -434,11 +434,16 @@
         let targetProduct = null;
         let exchangeRates = {};
         let currencySymbols = {};
-        let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
-
-        // 🟢 NEW: CART MEMORY LOGIC
-        let rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
-
+        
+        // 🟢 FIX: Safe Memory Access (Prevents privacy blockers from crashing the page)
+        let activeCurrency = "CAD";
+        let rfqCart = [];
+        try {
+            activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
+            rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+        } catch (e) {
+            console.warn("Browser privacy settings blocked memory. Using default currency.");
+        }
         function updateCartUI() {
             const floatingCart = document.getElementById('cart-float');
             const badge = document.getElementById('cart-badge');
