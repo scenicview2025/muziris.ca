@@ -629,13 +629,15 @@
                 <span class="mx-2 text-gray-300">/</span> 
                 <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}&sub=${encodeURIComponent(targetProduct.subCategory)}" class="hover:text-black hover:underline transition">${targetProduct.subCategory}</a>
             `;
-            document.getElementById('pp-title').innerText = targetProduct.name;
+            // 🟢 FIX: Use the Supplier's rich SEO Title (fallback to short name if missing)
+            const displayTitle = targetProduct.title || targetProduct.name;
             
-            // 🟢 NEW: Dynamically update the browser tab title for SEO and UX!
-            document.title = `${targetProduct.name} | Wholesale | Muziris`;
+            document.getElementById('pp-title').innerText = displayTitle;
+            
+            // Dynamically update the browser tab title to match!
+            document.title = `${displayTitle} | Wholesale | Muziris`;
 
             document.getElementById('pp-card-sup-name').innerText = targetProduct.companyName || "Verified Factory";
-            document.getElementById('pp-supplier-link').onclick = () => window.location.href = 'factory.html?id=' + targetProduct.supplierId;
             
             document.getElementById('pp-price').innerText = (currencySymbols[activeCurrency] || '$') + convertPrice(targetProduct.startingPriceCAD);
             
