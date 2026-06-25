@@ -403,8 +403,12 @@
                     let groupedVariants = {};
                     product.variants.forEach((v) => {
                         let varName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
+                        
+                        // 🟢 FIX: Use v.img instead of v.image, and handle empty strings safely!
+                        let specificImg = (v.img && v.img.trim() !== '' && v.img.startsWith('http')) ? v.img : (product.hero || 'MC.png');
+                        
                         if (!groupedVariants[varName]) {
-                            groupedVariants[varName] = { vid: v.varId, unit: v.unit, image: v.image || product.hero || 'MC.png', tiers: [] };
+                            groupedVariants[varName] = { vid: v.varId, unit: v.unit, image: specificImg, tiers: [] };
                         }
                         let maxVal = (v.max && v.max.toLowerCase() !== "up") ? parseInt(v.max) : Infinity;
                         groupedVariants[varName].tiers.push({ min: parseInt(v.min) || 1, max: maxVal, priceCAD: parseFloat(v.priceCAD) || 0 });
