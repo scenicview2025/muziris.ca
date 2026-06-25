@@ -678,8 +678,10 @@
             document.getElementById('pp-main-img').src = targetProduct.hero || 'MC.png';
             const thumbRow = document.getElementById('pp-thumbs');
             thumbRow.innerHTML = '';
-            let allImgs = [targetProduct.hero, ...targetProduct.gallery].filter(Boolean);
-            allImgs.forEach((url, idx) => {
+            
+            // 🟢 Save images globally so the full-screen gallery can use them
+            window.productGalleryImages = [targetProduct.hero, ...(targetProduct.gallery || [])].filter(Boolean);
+            window.productGalleryImages.forEach((url, idx) => {
                 const thumb = document.createElement('img');
                 thumb.src = url;
                 thumb.alt = `Product image ${idx + 1}`;
