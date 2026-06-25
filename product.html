@@ -608,10 +608,43 @@
             });
 
             const tBody = document.getElementById('pp-pricing-body');
-            tBody.innerHTML = '';
+            // Remove Tailwind's divide-y class so it doesn't break our merged cells
+            tBody.className = "text-gray-900 font-medium"; 
+            
+            // 1. Group variants by their name
+            const groupedVariants = {};
             (targetProduct.variants || []).forEach(v => {
-                tBody.innerHTML += `<tr class="hover:bg-gray-50 transition"><td class="py-3 px-4">${v.type === "Standard" ? "Standard Base" : v.type+': '+v.opt}</td><td class="py-3 px-4 text-gray-500">${v.min} - ${v.max} ${v.unit}</td><td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)]">${currencySymbols[activeCurrency] || '$'}${convertPrice(v.priceCAD)}</td></tr>`;
+                const variantName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
+                if (!groupedVariants[variantName]) {
+                    groupedVariants[variantName] = [];
+                }
+                groupedVariants[variantName].push(v);
             });
+
+            // 2. Build the visually merged table
+            let tableHtml = '';
+            for (const [variantName, tiers] of Object.entries(groupedVariants)) {
+                tiers.forEach((v, index) => {
+                    // Create a thicker border at the bottom of each variant group for clean separation
+                    const isLastInGroup = index === tiers.length - 1;
+                    const rowBorder = isLastInGroup ? 'border-b border-gray-200' : 'border-b border-gray-50';
+                    
+                    tableHtml += `<tr class="hover:bg-gray-50 transition">`;
+                    
+                    // Only print the Variant Name on the very first row of the group, spanning downwards
+                    if (index === 0) {
+                        tableHtml += `<td class="py-4 px-4 bg-white border-b border-gray-200 align-middle shadow-[1px_0_0_0_#f3f4f6]" rowspan="${tiers.length}">
+                                        <div class="font-bold text-gray-900">${variantName}</div>
+                                      </td>`;
+                    }
+                    
+                    // Print the volumes and prices normally
+                    tableHtml += `<td class="py-3 px-4 text-gray-600 ${rowBorder}">${v.min} - ${v.max} ${v.unit}</td>`;
+                    tableHtml += `<td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)] ${rowBorder}">${currencySymbols[activeCurrency] || '$'}${convertPrice(v.priceCAD)}</td>`;
+                    tableHtml += `</tr>`;
+                });
+            }
+            tBody.innerHTML = tableHtml;
         }
 
         // Before they leave the page, log how long they looked at it
