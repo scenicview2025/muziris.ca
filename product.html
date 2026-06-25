@@ -525,11 +525,12 @@
             
             // Visual success feedback on the main button
             const btn = document.getElementById('main-rfq-btn');
-            btn.innerHTML = '✅ Added to Quote Cart';
+            // 🟢 Changed success messages to match new terminology
+            btn.innerHTML = '✅ Added to Quote List';
             btn.style.background = 'var(--gold)';
             btn.style.color = '#000';
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-plus mr-2"></i> View Cart or Add More';
+                btn.innerHTML = '<i class="fas fa-list mr-2"></i> View List or Add More';
                 btn.style.background = 'var(--void)';
                 btn.style.color = 'var(--gold)';
             }, 2000);
