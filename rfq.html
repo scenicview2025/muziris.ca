@@ -292,7 +292,14 @@
             }
         });
 
-        function goBackToCatalog() { window.location.href = "catalog.html"; }
+        // 🟢 FIX: Intelligent Back Button (Goes to the previous page, falls back to catalog if no history)
+        function goBackToCatalog() { 
+            if (document.referrer && document.referrer.includes(window.location.host)) {
+                window.history.back(); // Acts exactly like the browser's back button
+            } else {
+                window.location.href = "catalog.html"; // Safe fallback
+            }
+        }
         function closeAuthModal(e) { if(e.target.id === 'auth-modal') goBackToCatalog(); }
 
         function signInWithGoogle() { auth.signInWithPopup(googleProvider).catch(e => alert(e.message)); }
