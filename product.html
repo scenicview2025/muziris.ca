@@ -725,6 +725,40 @@
                 });
             }
             tBody.innerHTML = tableHtml;
+
+            // 🟢 INJECT RECOMMENDATIONS
+            const recContainer = document.getElementById('recommendations-container');
+            if (recContainer && allProducts.length > 1) {
+                
+                // Try to find products in the same category first, excluding the one we are looking at
+                let recs = allProducts.filter(p => p.category === targetProduct.category && p.id !== targetProduct.id);
+                
+                // If there aren't enough in the same category, grab from other categories
+                if (recs.length < 6) {
+                    const others = allProducts.filter(p => p.category !== targetProduct.category && p.id !== targetProduct.id);
+                    recs = [...recs, ...others];
+                }
+                
+                recs = recs.slice(0, 8); // Limit to 8 products max
+                
+                let recHtml = '';
+                recs.forEach(p => {
+                    const heroImg = p.hero || 'MC.png';
+                    const price = (currencySymbols[activeCurrency] || '$') + convertPrice(p.startingPriceCAD);
+                    
+                    // Creates a beautiful, clickable product card
+                    recHtml += `
+                        <div class="flex-shrink-0 w-44 md:w-52 cursor-pointer group" onclick="window.location.href='product.html?id=${p.id}'">
+                            <div class="w-full aspect-square bg-[#f8f9fa] rounded-xl overflow-hidden mb-3 border border-gray-100 relative">
+                                <img src="${heroImg}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 mix-blend-multiply" onerror="this.src='MC.png'">
+                            </div>
+                            <h4 class="text-[13px] font-bold text-gray-900 mb-1 line-clamp-2 leading-snug group-hover:text-[var(--gold)] transition">${p.name}</h4>
+                            <div class="font-mono font-bold text-[var(--gold-dark)] text-sm mb-1">${price}</div>
+                        </div>
+                    `;
+                });
+                recContainer.innerHTML = recHtml;
+            }
         }
 
         // Before they leave the page, log how long they looked at it
