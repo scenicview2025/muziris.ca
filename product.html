@@ -617,7 +617,18 @@
             document.getElementById('pp-supplier-link').onclick = () => window.location.href = 'factory.html?id=' + targetProduct.supplierId;
             
             document.getElementById('pp-price').innerText = (currencySymbols[activeCurrency] || '$') + convertPrice(targetProduct.startingPriceCAD);
-            document.getElementById('pp-desc').innerText = targetProduct.desc || "Standard configuration.";
+            
+            // 🟢 Inject Description & check if it needs the Read More button
+            const descEl = document.getElementById('pp-desc');
+            descEl.innerText = targetProduct.desc || "Standard configuration.";
+            setTimeout(() => {
+                // If the text fits naturally without being clamped, hide the button & fade
+                if (descEl.scrollHeight <= descEl.clientHeight) {
+                    document.getElementById('pp-desc-fade').style.display = 'none';
+                    document.getElementById('pp-desc-btn').style.display = 'none';
+                }
+            }, 50);
+
             document.getElementById('pp-id').innerText = targetProduct.id;
             document.getElementById('pp-terms').innerText = targetProduct.incoterms || "FOB";
             document.getElementById('pp-lead').innerText = targetProduct.leadTime ? targetProduct.leadTime + " Days" : "TBD";
