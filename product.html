@@ -657,8 +657,8 @@
                 rfqBtn.style.backgroundColor = '#e5e7eb'; rfqBtn.style.color = '#6b7280'; rfqBtn.style.cursor = 'not-allowed';
                 rfqBtn.onclick = null; 
             } else {
-                // 🟢 Changed to "Quote Cart"
-                rfqBtn.innerHTML = '<i class="fas fa-plus mr-2"></i> Add to Quote Cart';
+                // 🟢 Changed to "Request Official Quote"
+                rfqBtn.innerHTML = '<i class="fas fa-plus mr-2"></i> Request Official Quote';
                 rfqBtn.style.backgroundColor = 'var(--void)'; rfqBtn.style.color = 'var(--gold)'; rfqBtn.style.cursor = 'pointer';
                 rfqBtn.onclick = () => {
                     addToCart(targetProduct.id, targetProduct.name);
