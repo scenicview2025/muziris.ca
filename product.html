@@ -630,6 +630,10 @@
                 <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}&sub=${encodeURIComponent(targetProduct.subCategory)}" class="hover:text-black hover:underline transition">${targetProduct.subCategory}</a>
             `;
             document.getElementById('pp-title').innerText = targetProduct.name;
+            
+            // 🟢 NEW: Dynamically update the browser tab title for SEO and UX!
+            document.title = `${targetProduct.name} | Wholesale | Muziris`;
+
             document.getElementById('pp-card-sup-name').innerText = targetProduct.companyName || "Verified Factory";
             document.getElementById('pp-supplier-link').onclick = () => window.location.href = 'factory.html?id=' + targetProduct.supplierId;
             
