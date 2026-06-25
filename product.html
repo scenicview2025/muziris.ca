@@ -276,7 +276,35 @@
         <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 mt-8">
             <div class="bg-white rounded-2xl p-8 md:p-10 shadow-sm border border-gray-100">
                 <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-gray-900">Technical Description</h3>
-                <p class="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm" id="pp-desc">Description...</p>
+                
+                <div class="relative">
+                    <p class="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm line-clamp-5 overflow-hidden transition-all duration-300" id="pp-desc">Description...</p>
+                    <div id="pp-desc-fade" class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+                </div>
+                <button id="pp-desc-btn" onclick="toggleDesc()" class="mt-2 text-[var(--gold-dark)] font-bold text-[11px] uppercase tracking-widest hover:text-black transition flex items-center gap-1">
+                    <span id="pp-desc-btn-text">Read More</span> <i id="pp-desc-btn-icon" class="fas fa-chevron-down transition-transform duration-300"></i>
+                </button>
+
+                <script>
+                    function toggleDesc() {
+                        const d = document.getElementById('pp-desc');
+                        const f = document.getElementById('pp-desc-fade');
+                        const txt = document.getElementById('pp-desc-btn-text');
+                        const icon = document.getElementById('pp-desc-btn-icon');
+
+                        if (d.classList.contains('line-clamp-5')) {
+                            d.classList.remove('line-clamp-5'); // Expands text
+                            f.style.display = 'none'; // Hides the fade
+                            txt.innerText = 'Read Less';
+                            icon.classList.add('rotate-180'); // Flips the arrow up
+                        } else {
+                            d.classList.add('line-clamp-5'); // Shrinks text
+                            f.style.display = 'block'; // Shows the fade
+                            txt.innerText = 'Read More';
+                            icon.classList.remove('rotate-180'); // Flips the arrow down
+                        }
+                    }
+                </script>
                 
                 <div id="pp-pdf-container" class="mt-6"></div>
                 
