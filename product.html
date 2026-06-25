@@ -512,6 +512,29 @@
         // Run this immediately so the button appears if they already have items
         document.addEventListener('DOMContentLoaded', updateCartUI);
 
+        // 🟢 FIX: Putting the addToCart function back in with the new wording!
+        function addToCart(id, name) {
+            if (rfqCart.find(item => item.id === id)) {
+                alert("This product is already in your Quote Cart!");
+                return;
+            }
+
+            rfqCart.push({ id: id, name: name });
+            localStorage.setItem('muziris_cart', JSON.stringify(rfqCart));
+            updateCartUI();
+            
+            // Visual success feedback on the main button
+            const btn = document.getElementById('main-rfq-btn');
+            btn.innerHTML = '✅ Added to Quote Cart';
+            btn.style.background = 'var(--gold)';
+            btn.style.color = '#000';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-plus mr-2"></i> View Cart or Add More';
+                btn.style.background = 'var(--void)';
+                btn.style.color = 'var(--gold)';
+            }, 2000);
+        }
+
         window.onload = async function() {
             console.log("🚀 Engine Started!");
             
