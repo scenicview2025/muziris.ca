@@ -131,29 +131,13 @@
 
         <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-gray-500 h-full relative">
           
-          <div class="nav-group h-full flex items-center cursor-pointer">
-            <span class="hover:text-black transition flex items-center gap-2"><i class="fas fa-bars text-sm"></i> Categories</span>
-            
-            <div class="mega-menu-container text-left cursor-default shadow-2xl">
-              <div class="mega-sidebar">
-                <div class="mega-cat-item active" onmouseenter="switchMegaPanel('panel-agri', this)">Agriculture, Food & Beverage <i class="fas fa-chevron-right"></i></div>
-                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-apparel', this)">Apparel, Textiles & Accessories <i class="fas fa-chevron-right"></i></div>
-                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-electronics', this)">Consumer Electronics & Appliances <i class="fas fa-chevron-right"></i></div>
-                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-packaging', this)">Packaging & Printing <i class="fas fa-chevron-right"></i></div>
-                </div>
-              
-              <div class="mega-content overflow-y-auto">
-                <div id="panel-agri" class="mega-panel active">
-                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Agriculture, Food & Beverage</h3>
-                  <div class="subcat-grid">
-                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
-                  </div>
-                </div>
-                </div>
-            </div>
-          </div>
-          
           <a href="catalog.html" class="hover:text-black transition">Catalog</a>
+
+          <a href="rfq.html" class="hover:text-black transition flex items-center gap-2 relative">
+            <i class="fas fa-file-invoice text-sm"></i> RFQ Basket
+            <span id="header-cart-badge" class="absolute -top-2 -right-3 bg-[#ff5252] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
+          </a>
+
         </div>
 
         <div class="flex items-center gap-4 md:gap-6 text-gray-600 flex-shrink-0 ml-4">
