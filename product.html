@@ -492,11 +492,20 @@
         function updateCartUI() {
             const floatingCart = document.getElementById('cart-float');
             const badge = document.getElementById('cart-badge');
+            const headerBadge = document.getElementById('header-cart-badge'); // 🟢 Grab the new header badge
+            
             if (rfqCart.length > 0) {
-                floatingCart.style.display = 'flex';
-                badge.innerText = rfqCart.length;
+                if (floatingCart) floatingCart.style.display = 'flex';
+                if (badge) badge.innerText = rfqCart.length;
+                
+                // 🟢 Show and update the header badge
+                if (headerBadge) {
+                    headerBadge.innerText = rfqCart.length;
+                    headerBadge.classList.remove('hidden');
+                }
             } else {
-                floatingCart.style.display = 'none';
+                if (floatingCart) floatingCart.style.display = 'none';
+                if (headerBadge) headerBadge.classList.add('hidden');
             }
         }
 
