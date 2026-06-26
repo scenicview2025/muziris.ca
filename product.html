@@ -145,7 +145,13 @@
 
         </div>
 
-        <div class="flex items-center gap-4 md:gap-6 text-gray-600 flex-shrink-0 ml-4">
+        <div class="flex items-center gap-5 md:gap-6 text-gray-600 flex-shrink-0 ml-auto">
+            
+            <a href="rfq.html" class="md:hidden hover:text-[var(--gold)] transition flex items-center relative text-gray-700">
+                <i class="fas fa-clipboard-list text-[22px]"></i>
+                <span id="mobile-header-cart-badge" class="absolute -top-1.5 -right-2 bg-[#ff5252] text-white text-[9px] font-bold w-[16px] h-[16px] flex items-center justify-center rounded-full hidden shadow-sm border border-white">0</span>
+            </a>
+
             <div class="relative hidden md:block" id="customCurrencyDropdown">
                 <div class="bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer" id="currencyBtn">
                     <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
