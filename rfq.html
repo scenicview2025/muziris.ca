@@ -479,72 +479,40 @@
             let row = inputElement.closest('.matrix-row');
             let qty = parseInt(inputElement.value) || 0;
             
-            // 🟢 1. Unpack the tiers from the HTML
             let tiers = JSON.parse(decodeURIComponent(inputElement.getAttribute('data-tiers')));
-            let activePriceCAD = tiers[0].priceCAD; // Default fallback
-            let activeIndex = 0;
+            let activePriceCAD = tiers[0].priceCAD; 
 
-            // 🟢 2. The BULLETPROOF Math Engine
             if (qty > 0) {
                 for (let i = 0; i < tiers.length; i++) {
-                    // JSON formatting deletes "Infinity". We must convert null/blank back to Infinity so the highest tier works!
                     let maxLimit = (tiers[i].max === null || !tiers[i].max) ? Infinity : parseInt(tiers[i].max);
-                    
-                    // We check BOTH min and max so database sorting order never breaks the math!
-                    if (qty >= tiers[i].min && qty <= maxLimit) {
-                        activePriceCAD = tiers[i].priceCAD;
-                        activeIndex = i; 
-                    }
+                    if (qty >= tiers[i].min && qty <= maxLimit) activePriceCAD = tiers[i].priceCAD;
                 }
             }
             
-            // Convert to the buyer's local currency
             let finalUnitPrice = convertPrice(activePriceCAD);
-            
-            // 🟢 3. Update the hidden dataset so the submit payload gets the right price!
             inputElement.setAttribute('data-buyerprice', finalUnitPrice);
             
-            // 🟢 4. Update the visual total
-            row.querySelector('.v-total-display').innerText = (qty * finalUnitPrice).toFixed(2);
-            
-            // 🟢 5. The "iPhone" Dynamic Magnification Effect!
-            let vid = inputElement.getAttribute('data-vid');
-            tiers.forEach((t, idx) => {
-                let tierBox = document.getElementById(`tier-ui-${vid}-${idx}`);
-                if (tierBox) {
-                    let label = tierBox.querySelector('.tier-label');
-                    let price = tierBox.querySelector('.tier-price');
-
-                    if (idx === activeIndex) {
-                        // 🟢 ACTIVE STATE: Added `order-first` so this box instantly jumps to the front of the line!
-                        tierBox.className = "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-110 opacity-100 bg-[var(--gold-light)] border border-[var(--gold-border)] shadow-md z-10 origin-center mx-1 order-first";
-                        label.className = "tier-label text-[9px] text-[var(--gold-dark)] leading-[1.1] mb-1 font-bold transition-colors";
-                        price.className = "tier-price text-[11px] font-black text-[var(--gold-dark)] leading-none transition-colors";
-                    } else {
-                        // 🔴 INACTIVE STATE: Removed order-first so it slides to the right
-                        tierBox.className = "flex flex-col justify-center items-center text-center w-[68px] h-[64px] p-1 rounded-lg transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform scale-90 opacity-40 bg-gray-50 border border-transparent z-0 origin-center mx-0 order-none";
-                        label.className = "tier-label text-[9px] text-gray-400 leading-[1.1] mb-1 transition-colors";
-                        price.className = "tier-price text-[10px] font-bold text-gray-500 leading-none transition-colors";
-                    }
-                }
-            });
-            
-            let targetInput = row.querySelector('.v-target');
-            if (targetInput && targetInput.value) { updateTargetUnit(targetInput); }
-        }
-        function updateTargetUnit(inputElement) {
-            let row = inputElement.closest('.matrix-row');
-            let qty = parseInt(row.querySelector('.v-qty').value) || 0;
-            let targetTotal = parseFloat(inputElement.value) || 0;
-            let displayDiv = row.querySelector('.target-unit-display');
-            
-            if (qty > 0 && targetTotal > 0) {
-                let unitPrice = (targetTotal / qty).toFixed(2);
-                displayDiv.innerHTML = `Target Unit: <span class="text-[var(--text-dark)] ml-1">${activeCurrency} ${unitPrice}</span>`;
-                displayDiv.classList.remove('hidden');
+            // Show inline subtotal for this specific row
+            let lineTotalDisplay = row.querySelector('.line-total-display');
+            if (qty > 0) {
+                lineTotalDisplay.innerText = `Subtotal: ${activeCurrency} ${(qty * finalUnitPrice).toFixed(2)}`;
+                lineTotalDisplay.classList.remove('hidden');
             } else {
-                displayDiv.classList.add('hidden');
+                lineTotalDisplay.classList.add('hidden');
             }
+
+            // Update the Master Subtotal in the Sticky Bottom Bar
+            updateGrandTotal();
+        }
+
+        function updateGrandTotal() {
+            let grandTotal = 0;
+            document.querySelectorAll('.v-qty').forEach(input => {
+                let qty = parseInt(input.value) || 0;
+                let price = parseFloat(input.getAttribute('data-buyerprice')) || 0;
+                grandTotal += (qty * price);
+            });
+            document.getElementById('sticky-grand-total').innerText = grandTotal.toFixed(2);
         }
 
         function submitRFQ() {
