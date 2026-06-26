@@ -743,15 +743,16 @@
                 }
             }
 
-            // Inject the Swatches dynamically above the Volume Matrix
+            // Inject the Swatches dynamically below the Price Box
             let oldSwatchContainer = document.getElementById('advanced-variant-swatches');
             if (oldSwatchContainer) oldSwatchContainer.remove(); // Clear old ones on currency refresh
             
             if (hasSwatches) {
-                const matrixDiv = tBody.closest('.mb-8');
-                matrixDiv.insertAdjacentHTML('beforebegin', `
-                    <div id="advanced-variant-swatches" class="mb-8">
-                        <h3 class="text-[11px] font-bold uppercase text-gray-900 mb-4 tracking-widest">Select Variant</h3>
+                // 🟢 FIX: Target the Info Grid (Lead Time/Terms) so the swatches sit above it!
+                const infoGrid = document.getElementById('pp-lead').closest('.grid');
+                infoGrid.insertAdjacentHTML('beforebegin', `
+                    <div id="advanced-variant-swatches" class="mb-6">
+                        <h3 class="text-[11px] font-bold uppercase text-gray-900 mb-3 tracking-widest">Select Variant</h3>
                         <div class="flex flex-wrap gap-4 items-start">
                             ${swatchesHtml}
                         </div>
