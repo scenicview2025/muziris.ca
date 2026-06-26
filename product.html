@@ -696,19 +696,28 @@
             document.getElementById('pp-srv').innerText = targetProduct.services || "Standard";
             document.getElementById('pp-pkg').innerText = targetProduct.pkg || "Export Packaging";
 
-            const rfqBtn = document.getElementById('main-rfq-btn');
-            if (targetProduct.status === 'PAUSED') {
-                rfqBtn.innerHTML = '<i class="fas fa-pause-circle mr-2"></i> Currently Unavailable';
-                rfqBtn.style.backgroundColor = '#e5e7eb'; rfqBtn.style.color = '#6b7280'; rfqBtn.style.cursor = 'not-allowed';
-                rfqBtn.onclick = null; 
-            } else {
-                // 🟢 Changed to "Request Official Quote"
-                rfqBtn.innerHTML = '<i class="fas fa-plus mr-2"></i> Request Official Quote';
-                rfqBtn.style.backgroundColor = 'var(--void)'; rfqBtn.style.color = 'var(--gold)'; rfqBtn.style.cursor = 'pointer';
-                rfqBtn.onclick = () => {
-                    addToCart(targetProduct.id, targetProduct.name);
-                }; 
+            // 🟢 Extract MOQ dynamically for the new badge
+            if (targetProduct.variants && targetProduct.variants.length > 0) {
+                const moqVal = targetProduct.variants[0].min || "1";
+                const moqUnit = targetProduct.variants[0].unit || "Pcs";
+                document.getElementById('pp-moq').innerText = `${moqVal} ${moqUnit}`;
             }
+
+            // Bind actions to both Desktop and Mobile buttons
+            ['main-rfq-btn', 'mobile-rfq-btn'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (!btn) return;
+                
+                if (targetProduct.status === 'PAUSED') {
+                    btn.innerHTML = '<i class="fas fa-pause-circle mr-2"></i> Unavailable';
+                    btn.style.backgroundColor = '#e5e7eb'; btn.style.color = '#6b7280'; btn.style.cursor = 'not-allowed';
+                    btn.onclick = null; 
+                } else {
+                    btn.innerHTML = id === 'mobile-rfq-btn' ? '<i class="fas fa-plus mr-2"></i> Request Quote' : '<i class="fas fa-plus mr-2"></i> Request Official Quote';
+                    btn.style.backgroundColor = 'var(--void)'; btn.style.color = 'var(--gold)'; btn.style.cursor = 'pointer';
+                    btn.onclick = () => addToCart(targetProduct.id, targetProduct.name);
+                }
+            });
             const catalogContainer = document.getElementById('pp-pdf-container');
             if (targetProduct.pdf && targetProduct.pdf.startsWith('http')) {
                 const isPdf = targetProduct.pdf.toLowerCase().includes('.pdf');
