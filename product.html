@@ -189,7 +189,7 @@
         <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-gray-100">
             
             <div class="lg:col-span-4">
-                <div class="bg-[#f8f9fa] rounded-xl aspect-square flex items-center justify-center p-8 mb-4 border border-gray-100 relative overflow-hidden cursor-pointer group" onclick="openGallery()">
+                <div id="main-img-swipe-zone" class="bg-[#f8f9fa] rounded-xl aspect-square flex items-center justify-center p-8 mb-4 border border-gray-100 relative overflow-hidden cursor-pointer group touch-pan-y" onclick="if(!window.isMainSwiping) openGallery()">
                     <span class="absolute top-4 left-4 bg-white px-3 py-1.5 text-[10px] font-bold rounded uppercase tracking-widest text-gray-900 shadow-sm border border-gray-200 z-10 flex items-center gap-1.5"><i class="fas fa-check-circle text-[var(--gold)]"></i> Verified</span>
                     
                     <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md border border-gray-200 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:text-[var(--gold)]">
