@@ -1297,7 +1297,7 @@
             let startX = 0, startY = 0;
 
             mainZone.addEventListener('touchstart', e => {
-                window.isMainSwiping = false;
+                window.isMainSwiping = false; // Reset blocker
                 startX = e.changedTouches[0].screenX;
                 startY = e.changedTouches[0].screenY;
             }, {passive: true});
@@ -1312,17 +1312,44 @@
                 // 40px Threshold for a successful swipe
                 if (diffX > 40) { 
                     changeMainImage(1); 
-                    window.isMainSwiping = true; 
+                    window.isMainSwiping = true; // 🟢 BLOCK THE CLICK!
                 } else if (diffX < -40) { 
                     changeMainImage(-1); 
-                    window.isMainSwiping = true; 
+                    window.isMainSwiping = true; // 🟢 BLOCK THE CLICK!
                 }
                 
-                // Reset the swipe block after 50ms so normal taps still work
+                // Reset the click blocker after 50ms so normal taps work again
                 setTimeout(() => window.isMainSwiping = false, 50);
             }, {passive: true});
         });
 
+        function changeMainImage(dir) {
+            if (!window.productGalleryImages || window.productGalleryImages.length <= 1) return;
+            
+            const currentMainSrc = document.getElementById('pp-main-img').src;
+            let idx = window.productGalleryImages.findIndex(src => currentMainSrc.includes(src));
+            if(idx === -1) idx = 0;
+            
+            idx += dir;
+            if (idx < 0) idx = window.productGalleryImages.length - 1;
+            if (idx >= window.productGalleryImages.length) idx = 0;
+            
+            // 1. Swap the big image
+            document.getElementById('pp-main-img').src = window.productGalleryImages[idx];
+            
+            // 2. Automatically highlight the correct tiny thumbnail below it
+            document.querySelectorAll('#pp-thumbs img').forEach((thumb, i) => {
+                if(i === idx) {
+                    thumb.classList.remove('border-transparent', 'opacity-50');
+                    thumb.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+                    // Ensure the thumbnail scrolls into view if there are many of them!
+                    thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                } else {
+                    thumb.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+                    thumb.classList.add('border-transparent', 'opacity-50');
+                }
+            });
+        }
         function changeMainImage(dir) {
             if (!window.productGalleryImages || window.productGalleryImages.length <= 1) return;
             
