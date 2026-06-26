@@ -1285,32 +1285,71 @@
             });
         }
 
-        // 🟢 ALGORITHM: Mobile Finger Swipe Navigation
+        // ==========================================
+        // 🟢 ALGORITHM: Main Image Mobile Swipe Tracker
+        // ==========================================
+        window.isMainSwiping = false;
+        
         document.addEventListener('DOMContentLoaded', () => {
-            const swipeZone = document.getElementById('fs-swipe-zone');
-            if(!swipeZone) return;
+            const mainZone = document.getElementById('main-img-swipe-zone');
+            if(!mainZone) return;
             
-            let touchStartX = 0;
-            let touchEndX = 0;
-            
-            swipeZone.addEventListener('touchstart', e => {
-                touchStartX = e.changedTouches[0].screenX; // Where did finger land?
+            let startX = 0, startY = 0;
+
+            mainZone.addEventListener('touchstart', e => {
+                window.isMainSwiping = false;
+                startX = e.changedTouches[0].screenX;
+                startY = e.changedTouches[0].screenY;
             }, {passive: true});
             
-            swipeZone.addEventListener('touchend', e => {
-                touchEndX = e.changedTouches[0].screenX; // Where did finger lift off?
-                handleSwipe();
-            }, {passive: true});
-            
-            function handleSwipe() {
-                const swipeThreshold = 40; // Needs to move at least 40px to count as a swipe
-                if (touchStartX - touchEndX > swipeThreshold) {
-                    changeFsImage(1); // Swiped Left (Next)
-                } else if (touchEndX - touchStartX > swipeThreshold) {
-                    changeFsImage(-1); // Swiped Right (Previous)
+            mainZone.addEventListener('touchend', e => {
+                let diffX = startX - e.changedTouches[0].screenX;
+                let diffY = startY - e.changedTouches[0].screenY;
+                
+                // If they scroll vertically down the page, ignore the swipe
+                if (Math.abs(diffY) > Math.abs(diffX)) return;
+                
+                // 40px Threshold for a successful swipe
+                if (diffX > 40) { 
+                    changeMainImage(1); 
+                    window.isMainSwiping = true; 
+                } else if (diffX < -40) { 
+                    changeMainImage(-1); 
+                    window.isMainSwiping = true; 
                 }
-            }
+                
+                // Reset the swipe block after 50ms so normal taps still work
+                setTimeout(() => window.isMainSwiping = false, 50);
+            }, {passive: true});
         });
+
+        function changeMainImage(dir) {
+            if (!window.productGalleryImages || window.productGalleryImages.length <= 1) return;
+            
+            const currentMainSrc = document.getElementById('pp-main-img').src;
+            let idx = window.productGalleryImages.findIndex(src => currentMainSrc.includes(src));
+            if(idx === -1) idx = 0;
+            
+            idx += dir;
+            if (idx < 0) idx = window.productGalleryImages.length - 1;
+            if (idx >= window.productGalleryImages.length) idx = 0;
+            
+            // 1. Swap the big image
+            document.getElementById('pp-main-img').src = window.productGalleryImages[idx];
+            
+            // 2. Automatically highlight the correct tiny thumbnail below it
+            document.querySelectorAll('#pp-thumbs img').forEach((thumb, i) => {
+                if(i === idx) {
+                    thumb.classList.remove('border-transparent', 'opacity-50');
+                    thumb.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+                    // Ensure the thumbnail scrolls into view if there are many of them!
+                    thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                } else {
+                    thumb.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+                    thumb.classList.add('border-transparent', 'opacity-50');
+                }
+            });
+        }
     </script>
     <div id="fullscreen-gallery" class="fixed inset-0 bg-[#0b0e14]/98 backdrop-blur-md z-[99999] hidden flex-row items-center justify-center opacity-0 transition-opacity duration-300">
         
