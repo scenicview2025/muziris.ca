@@ -330,6 +330,15 @@
         </div>
     </main>
 
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-3 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] z-50 lg:hidden flex gap-3 pb-safe">
+        <button class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-gray-50 border border-gray-200 text-gray-600 rounded-xl transition hover:bg-gray-100" onclick="openSupplierChat()">
+            <i class="far fa-comments text-lg"></i>
+        </button>
+        <button id="mobile-rfq-btn" class="flex-1 btn-void-gold shadow-md text-sm rounded-xl h-12" onclick="triggerRFQ()">
+            <i class="fas fa-plus mr-2"></i> Request Quote
+        </button>
+    </div>
+
     <div id="cart-float" class="cart-float" onclick="window.location.href='rfq.html'">
         <i class="fas fa-file-invoice"></i> 
         <span>Submit RFQ</span>
