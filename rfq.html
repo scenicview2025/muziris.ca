@@ -416,7 +416,13 @@
                         let v = groupedVariants[varName];
                         let startingPrice = convertPrice(v.tiers[0].priceCAD);
                         let safeTiers = encodeURIComponent(JSON.stringify(v.tiers));
-                        let tierText = v.tiers.map(t => `${t.min}${t.max === Infinity ? '+' : '-'+t.max}: ${activeCurrency}${convertPrice(t.priceCAD)}`).join(' | ');
+                        
+                        // 🟢 FIX: Failsafe to force the last tier to always display "+" just like product.html!
+                        let tierText = v.tiers.map((t, index) => {
+                            let isLast = (index === v.tiers.length - 1);
+                            let displayMax = (isLast || t.max === Infinity || !t.max) ? '+' : '-' + t.max;
+                            return `${t.min}${displayMax}: ${activeCurrency} ${convertPrice(t.priceCAD)}`;
+                        }).join(' | ');
 
                         variantHtml += `
                         <div class="flex flex-col sm:flex-row gap-4 py-4 border-b border-gray-100 last:border-0 matrix-row">
