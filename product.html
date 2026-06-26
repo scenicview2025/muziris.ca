@@ -779,7 +779,18 @@
                     document.getElementById('supplier-trust-card').classList.remove('hidden');
                     
                     // Plug the real data in
-                    if(data.logo_url) document.getElementById('stc-logo').src = data.logo_url;
+                    if(data.logo_url) {
+                        document.getElementById('stc-logo').src = data.logo_url;
+                        
+                        // 🟢 FIX: Unhide the tiny logo at the top of the page!
+                        const topLogo = document.getElementById('pp-top-logo');
+                        if (topLogo) {
+                            topLogo.src = data.logo_url;
+                            topLogo.classList.remove('hidden');
+                            document.getElementById('pp-top-icon').classList.add('hidden'); // Hide the default icon
+                        }
+                    }
+                    
                     document.getElementById('stc-name').innerText = data.company_name || targetProduct.companyName;
                     document.getElementById('stc-type').innerText = data.biz_type || "Verified Supplier";
                     document.getElementById('stc-year').innerText = data.year_established || "N/A";
