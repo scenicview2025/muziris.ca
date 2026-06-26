@@ -327,6 +327,30 @@
                 
                 <h3 class="text-sm font-bold mb-3 mt-8 uppercase tracking-widest text-gray-900 pt-6 border-t border-gray-100">Master Packaging</h3>
                 <p class="text-gray-600 text-sm" id="pp-pkg">Standard export cartons.</p>
+                
+                <div id="supplier-trust-card" class="hidden mt-10 pt-8 border-t border-gray-100">
+                    <h3 class="text-[11px] font-bold uppercase text-gray-500 mb-6 tracking-widest">About the Manufacturer</h3>
+                    
+                    <div class="flex items-center gap-4 mb-6">
+                        <img id="stc-logo" src="MC.png" class="w-16 h-16 rounded-xl border border-gray-200 object-cover shadow-sm p-1 bg-white">
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-900 brand-font leading-tight" id="stc-name">Factory Name</h4>
+                            <span class="inline-block mt-1 text-[9px] bg-[var(--gold-light)] text-[var(--gold-dark)] border border-[var(--gold-border)] font-bold px-2 py-0.5 rounded uppercase tracking-widest" id="stc-type">Manufacturer</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-y-5 gap-x-4 text-sm mb-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
+                        <div><span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-1">Established</span><strong id="stc-year" class="text-gray-900">...</strong></div>
+                        <div><span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-1">Factory Size</span><strong id="stc-size" class="text-gray-900">...</strong></div>
+                        <div><span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-1">Certifications</span><strong id="stc-certs" class="text-[11px] text-gray-900 line-clamp-2">...</strong></div>
+                        <div><span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-1">OEM Services</span><strong id="stc-oem" class="text-[11px] text-gray-900 line-clamp-2">...</strong></div>
+                    </div>
+                    
+                    <button onclick="window.location.href='factory.html?id=' + targetProduct.supplierId" class="w-full py-3 bg-white hover:bg-gray-50 text-gray-700 font-bold text-[11px] uppercase tracking-widest rounded-xl border border-gray-200 transition shadow-sm flex items-center justify-center gap-2">
+                        <i class="fas fa-store"></i> View Full Factory Profile
+                    </button>
+                </div>
+
             </div>
         </div>
 
