@@ -761,6 +761,29 @@
             document.getElementById('pp-srv').innerText = targetProduct.services || "Standard";
             document.getElementById('pp-pkg').innerText = targetProduct.pkg || "Export Packaging";
 
+            // 🟢 NEW: Pull Real Supplier Data from the Ledger
+            fetch(API_BASE_URL + '/get-supplier-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ supplierId: targetProduct.supplierId })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(!data.error) {
+                    // Unhide the card because we found real data!
+                    document.getElementById('supplier-trust-card').classList.remove('hidden');
+                    
+                    // Plug the real data in
+                    if(data.logo_url) document.getElementById('stc-logo').src = data.logo_url;
+                    document.getElementById('stc-name').innerText = data.company_name || targetProduct.companyName;
+                    document.getElementById('stc-type').innerText = data.biz_type || "Verified Supplier";
+                    document.getElementById('stc-year').innerText = data.year_established || "N/A";
+                    document.getElementById('stc-size').innerText = data.factory_size ? parseFloat(data.factory_size).toLocaleString() + " SqM" : "Undisclosed";
+                    document.getElementById('stc-certs').innerText = data.certifications || "Standard Compliance";
+                    document.getElementById('stc-oem').innerText = data.oem_services || "Contact for Details";
+                }
+            }).catch(e => console.log("Silent fail: No extended profile found for this supplier."));
+
             // 🟢 Extract MOQ dynamically for the new badge
             if (targetProduct.variants && targetProduct.variants.length > 0) {
                 const moqVal = targetProduct.variants[0].min || "1";
