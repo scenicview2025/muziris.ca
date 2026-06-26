@@ -698,8 +698,8 @@
             // 🟢 DIAGNOSTIC: This prints the exact database object to your browser console so you can check the field names!
             console.log("📦 Full Product Data from Database:", targetProduct);
 
-            // 🟢 FIX: We added 'targetProduct.shortTitle' to perfectly match your Product Uploader page!
-            const displayTitle = targetProduct.shortTitle || targetProduct.title || targetProduct.seoTitle || targetProduct.name;
+            // 🟢 FIX: Added the exact database column name (short_title) with the underscore!
+            const displayTitle = targetProduct.short_title || targetProduct.shortTitle || targetProduct.title || targetProduct.name;
             
             document.getElementById('pp-title').innerText = displayTitle;
             
