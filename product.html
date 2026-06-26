@@ -689,10 +689,13 @@
             viewStartTime = Date.now();
             
             document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
+            // 🟢 FIX: Added the Short Name to the end of the breadcrumb trail!
             document.getElementById('pp-breadcrumb-cat').innerHTML = `
                 <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}" class="hover:text-black hover:underline transition">${targetProduct.category}</a> 
                 <span class="mx-2 text-gray-300">/</span> 
                 <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}&sub=${encodeURIComponent(targetProduct.subCategory)}" class="hover:text-black hover:underline transition">${targetProduct.subCategory}</a>
+                <span class="mx-2 text-gray-300">/</span> 
+                <span class="text-gray-400">${targetProduct.name}</span>
             `;
             
             // 🟢 DIAGNOSTIC: This prints the exact database object to your browser console so you can check the field names!
