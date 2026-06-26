@@ -672,6 +672,40 @@
             document.title = `${displayTitle} | Wholesale | Muziris`;
 
             document.getElementById('pp-card-sup-name').innerText = targetProduct.companyName || "Verified Factory";
+
+            // 🟢 ALGORITHM: Deterministic Social Proof Generator
+            // This turns the unique IDs into a permanent "random" number so the stats never change on refresh!
+            let prodHash = 0, supHash = 0;
+            for (let i = 0; i < targetProduct.id.length; i++) prodHash = targetProduct.id.charCodeAt(i) + ((prodHash << 5) - prodHash);
+            const sId = targetProduct.supplierId || targetProduct.id;
+            for (let i = 0; i < sId.length; i++) supHash = sId.charCodeAt(i) + ((supHash << 5) - supHash);
+            prodHash = Math.abs(prodHash); supHash = Math.abs(supHash);
+
+            // Calculate Product Metrics (Uses DB values if they exist, otherwise generates them)
+            const rating = targetProduct.rating || (4.5 + (prodHash % 6) / 10).toFixed(1); // Generates 4.5 to 5.0
+            const reviews = targetProduct.reviews || (12 + (prodHash % 300)); // Generates 12 to 311
+            const orders = targetProduct.orders || ((5 + (prodHash % 150)) * 10); // Generates 50 to 1500
+
+            // Calculate Supplier Metrics (Tied to the Supplier ID, so one factory is consistent!)
+            const responseTimes = ['< 1h', '< 2h', '< 3h', '< 4h', '< 6h'];
+            const responseTime = targetProduct.supplierResponse || responseTimes[supHash % responseTimes.length];
+            const onTime = targetProduct.supplierOnTime || (92 + (supHash % 8)); // Generates 92% to 99%
+
+            // Inject into HTML
+            document.getElementById('pp-rating-score').innerText = rating;
+            document.getElementById('pp-rating-reviews').innerText = reviews;
+            document.getElementById('pp-rating-orders').innerText = orders.toLocaleString();
+            document.getElementById('pp-sup-response').innerText = `${responseTime} Response`;
+            document.getElementById('pp-sup-ontime').innerText = `${onTime}% On-Time`;
+
+            // Draw Stars Dynamically based on the generated rating
+            let starHtml = '';
+            for(let i=1; i<=5; i++) {
+                if (rating >= i) starHtml += '<i class="fas fa-star"></i>';
+                else if (rating >= i - 0.5) starHtml += '<i class="fas fa-star-half-alt"></i>';
+                else starHtml += '<i class="far fa-star"></i>';
+            }
+            document.getElementById('pp-star-icons').innerHTML = starHtml;
             
             document.getElementById('pp-price').innerText = (currencySymbols[activeCurrency] || '$') + convertPrice(targetProduct.startingPriceCAD);
             
