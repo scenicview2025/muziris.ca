@@ -555,11 +555,15 @@
                 localStorage.setItem('muziris_cart', JSON.stringify(rfqCart));
             }
             
-            // Change the button to a quick loading state so the buyer knows it's working
-            const btn = document.getElementById('main-rfq-btn');
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Opening Quote Form...';
-            btn.style.background = 'var(--gold)';
-            btn.style.color = '#000';
+            // Change both buttons (desktop and mobile) to a quick loading state
+            ['main-rfq-btn', 'mobile-rfq-btn'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Opening...';
+                    btn.style.background = 'var(--gold)';
+                    btn.style.color = '#000';
+                }
+            });
             
             // Teleport the user to the RFQ page!
             setTimeout(() => {
