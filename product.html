@@ -1296,8 +1296,8 @@
             
             <div class="hidden md:flex flex-col gap-4 h-full max-h-[80vh] overflow-y-auto w-24 pr-2 scrollbar-hide py-4" id="fs-thumbs"></div>
 
-            <div class="flex-1 relative h-full max-h-[85vh] flex items-center justify-center group">
-                <img id="fs-main-img" src="" class="max-w-full max-h-full object-contain select-none rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <div id="fs-swipe-zone" class="flex-1 relative h-full max-h-[85vh] flex items-center justify-center group touch-pan-y">
+                <img id="fs-main-img" src="" class="max-w-full max-h-full object-contain select-none rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-transform duration-300">
                 
                 <button onclick="changeFsImage(-1)" class="absolute left-2 md:-left-6 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[var(--gold)] text-white hover:text-black w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-xl backdrop-blur transition opacity-0 group-hover:opacity-100 shadow-xl border border-white/10">
                     <i class="fas fa-chevron-left"></i>
