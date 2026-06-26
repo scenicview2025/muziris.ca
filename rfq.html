@@ -434,9 +434,9 @@
                                     <span class="text-[9px] font-bold text-gray-400 uppercase px-2">Qty</span>
                                     <input type="number" min="0" class="v-qty w-full h-full bg-transparent text-sm font-bold text-gray-900 outline-none p-0 text-center" placeholder="0" data-supplierid="${product.supplierId}" data-productid="${product.id}" data-productname="${product.name.replace(/'/g, "\\'")}" data-vid="${v.vid}" data-vname="${varName}" data-tiers="${safeTiers}" data-buyerprice="${startingPrice}" data-image="${v.image}" oninput="updateCalculatedTotal(this)">
                                 </div>
-                                <div class="flex-1 border border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex items-center h-9 focus-within:border-[var(--gold)] focus-within:ring-1 focus-within:ring-[var(--gold)] transition">
-                                    <span class="text-[9px] font-bold text-gray-400 uppercase px-2">Trgt</span>
-                                    <input type="number" step="0.01" class="v-target w-full h-full bg-transparent text-sm font-bold text-gray-900 outline-none p-0 text-center" placeholder="Total">
+                                <div class="flex-1 border border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex items-center h-9 focus-within:border-[var(--gold)] focus-within:ring-1 focus-within:ring-[var(--gold)] transition" title="Enter your target price per unit">
+                                    <span class="text-[9px] font-bold text-[var(--gold-dark)] uppercase px-2">Offer</span>
+                                    <input type="number" step="0.01" class="v-target w-full h-full bg-transparent text-sm font-bold text-gray-900 outline-none p-0 text-center pr-1" placeholder="/ unit">
                                 </div>
                             </div>
                         </div>`;
