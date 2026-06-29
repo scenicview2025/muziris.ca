@@ -180,8 +180,19 @@
                 <i class="far fa-user text-[22px] md:text-lg"></i> <span id="auth-btn-text" class="hidden md:block uppercase tracking-widest text-[10px]">Buyer Login</span>
             </button>
         </div>
-      </div>
-    </header>
+    </div>
+
+    <div id="mobile-search-dropdown" class="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-200 p-4 transform -translate-y-full opacity-0 transition-all duration-300 -z-10 pointer-events-none shadow-md">
+        <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('mobile-search-input').value);" class="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 focus-within:border-[var(--gold)] transition-colors shadow-inner">
+            <input type="text" id="mobile-search-input" class="w-full bg-transparent border-none outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="Search products, categories...">
+            <button type="submit" class="text-[var(--gold-dark)] ml-2 text-lg">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+  </header>
+
+  <main class="relative min-h-[85vh] flex items-center pt-10 overflow-hidden">
 
     <div id="loader" class="text-center py-32 w-full">
         <i class="fas fa-circle-notch fa-spin text-4xl text-[var(--gold)] mb-4"></i>
