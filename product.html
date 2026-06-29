@@ -534,19 +534,27 @@
             }
         });
 
-        function openAuthModal() {
-            if(currentUser) window.location.href = "buyer-dashboard.html";
-            else document.getElementById('auth-modal').style.display = 'flex';
+        function openMobileMenu() {
+            const menu = document.getElementById('mobile-category-menu');
+            menu.classList.remove('translate-y-full');
+            menu.classList.add('translate-y-0');
+            document.body.style.overflow = 'hidden'; // Locks the background
         }
-        function closeModal(e, modalId) {
-            if(e.target.id === modalId || e.target.closest('.modal-close')) document.getElementById(modalId).style.display = 'none';
+        
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-category-menu');
+            menu.classList.remove('translate-y-0');
+            menu.classList.add('translate-y-full');
+            document.body.style.overflow = ''; // Unlocks the background
         }
+
         function signInWithGoogle() { auth.signInWithPopup(googleProvider).then(() => document.getElementById('auth-modal').style.display = 'none'); }
         function signInWithMicrosoft() { auth.signInWithPopup(msProvider).then(() => document.getElementById('auth-modal').style.display = 'none'); }
+        
         function signInWithEmail() {
             const email = document.getElementById('auth-email').value, pass = document.getElementById('auth-pass').value;
-            if(!email || !pass) return alert("Enter email and password.");
-            auth.signInWithEmailAndPassword(email, pass).then(() => document.getElementById('auth-modal').style.display = 'none').catch(e => alert(e.message));
+            if(!email || !pass) return alert("Please enter both email and password.");
+            auth.signInWithEmailAndPassword(email, pass).then(() => { document.getElementById('auth-modal').style.display = 'none'; }).catch(error => alert("Error: " + error.message));
         }
         function signUpWithEmail() {
             const email = document.getElementById('auth-email').value, pass = document.getElementById('auth-pass').value;
