@@ -776,7 +776,7 @@
             if (user) {
                 currentUser = user;
                 let displayName = user.displayName || user.email.split('@')[0];
-                document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0] + " (Buyer)";
+                document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0];
 
                 fetch(API_BASE_URL + '/buyer/auth', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
