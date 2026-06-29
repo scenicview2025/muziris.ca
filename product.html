@@ -82,12 +82,20 @@
             overflow: hidden;
             z-index: 1000;
         }
+        /* 🟢 FIX: Added overflow-y to make the 18 categories scrollable! */
         .mega-sidebar {
             width: 35%;
             background: #f8f9fa;
             border-right: 1px solid #e5e7eb;
             padding: 15px 0;
+            overflow-y: auto; 
         }
+        
+        /* 🟢 NEW: Makes the scrollbar ultra-thin and premium so it doesn't look clunky */
+        .mega-sidebar::-webkit-scrollbar { width: 4px; }
+        .mega-sidebar::-webkit-scrollbar-track { background: transparent; }
+        .mega-sidebar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+        .mega-sidebar::-webkit-scrollbar-thumb:hover { background: var(--gold); }
         .mega-cat-item {
             padding: 14px 24px;
             font-size: 12px;
