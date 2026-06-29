@@ -152,14 +152,14 @@
                 <span id="mobile-header-cart-badge" class="absolute -top-1.5 -right-2 bg-[#ff5252] text-white text-[9px] font-bold w-[16px] h-[16px] flex items-center justify-center rounded-full hidden shadow-sm border border-white">0</span>
             </a>
 
-            <div class="relative hidden md:block" id="customCurrencyDropdown">
-                <div class="bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 flex items-center gap-2 hover:bg-gray-100 transition cursor-pointer" id="currencyBtn">
-                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
-                    <div class="flex items-center gap-2" id="activeCurrencyDisplay">
+            <div class="relative" id="customCurrencyDropdown">
+                <div class="bg-gray-50 px-2 md:px-3 py-1.5 md:py-2 rounded-lg border border-gray-200 flex items-center gap-1.5 md:gap-2 hover:bg-gray-100 transition cursor-pointer" id="currencyBtn">
+                    <span class="hidden md:block text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
+                    <div class="flex items-center gap-1.5 md:gap-2" id="activeCurrencyDisplay">
                         <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200">
-                        <span class="text-sm font-bold text-gray-900">CAD</span>
+                        <span class="hidden md:block text-sm font-bold text-gray-900">CAD</span>
                     </div>
-                    <i class="fas fa-chevron-down text-[10px] text-gray-500 ml-1"></i>
+                    <i class="fas fa-chevron-down text-[9px] text-gray-500"></i>
                 </div>
                 
                 <div id="currencyMenu" class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
