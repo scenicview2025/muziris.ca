@@ -1031,6 +1031,9 @@
                 currentUser = user;
                 let displayName = user.displayName || user.email.split('@')[0];
                 document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0];
+                
+                // 🟢 FIX: Redirects the user to their dashboard when clicked!
+                document.getElementById('auth-buttons').onclick = () => window.location.href = 'buyer-dashboard.html';
 
                 fetch(API_BASE_URL + '/buyer/auth', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -1044,9 +1047,11 @@
             } else {
                 currentUser = null;
                 document.getElementById('auth-btn-text').innerText = "Sign In";
+                
+                // 🟢 FIX: Restores the Login Modal if they log out!
+                document.getElementById('auth-buttons').onclick = openAuthModal;
             }
         });
-
         function openMobileMenu() {
             const menu = document.getElementById('mobile-category-menu');
             menu.classList.remove('translate-y-full');
