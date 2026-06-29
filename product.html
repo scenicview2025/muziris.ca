@@ -1046,13 +1046,19 @@
         let typingTimeout = null;      // 🟢 NEW
         
         auth.onAuthStateChanged((user) => {
+            const authBtn = document.getElementById('auth-buttons');
+            const dropdown = document.getElementById('userDropdownMenu');
+            
             if (user) {
                 currentUser = user;
                 let displayName = user.displayName || user.email.split('@')[0];
                 document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0];
                 
-                // 🟢 FIX: Redirects the user to their dashboard when clicked!
-                document.getElementById('auth-buttons').onclick = () => window.location.href = 'buyer-dashboard.html';
+                // 🟢 FIX: Click toggles the dropdown instead of instant redirect!
+                authBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('hidden');
+                };
 
                 fetch(API_BASE_URL + '/buyer/auth', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -1067,10 +1073,20 @@
                 currentUser = null;
                 document.getElementById('auth-btn-text').innerText = "Sign In";
                 
-                // 🟢 FIX: Restores the Login Modal if they log out!
-                document.getElementById('auth-buttons').onclick = openAuthModal;
+                // 🟢 FIX: Restores the Login Modal and ensures dropdown is hidden
+                authBtn.onclick = openAuthModal;
+                if(dropdown) dropdown.classList.add('hidden');
             }
         });
+
+        // 🟢 NEW: Sign Out Function
+        function signOutUser() {
+            auth.signOut().then(() => {
+                window.location.reload(); // Instantly refreshes page to logged-out state
+            }).catch((error) => {
+                alert("Error signing out: " + error.message);
+            });
+        }
         function openMobileMenu() {
             const menu = document.getElementById('mobile-category-menu');
             menu.classList.remove('translate-y-full');
