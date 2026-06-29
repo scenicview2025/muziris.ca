@@ -1081,20 +1081,22 @@
         let isTyping = false;          // 🟢 NEW
         let typingTimeout = null;      // 🟢 NEW
         
+        // 🟢 FIX: Swaps the Dropdown views instantly without needing Modals!
         auth.onAuthStateChanged((user) => {
-            const authBtn = document.getElementById('auth-buttons');
-            const dropdown = document.getElementById('userDropdownMenu');
-            
             if (user) {
                 currentUser = user;
                 let displayName = user.displayName || user.email.split('@')[0];
+                
+                // Update Button Name
                 document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0];
                 
-                // 🟢 FIX: Click toggles the dropdown instead of instant redirect!
-                authBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    dropdown.classList.toggle('hidden');
-                };
+                // Show Logged-In Menu, Hide Guest Form
+                document.getElementById('guest-dropdown-content').classList.add('hidden');
+                document.getElementById('user-dropdown-content').classList.remove('hidden');
+                
+                // Populate Profile Badge
+                document.getElementById('drop-user-name').innerText = displayName;
+                document.getElementById('drop-user-initial').innerText = displayName.charAt(0).toUpperCase();
 
                 fetch(API_BASE_URL + '/buyer/auth', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -1109,12 +1111,43 @@
                 currentUser = null;
                 document.getElementById('auth-btn-text').innerText = "Sign In";
                 
-                // 🟢 FIX: Restores the Login Modal and ensures dropdown is hidden
-                authBtn.onclick = openAuthModal;
-                if(dropdown) dropdown.classList.add('hidden');
+                // Show Guest Form, Hide Logged-In Menu
+                document.getElementById('guest-dropdown-content').classList.remove('hidden');
+                document.getElementById('user-dropdown-content').classList.add('hidden');
             }
         });
 
+        // 🟢 NEW: Login Functions wired to the new Hover Dropdown inputs
+        function signInWithEmailDrop() {
+            const email = document.getElementById('auth-email-drop').value;
+            const pass = document.getElementById('auth-pass-drop').value;
+            if(!email || !pass) return alert("Please enter both email and password.");
+            auth.signInWithEmailAndPassword(email, pass).catch(error => alert("Error: " + error.message));
+        }
+        function signUpWithEmailDrop() {
+            const email = document.getElementById('auth-email-drop').value;
+            const pass = document.getElementById('auth-pass-drop').value;
+            if(!email || !pass) return alert("Enter email and password.");
+            auth.createUserWithEmailAndPassword(email, pass).catch(e => alert(e.message));
+        }
+
+        // Keep Social Logins
+        function signInWithGoogle() { auth.signInWithPopup(googleProvider).catch(e => console.log(e)); }
+        function signInWithMicrosoft() { auth.signInWithPopup(msProvider).catch(e => console.log(e)); }
+
+        function signOutUser() {
+            auth.signOut().then(() => window.location.reload());
+        }
+        
+        // Mobile tap fallback (since phones don't have hover)
+        document.getElementById('auth-buttons').onclick = (e) => {
+            if (window.innerWidth < 768) {
+                e.stopPropagation();
+                const dropdown = document.getElementById('userMenuContainer').querySelector('.absolute');
+                dropdown.classList.toggle('invisible');
+                dropdown.classList.toggle('opacity-0');
+            }
+        };
         // 🟢 NEW: Sign Out Function
         function signOutUser() {
             auth.signOut().then(() => {
