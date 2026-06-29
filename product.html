@@ -122,76 +122,71 @@
 <body>
 
     <header class="glass-header" id="main-header">
-      <div class="max-w-[1400px] mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
-        <div class="flex items-center gap-4">
+      <div class="max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
+        
+        <div class="flex items-center gap-4 md:gap-6 flex-shrink-0">
           <button class="md:hidden text-gray-900 text-[22px] hover:text-[var(--gold)] transition mt-1" onclick="openMobileMenu()">
             <i class="fas fa-bars"></i>
           </button>
           
-          <h1 class="text-2xl font-bold tracking-[0.15em] text-gray-900 brand-font uppercase m-0 leading-none cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
+          <h1 class="text-3xl font-bold tracking-[0.1em] text-gray-900 brand-font m-0 leading-none cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
+          
+          <button onclick="window.location.href='catalog.html'" class="hidden md:flex items-center gap-2 text-gray-800 hover:text-[var(--gold-dark)] font-bold text-sm transition">
+            <i class="fas fa-bars text-lg"></i> Categories
+          </button>
         </div>
         
-        <div class="hidden md:block flex-1 max-w-xl mx-8">
-            <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('nav-search').value);" class="relative w-full">
-                <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                <input type="text" id="nav-search" placeholder="Search enterprise catalog..." class="w-full bg-[#f3f4f6] border border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] text-sm rounded-full py-2.5 pl-10 pr-4 outline-none transition-all">
+        <div class="hidden md:block flex-1 max-w-3xl">
+            <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('nav-search').value);" class="relative w-full group">
+                <input type="text" id="nav-search" placeholder="Search for anything..." class="w-full bg-gray-100 border-2 border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] text-sm rounded-full py-3 pl-5 pr-12 outline-none transition-all text-gray-900 shadow-inner">
+                <button type="submit" class="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-white w-9 h-9 rounded-full flex items-center justify-center transition shadow-sm">
+                    <i class="fas fa-search text-sm"></i>
+                </button>
             </form>
         </div>
 
-        <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase text-gray-500 h-full relative">
-          
-          <a href="catalog.html" class="hover:text-black transition">Catalog</a>
-
-          <a href="rfq.html" class="hover:text-black transition flex items-center gap-2 relative">
-            <i class="fas fa-clipboard-list text-sm"></i> Quote List
-            <span id="header-cart-badge" class="absolute -top-2 -right-3 bg-[#ff5252] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
-          </a>
-
-        </div>
-
-        <div class="flex items-center gap-4 md:gap-6 text-gray-600 flex-shrink-0 ml-auto">
+        <div class="flex items-center gap-5 md:gap-7 text-gray-700 flex-shrink-0">
             
-            <button onclick="toggleMobileSearch()" class="md:hidden hover:text-[var(--gold)] transition flex items-center text-gray-700">
+            <button onclick="toggleMobileSearch()" class="md:hidden hover:text-[var(--gold)] transition flex items-center">
                 <i class="fas fa-search text-[20px]"></i>
             </button>
 
-            <a href="rfq.html" class="md:hidden hover:text-[var(--gold)] transition flex items-center relative text-gray-700">
-                <i class="fas fa-clipboard-list text-[22px]"></i>
-                <span id="mobile-header-cart-badge" class="absolute -top-1.5 -right-2 bg-[#ff5252] text-white text-[9px] font-bold w-[16px] h-[16px] flex items-center justify-center rounded-full hidden shadow-sm border border-white">0</span>
-            </a>
+            <button onclick="openAuthModal()" id="auth-buttons" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
+                <i class="far fa-user text-[22px] md:text-xl"></i> 
+                <span id="auth-btn-text" class="hidden md:block text-sm">Sign In</span>
+            </button>
 
             <div class="relative" id="customCurrencyDropdown">
-                <div class="bg-gray-50 px-2 md:px-3 py-1.5 md:py-2 rounded-lg border border-gray-200 flex items-center gap-1.5 md:gap-2 hover:bg-gray-100 transition cursor-pointer" id="currencyBtn">
-                    <span class="hidden md:block text-[10px] text-gray-500 font-bold uppercase tracking-widest">Market</span>
-                    <div class="flex items-center gap-1.5 md:gap-2" id="activeCurrencyDisplay">
+                <div class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition py-2" id="currencyBtn">
+                    <div class="flex items-center gap-1.5" id="activeCurrencyDisplay">
                         <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200">
                         <span class="hidden md:block text-sm font-bold text-gray-900">CAD</span>
                     </div>
-                    <i class="fas fa-chevron-down text-[9px] text-gray-500"></i>
+                    <i class="fas fa-chevron-down text-[10px] text-gray-500 hidden md:block"></i>
                 </div>
                 
                 <div id="currencyMenu" class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
-                    <div class="py-2 max-h-72 overflow-y-auto" id="currencyList">
-                    </div>
+                    <div class="py-2 max-h-72 overflow-y-auto" id="currencyList"></div>
                 </div>
             </div>
 
-            <button onclick="openAuthModal()" id="auth-buttons" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
-                <i class="far fa-user text-[22px] md:text-lg"></i> <span id="auth-btn-text" class="hidden md:block uppercase tracking-widest text-[10px]">Buyer Login</span>
-            </button>
+            <a href="rfq.html" class="hover:text-[var(--gold)] transition flex items-center relative text-gray-700">
+                <i class="fas fa-clipboard-list text-[22px] md:text-xl"></i>
+                <span id="header-cart-badge" class="absolute -top-1.5 md:-top-2 -right-2 md:-right-2 bg-[#ff5252] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden shadow-sm border border-white">0</span>
+            </a>
+
         </div>
-    </div>
+      </div>
 
-    <div id="mobile-search-dropdown" class="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-200 p-4 transform -translate-y-full opacity-0 transition-all duration-300 -z-10 pointer-events-none shadow-md">
-        <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('mobile-search-input').value);" class="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 focus-within:border-[var(--gold)] transition-colors shadow-inner">
-            <input type="text" id="mobile-search-input" class="w-full bg-transparent border-none outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="Search products, categories...">
-            <button type="submit" class="text-[var(--gold-dark)] ml-2 text-lg">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
-    </div>
- </header>
-
+      <div id="mobile-search-dropdown" class="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-200 p-4 transform -translate-y-full opacity-0 transition-all duration-300 -z-10 pointer-events-none shadow-md">
+          <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('mobile-search-input').value);" class="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 focus-within:border-[var(--gold)] transition-colors shadow-inner">
+              <input type="text" id="mobile-search-input" class="w-full bg-transparent border-none outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="Search products, categories...">
+              <button type="submit" class="text-[var(--gold-dark)] ml-2 text-lg">
+                  <i class="fas fa-search"></i>
+              </button>
+          </form>
+      </div>
+    </header>
   <main class="min-h-screen bg-[#FAFAFA] pt-6">
 
     <div id="loader" class="text-center py-32 w-full">
