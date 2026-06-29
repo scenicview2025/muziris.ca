@@ -964,49 +964,8 @@
             </a>
             
         </div>
-    </div>
-
-    <div id="auth-modal" class="modal-overlay" onclick="closeModal(event, 'auth-modal')">
-        <div class="auth-content" onclick="event.stopPropagation()">
-            <div class="modal-close" onclick="closeModal(event, 'auth-modal')"><i class="fas fa-times"></i></div>
-            
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 brand-font mb-2">Sign in to continue</h2>
-                <p class="text-sm text-gray-500">Access exclusive wholesale pricing and secure contracts.</p>
-            </div>
-
-            <div class="space-y-4 mb-6 text-left">
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Corporate Email</label>
-                    <input type="email" id="auth-email" class="premium-input py-2.5" placeholder="procurement@company.com">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Password</label>
-                    <input type="password" id="auth-pass" class="premium-input py-2.5" placeholder="••••••••">
-                </div>
-                <div class="flex gap-3 pt-2">
-                    <button onclick="signInWithEmail()" class="flex-1 bg-[#d1b046] hover:bg-[#c2a138] text-black font-bold rounded-lg py-3 text-xs uppercase transition">Sign In</button>
-                    <button onclick="signUpWithEmail()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-lg py-3 text-xs uppercase tracking-widest transition">Create Account</button>
-                </div>
-            </div>
-
-            <div class="relative flex items-center py-2 mb-6">
-                <div class="flex-grow border-t border-gray-200"></div>
-                <span class="flex-shrink-0 mx-4 text-gray-400 text-[10px] uppercase tracking-widest font-bold">Or continue with</span>
-                <div class="flex-grow border-t border-gray-200"></div>
-            </div>
-
-            <div class="space-y-3">
-                <button onclick="signInWithGoogle()" class="btn-sso">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> Google
-                </button>
-                <button onclick="signInWithMicrosoft()" class="btn-sso">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" class="w-5 h-5"> Microsoft
-                </button>
-            </div>
-        </div>
-    </div>
-
+    </div
+        
     <div id="live-chat-window" style="display:none; position:fixed; bottom:20px; right:20px; width:360px; height:500px; background:#fff; border-radius:12px; box-shadow:0 15px 35px rgba(0,0,0,0.2); z-index:9999; flex-direction:column; border:1px solid var(--border-light); overflow:hidden; font-family:'Inter', sans-serif;">
         <div style="background:var(--void); padding:15px; color:var(--gold); display:flex; justify-content:space-between; align-items:center;">
             <div>
