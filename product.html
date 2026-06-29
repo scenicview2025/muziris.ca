@@ -380,21 +380,66 @@
         </button>
     </div>
 
-    <div id="mobile-category-menu" class="fixed inset-0 z-[200] bg-white transform translate-y-full transition-transform duration-300 flex flex-col md:hidden">
-        <div class="flex items-center justify-between p-5 border-b border-gray-100 bg-white">
-            <h2 class="text-lg font-bold text-gray-900">Browse Categories</h2>
-            <button onclick="closeMobileMenu()" class="text-gray-500 hover:text-red-500 text-3xl leading-none">&times;</button>
+    <div id="mobile-category-menu" class="fixed inset-0 z-[200] bg-gray-50 transform translate-y-full transition-transform duration-300 flex flex-col md:hidden">
+        
+        <div class="flex items-center justify-between p-5 border-b border-gray-200 bg-white shadow-sm z-10">
+            <h2 class="text-lg font-bold text-gray-900 brand-font">Browse Categories</h2>
+            <button onclick="closeMobileMenu()" class="text-gray-400 hover:text-red-500 text-4xl leading-none">&times;</button>
         </div>
+        
         <div class="flex-1 overflow-y-auto pb-safe">
-            <a href="catalog.html?category=Apparel, Textiles %26 Accessories" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Apparel & Textiles <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
-            <a href="catalog.html?category=Consumer Electronics %26 Appliances" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Consumer Electronics <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
-            <a href="catalog.html?category=Home Decor, Garden %26 Furniture" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Home, Garden & Furniture <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
-            <a href="catalog.html?category=Beauty %26 Personal Care" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Beauty & Personal Care <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
-            <a href="catalog.html?category=Packaging %26 Printing" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Packaging & Printing <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
-            <a href="catalog.html?category=Jewelry, Eyewear %26 Watches" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Jewelry & Watches <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
-            <a href="catalog.html?category=Industrial Machinery %26 Equipment" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Industrial Machinery <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
-            <a href="catalog.html?category=Sports, Toys %26 Hobbies" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Sports, Toys & Hobbies <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
-            <a href="catalog.html" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-[var(--gold-dark)] bg-[var(--gold-light)] hover:bg-[var(--gold)] hover:text-white transition">View All Categories <i class="fas fa-arrow-right text-xs"></i></a>
+            
+            <div class="bg-white border-b border-gray-200">
+                <button onclick="toggleMobileCat('mob-cat-1')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+                    Apparel, Textiles & Accessories <i id="icon-mob-cat-1" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="mob-cat-1" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories&sub=Clothing" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Clothing</a>
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories&sub=Sportswear" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Sportswear & Activewear</a>
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories&sub=Footwear" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Footwear & Accessories</a>
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Apparel &rarr;</a>
+                </div>
+            </div>
+
+            <div class="bg-white border-b border-gray-200">
+                <button onclick="toggleMobileCat('mob-cat-2')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+                    Consumer Electronics <i id="icon-mob-cat-2" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="mob-cat-2" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances&sub=Mobile" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Mobile Accessories</a>
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances&sub=Computers" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Computers & IT Hardware</a>
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances&sub=Audio" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Audio & Video</a>
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Electronics &rarr;</a>
+                </div>
+            </div>
+
+            <div class="bg-white border-b border-gray-200">
+                <button onclick="toggleMobileCat('mob-cat-3')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+                    Home, Garden & Furniture <i id="icon-mob-cat-3" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="mob-cat-3" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture&sub=Residential" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Residential Furniture</a>
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture&sub=Decor" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Home Decor & Crafts</a>
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture&sub=Kitchenware" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Kitchenware & Tableware</a>
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Home & Garden &rarr;</a>
+                </div>
+            </div>
+
+            <div class="bg-white border-b border-gray-200">
+                <button onclick="toggleMobileCat('mob-cat-4')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+                    Beauty & Personal Care <i id="icon-mob-cat-4" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="mob-cat-4" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+                    <a href="catalog.html?category=Beauty %26 Personal Care&sub=Skincare" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Skincare & Cosmetics</a>
+                    <a href="catalog.html?category=Beauty %26 Personal Care&sub=Fragrance" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Perfume & Fragrance</a>
+                    <a href="catalog.html?category=Beauty %26 Personal Care" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Beauty &rarr;</a>
+                </div>
+            </div>
+
+            <a href="catalog.html" class="flex items-center justify-center p-6 text-sm font-bold text-gray-900 bg-gray-100 hover:bg-gray-200 transition">
+                Browse Full Catalog Directory
+            </a>
+            
         </div>
     </div>
 
