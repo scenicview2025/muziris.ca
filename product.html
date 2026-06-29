@@ -380,6 +380,24 @@
         </button>
     </div>
 
+    <div id="mobile-category-menu" class="fixed inset-0 z-[200] bg-white transform translate-y-full transition-transform duration-300 flex flex-col md:hidden">
+        <div class="flex items-center justify-between p-5 border-b border-gray-100 bg-white">
+            <h2 class="text-lg font-bold text-gray-900">Browse Categories</h2>
+            <button onclick="closeMobileMenu()" class="text-gray-500 hover:text-red-500 text-3xl leading-none">&times;</button>
+        </div>
+        <div class="flex-1 overflow-y-auto pb-safe">
+            <a href="catalog.html?category=Apparel, Textiles %26 Accessories" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Apparel & Textiles <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
+            <a href="catalog.html?category=Consumer Electronics %26 Appliances" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Consumer Electronics <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
+            <a href="catalog.html?category=Home Decor, Garden %26 Furniture" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Home, Garden & Furniture <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
+            <a href="catalog.html?category=Beauty %26 Personal Care" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Beauty & Personal Care <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
+            <a href="catalog.html?category=Packaging %26 Printing" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Packaging & Printing <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
+            <a href="catalog.html?category=Jewelry, Eyewear %26 Watches" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Jewelry & Watches <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
+            <a href="catalog.html?category=Industrial Machinery %26 Equipment" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Industrial Machinery <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
+            <a href="catalog.html?category=Sports, Toys %26 Hobbies" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-gray-700 hover:bg-gray-50">Sports, Toys & Hobbies <i class="fas fa-chevron-right text-gray-300 text-xs"></i></a>
+            <a href="catalog.html" class="flex items-center justify-between p-5 border-b border-gray-50 text-sm font-bold text-[var(--gold-dark)] bg-[var(--gold-light)] hover:bg-[var(--gold)] hover:text-white transition">View All Categories <i class="fas fa-arrow-right text-xs"></i></a>
+        </div>
+    </div>
+
     <div id="auth-modal" class="modal-overlay" onclick="closeModal(event, 'auth-modal')">
         <div class="auth-content" onclick="event.stopPropagation()">
             <div class="modal-close" onclick="closeModal(event, 'auth-modal')"><i class="fas fa-times"></i></div>
