@@ -405,26 +405,62 @@
                 <i class="fas fa-search text-[20px]"></i>
             </button>
 
-            <div class="relative" id="userMenuContainer">
-                <button onclick="openAuthModal()" id="auth-buttons" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700">
+            <div class="relative group h-full flex items-center" id="userMenuContainer">
+                <button id="auth-buttons" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700 py-2">
                     <i class="far fa-user text-[22px] md:text-xl"></i> 
                     <span id="auth-btn-text" class="hidden md:block text-sm">Sign In</span>
                 </button>
 
-                <div id="userDropdownMenu" class="hidden absolute right-0 z-50 mt-4 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
-                    <div class="py-2">
-                        <a href="buyer-dashboard.html" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50">
-                            <i class="fas fa-th-large w-5 text-center text-gray-400 mr-2"></i> Account Dashboard
-                        </a>
-                        <a href="buyer-message-hub.html" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50">
-                            <i class="far fa-comments w-5 text-center text-gray-400 mr-2"></i> Messages
-                        </a>
-                        <a href="buyer-tracking.html" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50">
-                            <i class="fas fa-box-open w-5 text-center text-gray-400 mr-2"></i> Order Tracking
-                        </a>
-                        <button onclick="signOutUser()" class="w-full text-left block px-4 py-3 text-sm text-red-600 hover:bg-red-50 font-bold transition">
-                            <i class="fas fa-sign-out-alt w-5 text-center text-red-400 mr-2"></i> Sign Out
-                        </button>
+                <div class="absolute right-0 top-full pt-4 w-[320px] invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-50">
+                    <div class="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 relative overflow-hidden">
+                        
+                        <div class="absolute -top-2 right-6 w-4 h-4 bg-white border-l border-t border-gray-100 transform rotate-45 z-0"></div>
+
+                        <div id="guest-dropdown-content" class="p-6 relative z-10 bg-white">
+                            <div class="text-center mb-4">
+                                <h3 class="text-xl font-bold text-gray-900 brand-font mb-1">Buyer Access</h3>
+                                <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Secure Wholesale Portal</p>
+                            </div>
+
+                            <div class="space-y-3 mb-4 text-left">
+                                <div>
+                                    <input type="email" id="auth-email-drop" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--gold)] transition" placeholder="Corporate Email">
+                                </div>
+                                <div>
+                                    <input type="password" id="auth-pass-drop" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--gold)] transition" placeholder="Password">
+                                </div>
+                                <div class="flex gap-2 pt-1">
+                                    <button onclick="signInWithEmailDrop()" class="flex-1 bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-black font-bold rounded-lg py-2.5 text-xs uppercase tracking-widest transition">Sign In</button>
+                                    <button onclick="signUpWithEmailDrop()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-lg py-2.5 text-xs uppercase tracking-widest transition">Register</button>
+                                </div>
+                            </div>
+
+                            <div class="relative flex items-center py-2 mb-3">
+                                <div class="flex-grow border-t border-gray-100"></div>
+                                <span class="flex-shrink-0 mx-3 text-gray-400 text-[9px] uppercase tracking-widest font-bold">Or continue with</span>
+                                <div class="flex-grow border-t border-gray-100"></div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button onclick="signInWithGoogle()" class="flex-1 flex items-center justify-center gap-2 border border-gray-200 rounded-lg py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4"> Google</button>
+                                <button onclick="signInWithMicrosoft()" class="flex-1 flex items-center justify-center gap-2 border border-gray-200 rounded-lg py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" class="w-4 h-4"> MS</button>
+                            </div>
+                        </div>
+
+                        <div id="user-dropdown-content" class="hidden relative z-10 bg-white">
+                            <div class="bg-gray-50 p-5 border-b border-gray-100 text-center">
+                                <div class="w-12 h-12 bg-[var(--gold)] text-black rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-2 brand-font shadow-sm" id="drop-user-initial">M</div>
+                                <div class="text-sm font-bold text-gray-900" id="drop-user-name">Buyer Name</div>
+                                <div class="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-1">Verified Account</div>
+                            </div>
+                            <div class="py-2">
+                                <a href="buyer-dashboard.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="fas fa-th-large w-5 text-center text-gray-400 mr-2"></i> Account Dashboard</a>
+                                <a href="buyer-message-hub.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="far fa-comments w-5 text-center text-gray-400 mr-2"></i> Messages</a>
+                                <a href="buyer-tracking.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="fas fa-box-open w-5 text-center text-gray-400 mr-2"></i> Order Tracking</a>
+                                <button onclick="signOutUser()" class="w-full text-left block px-5 py-3 text-sm text-red-600 hover:bg-red-50 font-bold transition"><i class="fas fa-sign-out-alt w-5 text-center text-red-400 mr-2"></i> Sign Out</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
