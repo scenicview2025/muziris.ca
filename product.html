@@ -1224,7 +1224,10 @@
             activeCurrency = curr; 
             localStorage.setItem('muziris_active_currency', curr);
             const display = document.getElementById('activeCurrencyDisplay');
-            if(display) display.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="text-sm font-bold text-gray-900">${curr}</span>`;
+            
+            // 🟢 FIX: Added 'hidden md:block' to the text span so mobile stays clean!
+            if(display) display.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="hidden md:block text-sm font-bold text-gray-900">${curr}</span>`;
+            
             document.getElementById('currencyMenu')?.classList.add('hidden');
         }
 
