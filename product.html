@@ -1094,8 +1094,12 @@
         function signInWithGoogle() { auth.signInWithPopup(googleProvider).catch(e => console.log(e)); }
         function signInWithMicrosoft() { auth.signInWithPopup(msProvider).catch(e => console.log(e)); }
 
+        // 🟢 FIX: Clears the browser's cart memory when the user signs out!
         function signOutUser() {
-            auth.signOut().then(() => window.location.reload());
+            auth.signOut().then(() => {
+                localStorage.removeItem('muziris_cart'); // Wipes the quote list
+                window.location.reload(); // Instantly refreshes the page
+            });
         }
         
         // Mobile tap fallback (since phones don't have hover)
