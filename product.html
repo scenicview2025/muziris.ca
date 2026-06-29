@@ -548,6 +548,27 @@
             document.body.style.overflow = ''; // Unlocks the background
         }
 
+        // 🟢 NEW: Handles the Accordion Expander inside the Mobile Menu
+        function toggleMobileCat(id) {
+            const submenu = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            // If it's already open, close it
+            if (!submenu.classList.contains('hidden')) {
+                submenu.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+                return;
+            }
+            
+            // Close all other tabs first so the menu stays clean
+            document.querySelectorAll('.mobile-submenu').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="icon-mob-cat-"]').forEach(el => el.classList.remove('rotate-180'));
+            
+            // Open the one they clicked
+            submenu.classList.remove('hidden');
+            icon.classList.add('rotate-180');
+        }
+
         function signInWithGoogle() { auth.signInWithPopup(googleProvider).then(() => document.getElementById('auth-modal').style.display = 'none'); }
         function signInWithMicrosoft() { auth.signInWithPopup(msProvider).then(() => document.getElementById('auth-modal').style.display = 'none'); }
         
