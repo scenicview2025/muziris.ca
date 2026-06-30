@@ -539,7 +539,8 @@
             let imgs = [p.hero, ...(p.gallery || [])].filter(Boolean);
             if(imgs.length === 0) imgs = ['MC.png'];
 
-            let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
+            // 🟢 FIX: Added touch listeners and 'touch-pan-y' so it doesn't break scrolling!
+            let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider touch-pan-y" id="slider-${p.id}" ontouchstart="handleCardTouchStart(event)" ontouchend="handleCardTouchEnd(event, '${p.id}', ${imgs.length})">`;
             if (p.status === 'PAUSED') {
                 sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
             } else {
