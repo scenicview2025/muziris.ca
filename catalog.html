@@ -570,7 +570,8 @@
             const displayTitle = p.short_title || p.shortTitle || p.title || p.name;
 
             return `
-            <div class="${cardClass}" onclick="window.location.href='product.html?item=${safeSlug}&id=${p.id}'">
+            <div class="${cardClass}" onclick="if(!window.isCardSwiping) window.location.href='product.html?item=${safeSlug}&id=${p.id}'">
+                <div class="img-container">${sliderHtml}</div>
                 <div class="img-container">${sliderHtml}</div>
                 <div class="pt-2 pb-4 flex flex-col flex-1">
                     <h3 class="text-xs md:text-sm text-gray-900 leading-snug line-clamp-2 mb-1">${displayTitle}</h3>
