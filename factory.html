@@ -9,6 +9,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    
     <style>
         :root {
             --gold: #D4AF37;
@@ -25,20 +29,34 @@
         /* Premium Layout */
         .glass-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
         
+        /* 🟢 SYNCED: Mega Menu Styles */
+        .nav-group:hover .mega-menu-container { visibility: visible; opacity: 1; transform: translateY(0); }
+        .mega-menu-container { position: absolute; top: 100%; left: -100px; width: 750px; height: 380px; background: #fff; border-radius: 8px; display: flex; visibility: hidden; opacity: 0; transform: translateY(15px); transition: all 0.3s ease; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid #e5e7eb; overflow: hidden; z-index: 1000; }
+        .mega-sidebar { width: 35%; background: #f8f9fa; border-right: 1px solid #e5e7eb; padding: 15px 0; overflow-y: auto; overscroll-behavior: contain; }
+        .mega-sidebar::-webkit-scrollbar { width: 4px; }
+        .mega-sidebar::-webkit-scrollbar-track { background: transparent; }
+        .mega-sidebar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+        .mega-sidebar::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+        .mega-cat-item { padding: 14px 24px; font-size: 12px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; text-transform: none; letter-spacing: normal; }
+        .mega-cat-item:hover, .mega-cat-item.active { background: #ffffff; color: var(--gold-dark); border-left: 3px solid var(--gold); }
+        .mega-content { width: 65%; padding: 30px; background: #ffffff; overscroll-behavior: contain; }
+        .mega-panel { display: none; }
+        .mega-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .subcat-item { cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; transition: 0.2s; }
+        .subcat-item:hover { transform: translateX(5px); }
+
         /* Storefront Hero */
         .hero-banner { height: 320px; background-color: var(--void); background-size: cover; background-position: center; position: relative; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,14,20,0.9) 0%, rgba(11,14,20,0.2) 100%); }
-        
         .profile-logo { width: 140px; height: 140px; border-radius: 20px; background: #fff; border: 4px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.1); object-fit: contain; padding: 10px; margin-top: -70px; position: relative; z-index: 10; }
         
-        /* 🟢 EXACT MATCH: Highly Optimized Product Card from Catalog */
+        /* Product Card */
         .product-card { position: relative; transition: all 0.3s ease; background: #fff; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); overflow: hidden; display: flex; flex-direction: column; cursor: pointer;}
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0,0,0,0.08); border-color: rgba(212, 175, 55, 0.4); }
-        
         .img-container { background: #fdfdfd; position: relative; aspect-ratio: 1 / 1; border-bottom: 1px solid rgba(0,0,0,0.03); overflow: hidden; padding: 12px; }
         .img-layer { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
         .product-card:hover .img-layer.opacity-100 { transform: scale(1.08); }
-        
         .badge-verified { position: absolute; top: 12px; right: 12px; background: #ffffff; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #111; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 6px rgba(0,0,0,0.05); z-index: 30; display: flex; align-items: center; gap: 4px; }
         .badge-verified i { color: var(--gold); font-size: 11px; }
 
@@ -55,15 +73,100 @@
 </head>
 <body>
 
-    <header class="glass-header">
-        <div class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between gap-8">
-            <h1 class="text-2xl font-bold tracking-widest text-black brand-font uppercase cursor-pointer" onclick="window.location.href='catalog.html'">Muziris</h1>
-            
-            <div class="flex items-center gap-6 text-gray-600">
-                <a href="catalog.html" class="text-sm font-bold uppercase tracking-widest hover:text-[var(--gold)] transition"><i class="fas fa-arrow-left mr-2"></i> Back to Catalog</a>
-                <a href="buyer-dashboard.html" class="hover:text-[var(--gold)] transition"><i class="far fa-user text-xl"></i></a>
-            </div>
+    <header class="glass-header" id="main-header">
+      <div class="max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
+        
+        <div class="flex items-center gap-4 md:gap-6 flex-shrink-0 h-full">
+          <button class="md:hidden text-gray-900 text-[22px] hover:text-[var(--gold)] transition mt-1" onclick="openMobileMenu()">
+            <i class="fas fa-bars"></i>
+          </button>
+          
+          <h1 class="text-3xl font-bold tracking-[0.1em] text-gray-900 brand-font m-0 leading-none cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
+          
+          <div class="hidden md:flex nav-group h-full items-center ml-4 md:ml-8 cursor-pointer relative">
+            <span class="text-gray-500 hover:text-gray-900 text-xs font-bold uppercase tracking-widest transition flex items-center gap-2 py-8">
+              <i class="fas fa-bars text-sm"></i> Categories
+            </span>
+            <div class="mega-menu-container text-left cursor-default shadow-2xl absolute top-[80px] -left-[100px]">
+              <div class="mega-sidebar" id="dynamic-mega-sidebar"></div>            
+              <div class="mega-content overflow-y-auto" id="dynamic-mega-panels"></div> 
+            </div> 
+          </div>
         </div>
+        
+        <div class="hidden md:block flex-1 max-w-3xl">
+            <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('nav-search').value);" class="relative w-full group">
+                <input type="text" id="nav-search" placeholder="Search for anything..." class="w-full bg-gray-100 border-2 border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] text-sm rounded-full py-3 pl-5 pr-12 outline-none transition-all text-gray-900 shadow-inner">
+                <button type="submit" class="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-white w-9 h-9 rounded-full flex items-center justify-center transition shadow-sm">
+                    <i class="fas fa-search text-sm"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="flex items-center gap-5 md:gap-7 text-gray-700 flex-shrink-0">
+            <button onclick="toggleMobileSearch()" class="md:hidden hover:text-[var(--gold)] transition flex items-center">
+                <i class="fas fa-search text-[20px]"></i>
+            </button>
+
+            <div class="relative group h-full flex items-center" id="userMenuContainer">
+                <button id="auth-buttons" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700 py-2">
+                    <i class="far fa-user text-[22px] md:text-xl"></i> 
+                    <span id="auth-btn-text" class="hidden md:block text-sm">Sign In</span>
+                </button>
+                <div class="absolute right-0 top-full pt-4 w-[320px] invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-50">
+                    <div class="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 relative overflow-hidden">
+                        <div class="absolute -top-2 right-6 w-4 h-4 bg-white border-l border-t border-gray-100 transform rotate-45 z-0"></div>
+                        <div id="guest-dropdown-content" class="p-6 relative z-10 bg-white">
+                            <div class="text-center mb-4"><h3 class="text-xl font-bold text-gray-900 brand-font mb-1">Buyer Access</h3><p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Secure Portal</p></div>
+                            <div class="space-y-3 mb-4 text-left">
+                                <div><input type="email" id="auth-email-drop" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--gold)]" placeholder="Corporate Email"></div>
+                                <div><input type="password" id="auth-pass-drop" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--gold)]" placeholder="Password"></div>
+                                <div class="flex gap-2 pt-1"><button onclick="signInWithEmailDrop()" class="flex-1 bg-[var(--gold)] text-black font-bold rounded-lg py-2.5 text-xs uppercase tracking-widest">Sign In</button><button onclick="signUpWithEmailDrop()" class="flex-1 bg-gray-100 text-gray-800 font-bold rounded-lg py-2.5 text-xs uppercase tracking-widest">Register</button></div>
+                            </div>
+                        </div>
+                        <div id="user-dropdown-content" class="hidden relative z-10 bg-white">
+                            <div class="bg-gray-50 p-5 border-b border-gray-100 text-center">
+                                <div class="w-12 h-12 bg-[var(--gold)] text-black rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-2 brand-font shadow-sm" id="drop-user-initial">M</div>
+                                <div class="text-sm font-bold text-gray-900" id="drop-user-name">Buyer Name</div>
+                            </div>
+                            <div class="py-2">
+                                <a href="buyer-dashboard.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="fas fa-th-large w-5 text-center text-gray-400 mr-2"></i> Account Dashboard</a>
+                                <a href="buyer-message-hub.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="far fa-comments w-5 text-center text-gray-400 mr-2"></i> Messages</a>
+                                <a href="buyer-tracking.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="fas fa-box-open w-5 text-center text-gray-400 mr-2"></i> Order Tracking</a>
+                                <button onclick="signOutUser()" class="w-full text-left block px-5 py-3 text-sm text-red-600 hover:bg-red-50 font-bold transition"><i class="fas fa-sign-out-alt w-5 text-center text-red-400 mr-2"></i> Sign Out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative" id="customCurrencyDropdown">
+                <div class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition py-2" id="currencyBtn">
+                    <div class="flex items-center gap-1.5" id="activeCurrencyDisplay">
+                        <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200">
+                        <span class="hidden md:block text-sm font-bold text-gray-900">CAD</span>
+                    </div>
+                    <i class="fas fa-chevron-down text-[10px] text-gray-500 hidden md:block"></i>
+                </div>
+                <div id="currencyMenu" class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
+                    <div class="py-2 max-h-72 overflow-y-auto" id="currencyList"></div>
+                </div>
+            </div>
+
+            <a href="rfq.html" class="hover:text-[var(--gold)] transition flex items-center relative text-gray-700">
+                <i class="fas fa-clipboard-list text-[22px] md:text-xl"></i>
+                <span id="header-cart-badge" class="absolute -top-1.5 md:-top-2 -right-2 md:-right-2 bg-[#ff5252] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden shadow-sm border border-white">0</span>
+            </a>
+
+        </div>
+      </div>
+
+      <div id="mobile-search-dropdown" class="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-200 p-4 transform -translate-y-full opacity-0 transition-all duration-300 -z-10 pointer-events-none shadow-md">
+          <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('mobile-search-input').value);" class="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 focus-within:border-[var(--gold)] transition-colors shadow-inner">
+              <input type="text" id="mobile-search-input" class="w-full bg-transparent border-none outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="Search products, categories...">
+              <button type="submit" class="text-[var(--gold-dark)] ml-2 text-lg"><i class="fas fa-search"></i></button>
+          </form>
+      </div>
     </header>
 
     <div id="loader" class="min-h-[60vh] flex flex-col items-center justify-center">
@@ -94,29 +197,17 @@
                     </div>
                 </div>
                 <div class="pb-2 w-full md:w-auto">
-                    <button class="w-full md:w-auto bg-[var(--void)] text-[var(--gold)] px-8 py-3 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-[#1a1f2e] transition shadow-lg" onclick="alert('Message system connecting to Hub...')">
+                    <button class="w-full md:w-auto bg-[var(--void)] text-[var(--gold)] px-8 py-3 rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-[#1a1f2e] transition shadow-lg" onclick="window.location.href='buyer-message-hub.html'">
                         <i class="far fa-envelope mr-2"></i> Contact Factory
                     </button>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <div class="stat-box">
-                    <div class="stat-value" id="sf-year">-</div>
-                    <div class="stat-label">Year Established</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="sf-emp">-</div>
-                    <div class="stat-label">Employees</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value text-[var(--gold)]" id="sf-certs">Pending</div>
-                    <div class="stat-label">Certifications</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="sf-markets">Global</div>
-                    <div class="stat-label">Main Markets</div>
-                </div>
+                <div class="stat-box"><div class="stat-value" id="sf-year">-</div><div class="stat-label">Year Established</div></div>
+                <div class="stat-box"><div class="stat-value" id="sf-emp">-</div><div class="stat-label">Employees</div></div>
+                <div class="stat-box"><div class="stat-value text-[var(--gold)]" id="sf-certs">Pending</div><div class="stat-label">Certifications</div></div>
+                <div class="stat-box"><div class="stat-value" id="sf-markets">Global</div><div class="stat-label">Main Markets</div></div>
             </div>
 
             <div class="flex gap-8 border-b border-gray-200 mb-8">
@@ -130,8 +221,7 @@
                     <span class="text-sm text-gray-500 font-bold uppercase tracking-widest"><strong id="sf-product-count" class="text-[var(--gold)]">0</strong> items</span>
                 </div>
                 
-                <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                    </div>
+                <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"></div>
                 
                 <div id="empty-state" class="hidden text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300 mt-6">
                     <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
@@ -141,7 +231,6 @@
             </div>
 
             <div id="content-about" style="display: none;" class="space-y-6">
-                
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="lg:col-span-2 bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
                         <h3 class="text-lg font-bold text-gray-900 brand-font mb-4 uppercase tracking-widest border-b border-gray-100 pb-4">Company Overview</h3>
@@ -171,32 +260,11 @@
 
                 <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
                     <h3 class="text-lg font-bold text-gray-900 brand-font mb-6 uppercase tracking-widest border-b border-gray-100 pb-4">Visual Evidence & Certifications</h3>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div id="gal1-box" class="hidden flex-col gap-2">
-                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group">
-                                <img id="sf-gal1" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="openLightbox(this.src)">
-                            </div>
-                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-industry mr-1 text-[var(--gold)]"></i> Factory Floor</span>
-                        </div>
-                        <div id="gal2-box" class="hidden flex-col gap-2">
-                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group">
-                                <img id="sf-gal2" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="openLightbox(this.src)">
-                            </div>
-                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-cogs mr-1 text-[var(--gold)]"></i> Production Line</span>
-                        </div>
-                        <div id="gal3-box" class="hidden flex-col gap-2">
-                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group">
-                                <img id="sf-gal3" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="openLightbox(this.src)">
-                            </div>
-                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-box-open mr-1 text-[var(--gold)]"></i> Showroom</span>
-                        </div>
-                        <div id="gal4-box" class="hidden flex-col gap-2">
-                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group">
-                                <img id="sf-gal4" src="" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="openLightbox(this.src)">
-                            </div>
-                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-certificate mr-1 text-[var(--gold)]"></i> Official Cert</span>
-                        </div>
+                        <div id="gal1-box" class="hidden flex-col gap-2"><div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group"><img id="sf-gal1" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="openLightbox(this.src)"></div><span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-industry mr-1 text-[var(--gold)]"></i> Factory Floor</span></div>
+                        <div id="gal2-box" class="hidden flex-col gap-2"><div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group"><img id="sf-gal2" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="openLightbox(this.src)"></div><span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-cogs mr-1 text-[var(--gold)]"></i> Production Line</span></div>
+                        <div id="gal3-box" class="hidden flex-col gap-2"><div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group"><img id="sf-gal3" src="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="openLightbox(this.src)"></div><span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-box-open mr-1 text-[var(--gold)]"></i> Showroom</span></div>
+                        <div id="gal4-box" class="hidden flex-col gap-2"><div class="aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 relative group"><img id="sf-gal4" src="" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="openLightbox(this.src)"></div><span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-center"><i class="fas fa-certificate mr-1 text-[var(--gold)]"></i> Official Cert</span></div>
                     </div>
                     <p id="no-gallery-msg" class="text-sm text-gray-400 italic text-center py-4 hidden">No visual evidence uploaded yet.</p>
                 </div>
@@ -204,50 +272,220 @@
         </div>
     </div>
 
-    <script>
-        const API_BASE_URL = "https://muziris-api.onrender.com/api";
-        const exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
-        let activeCurrency = "CAD";
-        let supplierId = "";
-        window.currentSlides = {}; // Track slider states
+    <div id="mobile-category-menu" class="fixed top-20 left-0 right-0 bottom-0 z-[90] bg-gray-50 transform translate-y-full transition-transform duration-300 flex flex-col md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)]">
+        <div class="flex items-center justify-between p-5 border-b border-gray-200 bg-white shadow-sm z-10">
+            <h2 class="text-lg font-bold text-gray-900 brand-font uppercase tracking-widest">Browse Categories</h2>
+            <button onclick="closeMobileMenu()" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-900 rounded-full flex items-center justify-center text-sm cursor-pointer transition-all duration-300 hover:rotate-90 hover:scale-110 shadow-sm"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto pb-safe" id="dynamic-mobile-menu"></div>
+    </div>
 
-        window.onload = function() {
+    <div id="image-lightbox" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300" onclick="closeLightbox()">
+        <button class="absolute top-6 right-6 text-white hover:text-[var(--gold)] text-4xl font-bold transition-colors cursor-pointer" onclick="closeLightbox()">&times;</button>
+        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl border border-white/10" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+          authDomain: "muziris-ac9dd.firebaseapp.com",
+          projectId: "muziris-ac9dd",
+          storageBucket: "muziris-ac9dd.firebasestorage.app",
+          messagingSenderId: "929662963272",
+          appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        
+        const auth = firebase.auth();
+        const API_BASE_URL = "https://muziris-api.onrender.com/api";
+        const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
+        
+        let exchangeRates = {};
+        let currencySymbols = {};
+        let activeCurrency = "CAD";
+        let rfqCart = [];
+        let supplierId = "";
+        let currentSupplierProducts = [];
+        window.currentSlides = {};
+
+        // Memory load
+        try {
+            activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
+            rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+        } catch (e) { console.warn("Browser blocked memory."); }
+
+        // =====================================
+        // PAGE LOAD ENGINE
+        // =====================================
+        window.onload = async function() {
+            loadLiveCurrenciesDropdown();
+            updateCartUI();
+
             const urlParams = new URLSearchParams(window.location.search);
             supplierId = urlParams.get('id');
 
             if (!supplierId) {
-                alert("Invalid Storefront URL. Redirecting to Catalog.");
+                alert("Invalid Storefront URL.");
                 window.location.href = "catalog.html";
                 return;
             }
 
-            Promise.all([
-                fetch(API_BASE_URL + '/get-supplier-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ supplierId }) }).then(r => r.json()),
-                fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) }).then(r => r.json())
-            ])
-            .then(([profile, catalogData]) => {
+            try {
+                // Fetch all required data simultaneously
+                const [profileRes, catalogRes, currRes] = await Promise.all([
+                    fetch(API_BASE_URL + '/get-supplier-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ supplierId }) }).then(r => r.json()),
+                    fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) }).then(r => r.json()),
+                    fetch(API_BASE_URL + '/public-currencies').then(r => r.json())
+                ]);
+
                 document.getElementById('loader').style.display = 'none';
-                
-                if (profile.error) {
-                    alert("Supplier not found.");
-                    window.location.href = "catalog.html";
-                    return;
+
+                if (profileRes.error) {
+                    alert("Supplier not found."); window.location.href = "catalog.html"; return;
                 }
 
-                renderProfile(profile);
-
-                if(catalogData.products) {
-                    const supplierProducts = catalogData.products.filter(p => p.supplierId === supplierId);
-                    renderGrid(supplierProducts);
+                if (currRes.success) {
+                    currRes.currencies.forEach(item => {
+                        exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
+                        currencySymbols[item.currency] = item.symbol || '$';
+                    });
                 }
-                
+
+                renderProfile(profileRes);
+
+                if(catalogRes.products) {
+                    generateDynamicCategories(catalogRes.products); // Build dynamic mega menu!
+                    currentSupplierProducts = catalogRes.products.filter(p => p.supplierId === supplierId);
+                    renderGrid(currentSupplierProducts);
+                }
+
                 document.getElementById('storefront').style.display = 'block';
-            })
-            .catch(err => {
+            } catch (err) {
+                console.error(err);
                 document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold'>Database Connection Failed.</div>";
-            });
+            }
         };
 
+        // =====================================
+        // AUTH & USER DROPDOWN LOGIC
+        // =====================================
+        auth.onAuthStateChanged((user) => {
+            const authBtn = document.getElementById('auth-buttons');
+            const guestDrop = document.getElementById('guest-dropdown-content');
+            const userDrop = document.getElementById('user-dropdown-content');
+            
+            if (user) {
+                let displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0];
+                
+                guestDrop.classList.add('hidden');
+                userDrop.classList.remove('hidden');
+                
+                document.getElementById('drop-user-name').innerText = displayName;
+                document.getElementById('drop-user-initial').innerText = displayName.charAt(0).toUpperCase();
+
+                // Ping backend to register session
+                fetch(API_BASE_URL + '/buyer/auth', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ email: user.email, name: displayName, photoUrl: user.photoURL || '' }) }).catch(()=>console.log("Sync skip"));
+            } else {
+                document.getElementById('auth-btn-text').innerText = "Sign In";
+                guestDrop.classList.remove('hidden');
+                userDrop.classList.add('hidden');
+            }
+        });
+
+        function signInWithEmailDrop() {
+            const email = document.getElementById('auth-email-drop').value, pass = document.getElementById('auth-pass-drop').value;
+            if(!email || !pass) return alert("Please enter both email and password.");
+            auth.signInWithEmailAndPassword(email, pass).catch(error => alert("Error: " + error.message));
+        }
+        function signUpWithEmailDrop() {
+            const email = document.getElementById('auth-email-drop').value, pass = document.getElementById('auth-pass-drop').value;
+            if(!email || !pass) return alert("Enter email and password.");
+            auth.createUserWithEmailAndPassword(email, pass).catch(e => alert(e.message));
+        }
+        function signOutUser() {
+            auth.signOut().then(() => {
+                localStorage.removeItem('muziris_cart');
+                window.location.reload();
+            });
+        }
+        
+        // Mobile tap fix for auth dropdown
+        document.getElementById('auth-buttons').onclick = (e) => {
+            if (window.innerWidth < 768) {
+                e.stopPropagation();
+                const dropdown = document.getElementById('userMenuContainer').querySelector('.absolute');
+                dropdown.classList.toggle('invisible');
+                dropdown.classList.toggle('opacity-0');
+            }
+        };
+
+        // =====================================
+        // CURRENCY & CART LOGIC
+        // =====================================
+        function loadLiveCurrenciesDropdown() {
+            fetch(API_BASE_URL + '/public-currencies').then(res => res.json()).then(data => {
+                if (data.success) {
+                    const dropdownList = document.getElementById('currencyList');
+                    if(!dropdownList) return;
+                    dropdownList.innerHTML = ''; 
+                    data.currencies.forEach(item => {
+                        const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
+                        const btn = document.createElement('button');
+                        btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
+                        btn.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="flex-1">${item.country}</span><span class="text-gray-400 text-xs font-bold">${item.currency}</span>`;
+                        btn.onclick = () => { selectCurrency(item.currency, flagCode); updateCurrency(); };
+                        dropdownList.appendChild(btn);
+                    });
+                    
+                    if (activeCurrency) {
+                        const initialFlag = flagMap[activeCurrency] || activeCurrency.substring(0,2).toLowerCase();
+                        selectCurrency(activeCurrency, initialFlag);
+                    }
+                }
+            }).catch(e => console.log("Currency load err"));
+        }
+
+        function selectCurrency(curr, flagCode) {
+            activeCurrency = curr; 
+            localStorage.setItem('muziris_active_currency', curr);
+            const display = document.getElementById('activeCurrencyDisplay');
+            if(display) display.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="hidden md:block text-sm font-bold text-gray-900">${curr}</span>`;
+            document.getElementById('currencyMenu')?.classList.add('hidden');
+        }
+
+        function updateCurrency() {
+            if(currentSupplierProducts.length > 0) renderGrid(currentSupplierProducts);
+        }
+
+        function updateCartUI() {
+            const headerBadge = document.getElementById('header-cart-badge'); 
+            if (rfqCart.length > 0) {
+                if (headerBadge) {
+                    headerBadge.innerText = rfqCart.length;
+                    headerBadge.classList.remove('hidden');
+                }
+            } else {
+                if (headerBadge) headerBadge.classList.add('hidden');
+            }
+        }
+
+        function convertPrice(cadPrice) {
+            if(!cadPrice || isNaN(cadPrice)) return "0.00";
+            if (activeCurrency === "CAD" || !exchangeRates[activeCurrency]) return parseFloat(cadPrice).toFixed(2);
+            return (cadPrice / exchangeRates[activeCurrency]).toFixed(2);
+        }
+
+        window.addEventListener('click', (e) => { 
+            if(!e.target.closest('#customCurrencyDropdown')) document.getElementById('currencyMenu')?.classList.add('hidden'); 
+            if(!e.target.closest('#userMenuContainer')) document.getElementById('userMenuContainer').querySelector('.absolute')?.classList.add('hidden'); 
+        });
+        document.getElementById('currencyBtn')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('currencyMenu')?.classList.toggle('hidden'); });
+
+
+        // =====================================
+        // FACTORY PROFILE RENDERING
+        // =====================================
         function renderProfile(data) {
             document.title = `Muziris | ${data.company_name}`;
             document.getElementById('sf-name').innerText = data.company_name;
@@ -263,7 +501,6 @@
             document.getElementById('sf-certs').innerText = data.certifications || "Standard";
             document.getElementById('sf-markets').innerText = data.export_markets || "Global";
             
-            // 🟢 MAP NEW SCALE & TRADE DATA
             document.getElementById('sf-port').innerText = data.nearest_port || "Factory Default";
             document.getElementById('sf-biztype').innerText = data.biz_type || "Direct Manufacturer";
             document.getElementById('sf-revenue').innerText = data.revenue || "Confidential";
@@ -275,7 +512,6 @@
             document.getElementById('sf-inco').innerText = data.incoterms || "FOB, EXW, CIF, DDP";
             document.getElementById('sf-lang').innerText = data.languages || "English";
 
-            // 🟢 DYNAMICALLY REVEAL UPLOADED GALLERY IMAGES
             let hasGallery = false;
             if (data.gallery_1 && data.gallery_1.startsWith('http')) { document.getElementById('sf-gal1').src = data.gallery_1; document.getElementById('gal1-box').classList.replace('hidden', 'flex'); hasGallery = true; }
             if (data.gallery_2 && data.gallery_2.startsWith('http')) { document.getElementById('sf-gal2').src = data.gallery_2; document.getElementById('gal2-box').classList.replace('hidden', 'flex'); hasGallery = true; }
@@ -290,37 +526,7 @@
                 webBtn.style.display = 'inline-block';
             }
         }
-        function convertPrice(cadPrice) {
-            if(!cadPrice || isNaN(cadPrice)) return "0.00";
-            return (cadPrice * exchangeRates[activeCurrency]).toFixed(2);
-        }
 
-        // 🟢 NEW: Slider Function Logic
-        function changeSlide(pid, direction, maxIndex) {
-            if (window.currentSlides[pid] === undefined) window.currentSlides[pid] = 0;
-            let current = window.currentSlides[pid];
-            
-            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-100', 'opacity-0');
-            document.getElementById(`img-${pid}-${current}`).classList.replace('z-10', 'z-0');
-            let oldDot = document.getElementById(`dot-${pid}-${current}`);
-            if(oldDot) {
-                oldDot.classList.replace('w-4', 'w-2');
-                oldDot.classList.replace('opacity-100', 'opacity-40');
-            }
-
-            current = (current + direction + maxIndex) % maxIndex;
-            window.currentSlides[pid] = current;
-
-            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-0', 'opacity-100');
-            document.getElementById(`img-${pid}-${current}`).classList.replace('z-0', 'z-10');
-            let newDot = document.getElementById(`dot-${pid}-${current}`);
-            if(newDot) {
-                newDot.classList.replace('w-2', 'w-4');
-                newDot.classList.replace('opacity-40', 'opacity-100');
-            }
-        }
-
-        // 🟢 NEW: Synchronized Grid Renderer (Matches updated catalog)
         function renderGrid(products) {
             const grid = document.getElementById('productGrid');
             const emptyState = document.getElementById('empty-state');
@@ -334,23 +540,17 @@
                 let displayPrice = convertPrice(p.startingPriceCAD);
                 let moq = p.variants && p.variants.length > 0 ? p.variants[0].min : 'Contact';
                 
-                // Collect images for slider
-                let imgs = [p.hero, ...p.gallery].filter(Boolean);
+                let imgs = [p.hero, ...(p.gallery || [])].filter(Boolean);
                 if(imgs.length === 0) imgs = ['MC.png'];
 
-                // Generate Slider HTML
                 let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
-                
-                // Verified Badge (Top Right)
                 sliderHtml += `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
 
-                // Images
                 imgs.forEach((img, i) => {
                     let activeClass = i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0';
                     sliderHtml += `<img src="${img}" class="img-layer absolute inset-0 ${activeClass}" id="img-${p.id}-${i}" loading="lazy" onerror="this.src='MC.png'">`;
                 });
 
-                // Arrows & Dots (Only if multiple images)
                 if(imgs.length > 1) {
                     sliderHtml += `
                         <button class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 shadow-md" onclick="event.stopPropagation(); changeSlide('${p.id}', -1, ${imgs.length})"><i class="fas fa-chevron-left text-[10px] text-gray-800"></i></button>
@@ -365,17 +565,17 @@
                 }
                 sliderHtml += `</div>`;
 
+                // Display title logic
+                const displayTitle = p.short_title || p.shortTitle || p.title || p.name;
+
                 grid.innerHTML += `
-                <div class="product-card" onclick="window.location.href='catalog.html?id=${p.id}'">
-                    <div class="img-container">
-                        ${sliderHtml}
-                    </div>
+                <div class="product-card" onclick="window.location.href='product.html?id=${p.id}'">
+                    <div class="img-container">${sliderHtml}</div>
                     <div class="p-4 flex flex-col flex-1">
                         <p class="text-[9px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1 truncate">${p.category}</p>
-                        <h3 class="text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2 h-10 mb-3">${p.name}</h3>
-                        
+                        <h3 class="text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2 h-10 mb-3">${displayTitle}</h3>
                         <div class="mt-auto">
-                            <p class="text-lg md:text-xl font-extrabold text-gray-900 font-mono leading-none">$${displayPrice} <span class="text-[10px] text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
+                            <p class="text-lg md:text-xl font-extrabold text-gray-900 font-mono leading-none">${currencySymbols[activeCurrency] || '$'}${displayPrice} <span class="text-[10px] text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
                             <p class="text-[10px] text-gray-500 font-medium mt-1">MOQ: ${moq}</p>
                         </div>
                     </div>
@@ -383,36 +583,180 @@
             });
         }
 
-       function switchTab(tab) {
+        function changeSlide(pid, direction, maxIndex) {
+            if (window.currentSlides[pid] === undefined) window.currentSlides[pid] = 0;
+            let current = window.currentSlides[pid];
+            
+            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-100', 'opacity-0');
+            document.getElementById(`img-${pid}-${current}`).classList.replace('z-10', 'z-0');
+            let oldDot = document.getElementById(`dot-${pid}-${current}`);
+            if(oldDot) { oldDot.classList.replace('w-4', 'w-2'); oldDot.classList.replace('opacity-100', 'opacity-40'); }
+
+            current = (current + direction + maxIndex) % maxIndex;
+            window.currentSlides[pid] = current;
+
+            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-0', 'opacity-100');
+            document.getElementById(`img-${pid}-${current}`).classList.replace('z-0', 'z-10');
+            let newDot = document.getElementById(`dot-${pid}-${current}`);
+            if(newDot) { newDot.classList.replace('w-2', 'w-4'); newDot.classList.replace('opacity-40', 'opacity-100'); }
+        }
+
+        function switchTab(tab) {
             document.getElementById('tab-products').classList.remove('active');
             document.getElementById('tab-about').classList.remove('active');
             document.getElementById('content-products').style.display = 'none';
             document.getElementById('content-about').style.display = 'none';
-
             document.getElementById('tab-' + tab).classList.add('active');
             document.getElementById('content-' + tab).style.display = 'block';
         }
 
-        // 🟢 NEW: LIGHTBOX LOGIC
         function openLightbox(imgSrc) {
             document.getElementById('lightbox-img').src = imgSrc;
             document.getElementById('image-lightbox').classList.remove('hidden');
             document.getElementById('image-lightbox').classList.add('flex');
-            document.body.style.overflow = 'hidden'; // Stop background scrolling
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeLightbox() {
             document.getElementById('image-lightbox').classList.add('hidden');
             document.getElementById('image-lightbox').classList.remove('flex');
             document.getElementById('lightbox-img').src = '';
-            document.body.style.overflow = 'auto'; // Restore scrolling
+            document.body.style.overflow = 'auto'; 
+        }
+
+        // ==========================================
+        // 🟢 MENU & SEARCH LOGIC
+        // ==========================================
+        function toggleMobileSearch() {
+            const searchDropdown = document.getElementById('mobile-search-dropdown');
+            const searchInput = document.getElementById('mobile-search-input');
+            if (searchDropdown.classList.contains('-translate-y-full')) {
+                searchDropdown.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+                searchDropdown.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+                setTimeout(() => searchInput.focus(), 300); 
+            } else {
+                searchDropdown.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+                searchDropdown.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+            }
+        }
+        function openMobileMenu() {
+            const menu = document.getElementById('mobile-category-menu');
+            menu.classList.remove('translate-y-full');
+            menu.classList.add('translate-y-0');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-category-menu');
+            menu.classList.remove('translate-y-0');
+            menu.classList.add('translate-y-full');
+            document.body.style.overflow = '';
+        }
+        function toggleMobileCat(id) {
+            const submenu = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (!submenu.classList.contains('hidden')) {
+                submenu.classList.add('hidden'); icon.classList.remove('rotate-180'); return;
+            }
+            document.querySelectorAll('.mobile-submenu').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="icon-mob-cat-"]').forEach(el => el.classList.remove('rotate-180'));
+            submenu.classList.remove('hidden'); icon.classList.add('rotate-180');
+        }
+        function switchMegaPanel(panelId, element) {
+            document.querySelectorAll('.mega-cat-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.mega-panel').forEach(panel => panel.classList.remove('active'));
+            const targetPanel = document.getElementById(panelId);
+            if(targetPanel) targetPanel.classList.add('active');
+        }
+
+        // ==========================================
+        // 🟢 DYNAMIC CATEGORY ALGORITHM (Smart Icons)
+        // ==========================================
+        function generateDynamicCategories(products) {
+            const catTree = {};
+            products.forEach(p => {
+                if(!p.category) return;
+                if(!catTree[p.category]) catTree[p.category] = new Set();
+                if(p.subCategory) catTree[p.category].add(p.subCategory);
+            });
+
+            const catIcons = {
+                "Agriculture, Food & Beverage": "fa-seedling", "Apparel, Textiles & Accessories": "fa-tshirt",
+                "Automotive & Transportation": "fa-car", "Beauty & Personal Care": "fa-spa",
+                "Chemicals & Raw Materials": "fa-flask", "Construction & Real Estate": "fa-building",
+                "Consumer Electronics & Appliances": "fa-laptop", "Electrical & Renewable Energy": "fa-solar-panel",
+                "Electronic Components & IoT": "fa-microchip", "Fabrication & B2B Services": "fa-cogs",
+                "Health & Medical": "fa-stethoscope", "Home Decor, Garden & Furniture": "fa-couch",
+                "Industrial Machinery & Equipment": "fa-industry", "Jewelry, Eyewear & Watches": "fa-gem",
+                "Minerals, Metals & Metallurgy": "fa-cubes", "Packaging & Printing": "fa-box",
+                "Sports, Toys & Hobbies": "fa-dumbbell", "Tools, Hardware & Safety": "fa-tools"
+            };
+
+            function getSubIcon(name, fallback) {
+                const n = name.toLowerCase();
+                if(n.includes('device') || n.includes('stethoscope')) return 'fa-stethoscope text-blue-500';
+                if(n.includes('furniture') || n.includes('bed')) return 'fa-procedures text-teal-600';
+                if(n.includes('disposable') || n.includes('syringe')) return 'fa-syringe text-gray-700';
+                if(n.includes('mobility') || n.includes('wheelchair')) return 'fa-wheelchair text-blue-600';
+                if(n.includes('supplement') || n.includes('pill')) return 'fa-pills text-green-600';
+                if(n.includes('produce') || n.includes('apple')) return 'fa-apple-alt text-red-500';
+                if(n.includes('coffee') || n.includes('tea')) return 'fa-coffee text-amber-800';
+                if(n.includes('clothing')) return 'fa-tshirt text-indigo-500';
+                if(n.includes('footwear')) return 'fa-shoe-prints text-orange-700';
+                if(n.includes('auto part')) return 'fa-cogs text-gray-600';
+                if(n.includes('skincare')) return 'fa-spa text-pink-400';
+                if(n.includes('tile') || n.includes('floor')) return 'fa-border-all text-stone-500';
+                if(n.includes('mobile')) return 'fa-mobile-alt text-gray-800';
+                if(n.includes('computer')) return 'fa-laptop text-slate-700';
+                if(n.includes('solar')) return 'fa-solar-panel text-blue-400';
+                if(n.includes('pcb')) return 'fa-microchip text-emerald-600';
+                if(n.includes('kitchenware')) return 'fa-utensils text-gray-500';
+                if(n.includes('packaging mach')) return 'fa-box-open text-amber-600';
+                if(n.includes('jewelry')) return 'fa-gem text-purple-500';
+                if(n.includes('box')) return 'fa-box text-yellow-600';
+                if(n.includes('fitness')) return 'fa-dumbbell text-zinc-800';
+                if(n.includes('tool')) return 'fa-tools text-slate-600';
+                return fallback || "fa-th-large text-gray-400";
+            }
+
+            let deskSidebarHTML = '', deskPanelsHTML = '', mobMenuHTML = '';
+            let index = 0;
+
+            for (const [cat, subcats] of Object.entries(catTree).sort()) {
+                const safeId = 'dyn-cat-' + index;
+                const mainIcon = catIcons[cat] || "fa-th-large";
+                const encodedCat = encodeURIComponent(cat);
+
+                deskSidebarHTML += `<div class="mega-cat-item ${index===0?'active':''}" onmouseenter="switchMegaPanel('${safeId}', this)" onclick="window.location.href='catalog.html?category=${encodedCat}'">${cat} <i class="fas fa-chevron-right"></i></div>`;
+
+                let subcatGridHTML = '';
+                Array.from(subcats).sort().forEach(sub => {
+                    const specificIcon = getSubIcon(sub, mainIcon);
+                    subcatGridHTML += `<div class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition" onclick="window.location.href='catalog.html?category=${encodedCat}&sub=${encodeURIComponent(sub)}'"><div class="subcat-icon bg-white shadow-sm border border-gray-100"><i class="fas ${specificIcon}"></i></div><div class="subcat-name text-left ml-2">${sub}</div></div>`;
+                });
+                subcatGridHTML += `<div class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition" onclick="window.location.href='catalog.html?category=${encodedCat}'"><div class="subcat-icon bg-[var(--gold-light)]"><i class="fas fa-arrow-right text-[var(--gold-dark)]"></i></div><div class="subcat-name text-[var(--gold-dark)] text-left ml-2">View All</div></div>`;
+                
+                deskPanelsHTML += `<div id="${safeId}" class="mega-panel ${index===0?'active':''}"><h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4 brand-font uppercase tracking-widest">${cat}</h3><div class="grid grid-cols-2 md:grid-cols-3 gap-3">${subcatGridHTML}</div></div>`;
+
+                let mobSubLinks = '';
+                Array.from(subcats).sort().forEach(sub => {
+                    mobSubLinks += `<a href="catalog.html?category=${encodedCat}&sub=${encodeURIComponent(sub)}" class="flex items-center gap-3 py-3 px-6 text-sm text-gray-600 border-b border-gray-200"><i class="fas ${getSubIcon(sub, mainIcon)} w-5 text-center"></i> ${sub}</a>`;
+                });
+                mobSubLinks += `<a href="catalog.html?category=${encodedCat}" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All ${cat.split(',')[0]} &rarr;</a>`;
+
+                mobMenuHTML += `<div class="bg-white border-b border-gray-200"><button onclick="toggleMobileCat('mob-${safeId}')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">${cat} <i id="icon-mob-${safeId}" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i></button><div id="mob-${safeId}" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">${mobSubLinks}</div></div>`;
+
+                index++;
+            }
+
+            const dSide = document.getElementById('dynamic-mega-sidebar');
+            const dPanel = document.getElementById('dynamic-mega-panels');
+            const mMenu = document.getElementById('dynamic-mobile-menu');
+
+            if(dSide) dSide.innerHTML = deskSidebarHTML;
+            if(dPanel) dPanel.innerHTML = deskPanelsHTML;
+            if(mMenu) mMenu.innerHTML = mobMenuHTML;
         }
     </script>
-
-    <div id="image-lightbox" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300" onclick="closeLightbox()">
-        <button class="absolute top-6 right-6 text-white hover:text-[var(--gold)] text-4xl font-bold transition-colors cursor-pointer" onclick="closeLightbox()">&times;</button>
-        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl border border-white/10" onclick="event.stopPropagation()">
-    </div>
-
 </body>
 </html>
