@@ -869,6 +869,69 @@
     s0.parentNode.insertBefore(s1,s0);
     })();
   </script>
+  <div id="supplier-invite-modal" class="fixed inset-0 z-[9999] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-300 opacity-0" onclick="closeInviteModal()">
+        <div class="bg-white max-w-md w-[90%] rounded-2xl shadow-2xl overflow-hidden relative transform scale-95 transition-transform duration-300" id="supplier-invite-box" onclick="event.stopPropagation()">
+            
+            <button onclick="closeInviteModal()" class="absolute top-3 right-4 text-gray-400 hover:text-white transition text-2xl z-10"><i class="fas fa-times"></i></button>
+            
+            <div class="bg-[var(--void)] p-8 text-center border-b-[3px] border-[var(--gold)] relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10 bg-[url('MC.png')] bg-center bg-cover mix-blend-overlay"></div>
+                <span class="text-5xl mb-3 block relative z-10">🇮🇳</span>
+                <h2 class="text-xl font-bold text-white brand-font tracking-widest uppercase relative z-10">Exclusive Invitation</h2>
+            </div>
+            
+            <div class="p-8 text-center">
+                <h3 class="text-lg font-bold text-gray-900 mb-3">Take Your Manufacturing Global</h3>
+                <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                    Muziris is building North America's premier B2B sourcing network. We are offering <strong>free early access</strong> to top-tier Indian manufacturers to build their catalogs before we officially open our doors to global buyers.
+                </p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="window.location.href='suppliers.html'" class="w-full bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-black font-bold uppercase tracking-widest py-3.5 rounded-lg text-xs transition shadow-md">
+                        Join as a Supplier (Free)
+                    </button>
+                    <button onclick="closeInviteModal()" class="text-[10px] font-bold text-gray-400 hover:text-gray-800 uppercase tracking-widest py-2 transition mt-2">
+                        I just want to browse for now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🟢 POPUP LOGIC (Only shows ONCE per session)
+        function showInviteModal() {
+            if (!sessionStorage.getItem('muziris_india_invite_seen')) {
+                const modal = document.getElementById('supplier-invite-modal');
+                const box = document.getElementById('supplier-invite-box');
+                
+                modal.classList.remove('hidden');
+                
+                // Tiny delay to allow CSS transitions to trigger smoothly
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    box.classList.remove('scale-95');
+                }, 50);
+            }
+        }
+
+        function closeInviteModal() {
+            const modal = document.getElementById('supplier-invite-modal');
+            const box = document.getElementById('supplier-invite-box');
+            
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            
+            // Memorize that they closed it so it doesn't annoy them again!
+            sessionStorage.setItem('muziris_india_invite_seen', 'true');
+            
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // Trigger the popup 1.5 seconds after the page loads so it feels natural
+        window.addEventListener('load', () => {
+            setTimeout(showInviteModal, 1500);
+        });
+    </script>
 </body>
 </html>
 
