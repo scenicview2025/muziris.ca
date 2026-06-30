@@ -501,23 +501,37 @@
             renderGrid(filtered, 'Search Results');
         }
 
-        function changeSlide(pid, direction, maxIndex) {
-            if (window.currentSlides[pid] === undefined) window.currentSlides[pid] = 0;
-            let current = window.currentSlides[pid];
-            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-100', 'opacity-0');
-            document.getElementById(`img-${pid}-${current}`).classList.replace('z-10', 'z-0');
-            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('w-4', 'w-2');
-            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('opacity-100', 'opacity-40');
-            
-            current = (current + direction + maxIndex) % maxIndex;
-            window.currentSlides[pid] = current;
-            
-            document.getElementById(`img-${pid}-${current}`).classList.replace('opacity-0', 'opacity-100');
-            document.getElementById(`img-${pid}-${current}`).classList.replace('z-0', 'z-10');
-            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('w-2', 'w-4');
-            document.getElementById(`dot-${pid}-${current}`)?.classList.replace('opacity-40', 'opacity-100');
+        // 🟢 NEW: Mobile Touch Swipe for Product Cards
+        let cardStartX = 0, cardStartY = 0;
+        window.isCardSwiping = false;
+
+        function handleCardTouchStart(e) {
+            window.isCardSwiping = false;
+            cardStartX = e.changedTouches[0].screenX;
+            cardStartY = e.changedTouches[0].screenY;
         }
 
+        function handleCardTouchEnd(e, pid, maxIndex) {
+            if (maxIndex <= 1) return; // Don't swipe if there's only 1 image!
+            
+            let diffX = cardStartX - e.changedTouches[0].screenX;
+            let diffY = cardStartY - e.changedTouches[0].screenY;
+            
+            // If they are scrolling down the page vertically, ignore it
+            if (Math.abs(diffY) > Math.abs(diffX)) return; 
+            
+            // 40px Threshold for a successful swipe
+            if (diffX > 40) { 
+                changeSlide(pid, 1, maxIndex); 
+                window.isCardSwiping = true; // Block the click!
+            } else if (diffX < -40) { 
+                changeSlide(pid, -1, maxIndex); 
+                window.isCardSwiping = true; // Block the click!
+            }
+            
+            // Reset the click blocker after 50ms so normal taps work again
+            setTimeout(() => window.isCardSwiping = false, 50);
+        }
         // 🟢 SYNCED: Reusable Product Card Generator
         function createProductCardHtml(p) {
             let displayPrice = convertPrice(p.startingPriceCAD);
