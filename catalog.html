@@ -371,33 +371,39 @@
         window.onload = async function() {
             await loadLiveCurrencies(); 
             
-            // 1. Check if the browser already memorized the catalog
-            const cachedData = sessionStorage.getItem('muziris_live_catalog');
-            
-            if (cachedData) {
-                // ⚡ LIGHTNING FAST LOAD: Use the memory!
-                const data = JSON.parse(cachedData);
-                document.getElementById('loader').style.display = 'none';
-                processCatalogData(data); // A helper function we will create
-            } else {
-                // 🐢 SLOW LOAD: Fetch from database (only happens ONCE per visit)
-                fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
-                .then(res => res.json()).then(data => {
+            try {
+                // 1. Check if the browser already memorized the catalog
+                const cachedData = sessionStorage.getItem('muziris_live_catalog');
+                
+                if (cachedData) {
+                    // ⚡ LIGHTNING FAST LOAD: Use the memory!
+                    const data = JSON.parse(cachedData);
                     document.getElementById('loader').style.display = 'none';
-                    if(data.products) {
-                        // Save to memory for next time!
-                        sessionStorage.setItem('muziris_live_catalog', JSON.stringify(data));
-                        processCatalogData(data);
-                    } else {
-                        document.getElementById('catalog-dynamic-area').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
-                    }
-                }).catch(err => {
-                    document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
-                });
+                    processCatalogData(data);
+                } else {
+                    // 🐢 SLOW LOAD: Fetch from database
+                    fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
+                    .then(res => res.json()).then(data => {
+                        document.getElementById('loader').style.display = 'none';
+                        if(data.products) {
+                            sessionStorage.setItem('muziris_live_catalog', JSON.stringify(data));
+                            processCatalogData(data);
+                        } else {
+                            document.getElementById('catalog-dynamic-area').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
+                        }
+                    }).catch(err => {
+                        console.error(err);
+                        document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
+                    });
+                }
+            } catch(e) {
+                // Failsafe in case memory cache is corrupted
+                sessionStorage.removeItem('muziris_live_catalog');
+                window.location.reload();
             }
         };
 
-        // 2. Put all your rendering logic safely in here
+        // 2. Main rendering logic safely extracted here
         function processCatalogData(data) {
             allProducts = data.products.reverse(); 
             window.globalCategories = data.categories; 
