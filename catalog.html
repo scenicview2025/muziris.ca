@@ -367,10 +367,54 @@
         const urlCategory = urlParams.get('category');
         const urlSubCat = urlParams.get('sub');
 
+        // 🟢 GO-LIVE SPEED FIX: Browser Memory Caching
         window.onload = async function() {
             await loadLiveCurrencies(); 
-            fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
-            .then(res => res.json()).then(data => {
+            
+            // 1. Check if the browser already memorized the catalog
+            const cachedData = sessionStorage.getItem('muziris_live_catalog');
+            
+            if (cachedData) {
+                // ⚡ LIGHTNING FAST LOAD: Use the memory!
+                const data = JSON.parse(cachedData);
+                document.getElementById('loader').style.display = 'none';
+                processCatalogData(data); // A helper function we will create
+            } else {
+                // 🐢 SLOW LOAD: Fetch from database (only happens ONCE per visit)
+                fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
+                .then(res => res.json()).then(data => {
+                    document.getElementById('loader').style.display = 'none';
+                    if(data.products) {
+                        // Save to memory for next time!
+                        sessionStorage.setItem('muziris_live_catalog', JSON.stringify(data));
+                        processCatalogData(data);
+                    } else {
+                        document.getElementById('catalog-dynamic-area').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
+                    }
+                }).catch(err => {
+                    document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
+                });
+            }
+        };
+
+        // 2. Put all your rendering logic safely in here
+        function processCatalogData(data) {
+            allProducts = data.products.reverse(); 
+            window.globalCategories = data.categories; 
+            
+            if(typeof renderCategories === 'function') renderCategories(data.categories); 
+            if(typeof generateDynamicCategories === 'function') generateDynamicCategories(allProducts);
+            
+            // ... the rest of your URL checking logic (if urlSearch, etc.) ...
+            if (urlSearch) {
+                document.getElementById('nav-search').value = urlSearch;
+                handleSearch(); 
+            } else if (urlCategory) {
+                filterCat(urlCategory); 
+            } else {
+                if(typeof filterCat === 'function') filterCat('All'); 
+            }
+        }
                 document.getElementById('loader').style.display = 'none';
                 if(data.products) {
                     allProducts = data.products.reverse(); 
