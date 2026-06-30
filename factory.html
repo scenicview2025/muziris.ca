@@ -698,6 +698,10 @@
 
             function getSubIcon(name, fallback) {
                 const n = name.toLowerCase();
+                
+                // 🟢 FIX: Added specific rule for Candles with a nice orange flame icon!
+                if(n.includes('candle')) return 'fa-fire text-orange-500';
+                
                 if(n.includes('device') || n.includes('stethoscope')) return 'fa-stethoscope text-blue-500';
                 if(n.includes('furniture') || n.includes('bed')) return 'fa-procedures text-teal-600';
                 if(n.includes('disposable') || n.includes('syringe')) return 'fa-syringe text-gray-700';
@@ -722,7 +726,6 @@
                 if(n.includes('tool')) return 'fa-tools text-slate-600';
                 return fallback || "fa-th-large text-gray-400";
             }
-
             let deskSidebarHTML = '', deskPanelsHTML = '', mobMenuHTML = '';
             let index = 0;
 
