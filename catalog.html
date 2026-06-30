@@ -276,7 +276,7 @@
 
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
         let allProducts = [];
-        let exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
+        let exchangeRates = {};
         let currencySymbols = {};
         let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
         window.currentSlides = {}; 
@@ -336,7 +336,7 @@
                         selectCurrency(activeCurrency, initialFlag);
                     }
                 }
-            } catch (e) { console.log("Using default fallback exchange rates."); }
+            } catch (e) { exchangeRates = { "CAD": 1.00, "USD": 0.74 }; }
         }
 
         function selectCurrency(curr, flagCode) {
@@ -349,11 +349,7 @@
         document.getElementById('currencyBtn')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('currencyMenu').classList.toggle('hidden'); });
         window.addEventListener('click', (e) => { 
             if(!e.target.closest('#customCurrencyDropdown')) document.getElementById('currencyMenu')?.classList.add('hidden'); 
-            
-            if(!e.target.closest('#userMenuContainer')) {
-                const userDrop = document.getElementById('userMenuContainer')?.querySelector('.absolute');
-                if(userDrop) userDrop.classList.add('invisible', 'opacity-0');
-            }
+            if(!e.target.closest('#userMenuContainer')) document.getElementById('userMenuContainer').querySelector('.absolute')?.classList.add('hidden'); 
         });
 
         function updateCurrency() {
@@ -366,73 +362,47 @@
         const urlCategory = urlParams.get('category');
         const urlSubCat = urlParams.get('sub');
 
-        // 🟢 GO-LIVE SPEED FIX: Unblocked memory caching!
-        window.onload = function() {
-            
-            // 1. Fetch currencies silently in the background
-            loadLiveCurrencies().then(() => {
-                if (allProducts.length > 0) updateCurrency();
+        window.onload = async function() {
+            await loadLiveCurrencies(); 
+            fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
+            .then(res => res.json()).then(data => {
+                document.getElementById('loader').style.display = 'none';
+                if(data.products) {
+                    allProducts = data.products.reverse(); 
+                    window.globalCategories = data.categories; 
+                    
+                    renderCategories(data.categories); 
+                    generateDynamicCategories(allProducts); // 🟢 Builds the Header Mega Menu!
+                    
+                    if (urlSearch) {
+                        document.getElementById('nav-search').value = urlSearch;
+                        handleSearch(); 
+                    } else if (urlCategory && urlSubCat) {
+                        filterCat(urlCategory);
+                        setTimeout(() => {
+                            let safeCatId = urlCategory.replace(/[^a-zA-Z0-9]/g, '');
+                            let safeSubId = urlSubCat.replace(/[^a-zA-Z0-9]/g, '');
+                            let subBtn = document.getElementById(`sub-link-${safeCatId}-${safeSubId}`);
+                            filterSubCat(urlCategory, urlSubCat, subBtn);
+                        }, 50);
+                    } else if (urlCategory) {
+                        filterCat(urlCategory); 
+                    } else {
+                        filterCat('All'); 
+                    }
+                } else {
+                    document.getElementById('catalog-dynamic-area').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
+                }
+            }).catch(err => {
+                document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
             });
             
-            try {
-                // 2. Try loading instantly from Memory Cache
-                const cachedData = sessionStorage.getItem('muziris_live_catalog');
-                
-                if (cachedData) {
-                    const data = JSON.parse(cachedData);
-                    document.getElementById('loader').style.display = 'none';
-                    processCatalogData(data);
-                } else {
-                    // 3. Fallback: Slow fetch from DB if Memory is empty
-                    fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
-                    .then(res => res.json()).then(data => {
-                        document.getElementById('loader').style.display = 'none';
-                        if(data.products) {
-                            sessionStorage.setItem('muziris_live_catalog', JSON.stringify(data));
-                            processCatalogData(data);
-                        } else {
-                            document.getElementById('catalog-dynamic-area').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
-                        }
-                    }).catch(err => {
-                        console.error(err);
-                        document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
-                    });
-                }
-            } catch(e) {
-                sessionStorage.removeItem('muziris_live_catalog');
-                window.location.reload();
-            }
-        };
-
-        function processCatalogData(data) {
-            allProducts = data.products.reverse(); 
-            window.globalCategories = data.categories; 
-            
-            renderCategories(data.categories); 
-            generateDynamicCategories(allProducts); 
-            
-            if (urlSearch) {
-                document.getElementById('nav-search').value = urlSearch;
-                handleSearch(); 
-            } else if (urlCategory && urlSubCat) {
-                filterCat(urlCategory);
-                setTimeout(() => {
-                    let safeCatId = urlCategory.replace(/[^a-zA-Z0-9]/g, '');
-                    let safeSubId = urlSubCat.replace(/[^a-zA-Z0-9]/g, '');
-                    let subBtn = document.getElementById(`sub-link-${safeCatId}-${safeSubId}`);
-                    filterSubCat(urlCategory, urlSubCat, subBtn);
-                }, 50);
-            } else if (urlCategory) {
-                filterCat(urlCategory); 
-            } else {
-                filterCat('All'); 
-            }
-            
+            // Connect Live Search listeners
             document.getElementById('nav-search')?.addEventListener('input', handleSearch);
             document.getElementById('nav-search')?.addEventListener('keypress', (e) => { if(e.key==='Enter') e.preventDefault(); });
             document.getElementById('mobile-search-input')?.addEventListener('input', handleSearch);
             document.getElementById('mobile-search-input')?.addEventListener('keypress', (e) => { if(e.key==='Enter') e.preventDefault(); });
-        }
+        };
 
         function trackBehavior(actionType, targetId) {
             fetch(API_BASE_URL + '/buyer/track', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ email: currentUser ? currentUser.email : 'Anonymous', actionType: actionType, targetId: targetId, duration: 0 }) }).catch(e => console.log("Skip"));
@@ -509,6 +479,7 @@
             renderGrid(allProducts.filter(p => p.category === catName && p.subCategory === subCatName), subCatName);
         }
 
+        // 🟢 FIX: Search function now syncs beautifully without page reloads
         function handleSearch() {
             const deskQ = document.getElementById('nav-search')?.value.toLowerCase() || "";
             const mobQ = document.getElementById('mobile-search-input')?.value.toLowerCase() || "";
@@ -542,41 +513,14 @@
             document.getElementById(`dot-${pid}-${current}`)?.classList.replace('opacity-40', 'opacity-100');
         }
 
-        let cardStartX = 0, cardStartY = 0;
-        window.isCardSwiping = false;
-
-        function handleCardTouchStart(e) {
-            window.isCardSwiping = false;
-            cardStartX = e.changedTouches[0].screenX;
-            cardStartY = e.changedTouches[0].screenY;
-        }
-
-        function handleCardTouchEnd(e, pid, maxIndex) {
-            if (maxIndex <= 1) return; 
-            
-            let diffX = cardStartX - e.changedTouches[0].screenX;
-            let diffY = cardStartY - e.changedTouches[0].screenY;
-            
-            if (Math.abs(diffY) > Math.abs(diffX)) return; 
-            
-            if (diffX > 40) { 
-                changeSlide(pid, 1, maxIndex); 
-                window.isCardSwiping = true; 
-            } else if (diffX < -40) { 
-                changeSlide(pid, -1, maxIndex); 
-                window.isCardSwiping = true; 
-            }
-            
-            setTimeout(() => window.isCardSwiping = false, 50);
-        }
-
+        // 🟢 SYNCED: Reusable Product Card Generator
         function createProductCardHtml(p) {
             let displayPrice = convertPrice(p.startingPriceCAD);
             let moq = p.variants && p.variants.length > 0 ? p.variants[0].min : 'Contact';
             let imgs = [p.hero, ...(p.gallery || [])].filter(Boolean);
             if(imgs.length === 0) imgs = ['MC.png'];
 
-            let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider touch-pan-y" id="slider-${p.id}" ontouchstart="handleCardTouchStart(event)" ontouchend="handleCardTouchEnd(event, '${p.id}', ${imgs.length})">`;
+            let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider" id="slider-${p.id}">`;
             if (p.status === 'PAUSED') {
                 sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
             } else {
@@ -606,7 +550,7 @@
             const displayTitle = p.short_title || p.shortTitle || p.title || p.name;
 
             return `
-            <div class="${cardClass}" onclick="if(!window.isCardSwiping) window.location.href='product.html?item=${safeSlug}&id=${p.id}'">
+            <div class="${cardClass}" onclick="window.location.href='product.html?item=${safeSlug}&id=${p.id}'">
                 <div class="img-container">${sliderHtml}</div>
                 <div class="pt-2 pb-4 flex flex-col flex-1">
                     <h3 class="text-xs md:text-sm text-gray-900 leading-snug line-clamp-2 mb-1">${displayTitle}</h3>
@@ -621,6 +565,7 @@
             </div>`;
         }
 
+        // 🟢 SYNCED: Fixed Grid Layout (gap-3 for tighter mobile view)
         function renderGrid(products) {
             const area = document.getElementById('catalog-dynamic-area');
             const emptyState = document.getElementById('empty-state');
@@ -633,7 +578,7 @@
             }
             emptyState.classList.add('hidden');
 
-            let gridHtml = `<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">`;
+            let gridHtml = `<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">`;
             products.forEach(p => {
                 gridHtml += createProductCardHtml(p);
             });
@@ -642,6 +587,7 @@
             area.innerHTML = gridHtml;
         }
 
+        // 🟢 SYNCED: Category Hub Layout
         function renderCategoryHub(catName) {
             const area = document.getElementById('catalog-dynamic-area');
             const emptyState = document.getElementById('empty-state');
@@ -660,6 +606,7 @@
 
             let html = '';
 
+            // --- A: TOP CIRCULAR NAVIGATION ---
             html += `<div class="flex gap-4 md:gap-8 overflow-x-auto pb-6 mb-8 scrollbar-hide" style="scroll-snap-type: x mandatory;">`;
             subCats.forEach(sub => {
                 let subProds = catProducts.filter(p => p.subCategory === sub);
@@ -678,6 +625,7 @@
             });
             html += `</div>`;
 
+            // --- B: THE GROUPED "AISLE" ROWS ---
             html += `<div class="flex flex-col gap-14">`;
             subCats.forEach(sub => {
                 let subProds = catProducts.filter(p => p.subCategory === sub);
@@ -693,7 +641,7 @@
                                 View More <i class="fas fa-arrow-right ml-1"></i>
                             </button>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">`;
+                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">`; // 🟢 Fixed gap here too!
                     
                     subProds.slice(0, 4).forEach(p => {
                         html += createProductCardHtml(p);
@@ -707,6 +655,9 @@
             area.innerHTML = html;
         }
 
+        // ==========================================
+        // 🟢 SYNCED: HEADER & MOBILE MENU LOGIC
+        // ==========================================
         function toggleMobileSearch() {
             const searchDropdown = document.getElementById('mobile-search-dropdown');
             const searchInput = document.getElementById('mobile-search-input');
@@ -749,6 +700,9 @@
             if(targetPanel) targetPanel.classList.add('active');
         }
 
+        // ==========================================
+        // 🟢 SYNCED: DYNAMIC MEGA MENU BUILDER
+        // ==========================================
         function generateDynamicCategories(products) {
             const catTree = {};
             products.forEach(p => {
