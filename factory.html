@@ -571,15 +571,15 @@
                 // Display title logic
                 const displayTitle = p.short_title || p.shortTitle || p.title || p.name;
 
+                // 🟢 FIX: Removed Category, tightened padding (pt-2), and adjusted font sizes!
                 grid.innerHTML += `
                 <div class="product-card" onclick="window.location.href='product.html?id=${p.id}'">
                     <div class="img-container">${sliderHtml}</div>
-                    <div class="p-4 flex flex-col flex-1">
-                        <p class="text-[9px] text-[var(--gold)] uppercase tracking-[0.1em] font-bold mb-1 truncate">${p.category}</p>
-                        <h3 class="text-xs md:text-sm font-bold text-gray-900 leading-snug line-clamp-2 h-10 mb-3">${displayTitle}</h3>
+                    <div class="pt-2 pb-4 flex flex-col flex-1">
+                        <h3 class="text-xs md:text-sm text-gray-900 leading-snug line-clamp-2 mb-1">${displayTitle}</h3>
                         <div class="mt-auto">
-                            <p class="text-lg md:text-xl font-extrabold text-gray-900 font-mono leading-none">${currencySymbols[activeCurrency] || '$'}${displayPrice} <span class="text-[10px] text-gray-500 font-sans ui-curr-symbol">${activeCurrency}</span></p>
-                            <p class="text-[10px] text-gray-500 font-medium mt-1">MOQ: ${moq}</p>
+                            <p class="text-[15px] md:text-lg font-bold text-gray-900 font-mono leading-none">${currencySymbols[activeCurrency] || '$'}${displayPrice} <span class="text-[10px] text-gray-400 font-sans font-normal ui-curr-symbol">${activeCurrency}</span></p>
+                            <p class="text-[10px] text-gray-500 mt-0.5">MOQ: ${moq}</p>
                         </div>
                     </div>
                 </div>`;
