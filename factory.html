@@ -482,7 +482,12 @@
 
         window.addEventListener('click', (e) => { 
             if(!e.target.closest('#customCurrencyDropdown')) document.getElementById('currencyMenu')?.classList.add('hidden'); 
-            if(!e.target.closest('#userMenuContainer')) document.getElementById('userMenuContainer').querySelector('.absolute')?.classList.add('hidden'); 
+            
+            // 🟢 FIX: We use invisible/opacity-0 so it doesn't permanently break the CSS Hover effect!
+            if(!e.target.closest('#userMenuContainer')) {
+                const userDrop = document.getElementById('userMenuContainer')?.querySelector('.absolute');
+                if(userDrop) userDrop.classList.add('invisible', 'opacity-0');
+            }
         });
         document.getElementById('currencyBtn')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('currencyMenu')?.classList.toggle('hidden'); });
 
