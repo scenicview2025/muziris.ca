@@ -276,7 +276,7 @@
 
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
         let allProducts = [];
-        let exchangeRates = {};
+        let exchangeRates = { "CAD": 1.00, "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "AUD": 1.13 };
         let currencySymbols = {};
         let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
         window.currentSlides = {}; 
@@ -336,7 +336,7 @@
                         selectCurrency(activeCurrency, initialFlag);
                     }
                 }
-            } catch (e) { exchangeRates = { "CAD": 1.00, "USD": 0.74 }; }
+            } catch (e) { console.log("Using default fallback exchange rates."); }
         }
 
         function selectCurrency(curr, flagCode) {
@@ -350,7 +350,6 @@
         window.addEventListener('click', (e) => { 
             if(!e.target.closest('#customCurrencyDropdown')) document.getElementById('currencyMenu')?.classList.add('hidden'); 
             
-            // 🟢 FIX: We use invisible/opacity-0 so it doesn't permanently break the CSS Hover effect!
             if(!e.target.closest('#userMenuContainer')) {
                 const userDrop = document.getElementById('userMenuContainer')?.querySelector('.absolute');
                 if(userDrop) userDrop.classList.add('invisible', 'opacity-0');
@@ -367,21 +366,24 @@
         const urlCategory = urlParams.get('category');
         const urlSubCat = urlParams.get('sub');
 
-        // 🟢 GO-LIVE SPEED FIX: Browser Memory Caching
-        window.onload = async function() {
-            await loadLiveCurrencies(); 
+        // 🟢 GO-LIVE SPEED FIX: Unblocked memory caching!
+        window.onload = function() {
+            
+            // 1. Fetch currencies silently in the background
+            loadLiveCurrencies().then(() => {
+                if (allProducts.length > 0) updateCurrency();
+            });
             
             try {
-                // 1. Check if the browser already memorized the catalog
+                // 2. Try loading instantly from Memory Cache
                 const cachedData = sessionStorage.getItem('muziris_live_catalog');
                 
                 if (cachedData) {
-                    // ⚡ LIGHTNING FAST LOAD: Use the memory!
                     const data = JSON.parse(cachedData);
                     document.getElementById('loader').style.display = 'none';
                     processCatalogData(data);
                 } else {
-                    // 🐢 SLOW LOAD: Fetch from database
+                    // 3. Fallback: Slow fetch from DB if Memory is empty
                     fetch(API_BASE_URL + '/public-catalog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
                     .then(res => res.json()).then(data => {
                         document.getElementById('loader').style.display = 'none';
@@ -397,13 +399,11 @@
                     });
                 }
             } catch(e) {
-                // Failsafe in case memory cache is corrupted
                 sessionStorage.removeItem('muziris_live_catalog');
                 window.location.reload();
             }
         };
 
-        // 2. Main rendering logic safely extracted here
         function processCatalogData(data) {
             allProducts = data.products.reverse(); 
             window.globalCategories = data.categories; 
@@ -428,7 +428,6 @@
                 filterCat('All'); 
             }
             
-            // Connect Live Search listeners safely after data loads
             document.getElementById('nav-search')?.addEventListener('input', handleSearch);
             document.getElementById('nav-search')?.addEventListener('keypress', (e) => { if(e.key==='Enter') e.preventDefault(); });
             document.getElementById('mobile-search-input')?.addEventListener('input', handleSearch);
@@ -510,7 +509,6 @@
             renderGrid(allProducts.filter(p => p.category === catName && p.subCategory === subCatName), subCatName);
         }
 
-        // 🟢 FIX: Search function now syncs beautifully without page reloads
         function handleSearch() {
             const deskQ = document.getElementById('nav-search')?.value.toLowerCase() || "";
             const mobQ = document.getElementById('mobile-search-input')?.value.toLowerCase() || "";
@@ -544,7 +542,6 @@
             document.getElementById(`dot-${pid}-${current}`)?.classList.replace('opacity-40', 'opacity-100');
         }
 
-        // 🟢 NEW: Mobile Touch Swipe for Product Cards
         let cardStartX = 0, cardStartY = 0;
         window.isCardSwiping = false;
 
@@ -555,35 +552,30 @@
         }
 
         function handleCardTouchEnd(e, pid, maxIndex) {
-            if (maxIndex <= 1) return; // Don't swipe if there's only 1 image!
+            if (maxIndex <= 1) return; 
             
             let diffX = cardStartX - e.changedTouches[0].screenX;
             let diffY = cardStartY - e.changedTouches[0].screenY;
             
-            // If they are scrolling down the page vertically, ignore it
             if (Math.abs(diffY) > Math.abs(diffX)) return; 
             
-            // 40px Threshold for a successful swipe
             if (diffX > 40) { 
                 changeSlide(pid, 1, maxIndex); 
-                window.isCardSwiping = true; // Block the click!
+                window.isCardSwiping = true; 
             } else if (diffX < -40) { 
                 changeSlide(pid, -1, maxIndex); 
-                window.isCardSwiping = true; // Block the click!
+                window.isCardSwiping = true; 
             }
             
-            // Reset the click blocker after 50ms so normal taps work again
             setTimeout(() => window.isCardSwiping = false, 50);
         }
 
-        // 🟢 SYNCED: Reusable Product Card Generator
         function createProductCardHtml(p) {
             let displayPrice = convertPrice(p.startingPriceCAD);
             let moq = p.variants && p.variants.length > 0 ? p.variants[0].min : 'Contact';
             let imgs = [p.hero, ...(p.gallery || [])].filter(Boolean);
             if(imgs.length === 0) imgs = ['MC.png'];
 
-            // 🟢 FIX: Added touch listeners and 'touch-pan-y' so it doesn't break scrolling!
             let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider touch-pan-y" id="slider-${p.id}" ontouchstart="handleCardTouchStart(event)" ontouchend="handleCardTouchEnd(event, '${p.id}', ${imgs.length})">`;
             if (p.status === 'PAUSED') {
                 sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
@@ -616,7 +608,6 @@
             return `
             <div class="${cardClass}" onclick="if(!window.isCardSwiping) window.location.href='product.html?item=${safeSlug}&id=${p.id}'">
                 <div class="img-container">${sliderHtml}</div>
-                <div class="img-container">${sliderHtml}</div>
                 <div class="pt-2 pb-4 flex flex-col flex-1">
                     <h3 class="text-xs md:text-sm text-gray-900 leading-snug line-clamp-2 mb-1">${displayTitle}</h3>
                     <div class="mt-auto">
@@ -630,7 +621,6 @@
             </div>`;
         }
 
-        // 🟢 SYNCED: Fixed Grid Layout (gap-3 for tighter mobile view)
         function renderGrid(products) {
             const area = document.getElementById('catalog-dynamic-area');
             const emptyState = document.getElementById('empty-state');
@@ -652,7 +642,6 @@
             area.innerHTML = gridHtml;
         }
 
-        // 🟢 SYNCED: Category Hub Layout
         function renderCategoryHub(catName) {
             const area = document.getElementById('catalog-dynamic-area');
             const emptyState = document.getElementById('empty-state');
@@ -671,7 +660,6 @@
 
             let html = '';
 
-            // --- A: TOP CIRCULAR NAVIGATION ---
             html += `<div class="flex gap-4 md:gap-8 overflow-x-auto pb-6 mb-8 scrollbar-hide" style="scroll-snap-type: x mandatory;">`;
             subCats.forEach(sub => {
                 let subProds = catProducts.filter(p => p.subCategory === sub);
@@ -690,7 +678,6 @@
             });
             html += `</div>`;
 
-            // --- B: THE GROUPED "AISLE" ROWS ---
             html += `<div class="flex flex-col gap-14">`;
             subCats.forEach(sub => {
                 let subProds = catProducts.filter(p => p.subCategory === sub);
@@ -706,7 +693,7 @@
                                 View More <i class="fas fa-arrow-right ml-1"></i>
                             </button>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">`; // 🟢 Fixed gap here too!
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">`;
                     
                     subProds.slice(0, 4).forEach(p => {
                         html += createProductCardHtml(p);
@@ -720,9 +707,6 @@
             area.innerHTML = html;
         }
 
-        // ==========================================
-        // 🟢 SYNCED: HEADER & MOBILE MENU LOGIC
-        // ==========================================
         function toggleMobileSearch() {
             const searchDropdown = document.getElementById('mobile-search-dropdown');
             const searchInput = document.getElementById('mobile-search-input');
@@ -765,9 +749,6 @@
             if(targetPanel) targetPanel.classList.add('active');
         }
 
-        // ==========================================
-        // 🟢 SYNCED: DYNAMIC MEGA MENU BUILDER
-        // ==========================================
         function generateDynamicCategories(products) {
             const catTree = {};
             products.forEach(p => {
