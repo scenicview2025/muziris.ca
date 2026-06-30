@@ -583,7 +583,7 @@
             }
             emptyState.classList.add('hidden');
 
-            let gridHtml = `<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">`;
+            let gridHtml = `<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">`;
             products.forEach(p => {
                 gridHtml += createProductCardHtml(p);
             });
@@ -646,7 +646,7 @@
                                 View More <i class="fas fa-arrow-right ml-1"></i>
                             </button>
                         </div>
-                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">`; // 🟢 Fixed gap here too!
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">`; // 🟢 Fixed gap here too!
                     
                     subProds.slice(0, 4).forEach(p => {
                         html += createProductCardHtml(p);
