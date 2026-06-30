@@ -402,56 +402,32 @@
             allProducts = data.products.reverse(); 
             window.globalCategories = data.categories; 
             
-            if(typeof renderCategories === 'function') renderCategories(data.categories); 
-            if(typeof generateDynamicCategories === 'function') generateDynamicCategories(allProducts);
+            renderCategories(data.categories); 
+            generateDynamicCategories(allProducts); 
             
-            // ... the rest of your URL checking logic (if urlSearch, etc.) ...
             if (urlSearch) {
                 document.getElementById('nav-search').value = urlSearch;
                 handleSearch(); 
+            } else if (urlCategory && urlSubCat) {
+                filterCat(urlCategory);
+                setTimeout(() => {
+                    let safeCatId = urlCategory.replace(/[^a-zA-Z0-9]/g, '');
+                    let safeSubId = urlSubCat.replace(/[^a-zA-Z0-9]/g, '');
+                    let subBtn = document.getElementById(`sub-link-${safeCatId}-${safeSubId}`);
+                    filterSubCat(urlCategory, urlSubCat, subBtn);
+                }, 50);
             } else if (urlCategory) {
                 filterCat(urlCategory); 
             } else {
-                if(typeof filterCat === 'function') filterCat('All'); 
+                filterCat('All'); 
             }
-        }
-                document.getElementById('loader').style.display = 'none';
-                if(data.products) {
-                    allProducts = data.products.reverse(); 
-                    window.globalCategories = data.categories; 
-                    
-                    renderCategories(data.categories); 
-                    generateDynamicCategories(allProducts); // 🟢 Builds the Header Mega Menu!
-                    
-                    if (urlSearch) {
-                        document.getElementById('nav-search').value = urlSearch;
-                        handleSearch(); 
-                    } else if (urlCategory && urlSubCat) {
-                        filterCat(urlCategory);
-                        setTimeout(() => {
-                            let safeCatId = urlCategory.replace(/[^a-zA-Z0-9]/g, '');
-                            let safeSubId = urlSubCat.replace(/[^a-zA-Z0-9]/g, '');
-                            let subBtn = document.getElementById(`sub-link-${safeCatId}-${safeSubId}`);
-                            filterSubCat(urlCategory, urlSubCat, subBtn);
-                        }, 50);
-                    } else if (urlCategory) {
-                        filterCat(urlCategory); 
-                    } else {
-                        filterCat('All'); 
-                    }
-                } else {
-                    document.getElementById('catalog-dynamic-area').innerHTML = "<p class='col-span-full text-center text-red-500 py-10 font-bold'>System Offline.</p>";
-                }
-            }).catch(err => {
-                document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
-            });
             
-            // Connect Live Search listeners
+            // Connect Live Search listeners safely after data loads
             document.getElementById('nav-search')?.addEventListener('input', handleSearch);
             document.getElementById('nav-search')?.addEventListener('keypress', (e) => { if(e.key==='Enter') e.preventDefault(); });
             document.getElementById('mobile-search-input')?.addEventListener('input', handleSearch);
             document.getElementById('mobile-search-input')?.addEventListener('keypress', (e) => { if(e.key==='Enter') e.preventDefault(); });
-        };
+        }
 
         function trackBehavior(actionType, targetId) {
             fetch(API_BASE_URL + '/buyer/track', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ email: currentUser ? currentUser.email : 'Anonymous', actionType: actionType, targetId: targetId, duration: 0 }) }).catch(e => console.log("Skip"));
