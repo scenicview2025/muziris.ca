@@ -269,12 +269,21 @@
         }
         
         document.getElementById('auth-buttons').onclick = (e) => {
-            if (window.innerWidth < 768 && !currentUser) {
+            // Apply this to both Mobile AND Tablet (up to 1024px)
+            if (window.innerWidth <= 1024) { 
                 e.stopPropagation();
                 const dropdown = document.getElementById('userMenuContainer').querySelector('.absolute');
-                dropdown.classList.toggle('invisible'); dropdown.classList.toggle('opacity-0');
-            } else if (window.innerWidth < 768 && currentUser) {
-                window.location.href = "buyer-dashboard.html";
+                
+                // Force the dropdown to open/close on touch screens
+                if (dropdown.style.visibility === 'visible') {
+                    dropdown.style.visibility = '';
+                    dropdown.style.opacity = '';
+                    dropdown.style.transform = '';
+                } else {
+                    dropdown.style.visibility = 'visible';
+                    dropdown.style.opacity = '1';
+                    dropdown.style.transform = 'translateY(0)';
+                }
             }
         };
 
