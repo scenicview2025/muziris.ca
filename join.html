@@ -689,6 +689,48 @@
 
   function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
 
+  // 🟢 NEW: Submit Support Request to CRM
+  function submitSupportRequest() {
+    const phone = document.getElementById('support-phone').value.trim();
+    if(!phone) return alert("Please enter a valid phone or WhatsApp number.");
+
+    const btn = document.querySelector('#support-modal .btn-next');
+    btn.innerText = "Sending...";
+    btn.disabled = true;
+    
+    // Pull any data they've already typed into the form to help the agent
+    const company = document.getElementById('companyName') ? document.getElementById('companyName').value : "";
+    const contact = document.getElementById('contactPerson') ? document.getElementById('contactPerson').value : "";
+    const email = document.getElementById('email') ? document.getElementById('email').value : "";
+
+    fetch("https://muziris-api.onrender.com/api/staff/leads", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            type: "Supplier Support",
+            companyName: company || "Pending Registration",
+            contactPerson: contact || "Unknown",
+            email: email,
+            phone: phone,
+            whatsapp: phone,
+            country: "Unknown"
+        })
+    })
+    .then(r => r.json())
+    .then(d => {
+        document.getElementById('support-modal').style.display = 'none';
+        btn.innerText = "Request Call";
+        btn.disabled = false;
+        showAlert("Request Received", "Our onboarding team will contact you shortly at " + phone + ".");
+    })
+    .catch(e => {
+        document.getElementById('support-modal').style.display = 'none';
+        btn.innerText = "Request Call";
+        btn.disabled = false;
+        showAlert("Request Received", "Our onboarding team will contact you shortly.");
+    });
+  }
+
   function populateLists(data) {
     var cSelect = document.getElementById("countrySelect");
     data.countries.forEach(c => { 
