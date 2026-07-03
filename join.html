@@ -698,6 +698,10 @@
   window.onload = function() { 
     populateLists(lists); 
     initGlobe();
+    // 🟢 NEW: Make the concierge slide in after 4 seconds!
+    setTimeout(() => {
+      document.getElementById('animated-concierge').classList.add('active');
+    }, 4000);
 
    // 🟢 SHOW/HIDE PASSWORD LOGIC
     const togglePassword = document.getElementById('togglePassword');
