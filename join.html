@@ -250,11 +250,20 @@
 </head>
 <body>
 
-<div id="custom-alert">
-  <div class="alert-box">
-    <h3 id="alert-title">Notice</h3>
-    <p id="alert-message">Message goes here.</p>
-    <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+<div id="support-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease;">
+  <div class="alert-box" style="text-align: left; max-width: 400px; border-color: var(--gold);">
+    <h3 style="color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; text-align: left;">Need Assistance?</h3>
+    <p style="font-size: 13px; color: #aaa; margin-bottom: 20px; text-align: left; line-height: 1.5;">Feel confused or need support filling out the document? Provide your WhatsApp or Phone number and our onboarding team will call you shortly.</p>
+    
+    <div class="form-group" style="text-align: left;">
+      <label style="color: #888;">Phone / WhatsApp Number</label>
+      <input type="text" id="support-phone" placeholder="+1 234 567 8900" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif;">
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px;">
+      <button class="alert-btn" style="border-color: #555; color: #aaa;" onclick="document.getElementById('support-modal').style.display='none'">Cancel</button>
+      <button class="btn-next" style="padding: 10px 20px; border: none; font-size: 12px; font-family: 'Cinzel', serif;" onclick="submitSupportRequest()">Request Call</button>
+    </div>
   </div>
 </div>
 
