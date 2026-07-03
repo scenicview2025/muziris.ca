@@ -506,6 +506,9 @@
                 if (prodData.status === 'fulfilled' && prodData.value.products) {
                     allProducts = prodData.value.products; // 🟢 Save the full list
                     targetProduct = allProducts.find(p => p.id === productId);
+                    
+                    // 🟢 NEW: Trigger the dynamic mega menu!
+                    generateDynamicCategories(allProducts);
                 }
                 if (!targetProduct) {
                     if (prodData.status === 'rejected') throw new Error(prodData.reason.message);
