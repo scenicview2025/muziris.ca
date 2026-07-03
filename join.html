@@ -246,6 +246,50 @@
       .input-row { flex-direction: column; gap: 20px; }
       .eco-pledge { margin-top: 40px; }
     }
+    /* 🟢 NEW: PROACTIVE CONCIERGE ANIMATION */
+    .concierge-widget {
+      position: fixed;
+      bottom: 30px;
+      left: -350px; /* Starts hidden off-screen to the left */
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      z-index: 900;
+      transition: left 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+    .concierge-widget.active {
+      left: 30px; /* Slides into view */
+    }
+    .concierge-avatar {
+      width: 50px;
+      height: 50px;
+      background: var(--dark-bg);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+    .concierge-bubble {
+      background: var(--card-bg);
+      border: 1px solid var(--gold);
+      padding: 12px 18px;
+      border-radius: 16px 16px 16px 0;
+      font-size: 13px;
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transition: 0.3s;
+      font-weight: bold;
+    }
+    .concierge-widget:hover .concierge-bubble {
+      background: var(--gold);
+      color: #000;
+    }
+    @media (max-width: 900px) {
+      .concierge-widget.active { left: 15px; bottom: 15px; }
+    }
   </style>
 </head>
 <body>
