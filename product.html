@@ -852,7 +852,95 @@
             const targetPanel = document.getElementById(panelId);
             if(targetPanel) targetPanel.classList.add('active');
         }
+        // ==========================================
+        // 🟢 SYNCED: DYNAMIC MEGA MENU BUILDER
+        // ==========================================
+        function generateDynamicCategories(products) {
+            const catTree = {};
+            products.forEach(p => {
+                if(!p.category) return;
+                if(!catTree[p.category]) catTree[p.category] = new Set();
+                if(p.subCategory) catTree[p.category].add(p.subCategory);
+            });
 
+            const catIcons = {
+                "Agriculture, Food & Beverage": "fa-seedling", "Apparel, Textiles & Accessories": "fa-tshirt",
+                "Automotive & Transportation": "fa-car", "Beauty & Personal Care": "fa-spa",
+                "Chemicals & Raw Materials": "fa-flask", "Construction & Real Estate": "fa-building",
+                "Consumer Electronics & Appliances": "fa-laptop", "Electrical & Renewable Energy": "fa-solar-panel",
+                "Electronic Components & IoT": "fa-microchip", "Fabrication & B2B Services": "fa-cogs",
+                "Health & Medical": "fa-stethoscope", "Home Decor, Garden & Furniture": "fa-couch",
+                "Industrial Machinery & Equipment": "fa-industry", "Jewelry, Eyewear & Watches": "fa-gem",
+                "Minerals, Metals & Metallurgy": "fa-cubes", "Packaging & Printing": "fa-box",
+                "Sports, Toys & Hobbies": "fa-dumbbell", "Tools, Hardware & Safety": "fa-tools"
+            };
+
+            function getSubIcon(name, fallback) {
+                const n = name.toLowerCase();
+                if(n.includes('candle')) return 'fa-fire text-orange-500';
+                if(n.includes('device') || n.includes('stethoscope')) return 'fa-stethoscope text-blue-500';
+                if(n.includes('furniture') || n.includes('bed')) return 'fa-procedures text-teal-600';
+                if(n.includes('disposable') || n.includes('syringe')) return 'fa-syringe text-gray-700';
+                if(n.includes('mobility') || n.includes('wheelchair')) return 'fa-wheelchair text-blue-600';
+                if(n.includes('supplement') || n.includes('pill')) return 'fa-pills text-green-600';
+                if(n.includes('produce') || n.includes('apple')) return 'fa-apple-alt text-red-500';
+                if(n.includes('coffee') || n.includes('tea')) return 'fa-coffee text-amber-800';
+                if(n.includes('clothing')) return 'fa-tshirt text-indigo-500';
+                if(n.includes('footwear')) return 'fa-shoe-prints text-orange-700';
+                if(n.includes('auto part')) return 'fa-cogs text-gray-600';
+                if(n.includes('skincare')) return 'fa-spa text-pink-400';
+                if(n.includes('tile') || n.includes('floor')) return 'fa-border-all text-stone-500';
+                if(n.includes('mobile')) return 'fa-mobile-alt text-gray-800';
+                if(n.includes('computer')) return 'fa-laptop text-slate-700';
+                if(n.includes('solar')) return 'fa-solar-panel text-blue-400';
+                if(n.includes('pcb')) return 'fa-microchip text-emerald-600';
+                if(n.includes('kitchenware')) return 'fa-utensils text-gray-500';
+                if(n.includes('packaging mach')) return 'fa-box-open text-amber-600';
+                if(n.includes('jewelry')) return 'fa-gem text-purple-500';
+                if(n.includes('box')) return 'fa-box text-yellow-600';
+                if(n.includes('fitness')) return 'fa-dumbbell text-zinc-800';
+                if(n.includes('tool')) return 'fa-tools text-slate-600';
+                return fallback || "fa-th-large text-gray-400";
+            }
+
+            let deskSidebarHTML = '', deskPanelsHTML = '', mobMenuHTML = '';
+            let index = 0;
+
+            for (const [cat, subcats] of Object.entries(catTree).sort()) {
+                const safeId = 'dyn-cat-' + index;
+                const mainIcon = catIcons[cat] || "fa-th-large";
+                const encodedCat = encodeURIComponent(cat);
+
+                deskSidebarHTML += `<a href="catalog.html?category=${encodedCat}" class="mega-cat-item ${index===0?'active':''}" onmouseenter="switchMegaPanel('${safeId}', this)">${cat} <i class="fas fa-chevron-right"></i></a>`;
+
+                let subcatGridHTML = '';
+                Array.from(subcats).sort().forEach(sub => {
+                    const specificIcon = getSubIcon(sub, mainIcon);
+                    subcatGridHTML += `<a href="catalog.html?category=${encodedCat}&sub=${encodeURIComponent(sub)}" class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition"><div class="subcat-icon bg-white shadow-sm border border-gray-100"><i class="fas ${specificIcon}"></i></div><div class="subcat-name text-left ml-2">${sub}</div></a>`;
+                });
+                subcatGridHTML += `<a href="catalog.html?category=${encodedCat}" class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition"><div class="subcat-icon bg-[var(--gold-light)]"><i class="fas fa-arrow-right text-[var(--gold-dark)]"></i></div><div class="subcat-name text-[var(--gold-dark)] text-left ml-2">View All</div></a>`;
+                
+                deskPanelsHTML += `<div id="${safeId}" class="mega-panel ${index===0?'active':''}"><h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4 brand-font uppercase tracking-widest">${cat}</h3><div class="grid grid-cols-2 md:grid-cols-3 gap-3">${subcatGridHTML}</div></div>`;
+
+                let mobSubLinks = '';
+                Array.from(subcats).sort().forEach(sub => {
+                    mobSubLinks += `<a href="catalog.html?category=${encodedCat}&sub=${encodeURIComponent(sub)}" class="flex items-center gap-3 py-3 px-6 text-sm text-gray-600 border-b border-gray-200"><i class="fas ${getSubIcon(sub, mainIcon)} w-5 text-center"></i> ${sub}</a>`;
+                });
+                mobSubLinks += `<a href="catalog.html?category=${encodedCat}" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All ${cat.split(',')[0]} &rarr;</a>`;
+
+                mobMenuHTML += `<div class="bg-white border-b border-gray-200"><button onclick="toggleMobileCat('mob-${safeId}')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">${cat} <i id="icon-mob-${safeId}" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i></button><div id="mob-${safeId}" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">${mobSubLinks}</div></div>`;
+
+                index++;
+            }
+
+            const dSide = document.getElementById('dynamic-mega-sidebar');
+            const dPanel = document.getElementById('dynamic-mega-panels');
+            const mMenu = document.getElementById('dynamic-mobile-menu');
+
+            if(dSide) dSide.innerHTML = deskSidebarHTML;
+            if(dPanel) dPanel.innerHTML = deskPanelsHTML;
+            if(mMenu) mMenu.innerHTML = mobMenuHTML;
+        }
         // ==========================================
         // 🟢 LIVE CHAT LOGIC
         // ==========================================
