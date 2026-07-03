@@ -428,9 +428,10 @@
         }
 
         // 🟢 SYNCED: Sidebar Links now use SEO hrefs
+        // 🟢 SYNCED: Sidebar Links now use SEO hrefs and Premium Styling
         function renderCategories(catObj) {
             const nav = document.getElementById('categoryNav');
-            let html = `<a href="catalog.html" id="btn-cat-all" class="sidebar-link font-bold mb-3 ${!urlCategory && !urlSearch ? 'active' : ''}">🌍 Global Catalog</a>`;
+            let html = `<a href="catalog.html" id="btn-cat-all" class="sidebar-link mb-4 ${!urlCategory && !urlSearch ? 'active' : ''}"><span class="flex items-center"><i class="fas fa-globe-americas mr-3 opacity-50"></i> Global Catalog</span></a>`;
             
             for (const cat in catObj) {
                 let safeId = cat.replace(/[^a-zA-Z0-9]/g, '');
@@ -444,18 +445,18 @@
 
                 html += `
                 <div class="mb-1">
-                    <div class="sidebar-link flex justify-between items-center cursor-pointer ${activeHead}" id="cat-head-${safeId}" onclick="window.location.href='catalog.html?category=${encodedCat}'">
-                        <span class="truncate pr-2">${cat}</span>
-                        <i class="fas fa-chevron-down text-[10px] opacity-40 transition-transform duration-300" id="icon-${safeId}" style="${rotateClass}"></i>
-                    </div>
-                    <div id="sublist-${safeId}" class="${hiddenClass} flex-col pl-4 mt-1 border-l-2 border-[var(--gold)] ml-2 space-y-1">`;
+                    <a href="catalog.html?category=${encodedCat}" class="sidebar-link ${activeHead}" id="cat-head-${safeId}">
+                        <span class="pr-2">${cat}</span>
+                        <i class="fas fa-chevron-down text-[10px] opacity-40 transition-transform duration-300 flex-shrink-0" id="icon-${safeId}" style="${rotateClass}"></i>
+                    </a>
+                    <div id="sublist-${safeId}" class="${hiddenClass} flex-col mt-1 mb-3">`;
                 
                 catObj[cat].forEach(sub => {
                     let safeSubId = sub.replace(/[^a-zA-Z0-9]/g, '');
                     const encodedSub = encodeURIComponent(sub);
                     const activeSub = (urlCategory === cat && urlSubCat === sub) ? 'active' : '';
                     
-                    html += `<a href="catalog.html?category=${encodedCat}&sub=${encodedSub}" class="sidebar-link text-xs py-2 ${activeSub}" id="sub-link-${safeId}-${safeSubId}">${sub}</a>`;
+                    html += `<a href="catalog.html?category=${encodedCat}&sub=${encodedSub}" class="sub-link ${activeSub}" id="sub-link-${safeId}-${safeSubId}">${sub}</a>`;
                 });
                 html += `</div></div>`;
             }
