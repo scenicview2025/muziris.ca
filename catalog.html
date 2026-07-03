@@ -27,12 +27,12 @@
         
         .glass-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
         
-        .sidebar-link { display: block; padding: 10px 16px; color: var(--text-gray); font-size: 14px; font-weight: 500; transition: all 0.2s; cursor: pointer; border-radius: 8px; margin-bottom: 2px; }
+        /* 🟢 SYNCED: Sidebar Links now styled as Anchor tags */
+        .sidebar-link { display: block; padding: 10px 16px; color: var(--text-gray); font-size: 14px; font-weight: 500; transition: all 0.2s; text-decoration: none; border-radius: 8px; margin-bottom: 2px; }
         .sidebar-link:hover { background: #f3f4f6; color: var(--text-dark); }
         .sidebar-link.active { background-color: var(--void); color: var(--gold); font-weight: 700; box-shadow: 0 4px 12px rgba(11, 14, 20, 0.15); }
         .sidebar-header { font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; color: #9ca3af; padding-left: 16px; }
 
-        /* 🟢 SYNCED: Clean, borderless, Etsy-style Product Cards */
         .product-card { position: relative; transition: all 0.3s ease; background: transparent; display: flex; flex-direction: column; cursor: pointer; }
         .product-card:hover .img-layer.opacity-100 { transform: scale(1.05); }
         .img-container { background: #f3f4f6; position: relative; aspect-ratio: 4 / 5; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03); } 
@@ -41,7 +41,6 @@
         .badge-verified { position: absolute; top: 12px; right: 12px; background: #ffffff; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #111; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 6px rgba(0,0,0,0.05); z-index: 30; display: flex; align-items: center; gap: 4px; }
         .badge-verified i { color: var(--gold); font-size: 11px; }
 
-        /* 🟢 SYNCED: Mega Menu Styles */
         .nav-group:hover .mega-menu-container { visibility: visible; opacity: 1; transform: translateY(0); }
         .mega-menu-container { position: absolute; top: 100%; left: -100px; width: 750px; height: 380px; background: #fff; border-radius: 8px; display: flex; visibility: hidden; opacity: 0; transform: translateY(15px); transition: all 0.3s ease; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid #e5e7eb; overflow: hidden; z-index: 1000; }
         .mega-sidebar { width: 35%; background: #f8f9fa; border-right: 1px solid #e5e7eb; padding: 15px 0; overflow-y: auto; overscroll-behavior: contain; }
@@ -49,14 +48,19 @@
         .mega-sidebar::-webkit-scrollbar-track { background: transparent; }
         .mega-sidebar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
         .mega-sidebar::-webkit-scrollbar-thumb:hover { background: var(--gold); }
-        .mega-cat-item { padding: 14px 24px; font-size: 12px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; text-transform: none; letter-spacing: normal; }
+        
+        /* 🟢 SYNCED: Mega Menu Items as Anchor Tags */
+        .mega-cat-item { padding: 14px 24px; font-size: 12px; font-weight: 600; color: #4b5563; text-decoration: none; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; text-transform: none; letter-spacing: normal; }
         .mega-cat-item:hover, .mega-cat-item.active { background: #ffffff; color: var(--gold-dark); border-left: 3px solid var(--gold); }
+        
         .mega-content { width: 65%; padding: 30px; background: #ffffff; overscroll-behavior: contain; }
         .mega-panel { display: none; }
         .mega-panel.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .subcat-item { cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; transition: 0.2s; }
-        .subcat-item:hover { transform: translateX(5px); }
+        
+        /* 🟢 SYNCED: Mega Sub Items as Anchor Tags */
+        .subcat-item { text-decoration: none; color: #4b5563; display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; transition: 0.2s; }
+        .subcat-item:hover { transform: translateX(5px); color: var(--gold-dark); }
 
         .btn-add-cart { width: 100%; margin-top: 10px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); color: var(--gold-dark); padding: 8px; border-radius: 6px; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
         .btn-add-cart:hover { background: var(--gold); color: #000; }
@@ -96,7 +100,7 @@
         <div class="hidden md:block flex-1 max-w-3xl">
             <div class="relative w-full group">
                 <input type="text" id="nav-search" placeholder="Search for anything..." class="w-full bg-gray-100 border-2 border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] text-sm rounded-full py-3 pl-5 pr-12 outline-none transition-all text-gray-900 shadow-inner">
-                <button onclick="handleSearch()" class="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-white w-9 h-9 rounded-full flex items-center justify-center transition shadow-sm">
+                <button onclick="executeSearch()" class="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-white w-9 h-9 rounded-full flex items-center justify-center transition shadow-sm">
                     <i class="fas fa-search text-sm"></i>
                 </button>
             </div>
@@ -169,7 +173,7 @@
       <div id="mobile-search-dropdown" class="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-200 p-4 transform -translate-y-full opacity-0 transition-all duration-300 -z-10 pointer-events-none shadow-md">
           <div class="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 focus-within:border-[var(--gold)] transition-colors shadow-inner">
               <input type="text" id="mobile-search-input" class="w-full bg-transparent border-none outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="Search products, categories...">
-              <button onclick="handleSearch()" class="text-[var(--gold-dark)] ml-2 text-lg"><i class="fas fa-search"></i></button>
+              <button onclick="executeSearch()" class="text-[var(--gold-dark)] ml-2 text-lg"><i class="fas fa-search"></i></button>
           </div>
       </div>
     </header>
@@ -328,40 +332,36 @@
                         const btn = document.createElement('button');
                         btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
                         btn.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="flex-1">${item.country}</span><span class="text-gray-400 text-xs font-bold">${item.currency}</span>`;
-                        btn.onclick = () => { selectCurrency(item.currency, flagCode); updateCurrency(); };
+                        btn.onclick = () => { selectCurrency(item.currency, flagCode); };
                         dropdownList.appendChild(btn);
                     });
                     if (activeCurrency) {
                         const initialFlag = flagMap[activeCurrency] || activeCurrency.substring(0,2).toLowerCase();
-                        selectCurrency(activeCurrency, initialFlag);
+                        selectCurrency(activeCurrency, initialFlag, true); // true = don't reload
                     }
                 }
             } catch (e) { exchangeRates = { "CAD": 1.00, "USD": 0.74 }; }
         }
 
-        function selectCurrency(curr, flagCode) {
+        function selectCurrency(curr, flagCode, preventReload = false) {
             activeCurrency = curr; 
             localStorage.setItem('muziris_active_currency', curr);
             document.getElementById('activeCurrencyDisplay').innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="hidden md:block text-sm font-bold text-gray-900">${curr}</span>`;
             document.getElementById('currencyMenu').classList.add('hidden');
+            if(!preventReload) window.location.reload(); // Reload to recalculate all prices with new currency
         }
 
         document.getElementById('currencyBtn')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('currencyMenu').classList.toggle('hidden'); });
         window.addEventListener('click', (e) => { 
             if(!e.target.closest('#customCurrencyDropdown')) document.getElementById('currencyMenu')?.classList.add('hidden'); 
             
-            // 🟢 FIX: We use invisible/opacity-0 so it doesn't permanently break the CSS Hover effect!
             if(!e.target.closest('#userMenuContainer')) {
                 const userDrop = document.getElementById('userMenuContainer')?.querySelector('.absolute');
                 if(userDrop) userDrop.classList.add('invisible', 'opacity-0');
             }
         });
 
-        function updateCurrency() {
-            document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
-            handleSearch(); 
-        }
-
+        // 🟢 NEW: Parse the URL Parameters on Page Load
         const urlParams = new URLSearchParams(window.location.search);
         const urlSearch = urlParams.get('search');
         const urlCategory = urlParams.get('category');
@@ -377,22 +377,29 @@
                     window.globalCategories = data.categories; 
                     
                     renderCategories(data.categories); 
-                    generateDynamicCategories(allProducts); // 🟢 Builds the Header Mega Menu!
+                    generateDynamicCategories(allProducts);
                     
+                    // 🟢 THE ROUTING ENGINE
                     if (urlSearch) {
                         document.getElementById('nav-search').value = urlSearch;
-                        handleSearch(); 
+                        document.getElementById('mobile-search-input').value = urlSearch;
+                        executeSearch(urlSearch); 
                     } else if (urlCategory && urlSubCat) {
-                        filterCat(urlCategory);
-                        setTimeout(() => {
-                            let safeCatId = urlCategory.replace(/[^a-zA-Z0-9]/g, '');
-                            let safeSubId = urlSubCat.replace(/[^a-zA-Z0-9]/g, '');
-                            let subBtn = document.getElementById(`sub-link-${safeCatId}-${safeSubId}`);
-                            filterSubCat(urlCategory, urlSubCat, subBtn);
-                        }, 50);
+                        // Filter the grid to the subcategory
+                        filterSubCat(urlCategory, urlSubCat);
+                        // Open the sidebar folders visually
+                        let safeCatId = urlCategory.replace(/[^a-zA-Z0-9]/g, '');
+                        let headEl = document.getElementById('cat-head-' + safeCatId);
+                        let sublist = document.getElementById('sublist-' + safeCatId);
+                        let icon = document.getElementById('icon-' + safeCatId);
+                        if(headEl) headEl.classList.add('active');
+                        if(sublist) sublist.classList.remove('hidden');
+                        if(icon) icon.style.transform = 'rotate(180deg)';
                     } else if (urlCategory) {
+                        // Show the Hub page for the main category
                         filterCat(urlCategory); 
                     } else {
+                        // Show everything
                         filterCat('All'); 
                     }
                 } else {
@@ -402,11 +409,9 @@
                 document.getElementById('loader').innerHTML = "<div class='text-red-500 font-bold text-center w-full'>Connection Failed.</div>";
             });
             
-            // Connect Live Search listeners
-            document.getElementById('nav-search')?.addEventListener('input', handleSearch);
-            document.getElementById('nav-search')?.addEventListener('keypress', (e) => { if(e.key==='Enter') e.preventDefault(); });
-            document.getElementById('mobile-search-input')?.addEventListener('input', handleSearch);
-            document.getElementById('mobile-search-input')?.addEventListener('keypress', (e) => { if(e.key==='Enter') e.preventDefault(); });
+            // Connect Live Search listener for typing
+            document.getElementById('nav-search')?.addEventListener('keypress', (e) => { if(e.key==='Enter') executeSearch(); });
+            document.getElementById('mobile-search-input')?.addEventListener('keypress', (e) => { if(e.key==='Enter') executeSearch(); });
         };
 
         function trackBehavior(actionType, targetId) {
@@ -419,54 +424,47 @@
             return (cadPrice / exchangeRates[activeCurrency]).toFixed(2);
         }
 
+        // 🟢 SYNCED: Sidebar Links now use SEO hrefs
         function renderCategories(catObj) {
             const nav = document.getElementById('categoryNav');
-            let html = `<div id="btn-cat-all" class="sidebar-link active font-bold mb-3 cursor-pointer" onclick="filterCat('All', this)">🌍 Global Catalog</div>`;
+            let html = `<a href="catalog.html" id="btn-cat-all" class="sidebar-link font-bold mb-3 ${!urlCategory && !urlSearch ? 'active' : ''}">🌍 Global Catalog</a>`;
             
             for (const cat in catObj) {
                 let safeId = cat.replace(/[^a-zA-Z0-9]/g, '');
+                const encodedCat = encodeURIComponent(cat);
+                
+                // Determine if this folder should be open based on the URL
+                const isOpen = urlCategory === cat;
+                const hiddenClass = isOpen ? '' : 'hidden';
+                const rotateClass = isOpen ? 'transform: rotate(180deg);' : '';
+                const activeHead = isOpen && !urlSubCat ? 'active' : '';
+
                 html += `
                 <div class="mb-1">
-                    <div class="sidebar-link flex justify-between items-center cursor-pointer" id="cat-head-${safeId}" onclick="filterCat('${cat}', this)">
+                    <div class="sidebar-link flex justify-between items-center cursor-pointer ${activeHead}" id="cat-head-${safeId}" onclick="window.location.href='catalog.html?category=${encodedCat}'">
                         <span class="truncate pr-2">${cat}</span>
-                        <i class="fas fa-chevron-down text-[10px] opacity-40 transition-transform duration-300" id="icon-${safeId}"></i>
+                        <i class="fas fa-chevron-down text-[10px] opacity-40 transition-transform duration-300" id="icon-${safeId}" style="${rotateClass}"></i>
                     </div>
-                    <div id="sublist-${safeId}" class="hidden flex-col pl-4 mt-1 border-l-2 border-[var(--gold)] ml-2 space-y-1">`;
+                    <div id="sublist-${safeId}" class="${hiddenClass} flex-col pl-4 mt-1 border-l-2 border-[var(--gold)] ml-2 space-y-1">`;
                 
                 catObj[cat].forEach(sub => {
                     let safeSubId = sub.replace(/[^a-zA-Z0-9]/g, '');
-                    html += `<div class="sidebar-link text-xs py-2 cursor-pointer" id="sub-link-${safeId}-${safeSubId}" onclick="event.stopPropagation(); filterSubCat('${cat}', '${sub.replace(/'/g, "\\'")}', this)">${sub}</div>`;
+                    const encodedSub = encodeURIComponent(sub);
+                    const activeSub = (urlCategory === cat && urlSubCat === sub) ? 'active' : '';
+                    
+                    html += `<a href="catalog.html?category=${encodedCat}&sub=${encodedSub}" class="sidebar-link text-xs py-2 ${activeSub}" id="sub-link-${safeId}-${safeSubId}">${sub}</a>`;
                 });
                 html += `</div></div>`;
             }
             nav.innerHTML = html;
         }
 
-        function filterCat(catName, btnElement) {
-            document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('[id^="sublist-"]').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('[id^="icon-"]').forEach(el => el.style.transform = 'rotate(0deg)');
-            
-            if(document.getElementById('nav-search')) document.getElementById('nav-search').value = ""; 
-            if(document.getElementById('mobile-search-input')) document.getElementById('mobile-search-input').value = ""; 
-
+        function filterCat(catName) {
             if (catName === 'All') {
-                document.getElementById('btn-cat-all').classList.add('active');
                 document.getElementById('current-category-title').innerText = 'Global Catalog';
                 renderGrid(allProducts, 'All');
                 trackBehavior('click_category', 'All');
                 return;
-            }
-
-            let safeId = catName.replace(/[^a-zA-Z0-9]/g, '');
-            let headEl = btnElement || document.getElementById('cat-head-' + safeId);
-            if (headEl) headEl.classList.add('active');
-            
-            let sublist = document.getElementById('sublist-' + safeId);
-            let icon = document.getElementById('icon-' + safeId);
-            if (sublist) {
-                sublist.classList.remove('hidden');
-                if(icon) icon.style.transform = 'rotate(180deg)';
             }
 
             document.getElementById('current-category-title').innerText = catName;
@@ -474,34 +472,33 @@
             trackBehavior('click_category', catName);
         }
 
-        function filterSubCat(catName, subCatName, btnElement) {
-            let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
-            let sublist = document.getElementById('sublist-' + safeCatId);
-            if(sublist) sublist.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-            if (btnElement) btnElement.classList.add('active');
-
+        function filterSubCat(catName, subCatName) {
             document.getElementById('current-category-title').innerText = `${catName} - ${subCatName}`;
             renderGrid(allProducts.filter(p => p.category === catName && p.subCategory === subCatName), subCatName);
         }
 
-        // 🟢 FIX: Search function now syncs beautifully without page reloads
-        function handleSearch() {
+        // 🟢 SYNCED: Search Button forces URL update
+        function executeSearch(predefinedQuery = null) {
             const deskQ = document.getElementById('nav-search')?.value.toLowerCase() || "";
             const mobQ = document.getElementById('mobile-search-input')?.value.toLowerCase() || "";
-            const query = deskQ || mobQ;
+            const query = predefinedQuery || deskQ || mobQ;
             
-            clearTimeout(searchTimeout);
-            if(query.length > 2) searchTimeout = setTimeout(() => trackBehavior('search', query), 1000);
-            
+            if (!query) return;
+
+            // If we didn't pass a predefined query, reload the page with the search term in the URL
+            if (!predefinedQuery) {
+                window.location.href = `catalog.html?search=${encodeURIComponent(query)}`;
+                return;
+            }
+
+            // Actual filtering logic (runs on page load)
+            trackBehavior('search', query);
             const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || p.id.toLowerCase().includes(query));
             
-            document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-            document.getElementById('current-category-title').innerText = query ? `Search: "${query}"` : 'Global Catalog';
-            
+            document.getElementById('current-category-title').innerText = `Search: "${query}"`;
             renderGrid(filtered, 'Search Results');
         }
 
-        // 🟢 NEW: Mobile Touch Swipe for Product Cards
         let cardStartX = 0, cardStartY = 0;
         window.isCardSwiping = false;
 
@@ -512,34 +509,21 @@
         }
 
         function handleCardTouchEnd(e, pid, maxIndex) {
-            if (maxIndex <= 1) return; // Don't swipe if there's only 1 image!
-            
+            if (maxIndex <= 1) return; 
             let diffX = cardStartX - e.changedTouches[0].screenX;
             let diffY = cardStartY - e.changedTouches[0].screenY;
-            
-            // If they are scrolling down the page vertically, ignore it
             if (Math.abs(diffY) > Math.abs(diffX)) return; 
-            
-            // 40px Threshold for a successful swipe
-            if (diffX > 40) { 
-                changeSlide(pid, 1, maxIndex); 
-                window.isCardSwiping = true; // Block the click!
-            } else if (diffX < -40) { 
-                changeSlide(pid, -1, maxIndex); 
-                window.isCardSwiping = true; // Block the click!
-            }
-            
-            // Reset the click blocker after 50ms so normal taps work again
+            if (diffX > 40) { changeSlide(pid, 1, maxIndex); window.isCardSwiping = true; } 
+            else if (diffX < -40) { changeSlide(pid, -1, maxIndex); window.isCardSwiping = true; }
             setTimeout(() => window.isCardSwiping = false, 50);
         }
-        // 🟢 SYNCED: Reusable Product Card Generator
+
         function createProductCardHtml(p) {
             let displayPrice = convertPrice(p.startingPriceCAD);
             let moq = p.variants && p.variants.length > 0 ? p.variants[0].min : 'Contact';
             let imgs = [p.hero, ...(p.gallery || [])].filter(Boolean);
             if(imgs.length === 0) imgs = ['MC.png'];
 
-            // 🟢 FIX: Added touch listeners and 'touch-pan-y' so it doesn't break scrolling!
             let sliderHtml = `<div class="relative w-full h-full overflow-hidden group/slider touch-pan-y" id="slider-${p.id}" ontouchstart="handleCardTouchStart(event)" ontouchend="handleCardTouchEnd(event, '${p.id}', ${imgs.length})">`;
             if (p.status === 'PAUSED') {
                 sliderHtml += `<span class="badge-verified" style="background:#f3f4f6; color:#6b7280; border-color:#d1d5db;"><i class="fas fa-pause-circle" style="color:#6b7280;"></i> Unavailable</span>`;
@@ -585,7 +569,6 @@
             </div>`;
         }
 
-        // 🟢 SYNCED: Fixed Grid Layout (gap-3 for tighter mobile view)
         function renderGrid(products) {
             const area = document.getElementById('catalog-dynamic-area');
             const emptyState = document.getElementById('empty-state');
@@ -607,7 +590,6 @@
             area.innerHTML = gridHtml;
         }
 
-        // 🟢 SYNCED: Category Hub Layout
         function renderCategoryHub(catName) {
             const area = document.getElementById('catalog-dynamic-area');
             const emptyState = document.getElementById('empty-state');
@@ -631,17 +613,17 @@
             subCats.forEach(sub => {
                 let subProds = catProducts.filter(p => p.subCategory === sub);
                 let img = subProds.length > 0 && subProds[0].hero ? subProds[0].hero : 'MC.png';
-                let safeSubId = sub.replace(/[^a-zA-Z0-9]/g, '');
-                let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
+                const encodedCat = encodeURIComponent(catName);
+                const encodedSub = encodeURIComponent(sub);
                 
+                // 🟢 SYNCED: Replaced JS onclick with proper SEO Href
                 html += `
-                <div class="flex flex-col items-center gap-3 cursor-pointer min-w-[80px] md:min-w-[100px] flex-shrink-0 group" style="scroll-snap-align: start;" 
-                     onclick="let btn = document.getElementById('sub-link-${safeCatId}-${safeSubId}'); filterSubCat('${catName}', '${sub.replace(/'/g, "\\'")}', btn);">
+                <a href="catalog.html?category=${encodedCat}&sub=${encodedSub}" class="flex flex-col items-center gap-3 cursor-pointer min-w-[80px] md:min-w-[100px] flex-shrink-0 group" style="scroll-snap-align: start; text-decoration: none;">
                     <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-gray-200 group-hover:border-[var(--gold)] group-hover:shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all overflow-hidden bg-white p-1">
                         <img src="${img}" class="w-full h-full rounded-full object-cover mix-blend-multiply" onerror="this.src='MC.png'">
                     </div>
                     <span class="text-[10px] md:text-xs text-center font-bold text-gray-700 leading-tight group-hover:text-[var(--gold-dark)] transition-colors">${sub}</span>
-                </div>`;
+                </a>`;
             });
             html += `</div>`;
 
@@ -650,18 +632,19 @@
             subCats.forEach(sub => {
                 let subProds = catProducts.filter(p => p.subCategory === sub);
                 if (subProds.length > 0) {
-                    let safeSubId = sub.replace(/[^a-zA-Z0-9]/g, '');
-                    let safeCatId = catName.replace(/[^a-zA-Z0-9]/g, '');
+                    const encodedCat = encodeURIComponent(catName);
+                    const encodedSub = encodeURIComponent(sub);
+                    
+                    // 🟢 SYNCED: "View More" button is now an anchor tag
                     html += `
                     <div>
                         <div class="flex justify-between items-end border-b border-gray-200 pb-3 mb-6">
                             <h3 class="text-xl md:text-2xl font-bold brand-font text-gray-900">${sub}</h3>
-                            <button class="text-[var(--gold-dark)] text-[10px] md:text-xs font-bold uppercase tracking-widest hover:text-black transition" 
-                                    onclick="let btn = document.getElementById('sub-link-${safeCatId}-${safeSubId}'); filterSubCat('${catName}', '${sub.replace(/'/g, "\\'")}', btn); window.scrollTo(0,0);">
+                            <a href="catalog.html?category=${encodedCat}&sub=${encodedSub}" class="text-[var(--gold-dark)] text-[10px] md:text-xs font-bold uppercase tracking-widest hover:text-black transition flex items-center" style="text-decoration:none;">
                                 View More <i class="fas fa-arrow-right ml-1"></i>
-                            </button>
+                            </a>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">`; // 🟢 Fixed gap here too!
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">`; 
                     
                     subProds.slice(0, 4).forEach(p => {
                         html += createProductCardHtml(p);
@@ -721,7 +704,7 @@
         }
 
         // ==========================================
-        // 🟢 SYNCED: DYNAMIC MEGA MENU BUILDER
+        // 🟢 SYNCED: DYNAMIC MEGA MENU BUILDER (SEO Anchors)
         // ==========================================
         function generateDynamicCategories(products) {
             const catTree = {};
@@ -779,14 +762,14 @@
                 const mainIcon = catIcons[cat] || "fa-th-large";
                 const encodedCat = encodeURIComponent(cat);
 
-                deskSidebarHTML += `<div class="mega-cat-item ${index===0?'active':''}" onmouseenter="switchMegaPanel('${safeId}', this)" onclick="window.location.href='catalog.html?category=${encodedCat}'">${cat} <i class="fas fa-chevron-right"></i></div>`;
+                deskSidebarHTML += `<a href="catalog.html?category=${encodedCat}" class="mega-cat-item ${index===0?'active':''}" onmouseenter="switchMegaPanel('${safeId}', this)">${cat} <i class="fas fa-chevron-right"></i></a>`;
 
                 let subcatGridHTML = '';
                 Array.from(subcats).sort().forEach(sub => {
                     const specificIcon = getSubIcon(sub, mainIcon);
-                    subcatGridHTML += `<div class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition" onclick="window.location.href='catalog.html?category=${encodedCat}&sub=${encodeURIComponent(sub)}'"><div class="subcat-icon bg-white shadow-sm border border-gray-100"><i class="fas ${specificIcon}"></i></div><div class="subcat-name text-left ml-2">${sub}</div></div>`;
+                    subcatGridHTML += `<a href="catalog.html?category=${encodedCat}&sub=${encodeURIComponent(sub)}" class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition"><div class="subcat-icon bg-white shadow-sm border border-gray-100"><i class="fas ${specificIcon}"></i></div><div class="subcat-name text-left ml-2">${sub}</div></a>`;
                 });
-                subcatGridHTML += `<div class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition" onclick="window.location.href='catalog.html?category=${encodedCat}'"><div class="subcat-icon bg-[var(--gold-light)]"><i class="fas fa-arrow-right text-[var(--gold-dark)]"></i></div><div class="subcat-name text-[var(--gold-dark)] text-left ml-2">View All</div></div>`;
+                subcatGridHTML += `<a href="catalog.html?category=${encodedCat}" class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition"><div class="subcat-icon bg-[var(--gold-light)]"><i class="fas fa-arrow-right text-[var(--gold-dark)]"></i></div><div class="subcat-name text-[var(--gold-dark)] text-left ml-2">View All</div></a>`;
                 
                 deskPanelsHTML += `<div id="${safeId}" class="mega-panel ${index===0?'active':''}"><h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4 brand-font uppercase tracking-widest">${cat}</h3><div class="grid grid-cols-2 md:grid-cols-3 gap-3">${subcatGridHTML}</div></div>`;
 
