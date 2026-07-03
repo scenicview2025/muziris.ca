@@ -1,968 +1,4158 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Muziris | Product Details</title>
+
    
+
     <link rel="icon" type="image/png" href="MC.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+
     
+
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
     
+
     <style>
+
         :root {
+
             --gold: #D4AF37;
+
             --gold-dark: #b89225;
+
             --void: #0b0e14;
+
             --text-dark: #111827;
+
             --text-gray: #6b7280;
+
         }
+
         body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; }
+
         .brand-font { font-family: 'Cinzel', serif; }
+
         .glass-header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50; }
+
         .btn-void-gold { background-color: var(--void); color: var(--gold); border-radius: 8px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; }
+
         .btn-void-gold:hover { background-color: #1a1f2e; box-shadow: 0 8px 20px rgba(11, 14, 20, 0.2); transform: translateY(-1px); }
+
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(240, 240, 240, 0.9); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 40px 16px;}
+
         .auth-content { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); padding: 40px; position: relative; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
+
         .btn-sso { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; background: #fff; border: 1px solid #d1d5db; color: #374151; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
         .modal-close { position: absolute; top: 24px; right: 24px; width: 40px; height: 40px; background: #f3f4f6; color: #6b7280; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: all 0.2s ease; }
+
         .premium-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid #e5e7eb; color: var(--text-dark); border-radius: 8px; outline: none; transition: all 0.2s; font-size: 14px; font-weight: 500; }
+
     
+
     /* 🟢 NEW: Jumbo Emoji Native Rendering */
+
         .jumbo-emoji {
+
             display: inline-block;
+
             font-family: 'Noto Color Emoji', sans-serif !important;
+
             font-size: 44px;
+
             line-height: 1.2;
+
             text-align: center;
+
             padding: 5px 0;
+
         }
+
         #chat-history {
+
             font-family: 'Inter', 'Noto Color Emoji', sans-serif;
+
         }
+
         /* 🟢 NEW: MULTI-SKU CART STYLES */
+
         .cart-float { position: fixed; bottom: 30px; left: 30px; background: var(--void); color: var(--gold); padding: 15px 25px; border-radius: 50px; font-weight: bold; font-family: 'Cinzel', serif; box-shadow: 0 10px 25px rgba(0,0,0,0.2); cursor: pointer; z-index: 1000; border: 1px solid var(--gold); display: none; transition: 0.3s; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px;}
+
         .cart-float:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3); background: var(--gold); color: var(--void); }
+
         .cart-badge { background: #ff5252; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; font-family: 'Inter', sans-serif; }
+
         
+
         /* 🟢 FIX: Completely hides the redundant floating cart on mobile/tablets! */
+
         @media (max-width: 1024px) {
+
             .cart-float { display: none !important; }
+
         }
+
+
 
         /* 🟢 MEGA MENU FIX */
+
         .nav-group:hover .mega-menu-container {
+
             visibility: visible;
+
             opacity: 1;
+
             transform: translateY(0);
+
         }
+
         .mega-menu-container {
+
             position: absolute;
+
             top: 100%; /* Drops right below the header */
+
             left: -100px; /* Centers the menu slightly */
+
             width: 750px; /* Wide enough for sidebar + content */
+
             height: 380px;
+
             background: #fff;
+
             border-radius: 8px;
+
             display: flex;
+
             visibility: hidden;
+
             opacity: 0;
+
             transform: translateY(15px);
+
             transition: all 0.3s ease;
+
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
             border: 1px solid #e5e7eb;
+
             overflow: hidden;
+
             z-index: 1000;
+
         }
+
         /* 🟢 FIX: Added overflow-y to make the 18 categories scrollable! */
+
         .mega-sidebar {
+
             width: 35%;
+
             background: #f8f9fa;
+
             border-right: 1px solid #e5e7eb;
+
             padding: 15px 0;
+
             overflow-y: auto; 
+
             overscroll-behavior: contain; 
+
         }
+
         
+
         /* 🟢 NEW: Makes the scrollbar ultra-thin and premium so it doesn't look clunky */
+
         .mega-sidebar::-webkit-scrollbar { width: 4px; }
+
         .mega-sidebar::-webkit-scrollbar-track { background: transparent; }
+
         .mega-sidebar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+
         .mega-sidebar::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
         .mega-cat-item {
+
             padding: 14px 24px;
+
             font-size: 12px;
+
             font-weight: 600;
+
             color: #4b5563;
+
             cursor: pointer;
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             transition: all 0.2s;
+
             text-transform: none;
+
             letter-spacing: normal;
+
         }
+
         .mega-cat-item:hover, .mega-cat-item.active {
+
             background: #ffffff;
+
             color: var(--gold-dark);
+
             border-left: 3px solid var(--gold);
+
         }
+
         .mega-content {
+
             width: 65%;
+
             padding: 30px;
+
             background: #ffffff;
+
             overscroll-behavior: contain;
+
         }
+
         .mega-panel { display: none; }
+
         .mega-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         
+
         .subcat-item { cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; transition: 0.2s; }
+
         .subcat-item:hover { transform: translateX(5px); }
+
     </style>
+
 </head>
+
 <body>
 
+
+
     <header class="glass-header" id="main-header">
+
       <div class="max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
+
         
+
         <div class="flex items-center gap-4 md:gap-6 flex-shrink-0 h-full">
+
           <button class="md:hidden text-gray-900 text-[22px] hover:text-[var(--gold)] transition mt-1" onclick="openMobileMenu()">
+
             <i class="fas fa-bars"></i>
+
           </button>
+
           
+
           <h1 class="text-3xl font-bold tracking-[0.1em] text-gray-900 brand-font m-0 leading-none cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
+
           
+
           <div class="hidden md:flex nav-group h-full items-center ml-4 md:ml-8 cursor-pointer relative">
+
             <span class="text-gray-500 hover:text-gray-900 text-xs font-bold uppercase tracking-widest transition flex items-center gap-2 py-8">
+
               <i class="fas fa-bars text-sm"></i> Categories
+
             </span>
+
             
+
             <div class="mega-menu-container text-left cursor-default shadow-2xl absolute top-[80px] -left-[100px]">
-              <div class="mega-sidebar" id="dynamic-mega-sidebar"></div>            
-              <div class="mega-content overflow-y-auto" id="dynamic-mega-panels"></div> 
+
+              <div class="mega-sidebar">
+
+                <div class="mega-cat-item active" onmouseenter="switchMegaPanel('panel-agri', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Agriculture, Food & Beverage')">Agriculture, Food & Beverage <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-apparel', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Apparel, Textiles & Accessories')">Apparel, Textiles & Accessories <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-auto', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Automotive & Transportation')">Automotive & Transportation <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-beauty', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Beauty & Personal Care')">Beauty & Personal Care <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-chemicals', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Chemicals & Raw Materials')">Chemicals & Raw Materials <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-construction', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Construction & Real Estate')">Construction & Real Estate <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-electronics', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Consumer Electronics & Appliances')">Consumer Electronics & Appliances <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-electrical', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Electrical & Renewable Energy')">Electrical & Renewable Energy <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-components', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Electronic Components & IoT')">Electronic Components & IoT <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-fabrication', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Fabrication & B2B Services')">Fabrication & B2B Services <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-health', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Health & Medical')">Health & Medical <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-home', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Home Decor, Garden & Furniture')">Home Decor, Garden & Furniture <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-machinery', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Industrial Machinery & Equipment')">Industrial Machinery & Equipment <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-jewelry', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Jewelry, Eyewear & Watches')">Jewelry, Eyewear & Watches <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-metals', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Minerals, Metals & Metallurgy')">Minerals, Metals & Metallurgy <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-packaging', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Packaging & Printing')">Packaging & Printing <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-sports', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Sports, Toys & Hobbies')">Sports, Toys & Hobbies <i class="fas fa-chevron-right"></i></div>
+
+                <div class="mega-cat-item" onmouseenter="switchMegaPanel('panel-tools', this)" onclick="window.location.href='catalog.html?category=' + encodeURIComponent('Tools, Hardware & Safety')">Tools, Hardware & Safety <i class="fas fa-chevron-right"></i></div>
+
+              </div>            
+
+              <div class="mega-content overflow-y-auto">
+
+                
+
+                <div id="panel-agri" class="mega-panel active">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Agriculture, Food & Beverage</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Fresh %26 Processed Produce'"><div class="subcat-icon"><i class="fas fa-apple-alt"></i></div><div class="subcat-name">Fresh Produce</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Grains %26 Cereals'"><div class="subcat-icon"><i class="fas fa-seedling"></i></div><div class="subcat-name">Grains & Cereals</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Spices %26 Condiments'"><div class="subcat-icon"><i class="fas fa-pepper-hot"></i></div><div class="subcat-name">Spices & Condiments</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Coffee, Tea %26 Beverages'"><div class="subcat-icon"><i class="fas fa-coffee"></i></div><div class="subcat-name">Coffee & Tea</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage&sub=Meat %26 Seafood'"><div class="subcat-icon"><i class="fas fa-fish"></i></div><div class="subcat-name">Meat & Seafood</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Agriculture, Food %26 Beverage'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-apparel" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Apparel, Textiles & Accessories</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Men\\'s %26 Women\\'s Clothing'"><div class="subcat-icon"><i class="fas fa-tshirt"></i></div><div class="subcat-name">Clothing</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Sportswear %26 Activewear'"><div class="subcat-icon"><i class="fas fa-running"></i></div><div class="subcat-name">Sportswear</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Footwear %26 Accessories'"><div class="subcat-icon"><i class="fas fa-shoe-prints"></i></div><div class="subcat-name">Footwear</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Luggage, Bags %26 Cases'"><div class="subcat-icon"><i class="fas fa-suitcase"></i></div><div class="subcat-name">Luggage & Bags</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories&sub=Fabrics %26 Raw Textiles'"><div class="subcat-icon"><i class="fas fa-scroll"></i></div><div class="subcat-name">Fabrics</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-auto" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Automotive & Transportation</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=Auto Parts %26 Spares'"><div class="subcat-icon"><i class="fas fa-cogs"></i></div><div class="subcat-name">Auto Parts</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=Truck %26 Heavy Duty Parts'"><div class="subcat-icon"><i class="fas fa-truck"></i></div><div class="subcat-name">Heavy Duty Parts</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=EV Components %26 Charging'"><div class="subcat-icon"><i class="fas fa-charging-station"></i></div><div class="subcat-name">EV Components</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=Car Care %26 Accessories'"><div class="subcat-icon"><i class="fas fa-spray-can"></i></div><div class="subcat-name">Car Care</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation&sub=Motorcycles, ATVs %26 Scooters'"><div class="subcat-icon"><i class="fas fa-motorcycle"></i></div><div class="subcat-name">Motorcycles</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Automotive %26 Transportation'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-beauty" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Beauty & Personal Care</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Skincare %26 Cosmetics'"><div class="subcat-icon"><i class="fas fa-spa"></i></div><div class="subcat-name">Skincare</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Haircare %26 Wigs'"><div class="subcat-icon"><i class="fas fa-cut"></i></div><div class="subcat-name">Haircare</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Bath %26 Body Care'"><div class="subcat-icon"><i class="fas fa-bath"></i></div><div class="subcat-name">Bath & Body</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Perfume %26 Fragrance'"><div class="subcat-icon"><i class="fas fa-spray-can"></i></div><div class="subcat-name">Fragrance</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care&sub=Packaging for Cosmetics'"><div class="subcat-icon"><i class="fas fa-box"></i></div><div class="subcat-name">Cosmetic Packaging</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-chemicals" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Chemicals & Raw Materials</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Basic Organic Chemicals'"><div class="subcat-icon"><i class="fas fa-flask"></i></div><div class="subcat-name">Organic Chemicals</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Inorganic Chemicals'"><div class="subcat-icon"><i class="fas fa-vial"></i></div><div class="subcat-name">Inorganic Chemicals</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Polymers %26 Resins'"><div class="subcat-icon"><i class="fas fa-cubes"></i></div><div class="subcat-name">Polymers</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Dyes %26 Pigments'"><div class="subcat-icon"><i class="fas fa-palette"></i></div><div class="subcat-name">Dyes & Pigments</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials&sub=Agrochemicals %26 Fertilizers'"><div class="subcat-icon"><i class="fas fa-leaf"></i></div><div class="subcat-name">Agrochemicals</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-construction" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Construction & Real Estate</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=Building Materials %26 Cement'"><div class="subcat-icon"><i class="fas fa-building"></i></div><div class="subcat-name">Building Materials</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=Tiles, Flooring %26 Surfaces'"><div class="subcat-icon"><i class="fas fa-border-all"></i></div><div class="subcat-name">Tiles & Flooring</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=Doors, Windows %26 Glass'"><div class="subcat-icon"><i class="fas fa-door-open"></i></div><div class="subcat-name">Doors & Windows</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=Kitchen %26 Bath Fixtures'"><div class="subcat-icon"><i class="fas fa-faucet"></i></div><div class="subcat-name">Kitchen & Bath</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate&sub=HVAC %26 Plumbing Systems'"><div class="subcat-icon"><i class="fas fa-fan"></i></div><div class="subcat-name">HVAC Systems</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-electronics" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Consumer Electronics & Appliances</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Mobile Phones %26 Accessories'"><div class="subcat-icon"><i class="fas fa-mobile-alt"></i></div><div class="subcat-name">Mobile Accessories</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Computers %26 IT Hardware'"><div class="subcat-icon"><i class="fas fa-laptop"></i></div><div class="subcat-name">Computers & IT</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Smart Home %26 IoT Devices'"><div class="subcat-icon"><i class="fas fa-network-wired"></i></div><div class="subcat-name">Smart Home</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Audio %26 Video Equipment'"><div class="subcat-icon"><i class="fas fa-headphones"></i></div><div class="subcat-name">Audio & Video</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances&sub=Home %26 Kitchen Appliances'"><div class="subcat-icon"><i class="fas fa-blender"></i></div><div class="subcat-name">Home Appliances</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-electrical" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Electrical & Renewable Energy</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Solar Panels %26 Wind Power'"><div class="subcat-icon"><i class="fas fa-solar-panel"></i></div><div class="subcat-name">Solar Panels</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Batteries %26 Energy Storage'"><div class="subcat-icon"><i class="fas fa-battery-full"></i></div><div class="subcat-name">Batteries</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Lighting Solutions %26 LEDs'"><div class="subcat-icon"><i class="fas fa-lightbulb"></i></div><div class="subcat-name">Lighting Solutions</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Cables, Wires %26 Switches'"><div class="subcat-icon"><i class="fas fa-plug"></i></div><div class="subcat-name">Cables & Wires</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy&sub=Motors, Pumps %26 Drives'"><div class="subcat-icon"><i class="fas fa-cogs"></i></div><div class="subcat-name">Motors & Pumps</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electrical %26 Renewable Energy'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-components" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Electronic Components & IoT</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=PCBs %26 PCBA'"><div class="subcat-icon"><i class="fas fa-microchip"></i></div><div class="subcat-name">PCBs & PCBA</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=Sensors %26 Integrated Circuits'"><div class="subcat-icon"><i class="fas fa-memory"></i></div><div class="subcat-name">Sensors & ICs</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=Connectors %26 Terminals'"><div class="subcat-icon"><i class="fas fa-link"></i></div><div class="subcat-name">Connectors</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=Displays %26 Signage'"><div class="subcat-icon"><i class="fas fa-tv"></i></div><div class="subcat-name">Displays</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT&sub=Telecommunications %26 RF'"><div class="subcat-icon"><i class="fas fa-broadcast-tower"></i></div><div class="subcat-name">Telecom & RF</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Electronic Components %26 IoT'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-fabrication" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Fabrication & B2B Services</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=CNC Machining Services'"><div class="subcat-icon"><i class="fas fa-cogs"></i></div><div class="subcat-name">CNC Machining</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=Sheet Metal Fabrication'"><div class="subcat-icon"><i class="fas fa-gavel"></i></div><div class="subcat-name">Sheet Metal</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=Injection Molding %26 Casting'"><div class="subcat-icon"><i class="fas fa-cube"></i></div><div class="subcat-name">Injection Molding</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=3D Printing %26 Prototyping'"><div class="subcat-icon"><i class="fas fa-print"></i></div><div class="subcat-name">3D Printing</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services&sub=Inspection %26 Certification'"><div class="subcat-icon"><i class="fas fa-check-double"></i></div><div class="subcat-name">Inspections</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Fabrication %26 B2B Services'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-health" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Health & Medical</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Professional Medical Devices'"><div class="subcat-icon"><i class="fas fa-stethoscope"></i></div><div class="subcat-name">Medical Devices</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Hospital Furniture %26 Supplies'"><div class="subcat-icon"><i class="fas fa-procedures"></i></div><div class="subcat-name">Hospital Furniture</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Consumables %26 Disposables'"><div class="subcat-icon"><i class="fas fa-syringe"></i></div><div class="subcat-name">Disposables</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Mobility %26 Rehab Aids'"><div class="subcat-icon"><i class="fas fa-wheelchair"></i></div><div class="subcat-name">Mobility Aids</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical&sub=Dietary Supplements'"><div class="subcat-icon"><i class="fas fa-pills"></i></div><div class="subcat-name">Dietary Supplements</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Health %26 Medical'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-home" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Home Decor, Garden & Furniture</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Residential Furniture'"><div class="subcat-icon"><i class="fas fa-couch"></i></div><div class="subcat-name">Residential Furniture</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Commercial %26 Office Furniture'"><div class="subcat-icon"><i class="fas fa-chair"></i></div><div class="subcat-name">Office Furniture</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Home Decor %26 Crafts'"><div class="subcat-icon"><i class="fas fa-paint-roller"></i></div><div class="subcat-name">Home Decor</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Kitchenware %26 Tableware'"><div class="subcat-icon"><i class="fas fa-utensils"></i></div><div class="subcat-name">Kitchenware</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture&sub=Pet Supplies %26 Food'"><div class="subcat-icon"><i class="fas fa-paw"></i></div><div class="subcat-name">Pet Supplies</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-machinery" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Industrial Machinery & Equipment</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Manufacturing %26 Processing'"><div class="subcat-icon"><i class="fas fa-industry"></i></div><div class="subcat-name">Manufacturing</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Packaging Machinery'"><div class="subcat-icon"><i class="fas fa-box-open"></i></div><div class="subcat-name">Packaging Machinery</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Agricultural Machinery'"><div class="subcat-icon"><i class="fas fa-tractor"></i></div><div class="subcat-name">Agricultural Tech</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Construction %26 Heavy Equipment'"><div class="subcat-icon"><i class="fas fa-truck-pickup"></i></div><div class="subcat-name">Heavy Equipment</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment&sub=Material Handling %26 Conveyors'"><div class="subcat-icon"><i class="fas fa-pallet"></i></div><div class="subcat-name">Material Handling</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-jewelry" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Jewelry, Eyewear & Watches</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Fine Jewelry %26 Gemstones'"><div class="subcat-icon"><i class="fas fa-gem"></i></div><div class="subcat-name">Fine Jewelry</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Fashion %26 Imitation Jewelry'"><div class="subcat-icon"><i class="fas fa-ring"></i></div><div class="subcat-name">Fashion Jewelry</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Watches %26 Timepieces'"><div class="subcat-icon"><i class="fas fa-clock"></i></div><div class="subcat-name">Watches</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Eyewear %26 Accessories'"><div class="subcat-icon"><i class="fas fa-glasses"></i></div><div class="subcat-name">Eyewear</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Jewelry Packaging %26 Display'"><div class="subcat-icon"><i class="fas fa-box"></i></div><div class="subcat-name">Packaging</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Jewelry, Eyewear %26 Watches'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-metals" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Minerals, Metals & Metallurgy</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Steel %26 Iron Products'"><div class="subcat-icon"><i class="fas fa-gavel"></i></div><div class="subcat-name">Steel & Iron</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Aluminum %26 Copper'"><div class="subcat-icon"><i class="fas fa-coins"></i></div><div class="subcat-name">Aluminum & Copper</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Precious %26 Semi-Precious Metals'"><div class="subcat-icon"><i class="fas fa-gem"></i></div><div class="subcat-name">Precious Metals</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Non-Metallic Minerals'"><div class="subcat-icon"><i class="fas fa-cube"></i></div><div class="subcat-name">Non-Metallic Minerals</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Coir %26 Natural Fibers'"><div class="subcat-icon"><i class="fas fa-leaf"></i></div><div class="subcat-name">Natural Fibers</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Minerals, Metals %26 Metallurgy'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-packaging" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Packaging & Printing</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Corrugated Boxes %26 Cartons'"><div class="subcat-icon"><i class="fas fa-box"></i></div><div class="subcat-name">Corrugated Boxes</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Paper %26 Paperboard'"><div class="subcat-icon"><i class="fas fa-file-alt"></i></div><div class="subcat-name">Paperboard</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Glass %26 Plastic Bottles'"><div class="subcat-icon"><i class="fas fa-wine-bottle"></i></div><div class="subcat-name">Bottles</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Flexible Packaging'"><div class="subcat-icon"><i class="fas fa-shopping-bag"></i></div><div class="subcat-name">Flexible Packaging</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing&sub=Commercial Printing Services'"><div class="subcat-icon"><i class="fas fa-print"></i></div><div class="subcat-name">Commercial Printing</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Packaging %26 Printing'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-sports" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Sports, Toys & Hobbies</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Fitness %26 Body Building'"><div class="subcat-icon"><i class="fas fa-dumbbell"></i></div><div class="subcat-name">Fitness & Gym</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Outdoor %26 Water Sports'"><div class="subcat-icon"><i class="fas fa-swimmer"></i></div><div class="subcat-name">Outdoor Sports</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Educational Toys %26 Games'"><div class="subcat-icon"><i class="fas fa-puzzle-piece"></i></div><div class="subcat-name">Educational Toys</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Baby Care %26 Clothing'"><div class="subcat-icon"><i class="fas fa-baby"></i></div><div class="subcat-name">Baby Care</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies&sub=Corporate Gifts %26 Crafts'"><div class="subcat-icon"><i class="fas fa-gift"></i></div><div class="subcat-name">Gifts & Crafts</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Sports, Toys %26 Hobbies'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div id="panel-tools" class="mega-panel">
+
+                  <h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2 brand-font">Tools, Hardware & Safety</h3>
+
+                  <div class="subcat-grid">
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Hand %26 Power Tools'"><div class="subcat-icon"><i class="fas fa-tools"></i></div><div class="subcat-name">Hand & Power Tools</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Fasteners %26 Screws'"><div class="subcat-icon"><i class="fas fa-screwdriver"></i></div><div class="subcat-name">Fasteners</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Safety %26 PPE Equipment'"><div class="subcat-icon"><i class="fas fa-hard-hat"></i></div><div class="subcat-name">Safety & PPE</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Testing %26 Measuring Instruments'"><div class="subcat-icon"><i class="fas fa-ruler"></i></div><div class="subcat-name">Measuring Instruments</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety&sub=Welding %26 Soldering Supplies'"><div class="subcat-icon"><i class="fas fa-fire"></i></div><div class="subcat-name">Welding Supplies</div></div>
+
+                    <div class="subcat-item" onclick="window.location.href='catalog.html?category=Tools, Hardware %26 Safety'"><div class="subcat-icon"><i class="fas fa-arrow-right text-[var(--gold)]"></i></div><div class="subcat-name text-[var(--gold-dark)]">View All</div></div>
+
+                  </div>
+
+                </div>
+
+
+
+              </div>
+
+            </div> 
+
+          </div>
+
+        </div>
+
+        
+
+        <div class="hidden md:block flex-1 max-w-3xl">
+
+            <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('nav-search').value);" class="relative w-full group">
+
+                <input type="text" id="nav-search" placeholder="Search for anything..." class="w-full bg-gray-100 border-2 border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] text-sm rounded-full py-3 pl-5 pr-12 outline-none transition-all text-gray-900 shadow-inner">
+
+                <button type="submit" class="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-white w-9 h-9 rounded-full flex items-center justify-center transition shadow-sm">
+
+                    <i class="fas fa-search text-sm"></i>
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+
+        <div class="flex items-center gap-5 md:gap-7 text-gray-700 flex-shrink-0">
+
+            
+
+            <button onclick="toggleMobileSearch()" class="md:hidden hover:text-[var(--gold)] transition flex items-center">
+
+                <i class="fas fa-search text-[20px]"></i>
+
+            </button>
+
+
+
+            <div class="relative group h-full flex items-center" id="userMenuContainer">
+
+                <button id="auth-buttons" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700 py-2">
+
+                    <i class="far fa-user text-[22px] md:text-xl"></i> 
+
+                    <span id="auth-btn-text" class="hidden md:block text-sm">Sign In</span>
+
+                </button>
+
+
+
+                <div class="absolute right-0 top-full pt-4 w-[320px] invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-50">
+
+                    <div class="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 relative overflow-hidden">
+
+                        
+
+                        <div class="absolute -top-2 right-6 w-4 h-4 bg-white border-l border-t border-gray-100 transform rotate-45 z-0"></div>
+
+
+
+                        <div id="guest-dropdown-content" class="p-6 relative z-10 bg-white">
+
+                            <div class="text-center mb-4">
+
+                                <h3 class="text-xl font-bold text-gray-900 brand-font mb-1">Buyer Access</h3>
+
+                                <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Secure Wholesale Portal</p>
+
+                            </div>
+
+
+
+                            <div class="space-y-3 mb-4 text-left">
+
+                                <div>
+
+                                    <input type="email" id="auth-email-drop" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--gold)] transition" placeholder="Corporate Email">
+
+                                </div>
+
+                                <div>
+
+                                    <input type="password" id="auth-pass-drop" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--gold)] transition" placeholder="Password">
+
+                                </div>
+
+                                <div class="flex gap-2 pt-1">
+
+                                    <button onclick="signInWithEmailDrop()" class="flex-1 bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-black font-bold rounded-lg py-2.5 text-xs uppercase tracking-widest transition">Sign In</button>
+
+                                    <button onclick="signUpWithEmailDrop()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-lg py-2.5 text-xs uppercase tracking-widest transition">Register</button>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="relative flex items-center py-2 mb-3">
+
+                                <div class="flex-grow border-t border-gray-100"></div>
+
+                                <span class="flex-shrink-0 mx-3 text-gray-400 text-[9px] uppercase tracking-widest font-bold">Or continue with</span>
+
+                                <div class="flex-grow border-t border-gray-100"></div>
+
+                            </div>
+
+
+
+                            <div class="flex gap-2">
+
+                                <button onclick="signInWithGoogle()" class="flex-1 flex items-center justify-center gap-2 border border-gray-200 rounded-lg py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4"> Google</button>
+
+                                <button onclick="signInWithMicrosoft()" class="flex-1 flex items-center justify-center gap-2 border border-gray-200 rounded-lg py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" class="w-4 h-4"> MS</button>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div id="user-dropdown-content" class="hidden relative z-10 bg-white">
+
+                            <div class="bg-gray-50 p-5 border-b border-gray-100 text-center">
+
+                                <div class="w-12 h-12 bg-[var(--gold)] text-black rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-2 brand-font shadow-sm" id="drop-user-initial">M</div>
+
+                                <div class="text-sm font-bold text-gray-900" id="drop-user-name">Buyer Name</div>
+
+                                <div class="text-[9px] text-gray-500 uppercase tracking-widest font-bold mt-1">Verified Account</div>
+
+                            </div>
+
+                            <div class="py-2">
+
+                                <a href="buyer-dashboard.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="fas fa-th-large w-5 text-center text-gray-400 mr-2"></i> Account Dashboard</a>
+
+                                <a href="buyer-message-hub.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="far fa-comments w-5 text-center text-gray-400 mr-2"></i> Messages</a>
+
+                                <a href="buyer-tracking.html" class="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[var(--gold-dark)] font-medium transition border-b border-gray-50"><i class="fas fa-box-open w-5 text-center text-gray-400 mr-2"></i> Order Tracking</a>
+
+                                <button onclick="signOutUser()" class="w-full text-left block px-5 py-3 text-sm text-red-600 hover:bg-red-50 font-bold transition"><i class="fas fa-sign-out-alt w-5 text-center text-red-400 mr-2"></i> Sign Out</button>
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
             </div>
+
+
+
+            <div class="relative" id="customCurrencyDropdown">
+
+                <div class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition py-2" id="currencyBtn">
+
+                    <div class="flex items-center gap-1.5" id="activeCurrencyDisplay">
+
+                        <img src="https://flagcdn.com/w20/ca.png" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200">
+
+                        <span class="hidden md:block text-sm font-bold text-gray-900">CAD</span>
+
+                    </div>
+
+                    <i class="fas fa-chevron-down text-[10px] text-gray-500 hidden md:block"></i>
+
+                </div>
+
+                
+
+                <div id="currencyMenu" class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl border border-gray-100 focus:outline-none overflow-hidden">
+
+                    <div class="py-2 max-h-72 overflow-y-auto" id="currencyList"></div>
+
+                </div>
+
+            </div>
+
+
+
+            <a href="rfq.html" class="hover:text-[var(--gold)] transition flex items-center relative text-gray-700">
+
+                <i class="fas fa-clipboard-list text-[22px] md:text-xl"></i>
+
+                <span id="header-cart-badge" class="absolute -top-1.5 md:-top-2 -right-2 md:-right-2 bg-[#ff5252] text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden shadow-sm border border-white">0</span>
+
+            </a>
+
+
+
+        </div>
+
+      </div>
+
+
+
+      <div id="mobile-search-dropdown" class="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-200 p-4 transform -translate-y-full opacity-0 transition-all duration-300 -z-10 pointer-events-none shadow-md">
+
+          <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('mobile-search-input').value);" class="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2 focus-within:border-[var(--gold)] transition-colors shadow-inner">
+
+              <input type="text" id="mobile-search-input" class="w-full bg-transparent border-none outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="Search products, categories...">
+
+              <button type="submit" class="text-[var(--gold-dark)] ml-2 text-lg">
+
+                  <i class="fas fa-search"></i>
+
+              </button>
+
+          </form>
+
+      </div>
+
+    </header>
+
+  <main class="min-h-screen bg-[#FAFAFA] pt-6">
+
+
+
+    <div id="loader" class="text-center py-32 w-full">
+
+        <i class="fas fa-circle-notch fa-spin text-4xl text-[var(--gold)] mb-4"></i>
+
+        <h3 class="text-sm font-bold text-gray-900 tracking-widest uppercase">Loading Product Details...</h3>
+
+    </div>
+
+
+
+    <main id="product-page-view" class="pb-20 pt-6 hidden">
+
+        <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 mb-6 text-sm text-gray-500 font-medium">
+
+            <button onclick="window.location.href='catalog.html'" class="hover:text-black hover:underline transition">Global Catalog</button> <span class="mx-2 text-gray-300">/</span> 
+
+            <span id="pp-breadcrumb-cat" class="text-[var(--gold)] font-bold">Category</span>
+
+        </div>
+
+
+
+        <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-gray-100">
+
+            
+
+            <div class="lg:col-span-4">
+
+                <div id="main-img-swipe-zone" class="bg-[#f8f9fa] rounded-xl aspect-square flex items-center justify-center p-8 mb-4 border border-gray-100 relative overflow-hidden cursor-pointer group touch-pan-y" onclick="if(!window.isMainSwiping) openGallery()">
+
+                    <span class="absolute top-4 left-4 bg-white px-3 py-1.5 text-[10px] font-bold rounded uppercase tracking-widest text-gray-900 shadow-sm border border-gray-200 z-10 flex items-center gap-1.5"><i class="fas fa-check-circle text-[var(--gold)]"></i> Verified</span>
+
+                    
+
+                    <div class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md border border-gray-200 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:text-[var(--gold)]">
+
+                        <i class="fas fa-expand"></i>
+
+                    </div>
+
+
+
+                    <img id="pp-main-img" src="" class="max-w-full max-h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105" onerror="this.src='MC.png'">
+
+                </div>
+
+                <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" id="pp-thumbs"></div>
+
+            </div>
+
+
+
+            <div class="lg:col-span-5 flex flex-col">
+
+                
+
+                <div class="flex flex-wrap items-center gap-3 mb-3">
+
+                    <a id="pp-supplier-link" onclick="window.location.href='factory.html?id=' + targetProduct.supplierId" class="text-[11px] font-bold text-gray-500 uppercase tracking-widest cursor-pointer hover:text-[var(--gold)] transition flex items-center gap-1.5">
+
+                        <img id="pp-top-logo" src="" class="w-5 h-5 rounded-full object-cover border border-gray-200 hidden">
+
+                        <i id="pp-top-icon" class="fas fa-industry"></i> 
+
+                        <span id="pp-card-sup-name">Supplier Name</span>
+
+                    </a>
+
+                    <span class="hidden md:flex items-center gap-2 text-[10px] text-gray-400 font-medium bg-gray-50 px-2 py-1 rounded border border-gray-100">
+
+                        <span><i class="fas fa-reply text-green-500 mr-1"></i> <span id="pp-sup-response">&lt;2h Response</span></span>
+
+                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+
+                        <span><i class="fas fa-shipping-fast text-green-500 mr-1"></i> <span id="pp-sup-ontime">98% On-Time</span></span>
+
+                    </span>
+
+                </div>
+
+                
+
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-snug mb-2" id="pp-title">Product Name</h1>
+
+                
+
+                <div class="flex items-center gap-3 mb-5 border-b border-gray-100 pb-5">
+
+                    <div class="flex text-[var(--gold)] text-sm" id="pp-star-icons">
+
+                        </div>
+
+                    <span class="text-xs font-bold text-gray-900" id="pp-rating-score">4.8</span>
+
+                    <span class="text-xs text-gray-500 underline cursor-pointer hover:text-[var(--gold-dark)] transition"><span id="pp-rating-reviews">24</span> Reviews</span>
+
+                    <span class="text-xs text-gray-300">|</span>
+
+                    <span class="text-xs font-bold text-gray-600"><span id="pp-rating-orders">1,200</span>+ Orders</span>
+
+                </div>
+
+                
+
+                <div class="mb-6 p-5 bg-[#f8f9fa] rounded-xl border border-gray-100 border-l-4 border-l-[var(--gold)] relative">
+
+                    <div class="absolute top-4 right-4 bg-white border border-gray-200 shadow-sm px-3 py-1.5 rounded-md text-[10px] font-bold text-gray-700 tracking-widest uppercase flex items-center gap-1.5">
+
+                        <i class="fas fa-box text-[var(--gold)]"></i> MOQ: <span id="pp-moq">1 Pcs</span>
+
+                    </div>
+
+                    <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Wholesale Starting Price</div>
+
+                    <div class="flex items-end gap-2">
+
+                        <span class="text-3xl font-extrabold text-gray-900 font-mono" id="pp-price">$0.00</span>
+
+                        <span class="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1"><span class="ui-curr-symbol">CAD</span></span>
+
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-sm border-b border-gray-100 pb-6">
+
+                    <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Lead Time</span><strong id="pp-lead" class="text-gray-900">30 Days</strong></div>
+
+                    <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Incoterms</span><strong id="pp-terms" class="text-gray-900">FOB</strong></div>
+
+                    <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Services</span><strong id="pp-srv" class="text-gray-900">OEM</strong></div>
+
+                    <div><span class="block text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Product ID</span><strong id="pp-id" class="font-mono text-gray-900">ID</strong></div>
+
+                </div>
+
+
+
+                <div class="mb-2">
+
+                    <div class="mb-8">
+
+                        <h3 class="text-[11px] font-bold uppercase text-gray-900 mb-3 tracking-widest">Volume Matrix</h3>
+
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+
+                            <table class="w-full text-sm text-left">
+
+                                <thead class="bg-gray-50 text-[10px] text-gray-500 uppercase tracking-widest">
+
+                                    <tr><th class="py-2.5 px-4 font-bold">Variant</th><th class="py-2.5 px-4 font-bold">Volume</th><th class="py-2.5 px-4 text-right font-bold">Unit Price</th></tr>
+
+                                </thead>
+
+                                <tbody id="pp-pricing-body" class="text-gray-900 font-medium divide-y divide-gray-100"></tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="hidden lg:block lg:col-span-3">
+
+                <div class="border border-gray-200 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sticky top-28 bg-white">
+
+                    <h3 class="text-[11px] font-bold uppercase text-gray-500 mb-4 tracking-widest border-b border-gray-100 pb-3">Supplier Actions</h3>
+
+                    
+
+                    <button id="main-rfq-btn" class="btn-void-gold py-3.5 text-sm shadow-lg w-full mb-3" onclick="triggerRFQ()">
+
+                        Request Official Quote
+
+                    </button>
+
+                    
+
+                    <button id="open-chat-btn" class="w-full py-3.5 text-sm font-bold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition flex items-center justify-center gap-2" onclick="openSupplierChat()">
+
+                        <i class="far fa-comments"></i> Message Factory
+
+                    </button>
+
+
+
+                    <div class="mt-6 space-y-4 pt-5 border-t border-gray-100">
+
+                        <div class="flex items-start gap-3">
+
+                            <i class="fas fa-shield-alt text-[var(--gold)] mt-0.5"></i>
+
+                            <div>
+
+                                <h4 class="text-xs font-bold text-gray-900">Secure Payments</h4>
+
+                                <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Transactions are protected with bank-grade SSL encryption and ESCROW.</p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="flex items-start gap-3">
+
+                            <i class="fas fa-box-open text-[var(--gold)] mt-0.5"></i>
+
+                            <div>
+
+                                <h4 class="text-xs font-bold text-gray-900">Order Protection</h4>
+
+                                <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Claim refunds if your order doesn't ship or lacks described quality.</p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 mt-8">
+
+            <div class="bg-white rounded-2xl p-8 md:p-10 shadow-sm border border-gray-100">
+
+                <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-gray-900">Technical Description</h3>
+
+                
+
+                <div class="relative">
+
+                    <p class="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm line-clamp-5 overflow-hidden transition-all duration-300" id="pp-desc">Description...</p>
+
+                    <div id="pp-desc-fade" class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+
+                </div>
+
+                <button id="pp-desc-btn" onclick="toggleDesc()" class="mt-2 text-[var(--gold-dark)] font-bold text-[11px] uppercase tracking-widest hover:text-black transition flex items-center gap-1">
+
+                    <span id="pp-desc-btn-text">Read More</span> <i id="pp-desc-btn-icon" class="fas fa-chevron-down transition-transform duration-300"></i>
+
+                </button>
+
+
+
+                <script>
+
+                    function toggleDesc() {
+
+                        const d = document.getElementById('pp-desc');
+
+                        const f = document.getElementById('pp-desc-fade');
+
+                        const txt = document.getElementById('pp-desc-btn-text');
+
+                        const icon = document.getElementById('pp-desc-btn-icon');
+
+
+
+                        if (d.classList.contains('line-clamp-5')) {
+
+                            d.classList.remove('line-clamp-5'); // Expands text
+
+                            f.style.display = 'none'; // Hides the fade
+
+                            txt.innerText = 'Read Less';
+
+                            icon.classList.add('rotate-180'); // Flips the arrow up
+
+                        } else {
+
+                            d.classList.add('line-clamp-5'); // Shrinks text
+
+                            f.style.display = 'block'; // Shows the fade
+
+                            txt.innerText = 'Read More';
+
+                            icon.classList.remove('rotate-180'); // Flips the arrow down
+
+                        }
+
+                    }
+
+                </script>
+
+                
+
+                <div id="pp-pdf-container" class="mt-6"></div>
+
+                
+
+                <h3 class="text-sm font-bold mb-3 mt-8 uppercase tracking-widest text-gray-900 pt-6 border-t border-gray-100">Master Packaging</h3>
+
+                <p class="text-gray-600 text-sm" id="pp-pkg">Standard export cartons.</p>
+
+                
+
+                <div id="supplier-trust-card" class="hidden mt-10 pt-8 border-t border-gray-100">
+
+                    <h3 class="text-[11px] font-bold uppercase text-gray-500 mb-6 tracking-widest">About the Manufacturer</h3>
+
+                    
+
+                    <div class="flex items-center gap-4 mb-6">
+
+                        <img id="stc-logo" src="MC.png" class="w-16 h-16 rounded-xl border border-gray-200 object-cover shadow-sm p-1 bg-white">
+
+                        <div>
+
+                            <h4 class="text-lg font-bold text-gray-900 brand-font leading-tight" id="stc-name">Factory Name</h4>
+
+                            <span class="inline-block mt-1 text-[9px] bg-[var(--gold-light)] text-[var(--gold-dark)] border border-[var(--gold-border)] font-bold px-2 py-0.5 rounded uppercase tracking-widest" id="stc-type">Manufacturer</span>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="grid grid-cols-2 gap-y-5 gap-x-4 text-sm mb-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
+
+                        <div><span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-1">Established</span><strong id="stc-year" class="text-gray-900">...</strong></div>
+
+                        <div><span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-1">Factory Size</span><strong id="stc-size" class="text-gray-900">...</strong></div>
+
+                        <div><span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-1">Certifications</span><strong id="stc-certs" class="text-[11px] text-gray-900 line-clamp-2">...</strong></div>
+
+                        <div><span class="block text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-1">OEM Services</span><strong id="stc-oem" class="text-[11px] text-gray-900 line-clamp-2">...</strong></div>
+
+                    </div>
+
+                    
+
+                    <button onclick="window.location.href='factory.html?id=' + targetProduct.supplierId" class="w-full py-3 bg-white hover:bg-gray-50 text-gray-700 font-bold text-[11px] uppercase tracking-widest rounded-xl border border-gray-200 transition shadow-sm flex items-center justify-center gap-2">
+
+                        <i class="fas fa-store"></i> View Full Factory Profile
+
+                    </button>
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+
+        <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 mt-12 mb-8">
+
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-6">Other recommendations for your business</h2>
+
+            <div id="recommendations-container" class="flex gap-6 overflow-x-auto pb-6 scrollbar-hide">
+
+                </div>
+
+        </div>
+
+    </main>
+
+
+
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-3 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] z-50 lg:hidden flex gap-3 pb-safe">
+
+        <button class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-gray-50 border border-gray-200 text-gray-600 rounded-xl transition hover:bg-gray-100" onclick="openSupplierChat()">
+
+            <i class="far fa-comments text-lg"></i>
+
+        </button>
+
+        <button id="mobile-rfq-btn" class="flex-1 btn-void-gold shadow-md text-sm rounded-xl h-12" onclick="triggerRFQ()">
+
+            <i class="fas fa-plus mr-2"></i> Request Quote
+
+        </button>
+
+    </div>
+
+
+
+    <div id="mobile-category-menu" class="fixed top-20 left-0 right-0 bottom-0 z-[90] bg-gray-50 transform translate-y-full transition-transform duration-300 flex flex-col md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.1)]">
+
+        
+
+        <div class="flex items-center justify-between p-5 border-b border-gray-200 bg-white shadow-sm z-10">
+
+            <h2 class="text-lg font-bold text-gray-900 brand-font uppercase tracking-widest">Browse Categories</h2>
+
+            
+
+            <button onclick="closeMobileMenu()" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-900 rounded-full flex items-center justify-center text-sm cursor-pointer transition-all duration-300 hover:rotate-90 hover:scale-110 shadow-sm">
+
+                <i class="fas fa-times"></i>
+
+            </button>
+
+        </div>
+
+        
+
+        <div class="flex-1 overflow-y-auto pb-safe">
+
+            
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-1')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Agriculture, Food & Beverage <i id="icon-mob-cat-1" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-1" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Agriculture, Food %26 Beverage&sub=Fresh %26 Processed Produce" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Fresh Produce</a>
+
+                    <a href="catalog.html?category=Agriculture, Food %26 Beverage&sub=Grains %26 Cereals" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Grains & Cereals</a>
+
+                    <a href="catalog.html?category=Agriculture, Food %26 Beverage&sub=Spices %26 Condiments" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Spices & Condiments</a>
+
+                    <a href="catalog.html?category=Agriculture, Food %26 Beverage&sub=Coffee, Tea %26 Beverages" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Coffee & Tea</a>
+
+                    <a href="catalog.html?category=Agriculture, Food %26 Beverage&sub=Meat %26 Seafood" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Meat & Seafood</a>
+
+                    <a href="catalog.html?category=Agriculture, Food %26 Beverage" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Agriculture &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-2')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Apparel, Textiles & Accessories <i id="icon-mob-cat-2" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-2" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories&sub=Men\'s %26 Women\'s Clothing" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Clothing</a>
+
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories&sub=Sportswear %26 Activewear" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Sportswear</a>
+
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories&sub=Footwear %26 Accessories" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Footwear</a>
+
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories&sub=Luggage, Bags %26 Cases" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Luggage & Bags</a>
+
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories&sub=Fabrics %26 Raw Textiles" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Fabrics</a>
+
+                    <a href="catalog.html?category=Apparel, Textiles %26 Accessories" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Apparel &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-3')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Automotive & Transportation <i id="icon-mob-cat-3" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-3" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Automotive %26 Transportation&sub=Auto Parts %26 Spares" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Auto Parts</a>
+
+                    <a href="catalog.html?category=Automotive %26 Transportation&sub=Truck %26 Heavy Duty Parts" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Heavy Duty Parts</a>
+
+                    <a href="catalog.html?category=Automotive %26 Transportation&sub=EV Components %26 Charging" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">EV Components</a>
+
+                    <a href="catalog.html?category=Automotive %26 Transportation&sub=Car Care %26 Accessories" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Car Care</a>
+
+                    <a href="catalog.html?category=Automotive %26 Transportation&sub=Motorcycles, ATVs %26 Scooters" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Motorcycles</a>
+
+                    <a href="catalog.html?category=Automotive %26 Transportation" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Auto &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-4')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Beauty & Personal Care <i id="icon-mob-cat-4" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-4" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Beauty %26 Personal Care&sub=Skincare %26 Cosmetics" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Skincare & Cosmetics</a>
+
+                    <a href="catalog.html?category=Beauty %26 Personal Care&sub=Haircare %26 Wigs" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Haircare & Wigs</a>
+
+                    <a href="catalog.html?category=Beauty %26 Personal Care&sub=Bath %26 Body Care" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Bath & Body Care</a>
+
+                    <a href="catalog.html?category=Beauty %26 Personal Care&sub=Perfume %26 Fragrance" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Fragrance</a>
+
+                    <a href="catalog.html?category=Beauty %26 Personal Care&sub=Packaging for Cosmetics" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Cosmetic Packaging</a>
+
+                    <a href="catalog.html?category=Beauty %26 Personal Care" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Beauty &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-5')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Chemicals & Raw Materials <i id="icon-mob-cat-5" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-5" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Chemicals %26 Raw Materials&sub=Basic Organic Chemicals" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Organic Chemicals</a>
+
+                    <a href="catalog.html?category=Chemicals %26 Raw Materials&sub=Inorganic Chemicals" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Inorganic Chemicals</a>
+
+                    <a href="catalog.html?category=Chemicals %26 Raw Materials&sub=Polymers %26 Resins" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Polymers & Resins</a>
+
+                    <a href="catalog.html?category=Chemicals %26 Raw Materials&sub=Dyes %26 Pigments" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Dyes & Pigments</a>
+
+                    <a href="catalog.html?category=Chemicals %26 Raw Materials&sub=Agrochemicals %26 Fertilizers" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Agrochemicals</a>
+
+                    <a href="catalog.html?category=Chemicals %26 Raw Materials" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Chemicals &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-6')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Construction & Real Estate <i id="icon-mob-cat-6" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-6" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Construction %26 Real Estate&sub=Building Materials %26 Cement" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Building Materials</a>
+
+                    <a href="catalog.html?category=Construction %26 Real Estate&sub=Tiles, Flooring %26 Surfaces" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Tiles & Flooring</a>
+
+                    <a href="catalog.html?category=Construction %26 Real Estate&sub=Doors, Windows %26 Glass" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Doors & Windows</a>
+
+                    <a href="catalog.html?category=Construction %26 Real Estate&sub=Kitchen %26 Bath Fixtures" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Kitchen & Bath</a>
+
+                    <a href="catalog.html?category=Construction %26 Real Estate&sub=HVAC %26 Plumbing Systems" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">HVAC Systems</a>
+
+                    <a href="catalog.html?category=Construction %26 Real Estate" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Construction &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-7')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Consumer Electronics & Appliances <i id="icon-mob-cat-7" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-7" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances&sub=Mobile Phones %26 Accessories" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Mobile Accessories</a>
+
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances&sub=Computers %26 IT Hardware" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Computers & IT</a>
+
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances&sub=Smart Home %26 IoT Devices" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Smart Home & IoT</a>
+
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances&sub=Audio %26 Video Equipment" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Audio & Video</a>
+
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances&sub=Home %26 Kitchen Appliances" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Home Appliances</a>
+
+                    <a href="catalog.html?category=Consumer Electronics %26 Appliances" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Electronics &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-8')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Electrical & Renewable Energy <i id="icon-mob-cat-8" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-8" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Electrical %26 Renewable Energy&sub=Solar Panels %26 Wind Power" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Solar & Wind Power</a>
+
+                    <a href="catalog.html?category=Electrical %26 Renewable Energy&sub=Batteries %26 Energy Storage" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Batteries</a>
+
+                    <a href="catalog.html?category=Electrical %26 Renewable Energy&sub=Lighting Solutions %26 LEDs" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Lighting Solutions</a>
+
+                    <a href="catalog.html?category=Electrical %26 Renewable Energy&sub=Cables, Wires %26 Switches" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Cables & Wires</a>
+
+                    <a href="catalog.html?category=Electrical %26 Renewable Energy&sub=Motors, Pumps %26 Drives" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Motors & Pumps</a>
+
+                    <a href="catalog.html?category=Electrical %26 Renewable Energy" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Electrical &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-9')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Electronic Components & IoT <i id="icon-mob-cat-9" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-9" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Electronic Components %26 IoT&sub=PCBs %26 PCBA" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">PCBs & PCBA</a>
+
+                    <a href="catalog.html?category=Electronic Components %26 IoT&sub=Sensors %26 Integrated Circuits" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Sensors & ICs</a>
+
+                    <a href="catalog.html?category=Electronic Components %26 IoT&sub=Connectors %26 Terminals" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Connectors</a>
+
+                    <a href="catalog.html?category=Electronic Components %26 IoT&sub=Displays %26 Signage" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Displays</a>
+
+                    <a href="catalog.html?category=Electronic Components %26 IoT&sub=Telecommunications %26 RF" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Telecom & RF</a>
+
+                    <a href="catalog.html?category=Electronic Components %26 IoT" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Components &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-10')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Fabrication & B2B Services <i id="icon-mob-cat-10" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-10" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Fabrication %26 B2B Services&sub=CNC Machining Services" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">CNC Machining</a>
+
+                    <a href="catalog.html?category=Fabrication %26 B2B Services&sub=Sheet Metal Fabrication" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Sheet Metal</a>
+
+                    <a href="catalog.html?category=Fabrication %26 B2B Services&sub=Injection Molding %26 Casting" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Injection Molding</a>
+
+                    <a href="catalog.html?category=Fabrication %26 B2B Services&sub=3D Printing %26 Prototyping" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">3D Printing</a>
+
+                    <a href="catalog.html?category=Fabrication %26 B2B Services&sub=Inspection %26 Certification" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Inspections</a>
+
+                    <a href="catalog.html?category=Fabrication %26 B2B Services" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Services &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-11')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Health & Medical <i id="icon-mob-cat-11" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-11" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Health %26 Medical&sub=Professional Medical Devices" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Medical Devices</a>
+
+                    <a href="catalog.html?category=Health %26 Medical&sub=Hospital Furniture %26 Supplies" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Hospital Furniture</a>
+
+                    <a href="catalog.html?category=Health %26 Medical&sub=Consumables %26 Disposables" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Disposables</a>
+
+                    <a href="catalog.html?category=Health %26 Medical&sub=Mobility %26 Rehab Aids" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Mobility Aids</a>
+
+                    <a href="catalog.html?category=Health %26 Medical&sub=Dietary Supplements" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Dietary Supplements</a>
+
+                    <a href="catalog.html?category=Health %26 Medical" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Medical &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-12')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Home Decor, Garden & Furniture <i id="icon-mob-cat-12" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-12" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture&sub=Residential Furniture" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Residential Furniture</a>
+
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture&sub=Commercial %26 Office Furniture" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Office Furniture</a>
+
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture&sub=Home Decor %26 Crafts" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Home Decor</a>
+
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture&sub=Kitchenware %26 Tableware" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Kitchenware</a>
+
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture&sub=Pet Supplies %26 Food" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Pet Supplies</a>
+
+                    <a href="catalog.html?category=Home Decor, Garden %26 Furniture" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Home Decor &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-13')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Industrial Machinery & Equipment <i id="icon-mob-cat-13" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-13" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Industrial Machinery %26 Equipment&sub=Manufacturing %26 Processing" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Manufacturing</a>
+
+                    <a href="catalog.html?category=Industrial Machinery %26 Equipment&sub=Packaging Machinery" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Packaging Machinery</a>
+
+                    <a href="catalog.html?category=Industrial Machinery %26 Equipment&sub=Agricultural Machinery" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Agricultural Tech</a>
+
+                    <a href="catalog.html?category=Industrial Machinery %26 Equipment&sub=Construction %26 Heavy Equipment" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Heavy Equipment</a>
+
+                    <a href="catalog.html?category=Industrial Machinery %26 Equipment&sub=Material Handling %26 Conveyors" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Material Handling</a>
+
+                    <a href="catalog.html?category=Industrial Machinery %26 Equipment" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Machinery &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-14')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Jewelry, Eyewear & Watches <i id="icon-mob-cat-14" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-14" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Fine Jewelry %26 Gemstones" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Fine Jewelry</a>
+
+                    <a href="catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Fashion %26 Imitation Jewelry" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Fashion Jewelry</a>
+
+                    <a href="catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Watches %26 Timepieces" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Watches</a>
+
+                    <a href="catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Eyewear %26 Accessories" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Eyewear</a>
+
+                    <a href="catalog.html?category=Jewelry, Eyewear %26 Watches&sub=Jewelry Packaging %26 Display" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Packaging</a>
+
+                    <a href="catalog.html?category=Jewelry, Eyewear %26 Watches" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Jewelry &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-15')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Minerals, Metals & Metallurgy <i id="icon-mob-cat-15" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-15" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Steel %26 Iron Products" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Steel & Iron</a>
+
+                    <a href="catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Aluminum %26 Copper" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Aluminum & Copper</a>
+
+                    <a href="catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Precious %26 Semi-Precious Metals" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Precious Metals</a>
+
+                    <a href="catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Non-Metallic Minerals" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Non-Metallic Minerals</a>
+
+                    <a href="catalog.html?category=Minerals, Metals %26 Metallurgy&sub=Coir %26 Natural Fibers" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Natural Fibers</a>
+
+                    <a href="catalog.html?category=Minerals, Metals %26 Metallurgy" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Metals &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-16')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Packaging & Printing <i id="icon-mob-cat-16" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-16" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Packaging %26 Printing&sub=Corrugated Boxes %26 Cartons" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Corrugated Boxes</a>
+
+                    <a href="catalog.html?category=Packaging %26 Printing&sub=Paper %26 Paperboard" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Paperboard</a>
+
+                    <a href="catalog.html?category=Packaging %26 Printing&sub=Glass %26 Plastic Bottles" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Bottles</a>
+
+                    <a href="catalog.html?category=Packaging %26 Printing&sub=Flexible Packaging" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Flexible Packaging</a>
+
+                    <a href="catalog.html?category=Packaging %26 Printing&sub=Commercial Printing Services" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Commercial Printing</a>
+
+                    <a href="catalog.html?category=Packaging %26 Printing" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Packaging &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-17')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Sports, Toys & Hobbies <i id="icon-mob-cat-17" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-17" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Sports, Toys %26 Hobbies&sub=Fitness %26 Body Building" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Fitness & Gym</a>
+
+                    <a href="catalog.html?category=Sports, Toys %26 Hobbies&sub=Outdoor %26 Water Sports" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Outdoor Sports</a>
+
+                    <a href="catalog.html?category=Sports, Toys %26 Hobbies&sub=Educational Toys %26 Games" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Educational Toys</a>
+
+                    <a href="catalog.html?category=Sports, Toys %26 Hobbies&sub=Baby Care %26 Clothing" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Baby Care</a>
+
+                    <a href="catalog.html?category=Sports, Toys %26 Hobbies&sub=Corporate Gifts %26 Crafts" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Gifts & Crafts</a>
+
+                    <a href="catalog.html?category=Sports, Toys %26 Hobbies" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Sports & Toys &rarr;</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="bg-white border-b border-gray-200">
+
+                <button onclick="toggleMobileCat('mob-cat-18')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">
+
+                    Tools, Hardware & Safety <i id="icon-mob-cat-18" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+
+                </button>
+
+                <div id="mob-cat-18" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">
+
+                    <a href="catalog.html?category=Tools, Hardware %26 Safety&sub=Hand %26 Power Tools" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Hand & Power Tools</a>
+
+                    <a href="catalog.html?category=Tools, Hardware %26 Safety&sub=Fasteners %26 Screws" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Fasteners</a>
+
+                    <a href="catalog.html?category=Tools, Hardware %26 Safety&sub=Safety %26 PPE Equipment" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Safety & PPE</a>
+
+                    <a href="catalog.html?category=Tools, Hardware %26 Safety&sub=Testing %26 Measuring Instruments" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Measuring Instruments</a>
+
+                    <a href="catalog.html?category=Tools, Hardware %26 Safety&sub=Welding %26 Soldering Supplies" class="block py-3 px-6 text-sm text-gray-600 border-b border-gray-200">Welding Supplies</a>
+
+                    <a href="catalog.html?category=Tools, Hardware %26 Safety" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All Tools &rarr;</a>
+
+                </div>
+
+            </div>
+
+
 
             <a href="catalog.html" class="flex items-center justify-center p-6 text-sm font-bold text-gray-900 bg-gray-100 hover:bg-gray-200 transition">
+
                 Browse Full Catalog Directory
+
             </a>
+
             
+
         </div>
+
     </div> 
+
       <div id="live-chat-window" style="display:none; position:fixed; bottom:20px; right:20px; width:360px; height:500px; background:#fff; border-radius:12px; box-shadow:0 15px 35px rgba(0,0,0,0.2); z-index:9999; flex-direction:column; border:1px solid var(--border-light); overflow:hidden; font-family:'Inter', sans-serif;">        <div style="background:var(--void); padding:15px; color:var(--gold); display:flex; justify-content:space-between; align-items:center;">
+
             <div>
+
                 <div style="font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase;">Secure Connection</div>
+
                 <div style="display: flex; align-items: center; gap: 8px;">
+
                     <div id="chat-supplier-name" style="font-size:14px; font-weight:bold; color:#fff;">Factory Name</div>
+
                     <div style="display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 12px;">
+
                         <div id="online-dot" style="width: 6px; height: 6px; background: #9ca3af; border-radius: 50%;"></div>
+
                         <span id="online-text" style="font-size: 9px; font-weight: bold; color: #9ca3af; text-transform: uppercase;">Offline</span>
+
                     </div>
+
                 </div>
+
             </div>
+
             
+
             <div style="display:flex; align-items:center; gap:15px;">
+
                 <a href="buyer-message-hub.html" style="color:var(--gold); border:1px solid var(--gold); padding:4px 8px; border-radius:4px; font-size:10px; font-weight:bold; text-transform:uppercase; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='var(--gold)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
+
                     <i class="fas fa-expand-arrows-alt"></i> Full Inbox
+
                 </a>
+
                 <i class="fas fa-times" style="cursor:pointer; color:#888; font-size:18px;" onclick="closeLiveChat()"></i>
+
             </div>
+
             
+
         </div>
+
         <div style="background:rgba(212,175,55,0.1); padding:8px 12px; font-size:10px; color:var(--gold-dark); font-weight:700; text-align:center; border-bottom:1px solid rgba(212,175,55,0.3);">
+
             <i class="fas fa-shield-alt"></i> Payments & escrow are protected when negotiating via Muziris.
+
         </div>
+
         <div id="chat-history" style="flex:1; padding:15px; background:#fafafa; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+
             <div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>
+
         </div>
+
+
 
         <div id="typing-indicator" style="display: none; padding: 5px 15px; font-size: 11px; font-style: italic; color: var(--gold-dark); background: #fafafa; font-weight: 600;">
+
             Supplier is typing...
+
         </div>
+
+
 
         <div style="padding:15px; background:#fff; border-top:1px solid var(--border-light); display:flex; gap:10px; align-items:center; position: relative;">
+
             
+
             <div id="emoji-wrapper-prod" style="display: none; position: absolute; bottom: 65px; left: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 10000; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb;">
+
                 <emoji-picker class="light"></emoji-picker>
+
             </div>
 
+
+
             <label for="chat-file-upload" style="cursor:pointer; color:#888; font-size:18px; padding:5px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
+
                 <i class="fas fa-paperclip"></i>
+
             </label>
+
             <input type="file" id="chat-file-upload" style="display:none;" accept="image/*,video/*" onchange="uploadChatFile(event)">
+
             
+
             <button onclick="const ew = document.getElementById('emoji-wrapper-prod'); ew.style.display = ew.style.display === 'block' ? 'none' : 'block';" style="background:transparent; border:none; color:#888; font-size:18px; cursor:pointer; padding:5px; transition:0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'"><i class="far fa-smile"></i></button>
 
+
+
             <input type="text" id="chat-input" placeholder="Type a message..." style="flex:1; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; outline:none; font-size:13px;" onkeypress="if(event.key === 'Enter') sendSupplierMessage()" oninput="handleTyping()">
+
             <button onclick="sendSupplierMessage()" style="background:var(--void); color:var(--gold); border:none; padding:0 15px; border-radius:8px; cursor:pointer; height: 40px;"><i class="fas fa-paper-plane"></i></button>
+
         </div>
+
     </div>
+
+
+
 
 
     <script>
+
         const firebaseConfig = {
+
           apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+
           authDomain: "muziris-ac9dd.firebaseapp.com",
+
           projectId: "muziris-ac9dd",
+
           storageBucket: "muziris-ac9dd.firebasestorage.app",
+
           messagingSenderId: "929662963272",
+
           appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+
         };
+
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+
         
+
         const db = firebase.firestore(); 
+
         const storage = firebase.storage();
+
         const auth = firebase.auth();
+
         const googleProvider = new firebase.auth.GoogleAuthProvider();
+
         const msProvider = new firebase.auth.OAuthProvider('microsoft.com');
 
+
+
         let currentUser = null;
+
         let pendingRfqTrigger = false;
+
         let unsubscribeChatDoc = null; // 🟢 NEW
+
         let isTyping = false;          // 🟢 NEW
+
         let typingTimeout = null;      // 🟢 NEW
+
         
+
         // 🟢 FIX: Swaps the Dropdown views instantly without needing Modals!
+
         auth.onAuthStateChanged((user) => {
+
             if (user) {
+
                 currentUser = user;
+
                 let displayName = user.displayName || user.email.split('@')[0];
+
                 
+
                 // Update Button Name
+
                 document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0];
+
                 
+
                 // Show Logged-In Menu, Hide Guest Form
+
                 document.getElementById('guest-dropdown-content').classList.add('hidden');
+
                 document.getElementById('user-dropdown-content').classList.remove('hidden');
+
                 
+
                 // Populate Profile Badge
+
                 document.getElementById('drop-user-name').innerText = displayName;
+
                 document.getElementById('drop-user-initial').innerText = displayName.charAt(0).toUpperCase();
 
+
+
                 fetch(API_BASE_URL + '/buyer/auth', {
+
                     method: 'POST', headers: {'Content-Type': 'application/json'},
+
                     body: JSON.stringify({ email: user.email, name: displayName, photoUrl: user.photoURL || '' })
+
                 }).catch(e => console.log("DB Sync skipped"));
 
+
+
                 if(pendingRfqTrigger) {
+
                     pendingRfqTrigger = false;
+
                     window.location.href = `rfq.html?id=${targetProduct.id}`;
+
                 }
+
             } else {
+
                 currentUser = null;
+
                 document.getElementById('auth-btn-text').innerText = "Sign In";
+
                 
+
                 // Show Guest Form, Hide Logged-In Menu
+
                 document.getElementById('guest-dropdown-content').classList.remove('hidden');
+
                 document.getElementById('user-dropdown-content').classList.add('hidden');
+
             }
+
         });
 
+
+
         // 🟢 NEW: Login Functions wired to the new Hover Dropdown inputs
+
         function signInWithEmailDrop() {
+
             const email = document.getElementById('auth-email-drop').value;
+
             const pass = document.getElementById('auth-pass-drop').value;
+
             if(!email || !pass) return alert("Please enter both email and password.");
+
             auth.signInWithEmailAndPassword(email, pass).catch(error => alert("Error: " + error.message));
+
         }
+
         function signUpWithEmailDrop() {
+
             const email = document.getElementById('auth-email-drop').value;
+
             const pass = document.getElementById('auth-pass-drop').value;
+
             if(!email || !pass) return alert("Enter email and password.");
+
             auth.createUserWithEmailAndPassword(email, pass).catch(e => alert(e.message));
+
         }
+
+
 
         // Keep Social Logins
+
         function signInWithGoogle() { auth.signInWithPopup(googleProvider).catch(e => console.log(e)); }
+
         function signInWithMicrosoft() { auth.signInWithPopup(msProvider).catch(e => console.log(e)); }
 
+
+
         // 🟢 FIX: Clears the browser's cart memory when the user signs out!
+
         function signOutUser() {
+
             auth.signOut().then(() => {
+
                 localStorage.removeItem('muziris_cart'); // Wipes the quote list
+
                 window.location.reload(); // Instantly refreshes the page
+
             });
+
         }
+
         
+
         // Mobile tap fallback (since phones don't have hover)
+
         document.getElementById('auth-buttons').onclick = (e) => {
+
             if (window.innerWidth < 768) {
+
                 e.stopPropagation();
+
                 const dropdown = document.getElementById('userMenuContainer').querySelector('.absolute');
+
                 dropdown.classList.toggle('invisible');
+
                 dropdown.classList.toggle('opacity-0');
+
             }
+
         };
+
         // 🟢 NEW: Sign Out Function
+
         function signOutUser() {
+
             auth.signOut().then(() => {
+
                 window.location.reload(); // Instantly refreshes page to logged-out state
+
             }).catch((error) => {
+
                 alert("Error signing out: " + error.message);
+
             });
+
         }
+
         // 🟢 FIX: Restored the missing Mobile Search toggle function!
+
         function toggleMobileSearch() {
+
             const searchDropdown = document.getElementById('mobile-search-dropdown');
+
             const searchInput = document.getElementById('mobile-search-input');
+
             
+
             if (searchDropdown.classList.contains('-translate-y-full')) {
+
                 // Open it
+
                 searchDropdown.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+
                 searchDropdown.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
                 // Automatically focus the keyboard for the user!
+
                 setTimeout(() => searchInput.focus(), 300); 
+
             } else {
+
                 // Close it
+
                 searchDropdown.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+
                 searchDropdown.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
             }
+
         }
+
+
 
         function openMobileMenu() {
+
             const menu = document.getElementById('mobile-category-menu');
+
             menu.classList.remove('translate-y-full');
+
             menu.classList.add('translate-y-0');
+
             document.body.style.overflow = 'hidden'; // Locks the background
+
         }
+
         
+
         function closeMobileMenu() {
+
             const menu = document.getElementById('mobile-category-menu');
+
             menu.classList.remove('translate-y-0');
+
             menu.classList.add('translate-y-full');
+
             document.body.style.overflow = ''; // Unlocks the background
+
         }
+
+
 
         // 🟢 NEW: Handles the Accordion Expander inside the Mobile Menu
+
         function toggleMobileCat(id) {
+
             const submenu = document.getElementById(id);
+
             const icon = document.getElementById('icon-' + id);
+
             
+
             // If it's already open, close it
+
             if (!submenu.classList.contains('hidden')) {
+
                 submenu.classList.add('hidden');
+
                 icon.classList.remove('rotate-180');
+
                 return;
+
             }
+
             
+
             // Close all other tabs first so the menu stays clean
+
             document.querySelectorAll('.mobile-submenu').forEach(el => el.classList.add('hidden'));
+
             document.querySelectorAll('[id^="icon-mob-cat-"]').forEach(el => el.classList.remove('rotate-180'));
+
             
+
             // Open the one they clicked
+
             submenu.classList.remove('hidden');
+
             icon.classList.add('rotate-180');
+
         }
+
+
 
         function signInWithGoogle() { auth.signInWithPopup(googleProvider).then(() => document.getElementById('auth-modal').style.display = 'none'); }
+
         function signInWithMicrosoft() { auth.signInWithPopup(msProvider).then(() => document.getElementById('auth-modal').style.display = 'none'); }
+
         
+
         function signInWithEmail() {
+
             const email = document.getElementById('auth-email').value, pass = document.getElementById('auth-pass').value;
+
             if(!email || !pass) return alert("Please enter both email and password.");
+
             auth.signInWithEmailAndPassword(email, pass).then(() => { document.getElementById('auth-modal').style.display = 'none'; }).catch(error => alert("Error: " + error.message));
+
         }
+
         function signUpWithEmail() {
+
             const email = document.getElementById('auth-email').value, pass = document.getElementById('auth-pass').value;
+
             if(!email || !pass) return alert("Enter email and password.");
+
             auth.createUserWithEmailAndPassword(email, pass).then(() => { document.getElementById('auth-modal').style.display = 'none'; alert("Account created!"); }).catch(e => alert(e.message));
+
         }
+
+
 
         let viewStartTime = 0;
+
         function trackBehavior(actionType, targetId, durationSeconds = 0) {
+
             fetch(API_BASE_URL + '/buyer/track', {
+
                 method: 'POST', headers: {'Content-Type': 'application/json'},
+
                 body: JSON.stringify({ email: currentUser ? currentUser.email : 'Anonymous', actionType: actionType, targetId: targetId, duration: Math.round(durationSeconds) })
+
             }).catch(e => console.log("Skip track"));
+
         }
+
+
 
         const API_BASE_URL = "https://muziris-api.onrender.com/api";
+
         let targetProduct = null;
+
         let allProducts = []; // 🟢 Holds all catalog products for recommendations
+
         let exchangeRates = {};
+
         let currencySymbols = {};
+
         
+
         // 🟢 FIX: Safe Memory Access (Prevents privacy blockers from crashing the page)
+
         let activeCurrency = "CAD";
+
         let rfqCart = [];
+
         try {
+
             activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
+
             rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+
         } catch (e) {
+
             console.warn("Browser privacy settings blocked memory. Using default currency.");
+
         }
+
         function updateCartUI() {
+
             const floatingCart = document.getElementById('cart-float');
+
             const badge = document.getElementById('cart-badge');
+
             const headerBadge = document.getElementById('header-cart-badge'); 
+
             const mobileHeaderBadge = document.getElementById('mobile-header-cart-badge'); // 🟢 Grab the new mobile badge
+
             
+
             if (rfqCart.length > 0) {
+
                 if (floatingCart) floatingCart.style.display = 'flex';
+
                 if (badge) badge.innerText = rfqCart.length;
+
                 
+
                 if (headerBadge) {
+
                     headerBadge.innerText = rfqCart.length;
+
                     headerBadge.classList.remove('hidden');
+
                 }
+
                 // 🟢 Show and update the Mobile header badge
+
                 if (mobileHeaderBadge) {
+
                     mobileHeaderBadge.innerText = rfqCart.length;
+
                     mobileHeaderBadge.classList.remove('hidden');
+
                 }
+
             } else {
+
                 if (floatingCart) floatingCart.style.display = 'none';
+
                 if (headerBadge) headerBadge.classList.add('hidden');
+
                 if (mobileHeaderBadge) mobileHeaderBadge.classList.add('hidden');
+
             }
+
         }
+
+
 
         // Run this immediately so the button appears if they already have items
+
         document.addEventListener('DOMContentLoaded', updateCartUI);
 
+
+
         // 🟢 INSTANT REDIRECT TO RFQ PAGE
+
         function addToCart(id, name) {
+
             // Check if it's already in the cart; if not, add it to memory
+
             if (!rfqCart.find(item => item.id === id)) {
+
                 rfqCart.push({ id: id, name: name });
+
                 localStorage.setItem('muziris_cart', JSON.stringify(rfqCart));
+
             }
+
             
+
             // Change both buttons (desktop and mobile) to a quick loading state
+
             ['main-rfq-btn', 'mobile-rfq-btn'].forEach(id => {
+
                 const btn = document.getElementById(id);
+
                 if (btn) {
+
                     btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Opening...';
+
                     btn.style.background = 'var(--gold)';
+
                     btn.style.color = '#000';
+
                 }
+
             });
+
             
+
             // Teleport the user to the RFQ page!
+
             setTimeout(() => {
+
                 window.location.href = 'rfq.html';
+
             }, 300);
+
         }
+
         window.onload = async function() {
+
             console.log("🚀 Engine Started!");
+
             
+
             // 1. Fire the Dropdown immediately
+
             loadLiveCurrenciesDropdown();
 
+
+
             // 2. Grab the ID from the URL parameters
+
             const urlParams = new URLSearchParams(window.location.search);
+
             const productId = urlParams.get('id');
+
             
+
             if(!productId) { 
+
                 console.log("❌ No Product ID in URL.");
+
                 window.location.href = 'catalog.html'; 
+
                 return; 
+
             }
+
+
 
             console.log("📦 Fetching Product ID:", productId);
 
+
+
             async function fetchWithTimeout(url, options = {}, timeout = 8000) {
+
                 const controller = new AbortController();
+
                 const timer = setTimeout(() => controller.abort(), timeout);
+
                 try {
+
                     const response = await fetch(url, { ...options, signal: controller.signal });
+
                     if (!response.ok) {
+
                         throw new Error(`Backend rejected request! Status: ${response.status}`);
+
                     }
+
                     return await response.json();
+
                 } finally {
+
                     clearTimeout(timer);
+
                 }
+
             }
+
+
 
             try {
+
                 const [currData, prodData] = await Promise.allSettled([
+
                     fetchWithTimeout(API_BASE_URL + '/public-currencies'),
+
                     fetchWithTimeout(API_BASE_URL + '/public-catalog', {
+
                         method: 'POST',
+
                         headers: { 'Content-Type': 'application/json' },
+
                         body: JSON.stringify({})
+
                     })
+
                 ]);
 
+
+
                 console.log("🌐 API Response - Currency:", currData.status);
+
                 console.log("🌐 API Response - Product:", prodData.status);
 
+
+
                 if (currData.status === 'fulfilled' && currData.value.success) {
+
                     currData.value.currencies.forEach(item => {
+
                         exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
+
                         currencySymbols[item.currency] = item.symbol || '$';
+
                     });
+
                 }
+
+
 
                 if (prodData.status === 'fulfilled' && prodData.value.products) {
+
                     allProducts = prodData.value.products; // 🟢 Save the full list
+
                     targetProduct = allProducts.find(p => p.id === productId);
-                    
-                    // 🟢 NEW: Trigger the dynamic mega menu!
-                    generateDynamicCategories(allProducts);
+
                 }
+
                 if (!targetProduct) {
+
                     if (prodData.status === 'rejected') throw new Error(prodData.reason.message);
+
                     throw new Error("Product ID not found in the live database."); 
+
                 }
+
+
 
                 console.log("✅ Product loaded successfully!");
+
                 renderProductPage();
 
+
+
             } catch (e) {
+
                 console.error('🚨 Product load FATAL ERROR:', e);
+
                 document.getElementById('loader').style.display = 'none';
+
                 document.getElementById('product-page-view').classList.remove('hidden');
+
                 document.getElementById('pp-title').innerText = 'Unable to load product';
+
                 document.getElementById('pp-desc').innerText = 'Error details: ' + e.message;
+
             }
+
         };
+
         
+
         function convertPrice(cadPrice) {
+
             if(!cadPrice || isNaN(cadPrice)) return "0.00";
+
             if (activeCurrency === "CAD" || !exchangeRates[activeCurrency]) return parseFloat(cadPrice).toFixed(2);
+
             return (cadPrice / exchangeRates[activeCurrency]).toFixed(2);
+
         }
 
+
+
         function renderProductPage() {
+
             if (!targetProduct) return;
 
+
+
             document.getElementById('loader').style.display = 'none';
+
             document.getElementById('product-page-view').classList.remove('hidden');
+
             
+
             viewStartTime = Date.now();
+
             
+
             document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
+
             // 🟢 FIX: Added the Short Name to the end of the breadcrumb trail!
+
             document.getElementById('pp-breadcrumb-cat').innerHTML = `
+
                 <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}" class="hover:text-black hover:underline transition">${targetProduct.category}</a> 
+
                 <span class="mx-2 text-gray-300">/</span> 
+
                 <a href="catalog.html?category=${encodeURIComponent(targetProduct.category)}&sub=${encodeURIComponent(targetProduct.subCategory)}" class="hover:text-black hover:underline transition">${targetProduct.subCategory}</a>
+
                 <span class="mx-2 text-gray-300">/</span> 
+
                 <span class="text-gray-400">${targetProduct.name}</span>
+
             `;
+
             
+
             // 🟢 DIAGNOSTIC: This prints the exact database object to your browser console so you can check the field names!
+
             console.log("📦 Full Product Data from Database:", targetProduct);
 
+
+
             // 🟢 FIX: Added the exact database column name (short_title) with the underscore!
+
             const displayTitle = targetProduct.short_title || targetProduct.shortTitle || targetProduct.title || targetProduct.name;
+
             
+
             document.getElementById('pp-title').innerText = displayTitle;
+
             
+
             // Dynamically update the browser tab title to match!
+
             document.title = `${displayTitle} | Wholesale | Muziris`;
+
+
 
             document.getElementById('pp-card-sup-name').innerText = targetProduct.companyName || "Verified Factory";
 
+
+
             // 🟢 ALGORITHM: Deterministic Social Proof Generator
+
             // This turns the unique IDs into a permanent "random" number so the stats never change on refresh!
+
             let prodHash = 0, supHash = 0;
+
             for (let i = 0; i < targetProduct.id.length; i++) prodHash = targetProduct.id.charCodeAt(i) + ((prodHash << 5) - prodHash);
+
             const sId = targetProduct.supplierId || targetProduct.id;
+
             for (let i = 0; i < sId.length; i++) supHash = sId.charCodeAt(i) + ((supHash << 5) - supHash);
+
             prodHash = Math.abs(prodHash); supHash = Math.abs(supHash);
 
+
+
             // Calculate Product Metrics (Uses DB values if they exist, otherwise generates them)
+
             const rating = targetProduct.rating || (4.5 + (prodHash % 6) / 10).toFixed(1); // Generates 4.5 to 5.0
+
             const reviews = targetProduct.reviews || (12 + (prodHash % 300)); // Generates 12 to 311
+
             const orders = targetProduct.orders || ((5 + (prodHash % 150)) * 10); // Generates 50 to 1500
 
+
+
             // Calculate Supplier Metrics (Tied to the Supplier ID, so one factory is consistent!)
+
             const responseTimes = ['< 1h', '< 2h', '< 3h', '< 4h', '< 6h'];
+
             const responseTime = targetProduct.supplierResponse || responseTimes[supHash % responseTimes.length];
+
             const onTime = targetProduct.supplierOnTime || (92 + (supHash % 8)); // Generates 92% to 99%
 
+
+
             // Inject into HTML
+
             document.getElementById('pp-rating-score').innerText = rating;
+
             document.getElementById('pp-rating-reviews').innerText = reviews;
+
             document.getElementById('pp-rating-orders').innerText = orders.toLocaleString();
+
             document.getElementById('pp-sup-response').innerText = `${responseTime} Response`;
+
             document.getElementById('pp-sup-ontime').innerText = `${onTime}% On-Time`;
 
+
+
             // Draw Stars Dynamically based on the generated rating
+
             let starHtml = '';
+
             for(let i=1; i<=5; i++) {
+
                 if (rating >= i) starHtml += '<i class="fas fa-star"></i>';
+
                 else if (rating >= i - 0.5) starHtml += '<i class="fas fa-star-half-alt"></i>';
+
                 else starHtml += '<i class="far fa-star"></i>';
+
             }
+
             document.getElementById('pp-star-icons').innerHTML = starHtml;
+
             
+
             document.getElementById('pp-price').innerText = (currencySymbols[activeCurrency] || '$') + convertPrice(targetProduct.startingPriceCAD);
+
             
+
             // 🟢 Inject Description & check if it needs the Read More button
+
             const descEl = document.getElementById('pp-desc');
+
             descEl.innerText = targetProduct.desc || "Standard configuration.";
+
             setTimeout(() => {
+
                 // If the text fits naturally without being clamped, hide the button & fade
+
                 if (descEl.scrollHeight <= descEl.clientHeight) {
+
                     document.getElementById('pp-desc-fade').style.display = 'none';
+
                     document.getElementById('pp-desc-btn').style.display = 'none';
+
                 }
+
             }, 50);
 
+
+
             document.getElementById('pp-id').innerText = targetProduct.id;
+
             document.getElementById('pp-terms').innerText = targetProduct.incoterms || "FOB";
+
             document.getElementById('pp-lead').innerText = targetProduct.leadTime ? targetProduct.leadTime + " Days" : "TBD";
+
             document.getElementById('pp-srv').innerText = targetProduct.services || "Standard";
+
             document.getElementById('pp-pkg').innerText = targetProduct.pkg || "Export Packaging";
 
+
+
             // 🟢 NEW: Pull Real Supplier Data from the Ledger
+
             fetch(API_BASE_URL + '/get-supplier-profile', {
+
                 method: 'POST',
+
                 headers: { 'Content-Type': 'application/json' },
+
                 body: JSON.stringify({ supplierId: targetProduct.supplierId })
+
             })
+
             .then(r => r.json())
+
             .then(data => {
+
                 if(!data.error) {
+
                     // Unhide the card because we found real data!
+
                     document.getElementById('supplier-trust-card').classList.remove('hidden');
+
                     
+
                     // Plug the real data in
+
                     if(data.logo_url) {
+
                         document.getElementById('stc-logo').src = data.logo_url;
+
                         
+
                         // 🟢 FIX: Unhide the tiny logo at the top of the page!
+
                         const topLogo = document.getElementById('pp-top-logo');
+
                         if (topLogo) {
+
                             topLogo.src = data.logo_url;
+
                             topLogo.classList.remove('hidden');
+
                             document.getElementById('pp-top-icon').classList.add('hidden'); // Hide the default icon
+
                         }
+
                     }
+
                     
+
                     document.getElementById('stc-name').innerText = data.company_name || targetProduct.companyName;
+
                     document.getElementById('stc-type').innerText = data.biz_type || "Verified Supplier";
+
                     document.getElementById('stc-year').innerText = data.year_established || "N/A";
+
                     document.getElementById('stc-size').innerText = data.factory_size ? parseFloat(data.factory_size).toLocaleString() + " SqM" : "Undisclosed";
+
                     document.getElementById('stc-certs').innerText = data.certifications || "Standard Compliance";
+
                     document.getElementById('stc-oem').innerText = data.oem_services || "Contact for Details";
+
                 }
+
             }).catch(e => console.log("Silent fail: No extended profile found for this supplier."));
 
+
+
             // 🟢 Extract MOQ dynamically for the new badge
+
             if (targetProduct.variants && targetProduct.variants.length > 0) {
+
                 const moqVal = targetProduct.variants[0].min || "1";
+
                 const moqUnit = targetProduct.variants[0].unit || "Pcs";
+
                 document.getElementById('pp-moq').innerText = `${moqVal} ${moqUnit}`;
+
             }
+
+
 
             // Bind actions to both Desktop and Mobile buttons
+
             ['main-rfq-btn', 'mobile-rfq-btn'].forEach(id => {
+
                 const btn = document.getElementById(id);
+
                 if (!btn) return;
+
                 
+
                 if (targetProduct.status === 'PAUSED') {
+
                     btn.innerHTML = '<i class="fas fa-pause-circle mr-2"></i> Unavailable';
+
                     btn.style.backgroundColor = '#e5e7eb'; btn.style.color = '#6b7280'; btn.style.cursor = 'not-allowed';
+
                     btn.onclick = null; 
+
                 } else {
+
                     btn.innerHTML = id === 'mobile-rfq-btn' ? '<i class="fas fa-plus mr-2"></i> Request Quote' : '<i class="fas fa-plus mr-2"></i> Request Official Quote';
+
                     btn.style.backgroundColor = 'var(--void)'; btn.style.color = 'var(--gold)'; btn.style.cursor = 'pointer';
+
                     btn.onclick = () => addToCart(targetProduct.id, targetProduct.name);
+
                 }
+
             });
+
             const catalogContainer = document.getElementById('pp-pdf-container');
+
             if (targetProduct.pdf && targetProduct.pdf.startsWith('http')) {
+
                 const isPdf = targetProduct.pdf.toLowerCase().includes('.pdf');
+
                 let mediaHtml = isPdf ? `<iframe src="${targetProduct.pdf}#toolbar=0" class="w-full h-[800px] border-0"></iframe>` 
+
                 : targetProduct.pdf.split(',').map((u, i) => `<img src="${u.trim()}" class="w-full h-auto block m-0 p-0">`).join('');
+
                 catalogContainer.innerHTML = `<div class="mt-8 pt-8 border-t border-gray-100"><h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-gray-900">Product Details</h3><div class="w-full overflow-hidden bg-white flex flex-col">${mediaHtml}</div></div>`;
+
             } else {
+
                 catalogContainer.innerHTML = '';
+
             }
+
+
 
             document.getElementById('pp-main-img').src = targetProduct.hero || 'MC.png';
+
             const thumbRow = document.getElementById('pp-thumbs');
+
             thumbRow.innerHTML = '';
+
             
+
             // 🟢 Save images globally so the full-screen gallery can use them
+
             window.productGalleryImages = [targetProduct.hero, ...(targetProduct.gallery || [])].filter(Boolean);
+
             window.productGalleryImages.forEach((url, idx) => {
+
                 const thumb = document.createElement('img');
+
                 thumb.src = url;
+
                 thumb.alt = `Product image ${idx + 1}`;
+
                 thumb.className = `w-14 h-14 md:w-16 md:h-16 object-cover rounded-lg cursor-pointer transition-all bg-white ${idx === 0 ? 'border-2 border-[var(--gold)] opacity-100 shadow-sm' : 'border-2 border-transparent opacity-50 hover:opacity-100'}`;
+
                 thumb.onclick = () => {
+
                     document.getElementById('pp-main-img').src = url;
+
                     document.querySelectorAll('#pp-thumbs img').forEach(t => {
+
                         t.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+
                         t.classList.add('border-transparent', 'opacity-50');
+
                     });
+
                     thumb.classList.remove('border-transparent', 'opacity-50');
+
                     thumb.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+
                 };
+
                 thumbRow.appendChild(thumb);
+
             });
+
+
 
             const tBody = document.getElementById('pp-pricing-body');
+
             tBody.className = "text-gray-900 font-medium"; 
+
             
+
             // 1. Group variants by their name
+
             const groupedVariants = {};
+
             (targetProduct.variants || []).forEach(v => {
+
                 const variantName = v.type === "Standard" ? "Standard Base" : `${v.type}: ${v.opt}`;
+
                 if (!groupedVariants[variantName]) {
+
                     groupedVariants[variantName] = [];
+
                 }
+
                 groupedVariants[variantName].push(v);
+
             });
+
+
 
             // 🟢 NEW: 2. Build the Advanced Visual Swatch Selector (E-commerce Circles)
+
             let swatchesHtml = '';
+
             let hasSwatches = false;
+
             
+
             for (const [variantName, tiers] of Object.entries(groupedVariants)) {
+
                 const varImg = tiers[0].img;
+
                 if (varImg && varImg.trim() !== '' && varImg.startsWith('http')) {
+
                     hasSwatches = true;
+
                     const cleanImg = varImg.replace(/'/g, "\\'"); // Safety catch
+
                     
+
                     // Builds beautiful circular hover-swatches with tiny labels
+
                     swatchesHtml += `
+
                         <div class="flex flex-col items-center gap-2 cursor-pointer group" onclick="document.getElementById('pp-main-img').src='${cleanImg}';">
+
                             <div class="p-0.5 rounded-full border-2 border-transparent group-hover:border-[var(--gold)] transition-all duration-300">
+
                                 <img src="${cleanImg}" class="w-10 h-10 md:w-12 md:h-12 object-cover rounded-full shadow-sm" title="${variantName}" onerror="this.style.display='none'">
+
                             </div>
+
                             <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest text-center w-16 truncate" title="${variantName}">${tiers[0].opt || variantName}</span>
+
                         </div>
+
                     `;
+
                 }
+
             }
+
+
 
             // Inject the Swatches dynamically below the Price Box
+
             let oldSwatchContainer = document.getElementById('advanced-variant-swatches');
+
             if (oldSwatchContainer) oldSwatchContainer.remove(); // Clear old ones on currency refresh
+
             
+
             if (hasSwatches) {
+
                 // 🟢 FIX: Target the Info Grid (Lead Time/Terms) so the swatches sit above it!
+
                 const infoGrid = document.getElementById('pp-lead').closest('.grid');
+
                 infoGrid.insertAdjacentHTML('beforebegin', `
+
                     <div id="advanced-variant-swatches" class="mb-6">
+
                         <h3 class="text-[11px] font-bold uppercase text-gray-900 mb-3 tracking-widest">Select Variant</h3>
+
                         <div class="flex flex-wrap gap-4 items-start">
+
                             ${swatchesHtml}
+
                         </div>
+
                     </div>
+
                 `);
+
             }
+
+
 
             // 3. Build the visually merged table (with clickable images!)
+
             let tableHtml = '';
+
             for (const [variantName, tiers] of Object.entries(groupedVariants)) {
+
                 
+
                 const varImg = tiers[0].img;
+
                 let imgHtml = '';
+
                 if (varImg && varImg.trim() !== '' && varImg.startsWith('http')) {
+
                     const cleanImg = varImg.replace(/'/g, "\\'");
+
                     // The table image is now clickable and hovers gold!
+
                     imgHtml = `<img src="${cleanImg}" class="w-10 h-10 object-cover rounded bg-gray-50 border border-gray-200 mr-3 flex-shrink-0 cursor-pointer hover:border-[var(--gold)] transition" onclick="document.getElementById('pp-main-img').src='${cleanImg}';" title="Click to view" onerror="this.style.display='none'">`;
+
                 }
+
+
 
                 tiers.forEach((v, index) => {
+
                     const isLastInGroup = index === tiers.length - 1;
+
                     const rowBorder = isLastInGroup ? 'border-b border-gray-200' : 'border-b border-gray-50';
+
                     const displayMax = isLastInGroup ? 'Up' : v.max;
+
                     
+
                     tableHtml += `<tr class="hover:bg-gray-50 transition">`;
+
                     
+
                     if (index === 0) {
+
                         tableHtml += `<td class="py-4 px-4 bg-white border-b border-gray-200 align-middle shadow-[1px_0_0_0_#f3f4f6]" rowspan="${tiers.length}">
+
                                         <div class="flex items-center">
+
                                             ${imgHtml}
+
                                             <span class="font-bold text-gray-900">${variantName}</span>
+
                                         </div>
+
                                       </td>`;
+
                     }
+
                     
+
                     tableHtml += `<td class="py-3 px-4 text-gray-600 ${rowBorder}">${v.min} - ${displayMax} ${v.unit}</td>`;
+
                     tableHtml += `<td class="py-3 px-4 text-right font-bold font-mono text-[var(--gold-dark)] ${rowBorder}">${currencySymbols[activeCurrency] || '$'}${convertPrice(v.priceCAD)}</td>`;
+
                     tableHtml += `</tr>`;
+
                 });
+
             }
+
             tBody.innerHTML = tableHtml;
 
+
+
             // 🟢 INJECT RECOMMENDATIONS
+
             const recContainer = document.getElementById('recommendations-container');
+
             if (recContainer && allProducts.length > 1) {
+
                 
+
                 // Try to find products in the same category first, excluding the one we are looking at
+
                 let recs = allProducts.filter(p => p.category === targetProduct.category && p.id !== targetProduct.id);
+
                 
+
                 // If there aren't enough in the same category, grab from other categories
+
                 if (recs.length < 6) {
+
                     const others = allProducts.filter(p => p.category !== targetProduct.category && p.id !== targetProduct.id);
+
                     recs = [...recs, ...others];
+
                 }
+
                 
+
                 recs = recs.slice(0, 8); // Limit to 8 products max
+
                 
+
                 let recHtml = '';
+
                 recs.forEach(p => {
+
                     const heroImg = p.hero || 'MC.png';
+
                     const price = (currencySymbols[activeCurrency] || '$') + convertPrice(p.startingPriceCAD);
+
                     
+
                     // Creates a beautiful, clickable product card
+
                     recHtml += `
+
                         <div class="flex-shrink-0 w-44 md:w-52 cursor-pointer group" onclick="window.location.href='product.html?id=${p.id}'">
+
                             <div class="w-full aspect-square bg-[#f8f9fa] rounded-xl overflow-hidden mb-3 border border-gray-100 relative">
+
                                 <img src="${heroImg}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 mix-blend-multiply" onerror="this.src='MC.png'">
+
                             </div>
+
                             <h4 class="text-[13px] font-bold text-gray-900 mb-1 line-clamp-2 leading-snug group-hover:text-[var(--gold)] transition">${p.name}</h4>
+
                             <div class="font-mono font-bold text-[var(--gold-dark)] text-sm mb-1">${price}</div>
+
                         </div>
+
                     `;
+
                 });
+
                 recContainer.innerHTML = recHtml;
+
             }
+
         }
+
+
 
         // Before they leave the page, log how long they looked at it
+
         window.addEventListener("beforeunload", () => {
+
             if (viewStartTime > 0 && targetProduct) {
+
                 trackBehavior('view_product', targetProduct.id, (Date.now() - viewStartTime) / 1000);
+
             }
+
         });
 
+
+
         // 🟢 MEGA MENU HOVER LOGIC
+
         function switchMegaPanel(panelId, element) {
+
             // 1. Remove active state from all sidebar items
+
             document.querySelectorAll('.mega-cat-item').forEach(item => {
+
                 item.classList.remove('active');
+
             });
+
             // 2. Add active state to the item you are hovering over
+
             element.classList.add('active');
 
+
+
             // 3. Hide all content panels
+
             document.querySelectorAll('.mega-panel').forEach(panel => {
+
                 panel.classList.remove('active');
+
             });
+
             // 4. Show the target panel
+
             const targetPanel = document.getElementById(panelId);
+
             if(targetPanel) targetPanel.classList.add('active');
+
         }
+
+
+
         // ==========================================
-        // 🟢 SYNCED: DYNAMIC MEGA MENU BUILDER
+
+        // 🟢 LIVE CHAT LOGIC
+
         // ==========================================
-        function generateDynamicCategories(products) {
-            const catTree = {};
-            products.forEach(p => {
-                if(!p.category) return;
-                if(!catTree[p.category]) catTree[p.category] = new Set();
-                if(p.subCategory) catTree[p.category].add(p.subCategory);
+
+        function openSupplierChat() {
+
+            if (!currentUser) return openAuthModal();
+
+            document.getElementById('chat-supplier-name').innerText = targetProduct.companyName || "Verified Factory";
+
+            document.getElementById('live-chat-window').style.display = 'flex';
+
+            
+
+            const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+
+            const history = document.getElementById('chat-history');
+
+            history.innerHTML = '<div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>';
+
+            
+
+            // 🟢 Tell Firebase you opened the chat and are online
+
+            db.collection('chats').doc(chatId).set({
+
+                buyerOnline: true,
+
+                unreadByBuyer: false
+
+            }, { merge: true });
+
+
+
+            if (unsubscribeChatDoc) unsubscribeChatDoc();
+
+
+
+            // 🟢 Listen for Supplier's Online/Typing status
+
+            unsubscribeChatDoc = db.collection('chats').doc(chatId).onSnapshot(doc => {
+
+                const data = doc.data();
+
+                if (!data) return;
+
+
+
+                const typingInd = document.getElementById('typing-indicator');
+
+                if (data.supplierTyping) typingInd.style.display = 'block';
+
+                else typingInd.style.display = 'none';
+
+
+
+                const dot = document.getElementById('online-dot');
+
+                const text = document.getElementById('online-text');
+
+                if (data.supplierOnline) {
+
+                    dot.style.background = 'var(--success)';
+
+                    text.innerText = 'Online';
+
+                    text.style.color = 'var(--success)';
+
+                } else {
+
+                    dot.style.background = '#9ca3af';
+
+                    text.innerText = 'Offline';
+
+                    text.style.color = '#9ca3af';
+
+                }
+
             });
 
-            const catIcons = {
-                "Agriculture, Food & Beverage": "fa-seedling", "Apparel, Textiles & Accessories": "fa-tshirt",
-                "Automotive & Transportation": "fa-car", "Beauty & Personal Care": "fa-spa",
-                "Chemicals & Raw Materials": "fa-flask", "Construction & Real Estate": "fa-building",
-                "Consumer Electronics & Appliances": "fa-laptop", "Electrical & Renewable Energy": "fa-solar-panel",
-                "Electronic Components & IoT": "fa-microchip", "Fabrication & B2B Services": "fa-cogs",
-                "Health & Medical": "fa-stethoscope", "Home Decor, Garden & Furniture": "fa-couch",
-                "Industrial Machinery & Equipment": "fa-industry", "Jewelry, Eyewear & Watches": "fa-gem",
-                "Minerals, Metals & Metallurgy": "fa-cubes", "Packaging & Printing": "fa-box",
-                "Sports, Toys & Hobbies": "fa-dumbbell", "Tools, Hardware & Safety": "fa-tools"
-            };
-
-            function getSubIcon(name, fallback) {
-                const n = name.toLowerCase();
-                if(n.includes('candle')) return 'fa-fire text-orange-500';
-                if(n.includes('device') || n.includes('stethoscope')) return 'fa-stethoscope text-blue-500';
-                if(n.includes('furniture') || n.includes('bed')) return 'fa-procedures text-teal-600';
-                if(n.includes('disposable') || n.includes('syringe')) return 'fa-syringe text-gray-700';
-                if(n.includes('mobility') || n.includes('wheelchair')) return 'fa-wheelchair text-blue-600';
-                if(n.includes('supplement') || n.includes('pill')) return 'fa-pills text-green-600';
-                if(n.includes('produce') || n.includes('apple')) return 'fa-apple-alt text-red-500';
-                if(n.includes('coffee') || n.includes('tea')) return 'fa-coffee text-amber-800';
-                if(n.includes('clothing')) return 'fa-tshirt text-indigo-500';
-                if(n.includes('footwear')) return 'fa-shoe-prints text-orange-700';
-                if(n.includes('auto part')) return 'fa-cogs text-gray-600';
-                if(n.includes('skincare')) return 'fa-spa text-pink-400';
-                if(n.includes('tile') || n.includes('floor')) return 'fa-border-all text-stone-500';
-                if(n.includes('mobile')) return 'fa-mobile-alt text-gray-800';
-                if(n.includes('computer')) return 'fa-laptop text-slate-700';
-                if(n.includes('solar')) return 'fa-solar-panel text-blue-400';
-                if(n.includes('pcb')) return 'fa-microchip text-emerald-600';
-                if(n.includes('kitchenware')) return 'fa-utensils text-gray-500';
-                if(n.includes('packaging mach')) return 'fa-box-open text-amber-600';
-                if(n.includes('jewelry')) return 'fa-gem text-purple-500';
-                if(n.includes('box')) return 'fa-box text-yellow-600';
-                if(n.includes('fitness')) return 'fa-dumbbell text-zinc-800';
-                if(n.includes('tool')) return 'fa-tools text-slate-600';
-                return fallback || "fa-th-large text-gray-400";
-            }
-
-            let deskSidebarHTML = '', deskPanelsHTML = '', mobMenuHTML = '';
-            let index = 0;
-
-            for (const [cat, subcats] of Object.entries(catTree).sort()) {
-                const safeId = 'dyn-cat-' + index;
-                const mainIcon = catIcons[cat] || "fa-th-large";
-                const encodedCat = encodeURIComponent(cat);
-
-                deskSidebarHTML += `<a href="catalog.html?category=${encodedCat}" class="mega-cat-item ${index===0?'active':''}" onmouseenter="switchMegaPanel('${safeId}', this)">${cat} <i class="fas fa-chevron-right"></i></a>`;
-
-                let subcatGridHTML = '';
-                Array.from(subcats).sort().forEach(sub => {
-                    const specificIcon = getSubIcon(sub, mainIcon);
-                    subcatGridHTML += `<a href="catalog.html?category=${encodedCat}&sub=${encodeURIComponent(sub)}" class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition"><div class="subcat-icon bg-white shadow-sm border border-gray-100"><i class="fas ${specificIcon}"></i></div><div class="subcat-name text-left ml-2">${sub}</div></a>`;
-                });
-                subcatGridHTML += `<a href="catalog.html?category=${encodedCat}" class="subcat-item hover:bg-gray-50 rounded-lg p-2 transition"><div class="subcat-icon bg-[var(--gold-light)]"><i class="fas fa-arrow-right text-[var(--gold-dark)]"></i></div><div class="subcat-name text-[var(--gold-dark)] text-left ml-2">View All</div></a>`;
-                
-                deskPanelsHTML += `<div id="${safeId}" class="mega-panel ${index===0?'active':''}"><h3 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4 brand-font uppercase tracking-widest">${cat}</h3><div class="grid grid-cols-2 md:grid-cols-3 gap-3">${subcatGridHTML}</div></div>`;
-
-                let mobSubLinks = '';
-                Array.from(subcats).sort().forEach(sub => {
-                    mobSubLinks += `<a href="catalog.html?category=${encodedCat}&sub=${encodeURIComponent(sub)}" class="flex items-center gap-3 py-3 px-6 text-sm text-gray-600 border-b border-gray-200"><i class="fas ${getSubIcon(sub, mainIcon)} w-5 text-center"></i> ${sub}</a>`;
-                });
-                mobSubLinks += `<a href="catalog.html?category=${encodedCat}" class="block py-3 px-6 text-sm font-bold text-[var(--gold-dark)]">View All ${cat.split(',')[0]} &rarr;</a>`;
-
-                mobMenuHTML += `<div class="bg-white border-b border-gray-200"><button onclick="toggleMobileCat('mob-${safeId}')" class="w-full flex items-center justify-between p-5 text-sm font-bold text-gray-800 hover:text-[var(--gold-dark)] transition">${cat} <i id="icon-mob-${safeId}" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i></button><div id="mob-${safeId}" class="mobile-submenu hidden bg-gray-50 border-t border-gray-100">${mobSubLinks}</div></div>`;
-
-                index++;
-            }
-
-            const dSide = document.getElementById('dynamic-mega-sidebar');
-            const dPanel = document.getElementById('dynamic-mega-panels');
-            const mMenu = document.getElementById('dynamic-mobile-menu');
-
-            if(dSide) dSide.innerHTML = deskSidebarHTML;
-            if(dPanel) dPanel.innerHTML = deskPanelsHTML;
-            if(mMenu) mMenu.innerHTML = mobMenuHTML;
-        }
-    </script>
-    <div id="fullscreen-gallery" class="fixed inset-0 bg-[#0b0e14]/98 backdrop-blur-md z-[99999] hidden flex-row items-center justify-center opacity-0 transition-opacity duration-300">
-        
-        <button onclick="closeGallery()" class="absolute top-4 right-4 md:top-6 md:right-6 bg-white shadow-lg border border-gray-200 text-gray-600 hover:text-black hover:bg-gray-50 text-2xl z-50 transition-all duration-300 hover:rotate-90 hover:scale-110 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full">
-            <i class="fas fa-times"></i>
-        </button>
-        
-        <div class="flex w-full h-full max-w-[1400px] p-4 md:p-12 gap-8 items-center justify-center relative">
             
+
+            // 🟢 NEW: Context Switching Logic!
+
+            // Check if they are looking at a NEW product, and if so, drop the context card!
+
+            const chatRef = db.collection('chats').doc(chatId);
+
+            chatRef.get().then(async (docSnap) => {
+
+                if (!docSnap.exists || docSnap.data().productId !== targetProduct.id) {
+
+                    const contextText = `OFFICIAL INQUIRY: Buyer is interested in "${targetProduct.name}" (ID: ${targetProduct.id}).`;
+
+                    await chatRef.collection('messages').add({ sender: "system-context", text: contextText, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+
+                    await chatRef.set({ productId: targetProduct.id, productName: targetProduct.name }, { merge: true });
+
+                }
+
+            });
+
+
+
+            db.collection('chats').doc(chatId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(async snapshot => {
+
+                  history.innerHTML = '<div style="align-self:center; font-size:10px; color:#9ca3af; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Today</div>'; 
+
+                  snapshot.forEach(doc => {
+
+                      const msg = doc.data();
+
+                      if (msg.sender !== 'system-context') {
+
+                          addChatMessage(msg.sender === 'buyer' ? "You" : "Factory", msg.text, msg.sender === 'buyer' ? 'buyer' : (msg.sender === 'system' ? 'system' : 'supplier'));
+
+                      }
+
+                  });
+
+            });
+
+        }
+
+
+
+        async function sendSupplierMessage() {
+
+            const input = document.getElementById('chat-input'), text = input.value.trim();
+
+            if (!text || !currentUser) return;
+
+            const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+
+            
+
+            let safeText = text, securityTriggered = false;
+
+            const blockRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}|\b\d{7,15}\b|whatsapp|wechat|skype|telegram/gi;
+
+            if (blockRegex.test(text)) { securityTriggered = true; safeText = safeText.replace(blockRegex, "[REDACTED]"); }
+
+
+
+            addChatMessage("You", safeText, "buyer");
+
+            input.value = "";
+
+            
+
+            // 🟢 Clear typing indicator instantly
+
+            isTyping = false;
+
+            clearTimeout(typingTimeout);
+
+
+
+            await db.collection('chats').doc(chatId).collection('messages').add({ 
+
+                sender: "buyer", 
+
+                text: safeText, 
+
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+
+            });
+
+            
+
+            await db.collection('chats').doc(chatId).set({ 
+
+                buyerEmail: currentUser.email, 
+
+                supplierId: targetProduct.supplierId, 
+
+                productId: targetProduct.id,      // 🟢 Locks the current product into the Inbox
+
+                productName: targetProduct.name,  // 🟢 Locks the current product into the Inbox
+
+                lastMessage: safeText, 
+
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp(), 
+
+                securityFlag: securityTriggered, 
+
+                unreadBySupplier: true, 
+
+                buyerTyping: false 
+
+            }, { merge: true });
+
+            
+
+            if (securityTriggered) addChatMessage("System", "⚠️ Security Alert: Direct contact details violate ToS.", "system");
+
+        }
+
+
+
+        function addChatMessage(sender, text, type) {
+
+            const history = document.getElementById('chat-history'), msgDiv = document.createElement('div');
+
+            
+
+            if (type === 'system') {
+
+                msgDiv.style.cssText = "align-self:center; background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; font-size:10px; padding:6px 12px; border-radius:6px; text-align:center; font-weight:600; overflow-wrap: anywhere; word-break: break-word;";
+
+            } else if (type === 'buyer') {
+
+                // 🟢 FIX: Buyer (You) - Crisp white, shining gold outer glow, subtle inner gold glow
+
+                msgDiv.style.cssText = "align-self:flex-end; background:#ffffff; color:#111827; border: 1px solid rgba(212, 175, 55, 0.9); padding:10px 14px; border-radius:12px; border-bottom-right-radius:2px; font-size:13px; max-width:85%; font-weight:500; box-shadow: 0 0 15px rgba(212, 175, 55, 0.45), inset 0 0 10px rgba(212, 175, 55, 0.15); overflow-wrap: anywhere; word-break: break-word;";
+
+            } else {
+
+                // 🟢 FIX: Factory - Crisp white, shining silver outer glow, subtle inner silver glow
+
+                msgDiv.style.cssText = "align-self:flex-start; background:#ffffff; color:#111827; border: 1px solid rgba(156, 163, 175, 0.8); padding:10px 14px; border-radius:12px; border-bottom-left-radius:2px; font-size:13px; max-width:85%; box-shadow: 0 0 15px rgba(156, 163, 175, 0.4), inset 0 0 10px rgba(156, 163, 175, 0.15); overflow-wrap: anywhere; word-break: break-word;";
+
+            }
+
+            
+
+            let content = text;
+
+            
+
+            if (text.startsWith('http') && !text.includes(' ')) {
+
+                content = `<a href="${text}" target="_blank" style="word-break: break-all;"><img src="${text}" style="max-width: 100%; border-radius: 8px;"></a>`;
+
+            } 
+
+            // Jumbo Emoji Detection for Product Chat Widget
+
+            else if (/^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji_Modifier}\uFE0F\u200D\s]+$/u.test(text)) {
+
+                content = `<div class="jumbo-emoji">${text}</div>`;
+
+            } 
+
+            else {
+
+                content = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: var(--gold-dark); font-weight: bold; text-decoration: underline; word-break: break-all;">$1</a>').replace(/\n/g, '<br>');
+
+            }
+
+            
+
+            msgDiv.innerHTML = content;
+
+            history.appendChild(msgDiv); history.scrollTop = history.scrollHeight;
+
+        }
+
+        
+
+        // 🟢 NEW: Typing Detector Logic
+
+        function handleTyping() {
+
+            if (!currentUser || !targetProduct) return;
+
+            const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+
+
+
+            if (!isTyping) {
+
+                isTyping = true;
+
+                db.collection('chats').doc(chatId).set({ buyerTyping: true }, { merge: true });
+
+            }
+
+
+
+            clearTimeout(typingTimeout);
+
+            typingTimeout = setTimeout(() => {
+
+                isTyping = false;
+
+                db.collection('chats').doc(chatId).set({ buyerTyping: false }, { merge: true });
+
+            }, 1500);
+
+        }
+
+
+
+        // 🟢 NEW: Safely go offline when closing the modal window
+
+        function closeLiveChat() {
+
+            document.getElementById('live-chat-window').style.display='none';
+
+            if (currentUser && targetProduct) {
+
+                const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+
+                db.collection('chats').doc(chatId).set({ buyerOnline: false, buyerTyping: false }, { merge: true });
+
+            }
+
+        }
+
+
+
+        // 🟢 NEW: Set Offline when closing the browser tab
+
+        window.addEventListener('beforeunload', () => {
+
+            if (currentUser && targetProduct && document.getElementById('live-chat-window').style.display !== 'none') {
+
+                const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+
+                db.collection('chats').doc(chatId).set({ 
+
+                    buyerOnline: false, 
+
+                    buyerTyping: false 
+
+                }, { merge: true });
+
+            }
+
+        });
+
+
+
+        async function uploadChatFile(event) {
+
+            const file = event.target.files[0];
+
+            if (!file || !currentUser) return;
+
+            const chatId = btoa(currentUser.email + "_" + targetProduct.supplierId);
+
+            addChatMessage("System", "Uploading file...", "system");
+
+            const storageRef = storage.ref(`chat_attachments/${chatId}/${Date.now()}_${file.name}`);
+
+            await storageRef.put(file);
+
+            const fileUrl = await storageRef.getDownloadURL();
+
+            await db.collection('chats').doc(chatId).collection('messages').add({ sender: "buyer", text: fileUrl, timestamp: firebase.firestore.FieldValue.serverTimestamp(), productId: targetProduct.id, productName: targetProduct.name });
+
+            await db.collection('chats').doc(chatId).set({ buyerEmail: currentUser.email, supplierId: targetProduct.supplierId, lastMessage: "📎 Sent an attachment", lastUpdated: firebase.firestore.FieldValue.serverTimestamp(), unreadBySupplier: true }, { merge: true });
+
+        }
+
+
+
+    // 🟢 NEW: Listen for Emoji Clicks inside the floating chat
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+
+                const input = document.getElementById('chat-input');
+
+                input.value += event.detail.unicode;
+
+                input.focus();
+
+                document.getElementById('emoji-wrapper-prod').style.display = 'none';
+
+            });
+
+        });
+
+
+
+        // ==========================================
+
+        // 🟢 DYNAMIC MARKET DROPDOWN LOGIC
+
+        // ==========================================
+
+        const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
+
+
+
+        function loadLiveCurrenciesDropdown() {
+
+            fetch(API_BASE_URL + '/public-currencies').then(res => res.json()).then(data => {
+
+                if (data.success) {
+
+                    const dropdownList = document.getElementById('currencyList');
+
+                    if(!dropdownList) return;
+
+                    dropdownList.innerHTML = ''; 
+
+                    data.currencies.forEach(item => {
+
+                        const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
+
+                        const btn = document.createElement('button');
+
+                        btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
+
+                        btn.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="flex-1">${item.country}</span><span class="text-gray-400 text-xs font-bold">${item.currency}</span>`;
+
+                        btn.onclick = () => { selectCurrency(item.currency, flagCode); updateCurrency(); };
+
+                        dropdownList.appendChild(btn);
+
+                    });
+
+                    
+
+                    if (activeCurrency) {
+
+                        const initialFlag = flagMap[activeCurrency] || activeCurrency.substring(0,2).toLowerCase();
+
+                        selectCurrency(activeCurrency, initialFlag);
+
+                    }
+
+                }
+
+            }).catch(e => console.log("Currency UI Load Error"));
+
+        }
+
+
+
+        function selectCurrency(curr, flagCode) {
+
+            activeCurrency = curr; 
+
+            localStorage.setItem('muziris_active_currency', curr);
+
+            const display = document.getElementById('activeCurrencyDisplay');
+
+            
+
+            // 🟢 FIX: Added 'hidden md:block' to the text span so mobile stays clean!
+
+            if(display) display.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="hidden md:block text-sm font-bold text-gray-900">${curr}</span>`;
+
+            
+
+            document.getElementById('currencyMenu')?.classList.add('hidden');
+
+        }
+
+
+
+        document.getElementById('currencyBtn')?.addEventListener('click', (e) => { 
+
+            e.stopPropagation(); 
+
+            document.getElementById('currencyMenu')?.classList.toggle('hidden'); 
+
+        });
+
+        window.addEventListener('click', (e) => { 
+
+            if(!e.target.closest('#customCurrencyDropdown')) document.getElementById('currencyMenu')?.classList.add('hidden'); 
+
+        });
+
+
+
+        function updateCurrency() {
+
+            document.querySelectorAll('.ui-curr-symbol').forEach(el => el.innerText = activeCurrency);
+
+            if(typeof renderProductPage === 'function' && targetProduct) {
+
+                renderProductPage();
+
+            }
+
+        }
+
+
+
+        // ==========================================
+
+        // 🟢 FULL SCREEN ALIBABA-STYLE GALLERY
+
+        // ==========================================
+
+        let fsCurrentIndex = 0;
+
+
+
+        function openGallery(startIndex = null) {
+
+            if (!window.productGalleryImages || window.productGalleryImages.length === 0) return;
+
+            
+
+            if (startIndex !== null) {
+
+                fsCurrentIndex = startIndex;
+
+            } else {
+
+                const currentMainSrc = document.getElementById('pp-main-img').src;
+
+                const idx = window.productGalleryImages.findIndex(src => currentMainSrc.includes(src));
+
+                fsCurrentIndex = idx !== -1 ? idx : 0;
+
+            }
+
+
+
+            const modal = document.getElementById('fullscreen-gallery');
+
+            modal.classList.remove('hidden');
+
+            modal.classList.add('flex');
+
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+
+            document.body.style.overflow = 'hidden'; // Stop background scrolling
+
+            updateFsGalleryUI();
+
+        }
+
+
+
+        function closeGallery() {
+
+            const modal = document.getElementById('fullscreen-gallery');
+
+            modal.classList.add('opacity-0');
+
+            setTimeout(() => {
+
+                modal.classList.add('hidden');
+
+                modal.classList.remove('flex');
+
+                document.body.style.overflow = 'auto'; // Restore scrolling
+
+            }, 300);
+
+        }
+
+
+
+        function changeFsImage(dir) {
+
+            fsCurrentIndex += dir;
+
+            if (fsCurrentIndex < 0) fsCurrentIndex = window.productGalleryImages.length - 1;
+
+            if (fsCurrentIndex >= window.productGalleryImages.length) fsCurrentIndex = 0;
+
+            updateFsGalleryUI();
+
+        }
+
+
+
+        function updateFsGalleryUI() {
+
+            document.getElementById('fs-main-img').src = window.productGalleryImages[fsCurrentIndex];
+
+            
+
+            const thumbContainer = document.getElementById('fs-thumbs');
+
+            thumbContainer.innerHTML = '';
+
+            window.productGalleryImages.forEach((src, idx) => {
+
+                const isActive = idx === fsCurrentIndex;
+
+                const borderClass = isActive ? 'border-[var(--gold)] opacity-100 scale-105' : 'border-transparent opacity-50 hover:opacity-100';
+
+                
+
+                thumbContainer.innerHTML += `
+
+                    <div class="w-20 h-20 bg-white rounded-lg cursor-pointer overflow-hidden transition-all flex-shrink-0 border-2 ${borderClass}" onclick="openGallery(${idx})">
+
+                        <img src="${src}" class="w-full h-full object-cover">
+
+                    </div>
+
+                `;
+
+            });
+
+        }
+
+
+
+        // ==========================================
+
+        // 🟢 ALGORITHM: Main Image Mobile Swipe Tracker
+
+        // ==========================================
+
+        window.isMainSwiping = false;
+
+        
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const mainZone = document.getElementById('main-img-swipe-zone');
+
+            if(!mainZone) return;
+
+            
+
+            let startX = 0, startY = 0;
+
+
+
+            mainZone.addEventListener('touchstart', e => {
+
+                window.isMainSwiping = false; // Reset blocker
+
+                startX = e.changedTouches[0].screenX;
+
+                startY = e.changedTouches[0].screenY;
+
+            }, {passive: true});
+
+            
+
+            mainZone.addEventListener('touchend', e => {
+
+                let diffX = startX - e.changedTouches[0].screenX;
+
+                let diffY = startY - e.changedTouches[0].screenY;
+
+                
+
+                // If they scroll vertically down the page, ignore the swipe
+
+                if (Math.abs(diffY) > Math.abs(diffX)) return;
+
+                
+
+                // 40px Threshold for a successful swipe
+
+                if (diffX > 40) { 
+
+                    changeMainImage(1); 
+
+                    window.isMainSwiping = true; // 🟢 BLOCK THE CLICK!
+
+                } else if (diffX < -40) { 
+
+                    changeMainImage(-1); 
+
+                    window.isMainSwiping = true; // 🟢 BLOCK THE CLICK!
+
+                }
+
+                
+
+                // Reset the click blocker after 50ms so normal taps work again
+
+                setTimeout(() => window.isMainSwiping = false, 50);
+
+            }, {passive: true});
+
+        });
+
+
+
+        function changeMainImage(dir) {
+
+            if (!window.productGalleryImages || window.productGalleryImages.length <= 1) return;
+
+            
+
+            const currentMainSrc = document.getElementById('pp-main-img').src;
+
+            let idx = window.productGalleryImages.findIndex(src => currentMainSrc.includes(src));
+
+            if(idx === -1) idx = 0;
+
+            
+
+            idx += dir;
+
+            if (idx < 0) idx = window.productGalleryImages.length - 1;
+
+            if (idx >= window.productGalleryImages.length) idx = 0;
+
+            
+
+            // 1. Swap the big image
+
+            document.getElementById('pp-main-img').src = window.productGalleryImages[idx];
+
+            
+
+            // 2. Automatically highlight the correct tiny thumbnail below it
+
+            document.querySelectorAll('#pp-thumbs img').forEach((thumb, i) => {
+
+                if(i === idx) {
+
+                    thumb.classList.remove('border-transparent', 'opacity-50');
+
+                    thumb.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+
+                    // Ensure the thumbnail scrolls into view if there are many of them!
+
+                    thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+                } else {
+
+                    thumb.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+
+                    thumb.classList.add('border-transparent', 'opacity-50');
+
+                }
+
+            });
+
+        }
+
+        function changeMainImage(dir) {
+
+            if (!window.productGalleryImages || window.productGalleryImages.length <= 1) return;
+
+            
+
+            const currentMainSrc = document.getElementById('pp-main-img').src;
+
+            let idx = window.productGalleryImages.findIndex(src => currentMainSrc.includes(src));
+
+            if(idx === -1) idx = 0;
+
+            
+
+            idx += dir;
+
+            if (idx < 0) idx = window.productGalleryImages.length - 1;
+
+            if (idx >= window.productGalleryImages.length) idx = 0;
+
+            
+
+            // 1. Swap the big image
+
+            document.getElementById('pp-main-img').src = window.productGalleryImages[idx];
+
+            
+
+            // 2. Automatically highlight the correct tiny thumbnail below it
+
+            document.querySelectorAll('#pp-thumbs img').forEach((thumb, i) => {
+
+                if(i === idx) {
+
+                    thumb.classList.remove('border-transparent', 'opacity-50');
+
+                    thumb.classList.add('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+
+                    // Ensure the thumbnail scrolls into view if there are many of them!
+
+                    thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+                } else {
+
+                    thumb.classList.remove('border-[var(--gold)]', 'opacity-100', 'shadow-sm');
+
+                    thumb.classList.add('border-transparent', 'opacity-50');
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+    <div id="fullscreen-gallery" class="fixed inset-0 bg-[#0b0e14]/98 backdrop-blur-md z-[99999] hidden flex-row items-center justify-center opacity-0 transition-opacity duration-300">
+
+        
+
+        <button onclick="closeGallery()" class="absolute top-4 right-4 md:top-6 md:right-6 bg-white shadow-lg border border-gray-200 text-gray-600 hover:text-black hover:bg-gray-50 text-2xl z-50 transition-all duration-300 hover:rotate-90 hover:scale-110 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full">
+
+            <i class="fas fa-times"></i>
+
+        </button>
+
+        
+
+        <div class="flex w-full h-full max-w-[1400px] p-4 md:p-12 gap-8 items-center justify-center relative">
+
+            
+
             <div class="hidden md:flex flex-col gap-4 h-full max-h-[80vh] overflow-y-auto w-24 pr-2 scrollbar-hide py-4" id="fs-thumbs"></div>
 
+
+
             <div id="fs-swipe-zone" class="flex-1 relative h-full max-h-[85vh] flex items-center justify-center group touch-pan-y">
+
                 <img id="fs-main-img" src="" class="max-w-full max-h-full object-contain select-none rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-transform duration-300">
+
                 
+
                 <button onclick="changeFsImage(-1)" class="absolute left-2 md:-left-6 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[var(--gold)] text-white hover:text-black w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-xl backdrop-blur transition opacity-0 group-hover:opacity-100 shadow-xl border border-white/10">
+
                     <i class="fas fa-chevron-left"></i>
+
                 </button>
+
                 <button onclick="changeFsImage(1)" class="absolute right-2 md:-right-6 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[var(--gold)] text-white hover:text-black w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-xl backdrop-blur transition opacity-0 group-hover:opacity-100 shadow-xl border border-white/10">
+
                     <i class="fas fa-chevron-right"></i>
+
                 </button>
+
             </div>
+
         </div>
+
     </div>
+
 </body>
-</html>
+
+</html> 
+
