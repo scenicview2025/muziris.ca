@@ -504,6 +504,7 @@
     </div>
   </footer>
   <script>
+      <script>
       // ==========================================
       // 🟢 FIREBASE INITIALIZATION & AUTH LOGIC
       // ==========================================
@@ -519,53 +520,60 @@
       if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
       const auth = firebase.auth();
       const googleProvider = new firebase.auth.GoogleAuthProvider();
-      const msProvider = new firebase.auth.OAuthProvider('microsoft.com');
 
       const API_BASE_URL = "https://muziris-api.onrender.com/api";
+      let currentUser = null;
 
       auth.onAuthStateChanged((user) => {
+          const guestDrop = document.getElementById('guest-dropdown-content');
+          const userDrop = document.getElementById('user-dropdown-content');
+          
           if (user) {
+              currentUser = user;
               let displayName = user.displayName || user.email.split('@')[0];
-              
-              // Smart UI Update: Change Login button to Dashboard
-              document.getElementById('auth-buttons').innerHTML = `
-                <a href="buyer-dashboard.html" class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-sm text-gray-800">
-                    <i class="far fa-user text-lg"></i> <span class="uppercase tracking-widest text-[10px]">Dashboard</span>
-                </a>
-                <a href="catalog.html" class="hidden md:flex btn-solid-gold px-6 py-3 rounded-lg text-[11px] items-center gap-2">
-                  Continue Sourcing <i class="fas fa-arrow-right"></i>
-                </a>
-              `;
+              document.getElementById('auth-btn-text').innerText = displayName.split(' ')[0];
+              if(guestDrop) guestDrop.classList.add('hidden'); 
+              if(userDrop) userDrop.classList.remove('hidden');
+              document.getElementById('drop-user-name').innerText = displayName;
+              document.getElementById('drop-user-initial').innerText = displayName.charAt(0).toUpperCase();
 
               fetch(API_BASE_URL + '/buyer/auth', {
                   method: 'POST',
                   headers: {'Content-Type': 'application/json'},
                   body: JSON.stringify({ email: user.email, name: displayName, photoUrl: user.photoURL || '' })
               }).catch(e => console.log("DB Sync skipped"));
+          } else {
+              currentUser = null;
+              document.getElementById('auth-btn-text').innerText = "Sign In";
+              if(guestDrop) guestDrop.classList.remove('hidden'); 
+              if(userDrop) userDrop.classList.add('hidden');
           }
       });
 
-      function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
-      function closeModal(e, modalId) { if(e.target.id === modalId || e.target.closest('.modal-close')) document.getElementById(modalId).style.display = 'none'; }
-
-      function signInWithGoogle() { auth.signInWithPopup(googleProvider).then(() => { document.getElementById('auth-modal').style.display = 'none'; }).catch(error => alert("Error: " + error.message)); }
-      function signInWithMicrosoft() { auth.signInWithPopup(msProvider).then(() => { document.getElementById('auth-modal').style.display = 'none'; }).catch(error => alert("Error: " + error.message)); }
-      
-      function signInWithEmail() {
-          const email = document.getElementById('auth-email').value;
-          const pass = document.getElementById('auth-pass').value;
+      function signInWithGoogle() { auth.signInWithPopup(googleProvider).catch(e => console.log(e)); }
+      function signInWithEmailDrop() {
+          const email = document.getElementById('auth-email-drop').value, pass = document.getElementById('auth-pass-drop').value;
           if(!email || !pass) return alert("Please enter both email and password.");
-          auth.signInWithEmailAndPassword(email, pass).then(() => { document.getElementById('auth-modal').style.display = 'none'; }).catch(error => alert("Error: " + error.message));
+          auth.signInWithEmailAndPassword(email, pass).catch(error => alert("Error: " + error.message));
+      }
+      function signUpWithEmailDrop() {
+          const email = document.getElementById('auth-email-drop').value, pass = document.getElementById('auth-pass-drop').value;
+          if(!email || !pass) return alert("Enter email and password.");
+          auth.createUserWithEmailAndPassword(email, pass).catch(e => alert(e.message));
+      }
+      function signOutUser() {
+          auth.signOut().then(() => { localStorage.removeItem('muziris_cart'); window.location.reload(); });
       }
 
-      function signUpWithEmail() {
-          const email = document.getElementById('auth-email').value;
-          const pass = document.getElementById('auth-pass').value;
-          if(!email || !pass) return alert("Please enter both email and password.");
-          auth.createUserWithEmailAndPassword(email, pass).then(() => { 
-              document.getElementById('auth-modal').style.display = 'none'; alert("Account created successfully!"); 
-          }).catch(error => alert("Error: " + error.message));
-      }
+      document.getElementById('auth-buttons').onclick = (e) => {
+          if (window.innerWidth < 768 && !currentUser) {
+              e.stopPropagation();
+              const dropdown = document.getElementById('userMenuContainer').querySelector('.absolute');
+              dropdown.classList.toggle('invisible'); dropdown.classList.toggle('opacity-0');
+          } else if (window.innerWidth < 768 && currentUser) {
+              window.location.href = "buyer-dashboard.html";
+          }
+      };
       
       // 🟢 MEGA MENU INTERACTION LOGIC
       function switchMegaPanel(panelId, element) {
