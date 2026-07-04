@@ -248,63 +248,71 @@
       .eco-pledge { margin-top: 40px; }
     }
 
-    /* 🟢 NEW: PROACTIVE CONCIERGE ANIMATION */
-    /* 🟢 NEW: FLOATING PILL TYPEWRITER CONCIERGE */
+    /* 🟢 NEW: SLEEK PILL CONCIERGE (MATCHING YOUR SCREENSHOT) */
     .concierge-widget {
       position: fixed;
-      bottom: -100px; /* Hidden below screen */
+      bottom: -100px; /* Starts hidden below screen */
       left: 50%;
       transform: translateX(-50%);
-      background: var(--card-bg);
-      border: 1px solid var(--gold);
+      background: #11151c; /* Deep dark blue/black pill background */
+      border: 1px solid rgba(212, 175, 55, 0.6); /* Thin gold border */
       border-radius: 50px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 6px 16px 6px 6px;
+      gap: 15px;
+      padding: 6px 20px 6px 6px;
       z-index: 9990;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 20px rgba(212, 175, 55, 0.2);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
       transition: bottom 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
+      min-width: 320px;
     }
     .concierge-widget.active {
       bottom: 40px; /* Slides up into the center */
     }
+    
+    /* The Avatar Circle */
     .concierge-avatar {
-      width: 45px;
-      height: 45px;
-      background: #1e2532;
+      width: 44px;
+      height: 44px;
       border: 2px solid var(--gold);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
+      overflow: hidden;
       flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); /* Slight gold glow */
+      background: var(--gold); /* Background behind cartoon if it's transparent */
     }
+    .concierge-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Text Area */
     .concierge-text-area {
+      flex: 1;
       display: flex;
       align-items: center;
-      min-width: 210px; /* Keeps the pill from jumping while typing */
     }
-    .concierge-bubble {
+    .concierge-text {
       font-size: 14px;
       color: #fff;
-      font-weight: bold;
+      font-weight: 700;
     }
-    /* The Blinking Cursor */
+    
+    /* Blinking Cursor */
     .typing-cursor {
       display: inline-block;
       width: 2px;
       height: 15px;
       background-color: var(--gold);
-      margin-left: 3px;
+      margin-left: 5px;
       animation: blink 0.7s infinite;
     }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-    
+
+    /* The Close 'X' */
     .close-concierge {
-      margin-left: 5px;
       color: #666;
       display: flex;
       align-items: center;
@@ -313,9 +321,9 @@
       height: 24px;
       border-radius: 50%;
       transition: 0.2s;
+      font-size: 16px;
     }
     .close-concierge:hover {
-      background: rgba(255, 82, 82, 0.1);
       color: var(--alert);
     }
   </style>
