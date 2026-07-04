@@ -249,83 +249,74 @@
     }
 
     /* 🟢 NEW: PROACTIVE CONCIERGE ANIMATION */
-    /* 🟢 UPGRADED: PROACTIVE CONCIERGE ANIMATION */
+    /* 🟢 NEW: FLOATING PILL TYPEWRITER CONCIERGE */
     .concierge-widget {
       position: fixed;
-      bottom: 30px;
-      left: -350px; 
+      bottom: -100px; /* Hidden below screen */
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      border: 1px solid var(--gold);
+      border-radius: 50px;
       display: flex;
-      align-items: center; /* Aligns bubble to the center/mouth */
-      gap: 15px;
-      z-index: 900;
-      transition: left 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      align-items: center;
+      gap: 12px;
+      padding: 6px 16px 6px 6px;
+      z-index: 9990;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 20px rgba(212, 175, 55, 0.2);
+      transition: bottom 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
     }
     .concierge-widget.active {
-      left: 30px; 
+      bottom: 40px; /* Slides up into the center */
     }
     .concierge-avatar {
-      width: 50px;
-      height: 50px;
-      background: var(--dark-bg);
+      width: 45px;
+      height: 45px;
+      background: #1e2532;
       border: 2px solid var(--gold);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-      position: relative;
-      z-index: 2;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .concierge-text-area {
+      display: flex;
+      align-items: center;
+      min-width: 210px; /* Keeps the pill from jumping while typing */
     }
     .concierge-bubble {
-      position: relative;
-      background: var(--card-bg);
-      border: 1px solid var(--gold);
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 13px;
+      font-size: 14px;
       color: #fff;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      transition: 0.3s;
       font-weight: bold;
     }
+    /* The Blinking Cursor */
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 15px;
+      background-color: var(--gold);
+      margin-left: 3px;
+      animation: blink 0.7s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     
-    /* The Gold Outline of the Arrow */
-    .concierge-bubble::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: -8px; /* Pushes the arrow out to the left */
-      transform: translateY(-50%);
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-      border-right: 8px solid var(--gold);
+    .close-concierge {
+      margin-left: 5px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      transition: 0.2s;
     }
-    
-    /* The Dark Inside of the Arrow */
-    .concierge-bubble::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: -6px; /* Sits just inside the gold border */
-      transform: translateY(-50%);
-      border-top: 6px solid transparent;
-      border-bottom: 6px solid transparent;
-      border-right: 6px solid var(--card-bg);
-      transition: 0.3s;
-    }
-
-    /* Hover Effects */
-    .concierge-widget:hover .concierge-bubble {
-      background: var(--gold);
-      color: #000;
-    }
-    .concierge-widget:hover .concierge-bubble::after {
-      border-right-color: var(--gold); /* Makes the arrow turn gold on hover too! */
-    }
-
-    @media (max-width: 900px) {
-      .concierge-widget.active { left: 15px; bottom: 15px; }
+    .close-concierge:hover {
+      background: rgba(255, 82, 82, 0.1);
+      color: var(--alert);
     }
   </style>
 </head>
