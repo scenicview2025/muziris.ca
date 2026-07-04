@@ -25,7 +25,6 @@
 
     body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     .brand-font { font-family: 'Cinzel', serif; }
-
     
     /* 🟢 Pre-Header & Header */
     .pre-header { background: #fcf9f0; color: #524733; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; padding: 10px 20px; z-index: 101; position: relative; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
@@ -61,19 +60,10 @@
     .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-    /* 🟢 AUTH MODAL STYLING */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(11, 14, 20, 0.8); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px;}
-    .auth-content { background: #ffffff; width: 100%; max-width: 420px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); padding: 40px; position: relative; text-align: center; border: 1px solid rgba(0,0,0,0.1); }
-    .modal-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; background: #f3f4f6; color: #6b7280; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: all 0.2s ease; }
-    .modal-close:hover { background: #e5e7eb; color: #111; transform: rotate(90deg); }
-    .premium-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid var(--border-light); color: var(--text-dark); border-radius: 8px; outline: none; transition: all 0.2s; font-size: 14px; font-weight: 500; }
-    .premium-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
-    .btn-sso { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; background: #fff; border: 1px solid #d1d5db; color: #374151; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .btn-sso:hover { background: #f9fafb; border-color: #9ca3af; }
-    
-   /* 🟢 MEGA MENU STYLES */
+    /* 🟢 MEGA MENU STYLES */
     .nav-group:hover .mega-menu-container { visibility: visible; opacity: 1; transform: translateY(0); }
-    .mega-menu-container { position: absolute; top: 100%; left: -20px; width: 800px; height: 450px; background: #fff; border-radius: 0 0 12px 12px; display: flex; visibility: hidden; opacity: 0; transform: translateY(10px); transition: all 0.3s ease; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid #e5e7eb; border-top: none; overflow: hidden; z-index: 1000; }    
+    .mega-menu-container { position: absolute; top: 100%; left: -20px; width: 800px; height: 450px; background: #fff; border-radius: 0 0 12px 12px; display: flex; visibility: hidden; opacity: 0; transform: translateY(10px); transition: all 0.3s ease; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid #e5e7eb; border-top: none; overflow: hidden; z-index: 1000; }
+    
     .mega-sidebar { width: 35%; background: #f8f9fa; border-right: 1px solid #e5e7eb; padding: 15px 0; overflow-y: auto; overscroll-behavior: contain; }
     .mega-sidebar::-webkit-scrollbar { width: 4px; }
     .mega-sidebar::-webkit-scrollbar-track { background: transparent; }
@@ -119,7 +109,6 @@
               <div class="mega-content overflow-y-auto" id="dynamic-mega-panels"></div> 
             </div> 
           </div>
-          
         </div>
         
         <div class="hidden md:block flex-1 max-w-3xl">
@@ -210,6 +199,7 @@
           <div class="flex-1 overflow-y-auto pb-safe" id="dynamic-mobile-menu"></div>
       </div>
     </header>
+
   <main class="relative min-h-[85vh] flex items-center pt-10 overflow-hidden">
     <div class="absolute inset-0 z-0 bg-[#FAFAFA]">
       <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-100">
@@ -228,14 +218,24 @@
           <span class="text-[var(--gold)]" style="text-shadow: 0 0 30px rgba(212,175,55,0.4);">Zero Risk.</span>
         </h1>
         
-        <button onclick="window.location.href='suppliers'" class="btn-solid-gold px-10 py-4 mt-4 text-sm shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-            Partner With Muziris <i class="fas fa-arrow-right ml-2"></i>
-        </button>
+        <p class="text-lg text-gray-800 max-w-2xl leading-relaxed font-medium drop-shadow-sm mb-2">
+          Connect directly with verified global factories. We protect your capital in an automated milestone escrow vault until your goods are successfully delivered.
+        </p>
+
+        <div class="pt-4 flex flex-col items-start">
+            <span class="text-[11px] font-bold uppercase tracking-widest text-[var(--gold)] mb-3 drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                <i class="fas fa-handshake mr-1.5"></i> Welcoming Global Manufacturers & Premium Suppliers
+            </span>
+            <button onclick="window.location.href='suppliers'" class="btn-solid-gold px-10 py-4 text-sm shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+                Partner With Muziris <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
 
       </div>
 
     </div>
   </main>
+
   <section class="bg-white py-16 border-b border-gray-100 relative z-20 shadow-sm">
     <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center divide-x divide-gray-100 fade-up">
       <div>
@@ -280,7 +280,8 @@
       </div>
     </div>
   </section>
-<section class="w-full bg-[#FDFBF7] flex flex-col lg:flex-row overflow-hidden border-b border-gray-200">
+
+  <section class="w-full bg-[#FDFBF7] flex flex-col lg:flex-row overflow-hidden border-b border-gray-200">
     <div class="w-full lg:w-1/2 flex flex-col justify-center p-10 lg:p-24 xl:p-32 fade-up relative z-10">
       
       <h2 class="text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-10">
@@ -303,7 +304,7 @@
       </div>
       
       <div>
-        <button onclick="document.getElementById('auth-buttons').click()" class="bg-gray-900 hover:bg-black text-white px-8 py-4 text-xs font-bold tracking-[0.15em] uppercase transition-all hover:-translate-y-1 rounded-sm shadow-lg">
+        <button onclick="document.querySelector('#userMenuContainer button').click()" class="bg-gray-900 hover:bg-black text-white px-8 py-4 text-xs font-bold tracking-[0.15em] uppercase transition-all hover:-translate-y-1 rounded-sm shadow-lg">
           Open Free Buyer Account
         </button>
       </div>
@@ -393,7 +394,7 @@
       <h2 class="text-4xl md:text-5xl font-bold text-white brand-font mb-6">Ready to scale your supply chain?</h2>
       <p class="text-lg text-gray-400 mb-10">Join thousands of businesses sourcing globally without the risk.</p>
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <button onclick="document.getElementById('auth-buttons').click()" class="btn-solid-gold px-10 py-5 text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)]">Create Buyer Account</button>
+        <button onclick="document.querySelector('#userMenuContainer button').click()" class="btn-solid-gold px-10 py-5 text-sm shadow-[0_0_20px_rgba(212,175,55,0.3)]">Create Buyer Account</button>
         <a href="suppliers" class="btn-outline-white px-10 py-5 text-sm">Apply as Factory</a>
       </div>
     </div>
