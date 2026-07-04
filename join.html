@@ -331,16 +331,20 @@
 <body>
 
 <div id="animated-concierge" class="concierge-widget" onclick="document.getElementById('support-modal').style.display='flex'">
-  <div class="concierge-avatar">👨‍💼</div>
+  
+  <div class="concierge-avatar">
+    <img src="avatar.png" alt="Support Agent">
+  </div>
   
   <div class="concierge-text-area">
-    <span class="concierge-bubble" id="concierge-text"></span>
+    <span class="concierge-text" id="concierge-text"></span>
     <span class="typing-cursor" id="typing-cursor"></span>
   </div>
 
   <div class="close-concierge" onclick="event.stopPropagation(); document.getElementById('animated-concierge').style.display='none';">
     <i class="fas fa-times"></i>
   </div>
+  
 </div>
 
 <div id="custom-alert">
