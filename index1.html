@@ -659,7 +659,16 @@
       // ==========================================
       // 🟢 CART BADGE & CURRENCY DROPDOWN LOGIC
       // ==========================================
-      let rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+      let rfqCart = [];
+      let activeCurrency = "CAD";
+      
+      try {
+          // Safety net: Prevents strict browsers from crashing the site if storage is blocked!
+          rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+          activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
+      } catch (error) {
+          console.warn("Browser blocked storage access. Using defaults.");
+      }
       
       function updateCartUI() {
           const headerBadge = document.getElementById('header-cart-badge'); 
@@ -672,7 +681,6 @@
 
       let exchangeRates = {};
       let currencySymbols = {};
-      let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
       const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
 
       async function loadLiveCurrencies() {
