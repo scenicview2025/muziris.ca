@@ -620,16 +620,20 @@
 
       function openMobileMenu() {
           const menu = document.getElementById('mobile-category-menu');
-          menu.classList.remove('translate-y-full');
-          menu.classList.add('translate-y-0');
-          document.body.style.overflow = 'hidden';
+          if(menu) {
+              menu.classList.remove('translate-y-4', 'opacity-0', 'pointer-events-none');
+              menu.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+              document.body.style.overflow = 'hidden';
+          }
       }
 
       function closeMobileMenu() {
           const menu = document.getElementById('mobile-category-menu');
-          menu.classList.remove('translate-y-0');
-          menu.classList.add('translate-y-full');
-          document.body.style.overflow = '';
+          if(menu) {
+              menu.classList.add('translate-y-4', 'opacity-0', 'pointer-events-none');
+              menu.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+              document.body.style.overflow = '';
+          }
       }
 
       function toggleMobileCat(id) {
