@@ -199,8 +199,15 @@
               <button onclick="executeSearch()" class="text-[var(--gold-dark)] ml-2 text-lg"><i class="fas fa-search"></i></button>
           </div>
       </div>
-    </header>
 
+      <div id="mobile-category-menu" class="md:hidden absolute top-20 left-0 w-full h-[calc(100vh-80px)] bg-gray-50 transform translate-y-4 opacity-0 transition-all duration-300 -z-20 pointer-events-none flex flex-col shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
+          <div class="flex items-center justify-between p-5 border-b border-gray-200 bg-white shadow-sm z-10">
+              <h2 class="text-lg font-bold text-gray-900 brand-font uppercase tracking-widest">Browse Categories</h2>
+              <button onclick="closeMobileMenu()" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-900 rounded-full flex items-center justify-center text-sm cursor-pointer transition-all duration-300 hover:rotate-90 hover:scale-110 shadow-sm"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="flex-1 overflow-y-auto pb-safe" id="dynamic-mobile-menu"></div>
+      </div>
+    </header>
   <main class="relative min-h-[85vh] flex items-center pt-10 overflow-hidden">
     <div class="absolute inset-0 z-0 bg-black">
       <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-80">
