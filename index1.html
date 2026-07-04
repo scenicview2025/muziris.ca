@@ -647,8 +647,76 @@
           window.location.href = `catalog.html?search=${encodeURIComponent(query)}`;
       }
 
+      // ==========================================
+      // 🟢 CART BADGE & CURRENCY DROPDOWN LOGIC
+      // ==========================================
+      let rfqCart = JSON.parse(localStorage.getItem('muziris_cart')) || [];
+      
+      function updateCartUI() {
+          const headerBadge = document.getElementById('header-cart-badge'); 
+          if (rfqCart.length > 0) {
+              if (headerBadge) { headerBadge.innerText = rfqCart.length; headerBadge.classList.remove('hidden'); }
+          } else {
+              if (headerBadge) headerBadge.classList.add('hidden');
+          }
+      }
+
+      let exchangeRates = {};
+      let currencySymbols = {};
+      let activeCurrency = localStorage.getItem('muziris_active_currency') || "CAD";
+      const flagMap = { "CAD": "ca", "USD": "us", "EUR": "eu", "GBP": "gb", "INR": "in", "SEK": "se", "AUD": "au", "JPY": "jp", "CNY": "cn", "MXN": "mx", "BRL": "br", "ZAR": "za", "CHF": "ch", "QAR": "qa", "AED": "ae" };
+
+      async function loadLiveCurrencies() {
+          try {
+              const res = await fetch(API_BASE_URL + '/public-currencies');
+              const data = await res.json();
+              if (data.success) {
+                  const dropdownList = document.getElementById('currencyList');
+                  if(dropdownList) dropdownList.innerHTML = ''; 
+                  data.currencies.forEach(item => {
+                      exchangeRates[item.currency] = parseFloat(item.live_cad_rate);
+                      currencySymbols[item.currency] = item.symbol || '$'; 
+                      const flagCode = flagMap[item.currency] || item.currency.substring(0,2).toLowerCase();
+                      
+                      const btn = document.createElement('button');
+                      btn.className = 'text-gray-700 hover:bg-gray-50 flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium transition-colors text-left';
+                      btn.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="flex-1">${item.country}</span><span class="text-gray-400 text-xs font-bold">${item.currency}</span>`;
+                      btn.onclick = () => { selectCurrency(item.currency, flagCode); };
+                      if(dropdownList) dropdownList.appendChild(btn);
+                  });
+                  if (activeCurrency) {
+                      const initialFlag = flagMap[activeCurrency] || activeCurrency.substring(0,2).toLowerCase();
+                      selectCurrency(activeCurrency, initialFlag, true);
+                  }
+              }
+          } catch (e) { exchangeRates = { "CAD": 1.00, "USD": 0.74 }; }
+      }
+
+      function selectCurrency(curr, flagCode, preventReload = false) {
+          activeCurrency = curr; 
+          localStorage.setItem('muziris_active_currency', curr);
+          const display = document.getElementById('activeCurrencyDisplay');
+          if(display) display.innerHTML = `<img src="https://flagcdn.com/w20/${flagCode}.png" onerror="this.src='https://flagcdn.com/w20/un.png'" class="w-5 h-3.5 object-cover rounded-sm shadow-sm border border-gray-200"><span class="hidden md:block text-sm font-bold text-gray-900">${curr}</span>`;
+          const menu = document.getElementById('currencyMenu');
+          if(menu) menu.classList.add('hidden');
+          if(!preventReload) window.location.reload(); 
+      }
+
+      document.getElementById('currencyBtn')?.addEventListener('click', (e) => { 
+          e.stopPropagation(); 
+          document.getElementById('currencyMenu')?.classList.toggle('hidden'); 
+      });
+
+      window.addEventListener('click', (e) => { 
+          if(!e.target.closest('#customCurrencyDropdown')) {
+              document.getElementById('currencyMenu')?.classList.add('hidden'); 
+          }
+      });
+
       // 🟢 LIVE MARKET SHOWCASE (Database Fetch Engine)
       document.addEventListener('DOMContentLoaded', async () => {
+          updateCartUI(); // Trigger cart badge check
+          loadLiveCurrencies(); // Load currencies
           try {
               const res = await fetch('https://muziris-api.onrender.com/api/public-catalog', {
                   method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({})
