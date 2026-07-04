@@ -231,36 +231,18 @@
           <span class="text-[var(--gold)]" style="text-shadow: 0 0 30px rgba(212,175,55,0.4);">Zero Risk.</span>
         </h1>
         
-        <p class="text-lg text-gray-300 max-w-2xl leading-relaxed font-medium drop-shadow-md">
+        <p class="text-lg text-gray-800 max-w-2xl leading-relaxed font-medium drop-shadow-sm mb-4">
           Connect directly with verified global factories. We protect your capital in an automated milestone escrow vault until your goods are successfully delivered.
         </p>
 
-        <div class="pt-4 w-full max-w-2xl relative z-20">
-          <form onsubmit="event.preventDefault(); window.location.href='catalog.html?search=' + encodeURIComponent(document.getElementById('master-search').value);" class="relative">
-            <div class="absolute -top-8 left-4 flex gap-6 text-[11px] font-bold uppercase tracking-widest text-gray-300">
-              <span class="text-[var(--gold)] border-b-2 border-[var(--gold)] pb-1 cursor-pointer">Products</span>
-              <span class="hover:text-white cursor-pointer transition" onclick="window.location.href='catalog.html'">Manufacturers</span>
-            </div>
-            <div class="flex items-center bg-white rounded-full p-2 pl-6 shadow-[0_10px_40px_rgba(0,0,0,0.5)] border-2 border-transparent focus-within:border-[var(--gold)] transition-all h-16">
-              <i class="fas fa-search text-gray-400 text-xl"></i>
-              <input type="text" id="master-search" class="w-full bg-transparent border-none outline-none px-4 text-gray-800 placeholder-gray-400 font-medium text-base h-full" placeholder="What are you sourcing today?">
-              <button type="submit" class="bg-[var(--void)] hover:bg-gray-900 text-[var(--gold)] px-8 h-full rounded-full font-bold text-sm tracking-widest uppercase transition-all shadow-md ml-2 flex items-center gap-2">
-                Search
-              </button>
-            </div>
-          </form>
-          <div class="flex flex-wrap items-center justify-start gap-3 pt-5 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-            <span>Trending:</span>
-            <a href="catalog.html?category=Apparel, Textiles %26 Accessories" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Textiles</a>
-            <a href="catalog.html?category=Consumer Electronics %26 Appliances" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Electronics</a>
-            <a href="catalog.html?category=Packaging %26 Printing" class="hover:text-[var(--gold)] transition border border-gray-600 rounded-full px-3 py-1">Packaging</a>
-          </div>
-        </div>
+        <button onclick="window.location.href='catalog.html'" class="btn-solid-gold px-10 py-4 mt-2 text-sm shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+            Explore Global Catalog <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+
       </div>
 
     </div>
   </main>
-
   <section class="bg-white py-16 border-b border-gray-100 relative z-20 shadow-sm">
     <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center divide-x divide-gray-100 fade-up">
       <div>
