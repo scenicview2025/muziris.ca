@@ -731,11 +731,16 @@
     populateLists(lists); 
     initGlobe();
 
-    // 🟢 NEW: Make the concierge slide in after 4 seconds!
+    // 🟢 NEW: Slide in, then Typewriter Effect!
     setTimeout(() => {
       const concierge = document.getElementById('animated-concierge');
-      if(concierge) concierge.classList.add('active');
-    }, 4000);
+      if(concierge) {
+        concierge.classList.add('active'); // Slides up from bottom
+        
+        // Wait 600ms for slide animation to finish, then start typing
+        setTimeout(typeConciergeText, 600);
+      }
+    }, 3000);
 
    // 🟢 SHOW/HIDE PASSWORD LOGIC
     const togglePassword = document.getElementById('togglePassword');
@@ -758,7 +763,23 @@
       });
     }
   };
-
+  // 🟢 The Typewriter Engine
+  const textToType = "Need help filling this out? 👋";
+  let typeIndex = 0;
+  
+  function typeConciergeText() {
+    if (typeIndex < textToType.length) {
+      document.getElementById('concierge-text').innerHTML += textToType.charAt(typeIndex);
+      typeIndex++;
+      setTimeout(typeConciergeText, 45); // Adjust this number for typing speed
+    } else {
+      // After it finishes typing, wait 3 seconds and hide the blinking cursor
+      setTimeout(() => { 
+        const cursor = document.getElementById('typing-cursor');
+        if(cursor) cursor.style.display = 'none'; 
+      }, 3000);
+    }
+  }
   function showAlert(title, message, redirectUrl = null) {
     document.getElementById('alert-title').innerText = title;
     document.getElementById('alert-message').innerText = message;
