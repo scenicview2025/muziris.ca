@@ -70,30 +70,27 @@
     .btn-sso:hover { background: #f9fafb; border-color: #9ca3af; }
     
     /* 🟢 MEGA MENU STYLES */
-    .mega-menu-container { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); width: 950px; height: 500px; background: #ffffff; border-radius: 0 0 16px 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid var(--border-light); border-top: none; opacity: 0; visibility: hidden; transition: all 0.3s ease; display: flex; overflow: hidden; z-index: 90; }
-    .nav-group:hover .mega-menu-container { opacity: 1; visibility: visible; }
+    .nav-group:hover .mega-menu-container { visibility: visible; opacity: 1; transform: translateY(0); }
+    .mega-menu-container { position: absolute; top: 100%; left: -100px; width: 750px; height: 380px; background: #fff; border-radius: 8px; display: flex; visibility: hidden; opacity: 0; transform: translateY(15px); transition: all 0.3s ease; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid #e5e7eb; overflow: hidden; z-index: 1000; }
     
-    .mega-sidebar { width: 32%; background: #f9fafb; border-right: 1px solid var(--border-light); padding: 10px 0; overflow-y: auto; }
+    .mega-sidebar { width: 35%; background: #f8f9fa; border-right: 1px solid #e5e7eb; padding: 15px 0; overflow-y: auto; overscroll-behavior: contain; }
     .mega-sidebar::-webkit-scrollbar { width: 4px; }
     .mega-sidebar::-webkit-scrollbar-track { background: transparent; }
     .mega-sidebar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
     .mega-sidebar::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
-    .mega-cat-item { padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; color: var(--text-gray); font-weight: 700; font-size: 12px; border-left: 3px solid transparent; }
+    .mega-cat-item { padding: 14px 24px; font-size: 12px; font-weight: 600; color: #4b5563; text-decoration: none; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; text-transform: none; letter-spacing: normal; }
     .mega-cat-item:hover, .mega-cat-item.active { background: #ffffff; color: var(--gold-dark); border-left: 3px solid var(--gold); }
     .mega-cat-item i { font-size: 10px; opacity: 0; transition: 0.2s; transform: translateX(-5px); }
     .mega-cat-item:hover i, .mega-cat-item.active i { opacity: 1; transform: translateX(0); }
     
-    .mega-content { width: 70%; padding: 30px; background: #ffffff; }
-    .mega-panel { display: none; animation: fadeIn 0.3s ease; }
-    .mega-panel.active { display: block; }
+    .mega-content { width: 65%; padding: 30px; background: #ffffff; overscroll-behavior: contain; }
+    .mega-panel { display: none; }
+    .mega-panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     
-    .subcat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 15px; }
-    .subcat-item { text-align: center; cursor: pointer; transition: 0.2s; padding: 10px; border-radius: 8px; }
-    .subcat-item:hover { background: #f9fafb; transform: translateY(-2px); }
-    .subcat-icon { width: 50px; height: 50px; margin: 0 auto 10px auto; background: #f3f4f6; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--text-dark); font-size: 20px; transition: 0.3s; }
-    .subcat-item:hover .subcat-icon { background: rgba(212, 175, 55, 0.1); color: var(--gold-dark); }
-    .subcat-name { font-size: 11px; font-weight: 700; color: var(--text-dark); text-transform: capitalize; letter-spacing: 0; }
+    .subcat-item { text-decoration: none; color: #4b5563; display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; transition: 0.2s; }
+    .subcat-item:hover { transform: translateX(5px); color: var(--gold-dark); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
