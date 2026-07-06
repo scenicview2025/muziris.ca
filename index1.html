@@ -941,31 +941,34 @@
     })();
   </script>
   
-  <div id="supplier-invite-modal" class="fixed inset-0 z-[9999] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-300 opacity-0" onclick="closeInviteModal()">
+  <div id="supplier-invite-modal" class="fixed inset-0 z-[9999] hidden flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" onclick="closeInviteModal()">
         <div class="bg-white max-w-md w-[90%] rounded-2xl shadow-2xl overflow-hidden relative transform scale-95 transition-transform duration-300" id="supplier-invite-box" onclick="event.stopPropagation()">
             
-            <button onclick="closeInviteModal()" class="absolute top-3 right-4 text-gray-400 hover:text-white transition text-2xl z-10"><i class="fas fa-times"></i></button>
+            <button onclick="closeInviteModal()" class="absolute top-4 right-5 text-gray-400 hover:text-gray-900 transition text-xl z-10"><i class="fas fa-times"></i></button>
             
-            <div class="bg-[var(--void)] p-8 text-center border-b-[3px] border-[var(--gold)] relative overflow-hidden">
-                <div class="absolute inset-0 opacity-10 bg-[url('MC.png')] bg-center bg-cover mix-blend-overlay"></div>
-                <img src="https://flagcdn.com/w80/in.png" alt="India Flag" class="w-14 h-auto mx-auto mb-4 relative z-10 rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.5)] border border-gray-600">
-                <h2 class="text-xl font-bold text-white brand-font tracking-widest uppercase relative z-10">Exclusive Invitation</h2>
-            </div>
-            
-            <div class="p-8 text-center">
-                <h3 class="text-lg font-bold text-gray-900 mb-3">Take Your Manufacturing Global</h3>
-                <p class="text-sm text-gray-600 mb-6 leading-relaxed">
-                    Muziris is building North America's premier B2B sourcing network. We are offering <strong>free early access</strong> to top-tier Indian manufacturers to build their catalogs before we officially open our doors to global buyers.
+            <div class="p-10 text-center">
+                
+                <div class="inline-block p-1 border border-gray-100 rounded shadow-sm mb-5 bg-gray-50">
+                    <img src="https://flagcdn.com/w80/in.png" alt="India Flag" class="w-10 h-auto block rounded-sm">
+                </div>
+                
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-3">Exclusive Invitation</h2>
+                <h3 class="text-2xl font-medium text-gray-900 font-serif tracking-tight mb-4">Take your manufacturing global</h3>
+                
+                <p class="text-[15px] text-gray-500 mb-8 leading-relaxed">
+                    Muziris is building North America's premier B2B sourcing network. We are offering <strong class="text-gray-900 font-semibold">free early access</strong> to top-tier Indian manufacturers to build their catalogs before we open to global buyers.
                 </p>
+                
                 <div class="flex flex-col gap-3">
-                    <button onclick="window.location.href='join.html'" class="w-full bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-black font-bold uppercase tracking-widest py-3.5 rounded-lg text-xs transition shadow-md">
+                    <button onclick="window.location.href='join.html'" class="w-full bg-gray-900 hover:bg-black text-white font-bold uppercase tracking-[0.15em] py-4 rounded-lg text-[11px] transition shadow-[0_4px_15px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)]">
                         Join as a Supplier (Free)
                     </button>
-                    <button onclick="closeInviteModal()" class="text-[10px] font-bold text-gray-400 hover:text-gray-800 uppercase tracking-widest py-2 transition mt-2">
+                    <button onclick="closeInviteModal()" class="text-[11px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest py-3 transition mt-1">
                         I just want to browse for now
                     </button>
                 </div>
             </div>
+            
         </div>
     </div>
 
