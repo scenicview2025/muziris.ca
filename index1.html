@@ -315,41 +315,72 @@
       </div>
     </div>
   </section>
-  <section class="w-full bg-[#FDFBF7] flex flex-col lg:flex-row overflow-hidden border-b border-gray-200">
-    <div class="w-full lg:w-1/2 flex flex-col justify-center p-10 lg:p-24 xl:p-32 fade-up relative z-10">
-      
-      <h2 class="text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-10">
-        Try new global factories,<br><span class="italic font-normal text-gray-600">with absolute confidence.</span>
-      </h2>
-      
-      <div class="space-y-8 mb-12">
-        <div>
-          <h4 class="text-sm font-bold text-gray-900 uppercase tracking-widest mb-2">100% Escrow Protection</h4>
-          <p class="text-sm text-gray-600 font-medium leading-relaxed max-w-md">Funds are held securely in a Canadian vault until your goods pass inspection and reach your destination. Zero risk.</p>
-        </div>
-        <div>
-          <h4 class="text-sm font-bold text-gray-900 uppercase tracking-widest mb-2">DDP Door-to-Door Logistics</h4>
-          <p class="text-sm text-gray-600 font-medium leading-relaxed max-w-md">We integrate global freight and customs clearance directly into your contract. No surprise fees at the border.</p>
-        </div>
-        <div>
-          <h4 class="text-sm font-bold text-gray-900 uppercase tracking-widest mb-2">Verified Manufacturers</h4>
-          <p class="text-sm text-gray-600 font-medium leading-relaxed max-w-md">Every factory on our ledger undergoes strict physical and financial vetting for enterprise-grade production capability.</p>
-        </div>
-      </div>
-      
-      <div>
-        <button onclick="document.querySelector('#userMenuContainer button').click()" class="bg-gray-900 hover:bg-black text-white px-8 py-4 text-xs font-bold tracking-[0.15em] uppercase transition-all hover:-translate-y-1 rounded-sm shadow-lg">
-          Open Free Buyer Account
-        </button>
-      </div>
+  <section class="w-full bg-[#52592C] flex flex-col md:flex-row overflow-hidden min-h-[500px] lg:min-h-[600px] relative">
+    
+    <div class="hidden md:block w-full md:w-1/4 lg:w-1/3 relative h-[250px] md:h-auto bg-black">
+       <img id="rapid-img-left" src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200">
+    </div>
+
+    <div class="w-full md:w-2/4 lg:w-1/3 flex flex-col justify-center items-center text-center p-10 lg:p-16 z-10 py-24 fade-up">
+       <h2 class="text-4xl lg:text-[42px] font-medium text-white font-serif tracking-tight leading-[1.1] mb-6">
+          Try new global factories,<br>with absolute confidence.
+       </h2>
+       
+       <p class="text-[15px] md:text-[16px] text-white/90 font-medium leading-relaxed mb-10 max-w-sm" style="text-shadow: 0 1px 4px rgba(0,0,0,0.2);">
+          100% Escrow protection, DDP door-to-door logistics, and strictly verified manufacturers. Find all the supply you need on Muziris.
+       </p>
+       
+       <button onclick="document.querySelector('#userMenuContainer button').click()" class="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3.5 rounded text-[15px] font-medium transition-colors shadow-sm">
+          Open free buyer account
+       </button>
+    </div>
+
+    <div class="w-full md:w-1/4 lg:w-1/3 relative h-[300px] md:h-auto bg-black">
+       <img id="rapid-img-right" src="https://images.unsplash.com/photo-1583847268964-b28ce8f31586?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200">
     </div>
     
-    <div class="w-full lg:w-1/2 min-h-[500px] lg:min-h-full relative overflow-hidden fade-up" style="transition-delay: 200ms;">
-      <img src="https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&q=80&w=1600" 
-           class="absolute inset-0 w-full h-full object-cover hover:scale-110 transition-transform duration-[3000ms] ease-out cursor-default" 
-           alt="Premium Wholesale Sourcing">
-    </div>
   </section>
+
+  <script>
+    // 🟢 Javascript for the fraction-of-a-second flipbook effect
+    document.addEventListener("DOMContentLoaded", () => {
+      const leftImages = [
+        "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800&auto=format&fit=crop", // Textiles
+        "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop", // Machinery
+        "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=800&auto=format&fit=crop", // Chemicals
+        "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=800&auto=format&fit=crop"  // Warehouse
+      ];
+      
+      const rightImages = [
+        "https://images.unsplash.com/photo-1583847268964-b28ce8f31586?q=80&w=800&auto=format&fit=crop", // Home Decor
+        "https://images.unsplash.com/photo-1504307651254-35680f356f12?q=80&w=800&auto=format&fit=crop", // Construction
+        "https://images.unsplash.com/photo-1596462502278-27bf85033e5a?q=80&w=800&auto=format&fit=crop", // Beauty
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop"  // Tech
+      ];
+
+      let rapidIndex = 0;
+      const leftImgEl = document.getElementById('rapid-img-left');
+      const rightImgEl = document.getElementById('rapid-img-right');
+
+      // Cycles the images every 900 milliseconds (fraction of a second)
+      setInterval(() => {
+        rapidIndex = (rapidIndex + 1) % leftImages.length;
+        
+        // Quick fade effect
+        leftImgEl.style.opacity = 0;
+        rightImgEl.style.opacity = 0;
+        
+        setTimeout(() => {
+            leftImgEl.src = leftImages[rapidIndex];
+            rightImgEl.src = rightImages[rapidIndex];
+            
+            leftImgEl.style.opacity = 1;
+            rightImgEl.style.opacity = 1;
+        }, 200); // 200ms fade sync
+        
+      }, 1200); // Changes every 1.2 seconds to feel rapid but smooth
+    });
+  </script>
   
   <section id="muziris-story" class="py-20 md:py-32 px-6 lg:px-12 bg-[#FDFBF7] border-b border-gray-200 overflow-hidden">
     <div class="w-full max-w-[1400px] mx-auto fade-up">
