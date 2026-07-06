@@ -315,13 +315,15 @@
       </div>
     </div>
   </section>
-  <section class="w-full bg-[#52592C] flex flex-col md:flex-row overflow-hidden min-h-[500px] lg:min-h-[600px] relative">
+  <section class="w-full bg-[#52592C] flex flex-col md:flex-row items-center justify-between min-h-[500px] md:min-h-[600px] relative overflow-hidden py-16 md:py-0">
     
-    <div class="hidden md:block w-full md:w-1/4 lg:w-1/3 relative h-[250px] md:h-auto bg-black">
-       <img id="rapid-img-left" src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200">
+    <div class="hidden md:flex w-full md:w-1/3 p-6 lg:p-16 justify-center items-center">
+       <div class="relative w-full aspect-[4/5] shadow-[0_20px_50px_rgba(0,0,0,0.3)] bg-gray-100">
+           <img id="rapid-img-left" src="https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200">
+       </div>
     </div>
 
-    <div class="w-full md:w-2/4 lg:w-1/3 flex flex-col justify-center items-center text-center p-10 lg:p-16 z-10 py-24 fade-up">
+    <div class="w-full md:w-1/3 flex flex-col justify-center items-center text-center px-6 py-12 z-10 fade-up">
        <h2 class="text-4xl lg:text-[42px] font-medium text-white font-serif tracking-tight leading-[1.1] mb-6">
           Try new global factories,<br>with absolute confidence.
        </h2>
@@ -335,8 +337,10 @@
        </button>
     </div>
 
-    <div class="w-full md:w-1/4 lg:w-1/3 relative h-[300px] md:h-auto bg-black">
-       <img id="rapid-img-right" src="https://images.unsplash.com/photo-1583847268964-b28ce8f31586?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200">
+    <div class="hidden md:flex w-full md:w-1/3 p-6 lg:p-16 justify-center items-center">
+       <div class="relative w-full aspect-[4/5] shadow-[0_20px_50px_rgba(0,0,0,0.3)] bg-gray-100">
+           <img id="rapid-img-right" src="https://images.unsplash.com/photo-1587049352847-81a56d773c1c?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200">
+       </div>
     </div>
     
   </section>
@@ -344,41 +348,44 @@
   <script>
     // 🟢 Javascript for the fraction-of-a-second flipbook effect
     document.addEventListener("DOMContentLoaded", () => {
+      // Fresh, vibrant images of boutique wholesale goods
       const leftImages = [
-        "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800&auto=format&fit=crop", // Textiles
-        "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop", // Machinery
-        "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=800&auto=format&fit=crop", // Chemicals
-        "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=800&auto=format&fit=crop"  // Warehouse
+        "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=800&auto=format&fit=crop", // Stationary/Pens
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop", // Ceramics/Vases
+        "https://images.unsplash.com/photo-1542840410-3092f99611a3?q=80&w=800&auto=format&fit=crop", // Colorful Socks/Textiles
+        "https://images.unsplash.com/photo-1599643478524-fb66f4ce141f?q=80&w=800&auto=format&fit=crop"  // Leather wallets
       ];
       
       const rightImages = [
-        "https://images.unsplash.com/photo-1583847268964-b28ce8f31586?q=80&w=800&auto=format&fit=crop", // Home Decor
-        "https://images.unsplash.com/photo-1504307651254-35680f356f12?q=80&w=800&auto=format&fit=crop", // Construction
-        "https://images.unsplash.com/photo-1596462502278-27bf85033e5a?q=80&w=800&auto=format&fit=crop", // Beauty
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop"  // Tech
+        "https://images.unsplash.com/photo-1587049352847-81a56d773c1c?q=80&w=800&auto=format&fit=crop", // Apothecary/Skincare
+        "https://images.unsplash.com/photo-1621251341142-b0cc328af133?q=80&w=800&auto=format&fit=crop", // Artisanal Soaps
+        "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?q=80&w=800&auto=format&fit=crop", // Wooden Toys
+        "https://images.unsplash.com/photo-1559523161-0fc0d6b28f7a?q=80&w=800&auto=format&fit=crop"  // Premium Coffee/Pantry
       ];
 
       let rapidIndex = 0;
       const leftImgEl = document.getElementById('rapid-img-left');
       const rightImgEl = document.getElementById('rapid-img-right');
 
-      // Cycles the images every 900 milliseconds (fraction of a second)
-      setInterval(() => {
-        rapidIndex = (rapidIndex + 1) % leftImages.length;
-        
-        // Quick fade effect
-        leftImgEl.style.opacity = 0;
-        rightImgEl.style.opacity = 0;
-        
-        setTimeout(() => {
-            leftImgEl.src = leftImages[rapidIndex];
-            rightImgEl.src = rightImages[rapidIndex];
+      if (leftImgEl && rightImgEl) {
+          // Cycles the images every 1.2 seconds 
+          setInterval(() => {
+            rapidIndex = (rapidIndex + 1) % leftImages.length;
             
-            leftImgEl.style.opacity = 1;
-            rightImgEl.style.opacity = 1;
-        }, 200); // 200ms fade sync
-        
-      }, 1200); // Changes every 1.2 seconds to feel rapid but smooth
+            // Quick fade effect
+            leftImgEl.style.opacity = 0;
+            rightImgEl.style.opacity = 0;
+            
+            setTimeout(() => {
+                leftImgEl.src = leftImages[rapidIndex];
+                rightImgEl.src = rightImages[rapidIndex];
+                
+                leftImgEl.style.opacity = 1;
+                rightImgEl.style.opacity = 1;
+            }, 200); // 200ms fade sync
+            
+          }, 1200); 
+      }
     });
   </script>
   
