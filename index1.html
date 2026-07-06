@@ -232,6 +232,37 @@
     </div>
   </main>
 
+  <section id="live-market" class="py-16 md:py-24 bg-white border-b border-gray-100 relative group z-20">
+    <div class="max-w-[1600px] mx-auto px-6 md:px-12 fade-up relative">
+      
+      <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
+        <div>
+          <h2 class="text-3xl lg:text-[40px] font-medium text-gray-900 font-serif tracking-tight">
+            Trending in Candles & Home Fragrance
+          </h2>
+        </div>
+        <a href="catalog.html" class="text-gray-900 font-medium text-sm hover:underline mt-4 md:mt-0 transition-colors">Shop wholesale online &rarr;</a>
+      </div>
+      
+      <div class="relative">
+        <button onclick="document.getElementById('live-showcase-grid').scrollBy({left: -400, behavior: 'smooth'})" class="hidden md:flex absolute -left-5 top-[40%] -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full items-center justify-center text-gray-600 shadow-md hover:scale-110 transition-transform z-10 opacity-0 group-hover:opacity-100">
+          <i class="fas fa-chevron-left text-sm"></i>
+        </button>
+
+        <div id="live-showcase-grid" class="flex gap-4 md:gap-6 overflow-x-auto pb-8 hide-scrollbar snap-x snap-mandatory" style="scroll-behavior: smooth;">
+           <div class="flex items-center justify-center w-full py-16">
+              <i class="fas fa-circle-notch fa-spin text-4xl text-gray-300"></i>
+           </div>
+        </div>
+
+        <button onclick="document.getElementById('live-showcase-grid').scrollBy({left: 400, behavior: 'smooth'})" class="hidden md:flex absolute -right-5 top-[40%] -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full items-center justify-center text-gray-600 shadow-md hover:scale-110 transition-transform z-10 opacity-0 group-hover:opacity-100">
+          <i class="fas fa-chevron-right text-sm"></i>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
   <section class="bg-[#FAFAFA] py-16 md:py-24 border-b border-gray-100 relative z-20 overflow-hidden">
     <div class="max-w-[1200px] mx-auto px-6 fade-up relative">
         
@@ -282,36 +313,6 @@
         </div>
 
       </div>
-    </div>
-  </section>
-  <section id="live-market" class="py-16 md:py-24 bg-white border-b border-gray-100 relative group">
-    <div class="max-w-[1600px] mx-auto px-6 md:px-12 fade-up relative">
-      
-      <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12">
-        <div>
-          <h2 class="text-3xl lg:text-[40px] font-medium text-gray-900 font-serif tracking-tight">
-            Trending in Candles & Home Fragrance
-          </h2>
-        </div>
-        <a href="catalog.html" class="text-gray-900 font-medium text-sm hover:underline mt-4 md:mt-0 transition-colors">Shop wholesale online &rarr;</a>
-      </div>
-      
-      <div class="relative">
-        <button onclick="document.getElementById('live-showcase-grid').scrollBy({left: -400, behavior: 'smooth'})" class="hidden md:flex absolute -left-5 top-[40%] -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full items-center justify-center text-gray-600 shadow-md hover:scale-110 transition-transform z-10 opacity-0 group-hover:opacity-100">
-          <i class="fas fa-chevron-left text-sm"></i>
-        </button>
-
-        <div id="live-showcase-grid" class="flex gap-4 md:gap-6 overflow-x-auto pb-8 hide-scrollbar snap-x snap-mandatory" style="scroll-behavior: smooth;">
-           <div class="flex items-center justify-center w-full py-16">
-              <i class="fas fa-circle-notch fa-spin text-4xl text-gray-300"></i>
-           </div>
-        </div>
-
-        <button onclick="document.getElementById('live-showcase-grid').scrollBy({left: 400, behavior: 'smooth'})" class="hidden md:flex absolute -right-5 top-[40%] -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full items-center justify-center text-gray-600 shadow-md hover:scale-110 transition-transform z-10 opacity-0 group-hover:opacity-100">
-          <i class="fas fa-chevron-right text-sm"></i>
-        </button>
-      </div>
-
     </div>
   </section>
   <section class="w-full bg-[#FDFBF7] flex flex-col lg:flex-row overflow-hidden border-b border-gray-200">
