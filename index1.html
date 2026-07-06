@@ -351,77 +351,158 @@
     </div>
   </section>
   
-  <section id="showcase" class="py-24 px-6 lg:px-12 bg-white border-b border-gray-100">
-    <div class="w-full max-w-[1800px] mx-auto fade-up">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-12">
-        <div>
-          <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">Explore Core Industries</h2>
-          <p class="text-gray-500 font-medium text-lg">Source direct from the manufacturer. No middlemen.</p>
-        </div>
-        <a href="catalog.html" class="text-[var(--gold-dark)] font-bold text-sm uppercase tracking-widest hover:underline mt-4 md:mt-0 transition-colors hover:text-black">View All Categories &rarr;</a>
-      </div>
+  <section id="muziris-story" class="py-20 md:py-32 px-6 lg:px-12 bg-[#FDFBF7] border-b border-gray-200 overflow-hidden">
+    <div class="w-full max-w-[1400px] mx-auto fade-up">
+      
+      <h2 class="text-3xl lg:text-[40px] font-medium text-gray-900 font-serif tracking-tight mb-8">The Muziris Mission</h2>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="category-card" onclick="window.location.href='catalog.html?category=Apparel, Textiles %26 Accessories'">
-          <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=800" alt="Apparel">
-          <div class="category-content">
-            <h3 class="text-white font-bold text-xl brand-font">Apparel & Textiles</h3>
-            <p class="text-[var(--gold)] text-xs uppercase tracking-widest mt-1">120+ Suppliers</p>
+      <div id="story-pills" class="flex overflow-x-auto hide-scrollbar gap-3 mb-10 pb-2">
+        </div>
+
+      <div class="flex flex-col lg:flex-row gap-10 lg:gap-20 items-center lg:items-start">
+        
+        <div class="w-full lg:w-1/2 h-[400px] lg:h-[600px] overflow-hidden bg-gray-100">
+          <img id="story-image" src="MC.png" class="w-full h-full object-cover transition-opacity duration-700 opacity-100" alt="Muziris Story">
+        </div>
+
+        <div class="w-full lg:w-1/2 flex flex-col justify-center pt-4 lg:pt-16 transition-opacity duration-700 opacity-100" id="story-text-content">
+          <h3 id="story-quote" class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-snug tracking-tight mb-8">
+            "Muziris was once the greatest trading port in the ancient world. We are bringing that legacy of global connection into the digital age."
+          </h3>
+          
+          <div class="mb-10">
+            <h4 id="story-title" class="text-lg font-bold text-gray-900 mb-1">Our History</h4>
+            <p id="story-subtitle" class="text-sm text-gray-500">Ancient Trade, Modern Tech</p>
+          </div>
+
+          <div>
+            <a id="story-btn" href="join.html" class="inline-flex items-center justify-center border border-gray-300 text-gray-900 hover:border-gray-900 hover:bg-gray-50 px-8 py-3 text-sm font-medium transition-colors">
+              Apply to sell
+            </a>
           </div>
         </div>
-        <div class="category-card" onclick="window.location.href='catalog.html?category=Consumer Electronics %26 Appliances'">
-          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" alt="Electronics">
-          <div class="category-content">
-            <h3 class="text-white font-bold text-xl brand-font">Consumer Electronics</h3>
-            <p class="text-[var(--gold)] text-xs uppercase tracking-widest mt-1">85+ Suppliers</p>
-          </div>
-        </div>
-        <div class="category-card" onclick="window.location.href='catalog.html?category=Home Decor, Garden %26 Furniture'">
-          <img src="https://images.unsplash.com/photo-1583847268964-b28ce8f31586?auto=format&fit=crop&q=80&w=800" alt="Home Goods">
-          <div class="category-content">
-            <h3 class="text-white font-bold text-xl brand-font">Home & Furniture</h3>
-            <p class="text-[var(--gold)] text-xs uppercase tracking-widest mt-1">200+ Suppliers</p>
-          </div>
-        </div>
-        <div class="category-card" onclick="window.location.href='catalog.html?category=Packaging %26 Printing'">
-          <img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&q=80&w=800" alt="Packaging">
-          <div class="category-content">
-            <h3 class="text-white font-bold text-xl brand-font">Custom Packaging</h3>
-            <p class="text-[var(--gold)] text-xs uppercase tracking-widest mt-1">50+ Suppliers</p>
-          </div>
-        </div>
-        <div class="category-card" onclick="window.location.href='catalog.html?category=Beauty %26 Personal Care'">
-          <img src="https://images.unsplash.com/photo-1596462502278-27bf85033e5a?auto=format&fit=crop&q=80&w=800" alt="Beauty">
-          <div class="category-content">
-            <h3 class="text-white font-bold text-xl brand-font">Beauty & Wellness</h3>
-            <p class="text-[var(--gold)] text-xs uppercase tracking-widest mt-1">90+ Suppliers</p>
-          </div>
-        </div>
-        <div class="category-card" onclick="window.location.href='catalog.html?category=Industrial Machinery %26 Equipment'">
-          <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800" alt="Machinery">
-          <div class="category-content">
-            <h3 class="text-white font-bold text-xl brand-font">Industrial Machinery</h3>
-            <p class="text-[var(--gold)] text-xs uppercase tracking-widest mt-1">110+ Suppliers</p>
-          </div>
-        </div>
-        <div class="category-card" onclick="window.location.href='catalog.html?category=Chemicals %26 Raw Materials'">
-          <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=800" alt="Chemicals">
-          <div class="category-content">
-            <h3 class="text-white font-bold text-xl brand-font">Chemicals & Raw Mat.</h3>
-            <p class="text-[var(--gold)] text-xs uppercase tracking-widest mt-1">65+ Suppliers</p>
-          </div>
-        </div>
-        <div class="category-card" onclick="window.location.href='catalog.html?category=Construction %26 Real Estate'">
-          <img src="https://images.unsplash.com/photo-1504307651254-35680f356f12?auto=format&fit=crop&q=80&w=800" alt="Construction">
-          <div class="category-content">
-            <h3 class="text-white font-bold text-xl brand-font">Construction & Build</h3>
-            <p class="text-[var(--gold)] text-xs uppercase tracking-widest mt-1">140+ Suppliers</p>
-          </div>
-        </div>
+
       </div>
     </div>
   </section>
 
+  <script>
+    // 🟢 Dynamic Story Data
+    const muzirisStories = [
+      {
+        pill: "Ancient Legacy",
+        image: "https://images.unsplash.com/photo-1562913076-23947e44b93b?auto=format&fit=crop&q=80&w=1200", // Kerala coast/ancient feel
+        quote: "“Muziris was once the greatest trading port in the ancient world. We are bringing that legacy of global connection into the digital age.”",
+        title: "Our Heritage",
+        subtitle: "Ancient Trade, Modern Tech",
+        btnText: "Learn about us",
+        btnLink: "about.html"
+      },
+      {
+        pill: "Zero Risk Escrow",
+        image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=1200", // Clean, modern banking/security feel
+        quote: "“Capital stays securely locked in our Canadian vault until milestones are met. We've removed the anxiety from international trade.”",
+        title: "100% Payment Protection",
+        subtitle: "Secure B2B Infrastructure",
+        btnText: "Explore our escrow",
+        btnLink: "join.html"
+      },
+      {
+        pill: "Direct Connection",
+        image: "https://images.unsplash.com/photo-1586528116311-ad8ed716d408?auto=format&fit=crop&q=80&w=1200", // Factory/Shipping
+        quote: "“From local Indian factory floors directly to North American shelves. No middlemen, just transparent, direct trade.”",
+        title: "Global Network",
+        subtitle: "Verified Manufacturers",
+        btnText: "Join supplier network",
+        btnLink: "suppliers"
+      },
+      {
+        pill: "For Buyers",
+        image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=1200", // Handshake / business meeting
+        quote: "“Discover trending global products with absolute certainty. DDP logistics and strict vetting mean you get exactly what you ordered.”",
+        title: "Source with Confidence",
+        subtitle: "North American Buyers",
+        btnText: "Open buyer account",
+        btnLink: "#" // Triggers login dropdown via JS later if needed
+      }
+    ];
+
+    let currentStory = 0;
+    let storyTimer;
+
+    const pillsContainer = document.getElementById('story-pills');
+    const storyImage = document.getElementById('story-image');
+    const textContent = document.getElementById('story-text-content');
+    
+    // DOM Elements to update
+    const storyQuote = document.getElementById('story-quote');
+    const storyTitle = document.getElementById('story-title');
+    const storySubtitle = document.getElementById('story-subtitle');
+    const storyBtn = document.getElementById('story-btn');
+
+    // Build the Pills
+    function renderPills() {
+      pillsContainer.innerHTML = '';
+      muzirisStories.forEach((story, index) => {
+        const isActive = index === currentStory;
+        const btnClass = isActive 
+          ? "bg-gray-900 text-white border-gray-900" 
+          : "bg-white text-gray-700 border-gray-200 hover:border-gray-400";
+        
+        pillsContainer.innerHTML += `
+          <button onclick="changeStory(${index})" class="whitespace-nowrap px-5 py-2 rounded-full border text-[13px] font-medium transition-all duration-300 ${btnClass}">
+            ${story.pill}
+          </button>
+        `;
+      });
+    }
+
+    // Update Content with Fade Effect
+    function changeStory(index) {
+      clearInterval(storyTimer);
+      currentStory = index;
+      
+      // Fade out
+      storyImage.style.opacity = 0;
+      textContent.style.opacity = 0;
+
+      setTimeout(() => {
+        const data = muzirisStories[index];
+        storyImage.src = data.image;
+        storyQuote.innerText = data.quote;
+        storyTitle.innerText = data.title;
+        storySubtitle.innerText = data.subtitle;
+        storyBtn.innerText = data.btnText;
+        storyBtn.href = data.btnLink;
+
+        // specific trigger for the buyer button to open the menu
+        if(index === 3) {
+            storyBtn.onclick = (e) => { e.preventDefault(); document.querySelector('#userMenuContainer button').click(); };
+        } else {
+            storyBtn.onclick = null;
+        }
+
+        renderPills();
+
+        // Fade in
+        storyImage.style.opacity = 1;
+        textContent.style.opacity = 1;
+      }, 400); // Matches transition duration
+
+      // Restart auto-cycle (every 4 seconds)
+      storyTimer = setInterval(() => {
+        changeStory((currentStory + 1) % muzirisStories.length);
+      }, 4000);
+    }
+
+    // Initialize
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPills();
+      storyTimer = setInterval(() => {
+        changeStory((currentStory + 1) % muzirisStories.length);
+      }, 4000);
+    });
+  </script>
   <section class="py-24 px-6 bg-[var(--void)] border-t border-[var(--gold)]/20 relative overflow-hidden">
     <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8ed716d408?auto=format&fit=crop&q=80&w=2000')] opacity-10 bg-cover bg-center mix-blend-overlay"></div>
     <div class="max-w-4xl mx-auto text-center relative z-10 fade-up">
