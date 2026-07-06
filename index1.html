@@ -782,7 +782,7 @@
                               <h3 class="text-[15px] text-gray-800 mb-1 line-clamp-1">${p.name}</h3>
                               <div class="text-[13px] text-gray-500 mb-2 truncate">${p.category} • MOQ: ${p.variants && p.variants[0] ? p.variants[0].min : '1'}</div>
                               
-                              <div class="mt-auto pt-1 text-[13px] text-gray-900 font-medium hover:text-gray-500 transition-colors w-max" onclick="event.stopPropagation(); window.location.href='factory.html';">View supplier profile &rarr;</div>
+                              <div class="mt-auto pt-1 text-[13px] text-gray-900 font-medium hover:text-gray-500 transition-colors w-max" onclick="event.stopPropagation(); window.location.href='factory.html?id=${p.supplierId}';">View supplier profile &rarr;</div>
                           </div>
                       </div>
                       `;
