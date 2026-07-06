@@ -348,19 +348,19 @@
   <script>
     // 🟢 Javascript for the fraction-of-a-second flipbook effect
     document.addEventListener("DOMContentLoaded", () => {
-      // 🟢 Fresh, highly curated boutique images
+      // 🟢 Fresh, highly reliable permanent images
       const leftImages = [
-        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop", // Ceramics (like your screenshot)
-        "https://images.unsplash.com/photo-1542840410-3092f99611a3?q=80&w=800&auto=format&fit=crop", // Colorful Socks
-        "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=800&auto=format&fit=crop", // Modern Stationery
-        "https://images.unsplash.com/photo-1599643478524-fb66f4ce141f?q=80&w=800&auto=format&fit=crop"  // Leather Goods
+        "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=800&auto=format&fit=crop", // Modern Stationery
+        "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop", // Ceramics
+        "https://images.unsplash.com/photo-1542840410-3092f99611a3?q=80&w=800&auto=format&fit=crop", // Colorful Socks/Textiles
+        "https://images.unsplash.com/photo-1584308972272-9e4e7685e80f?q=80&w=800&auto=format&fit=crop"  // Boutique Candles
       ];
       
       const rightImages = [
-        "https://images.unsplash.com/photo-1587049352847-81a56d773c1c?q=80&w=800&auto=format&fit=crop", // Apothecary / Skincare
-        "https://images.unsplash.com/photo-1621251341142-b0cc328af133?q=80&w=800&auto=format&fit=crop", // Artisanal Soaps
-        "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?q=80&w=800&auto=format&fit=crop", // Wooden Toys
-        "https://images.unsplash.com/photo-1559523161-0fc0d6b28f7a?q=80&w=800&auto=format&fit=crop"  // Premium Coffee/Pantry
+        "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=800&auto=format&fit=crop", // Premium Skincare
+        "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?q=80&w=800&auto=format&fit=crop", // Artisanal Soaps
+        "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?q=80&w=800&auto=format&fit=crop", // Wooden Crafts
+        "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=800&auto=format&fit=crop"  // Premium Coffee/Pantry
       ];
 
       let rapidIndex = 0;
@@ -368,7 +368,7 @@
       const rightImgEl = document.getElementById('rapid-img-right');
 
       if (leftImgEl && rightImgEl) {
-          // Cycles the images every 1.2 seconds
+          // Cycles the images every 1.2 seconds 
           setInterval(() => {
             rapidIndex = (rapidIndex + 1) % leftImages.length;
             
