@@ -117,10 +117,10 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     `;
 
-                    // Create the Cards for that month
                     articles.forEach(blog => {
                         const slug = createSlug(blog.title);
-                        const articleUrl = `blog.html?id=${blog.id}&article=${slug}`;
+                        // 🟢 Hardcoded to your live domain
+                        const articleUrl = `https://muziris.ca/blog.html?id=${blog.id}&article=${slug}`;
                         
                         // Use Cloudinary URL, or fallback to a placeholder
                         const imgUrl = blog.image_url && String(blog.image_url).startsWith('http') ? blog.image_url : 'MC.png';
