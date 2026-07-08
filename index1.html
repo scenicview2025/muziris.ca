@@ -547,17 +547,66 @@
     </div>
   </section>
 
-  <footer class="bg-[#05070a] py-16 px-6 border-t border-gray-900">
-    <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="text-[var(--gold)] brand-font font-bold tracking-widest text-2xl">MUZIRIS</div>
-      <div class="text-sm text-gray-500 text-center md:text-left font-medium">
-        &copy; 2026 Muziris International. All rights reserved. <br>
-        <span class="text-[10px] uppercase tracking-widest mt-2 block text-gray-600 font-bold">Secure B2B Infrastructure</span>
-      </div>
-      <div class="flex gap-6 text-gray-400">
-        <a href="#" class="hover:text-[var(--gold)] transition"><i class="fab fa-linkedin text-2xl"></i></a>
-        <a href="mailto:support@muziris.ca" class="hover:text-[var(--gold)] transition"><i class="fas fa-envelope text-2xl"></i></a>
-      </div>
+  <footer class="bg-[#05070a] pt-20 pb-10 px-6 border-t border-gray-900 relative overflow-hidden z-20">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-[var(--gold)]/20 to-transparent"></div>
+
+    <div class="max-w-[1400px] mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-16 mb-16">
+
+            <div class="lg:col-span-2">
+                <div class="text-[var(--gold)] brand-font font-bold tracking-widest text-3xl mb-4">MUZIRIS</div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8 max-w-sm">
+                    North America's premier B2B sourcing network. We bridge the gap between Indian manufacturing excellence and global buyers with 100% escrow protection.
+                </p>
+                <div class="flex gap-4 text-gray-400">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[var(--gold)] hover:text-black transition-colors duration-300"><i class="fab fa-linkedin-in text-sm"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[var(--gold)] hover:text-black transition-colors duration-300"><i class="fab fa-x-twitter text-sm"></i></a>
+                    <a href="mailto:info@muziris.ca" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[var(--gold)] hover:text-black transition-colors duration-300"><i class="fas fa-envelope text-sm"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Platform</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="catalog.html" class="hover:text-[var(--gold)] transition-colors">Global Catalog</a></li>
+                    <li><a href="rfq.html" class="hover:text-[var(--gold)] transition-colors">Submit Custom RFQ</a></li>
+                    <li><a href="join.html" class="hover:text-[var(--gold)] transition-colors">Apply as a Supplier</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors" onclick="document.querySelector('#userMenuContainer button').click(); return false;">Buyer Portal Login</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Company</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="about.html" class="hover:text-[var(--gold)] transition-colors">About Us</a></li>
+                    <li><a href="journal.html" class="hover:text-[var(--gold)] transition-colors">The Journal (Insights)</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors">Careers</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors">Contact Support</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Legal & Trust</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors flex items-center gap-2">Escrow Policy <i class="fas fa-shield-alt text-[10px] text-[var(--gold)]"></i></a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors flex items-center gap-2">KYC & Verification <i class="fas fa-check-circle text-[10px] text-[#4CAF50]"></i></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-sm text-gray-600 font-medium text-center md:text-left">
+                &copy; 2026 Muziris International Inc. All rights reserved. <br class="md:hidden">
+                <span class="md:hidden text-[10px] uppercase tracking-widest mt-2 block font-bold">Secure B2B Infrastructure</span>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <span class="text-[10px] uppercase tracking-widest text-gray-500 font-bold flex items-center gap-2"><img src="https://flagcdn.com/w20/ca.png" class="w-4 rounded-sm opacity-50 grayscale hover:grayscale-0 transition"> Based in Canada</span>
+                <span class="text-gray-800">•</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-500 font-bold flex items-center gap-2"><img src="https://flagcdn.com/w20/in.png" class="w-4 rounded-sm opacity-50 grayscale hover:grayscale-0 transition"> Rooted in India</span>
+            </div>
+        </div>
     </div>
   </footer>
 
