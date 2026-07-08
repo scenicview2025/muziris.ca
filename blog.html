@@ -171,6 +171,39 @@
             }
         }
 
+        // --- SHARE BUTTON FUNCTIONS ---
+        function shareToLinkedIn() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+        }
+
+        function shareToTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(document.title);
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${title}`, '_blank');
+        }
+
+        function copyArticleLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                const btn = document.getElementById('copyLinkBtn');
+                const originalHtml = btn.innerHTML;
+                
+                // Show success state
+                btn.innerHTML = '<i class="fas fa-check" style="color: #4CAF50;"></i> Copied!';
+                btn.style.borderColor = '#4CAF50';
+                btn.style.color = '#4CAF50';
+                
+                // Revert after 2 seconds
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.style.borderColor = '#e5e7eb';
+                    btn.style.color = '#4b5563'; // Tailwind text-gray-600
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy link: ', err);
+            });
+        }
+
         // Run the fetch when the page loads
         window.onload = fetchArticle;
     </script>
