@@ -40,7 +40,7 @@
 
     <div class="header">
         <h1>Edit Insight</h1>
-        <button onclick="window.location.href='https://muziris.ca/blog-admin.html'" style="background:transparent; color:#fff; border:1px solid var(--border); padding:8px 15px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:13px;">Cancel & Return to CMS</button>
+        <button onclick="window.location.href='https://muziris-api.onrender.com/blog-admin.html'" style="background:transparent; color:#fff; border:1px solid var(--border); padding:8px 15px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:13px;">Cancel & Return to CMS</button>
     </div>
 
     <div class="panel" id="editorPanel" style="opacity: 0.5; pointer-events: none;">
@@ -256,7 +256,7 @@
 
                 if (data.success) {
                     alert("✅ Article updated successfully!");
-                    window.location.href = 'https://muziris.ca/blog-admin.html'; // Send them back to the dashboard
+                    window.location.href = 'https://muziris-api.onrender.com/blog-admin.html'; // Send them back to the dashboard
                 } else {
                     throw new Error(data.error || "Database rejection.");
                 }
