@@ -109,39 +109,46 @@
             }
 
             try {
-                // Fetch all blogs, then find the one that matches this ID
-                const response = await fetch(`${API_BASE_URL}/blogs`);
+                // Fetch the specific blog directly using its ID
+                const response = await fetch(`${API_BASE_URL}/blogs/${blogId}`);
                 const data = await response.json();
                 
-                if (data.success) {
-                    const blog = data.blogs.find(b => b.id.toString() === blogId);
+                if (data.success && data.blog) {
+                    const blog = data.blog;
                     
-                    if(blog) {
-                        // Populate the fields
-                        document.getElementById('blogCategory').value = blog.category || '';
-                        document.getElementById('blogSeo').value = blog.seo_keywords || '';
-                        document.getElementById('blogTitle').value = blog.title || '';
-                        document.getElementById('blogAuthor').value = blog.author || '';
-                        document.getElementById('blogDate').value = blog.publish_date || '';
-                        document.getElementById('blogContent').value = blog.content || '';
-                        
-                        document.getElementById('blogImage').value = blog.image_url || '';
-                        if(blog.image_url) {
-                            const imgPreview = document.getElementById('currentImagePreview');
-                            imgPreview.src = blog.image_url;
-                            imgPreview.style.display = 'block';
-                        }
+                    // Decode HTML entities if they were escaped during save
+                    const decodeHTML = (html) => {
+                        const txt = document.createElement("textarea");
+                        txt.innerHTML = html;
+                        return txt.value;
+                    };
 
-                        // Unlock the panel
-                        document.getElementById('editorPanel').style.opacity = '1';
-                        document.getElementById('editorPanel').style.pointerEvents = 'auto';
-                        document.getElementById('statusMessage').innerHTML = '<strong>Edit Mode:</strong> Make your changes and click Save. Leave the image field blank to keep the existing hero image.';
-                    } else {
-                        document.getElementById('statusMessage').innerHTML = '❌ Error: Article not found in database.';
+                    // Populate the fields
+                    document.getElementById('blogCategory').value = blog.category || '';
+                    document.getElementById('blogSeo').value = blog.seo_keywords || '';
+                    document.getElementById('blogTitle').value = blog.title || '';
+                    document.getElementById('blogAuthor').value = blog.author || '';
+                    document.getElementById('blogDate').value = blog.publish_date || '';
+                    
+                    // Crucial: Set the innerHTML of the textarea to handle paragraph tags correctly
+                    document.getElementById('blogContent').value = decodeHTML(blog.content || '');
+                    
+                    document.getElementById('blogImage').value = blog.image_url || '';
+                    if(blog.image_url) {
+                        const imgPreview = document.getElementById('currentImagePreview');
+                        imgPreview.src = blog.image_url;
+                        imgPreview.style.display = 'block';
                     }
+
+                    // Unlock the panel
+                    document.getElementById('editorPanel').style.opacity = '1';
+                    document.getElementById('editorPanel').style.pointerEvents = 'auto';
+                    document.getElementById('statusMessage').innerHTML = '<strong>Edit Mode:</strong> Make your changes and click Save. Leave the image field blank to keep the existing hero image.';
+                } else {
+                    document.getElementById('statusMessage').innerHTML = '❌ Error: Article not found in database.';
                 }
             } catch (err) {
-                document.getElementById('statusMessage').innerHTML = '❌ Error connecting to database.';
+                document.getElementById('statusMessage').innerHTML = '❌ Error connecting to database: ' + err.message;
             }
         });
 
