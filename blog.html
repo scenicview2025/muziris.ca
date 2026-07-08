@@ -88,8 +88,16 @@
 
             <div class="mt-16 pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
                 <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Share this Insight</span>
-                <div class="flex gap-3">
-                    <button onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url='+window.location.href, '_blank')" class="share-btn linkedin flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-gray-600 bg-white shadow-sm"><i class="fab fa-linkedin-in"></i> LinkedIn</button>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="shareToLinkedIn()" class="share-btn linkedin flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-gray-600 bg-white shadow-sm transition">
+                        <i class="fab fa-linkedin-in" style="color: #0077b5;"></i> LinkedIn
+                    </button>
+                    <button onclick="shareToTwitter()" class="share-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-gray-600 bg-white shadow-sm hover:bg-blue-50 transition" style="border-color: #e5e7eb;">
+                        <i class="fab fa-twitter" style="color: #1DA1F2;"></i> Twitter
+                    </button>
+                    <button id="copyLinkBtn" onclick="copyArticleLink()" class="share-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-gray-600 bg-white shadow-sm hover:bg-gray-50 transition" style="border-color: #e5e7eb;">
+                        <i class="fas fa-link"></i> Copy Link
+                    </button>
                 </div>
             </div>
         </div>
