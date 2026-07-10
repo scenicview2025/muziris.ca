@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Apply to Sell</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #b89225;
+        --void: #0b0e14;
+    }
+
+    body { background-color: #FAFAFA; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .brand-font { font-family: 'Cinzel', serif; }
+    
+    /* 🟢 Form Inputs */
+    .form-input { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #111827; outline: none; transition: all 0.2s ease; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); }
+    .form-input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); }
+    .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 0.4rem; }
+
+    /* 🟢 Wizard Steps Animation */
+    .wizard-step { display: none; opacity: 0; transform: translateX(20px); transition: all 0.4s ease-in-out; }
+    .wizard-step.active { display: block; opacity: 1; transform: translateX(0); }
+
+    /* 🟢 Buttons */
+    .btn-primary { width: 100%; background-color: #222; color: #fff; padding: 14px; border-radius: 6px; font-weight: 600; font-size: 1rem; transition: 0.2s; cursor: pointer; }
+    .btn-primary:hover { background-color: #000; }
+    .btn-secondary { width: 100%; background-color: transparent; border: 1px solid #d1d5db; color: #374151; padding: 14px; border-radius: 6px; font-weight: 600; transition: 0.2s; cursor: pointer; }
+    .btn-secondary:hover { background-color: #f3f4f6; }
+
+    /* 🟢 Category Tiles (App-Feel) */
+    .category-tile { border: 2px solid #e5e7eb; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s ease; background: #fff; }
+    .category-tile:hover { border-color: var(--gold); background: #fdfbf7; }
+    .category-tile.selected { border-color: var(--gold-dark); background: #fdfbf7; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15); }
+    .category-tile i { font-size: 1.5rem; color: #6b7280; margin-bottom: 8px; display: block; transition: 0.2s; }
+    .category-tile.selected i { color: var(--gold-dark); }
+    .category-tile span { font-size: 0.85rem; font-weight: 600; color: #374151; }
+
+    /* 🟢 SSO Buttons */
+    .oauth-btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; border: 1px solid #d1d5db; background: #fff; color: #374151; }
+    .oauth-btn:hover { background: #f9fafb; }
+    
+    /* 🟢 Loading Overlay */
+    #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #FAFAFA; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+    .spinner { width: 50px; height: 50px; border: 3px solid rgba(212, 175, 55, 0.2); border-radius: 50%; border-top-color: var(--gold-dark); animation: spin 1s ease-in-out infinite; margin-bottom: 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <header class="w-full bg-white border-b border-gray-100 py-4 px-6 md:px-10 flex justify-between items-center fixed top-0 z-50">
+    <h1 class="text-2xl font-bold tracking-widest text-gray-900 brand-font cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
+    <div class="text-sm font-medium text-gray-600">
+        Already registered? <a href="#" class="text-[var(--gold-dark)] hover:text-black font-bold transition ml-1">Log in</a>
+    </div>
+  </header>
+
+  <div id="loading-overlay">
+      <div class="spinner"></div>
+      <h2 class="text-2xl brand-font font-bold text-gray-900 mb-2">Getting things ready...</h2>
+      <p class="text-gray-500 text-sm">Verifying your business and building your profile.</p>
+  </div>
+
+  <main class="pt-28 pb-20 px-4 flex justify-center min-h-screen items-start">
+    <div class="w-full max-w-[500px]">
+
+        <form id="wizard-form" onsubmit="event.preventDefault();">
+            
+            <div class="wizard-step active" id="step-1">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900 brand-font mb-2">Welcome! Sign up to sell on Muziris.</h2>
+                    <p class="text-sm text-gray-500">The premier wholesale marketplace connecting top-tier manufacturers with North American buyers.</p>
+                </div>
+
+                <button type="button" class="oauth-btn" onclick="simulateOAuth('Google')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    Continue with Google
+                </button>
+                <button type="button" class="oauth-btn" onclick="simulateOAuth('Microsoft')">
+                    <svg width="18" height="18" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M10 0H0v10h10V0z" fill="#f25022"/><path d="M21 0H11v10h10V0z" fill="#7fba00"/><path d="M10 11H0v10h10V11z" fill="#00a4ef"/><path d="M21 11H11v10h10V11z" fill="#ffb900"/></svg>
+                    Continue with Microsoft
+                </button>
+
+                <div class="flex items-center my-6">
+                    <hr class="flex-grow border-gray-200">
+                    <span class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Or sign up with email</span>
+                    <hr class="flex-grow border-gray-200">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="form-label">First name *</label>
+                        <input type="text" id="f_name" class="form-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Last name *</label>
+                        <input type="text" id="l_name" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Official Business Email *</label>
+                    <input type="email" id="f_email" class="form-input" placeholder="name@company.com" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Phone Number (WhatsApp) *</label>
+                    <input type="tel" id="f_phone" class="form-input" placeholder="+91 00000 00000" required>
+                </div>
+
+                <div class="mb-6 relative">
+                    <label class="form-label">Create Password *</label>
+                    <input type="password" id="f_pass" class="form-input" placeholder="Min 8 characters" required>
+                    <button type="button" onclick="togglePassword()" class="absolute right-3 top-[34px] text-gray-400 hover:text-gray-600 transition">
+                        <i class="far fa-eye" id="eye-icon"></i>
+                    </button>
+                </div>
+
+                <button type="button" class="btn-primary" onclick="nextStep(1)">Create Account & Continue</button>
+                
+                <p class="text-xs text-center text-gray-500 mt-6 leading-relaxed">
+                    By proceeding, you're agreeing to Muziris's <a href="terms.html" target="_blank" class="text-gray-900 underline">Terms of Service</a>, 
+                    <a href="supplier-terms.html" target="_blank" class="text-gray-900 underline">Supplier Terms</a>, and <a href="privacy.html" target="_blank" class="text-gray-900 underline">Privacy Policy</a>.
+                </p>
+            </div>
+
+            <div class="wizard-step" id="step-2">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900 brand-font mb-2">Tell us about your business.</h2>
+                    <p class="text-sm text-gray-500">This information will be displayed on your supplier profile.</p>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label">Company / Factory Name *</label>
+                    <input type="text" id="f_company" class="form-input" placeholder="Enter your registered business name" required>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label">Website URL (Optional)</label>
+                    <input type="url" id="f_website" class="form-input" placeholder="https://example.com">
+                    <p class="text-[11px] text-gray-400 mt-1">We'll use your website to quickly verify your brand and setup your account.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div>
+                        <label class="form-label">Year Established *</label>
+                        <input type="number" id="f_year" class="form-input" placeholder="e.g. 2010" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Factory Size *</label>
+                        <select id="f_size" class="form-input" required>
+                            <option value="">Select size...</option>
+                            <option value="1-50">1 - 50 Employees</option>
+                            <option value="51-200">51 - 200 Employees</option>
+                            <option value="201-500">201 - 500 Employees</option>
+                            <option value="500+">500+ Employees</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="button" class="btn-secondary w-1/3" onclick="prevStep(2)">Back</button>
+                    <button type="button" class="btn-primary w-2/3" onclick="nextStep(2)">Next</button>
+                </div>
+            </div>
+
+            <div class="wizard-step" id="step-3">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900 brand-font mb-2">Where are you located?</h2>
+                    <p class="text-sm text-gray-500">This helps us calculate shipping and logistics for North American buyers.</p>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label">Country *</label>
+                    <select id="f_country" class="form-input" required>
+                        <option value="">Select a country...</option>
+                        <option value="India">India</option>
+                        <option value="Canada">Canada</option>
+                        <option value="United States">United States</option>
+                        <option value="UAE">United Arab Emirates</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label">City / Manufacturing Hub *</label>
+                    <input type="text" id="f_city" class="form-input" placeholder="e.g. Surat, Mumbai, Tiruppur" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div>
+                        <label class="form-label">State / Province *</label>
+                        <input type="text" id="f_state" class="form-input" placeholder="e.g. Gujarat" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Zip / Postal Code *</label>
+                        <input type="text" id="f_zip" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="button" class="btn-secondary w-1/3" onclick="prevStep(3)">Back</button>
+                    <button type="button" class="btn-primary w-2/3" onclick="nextStep(3)">Next</button>
+                </div>
+            </div>
+
+            <div class="wizard-step" id="step-4">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900 brand-font mb-2">What do you manufacture?</h2>
+                    <p class="text-sm text-gray-500">Select your primary category. You can list products in other categories later.</p>
+                </div>
+
+                <input type="hidden" id="f_category" required>
+
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="category-tile" onclick="selectCategory(this, 'Apparel & Textiles')">
+                        <i class="fas fa-tshirt"></i>
+                        <span>Apparel & Textiles</span>
+                    </div>
+                    <div class="category-tile" onclick="selectCategory(this, 'Home Decor & Furniture')">
+                        <i class="fas fa-couch"></i>
+                        <span>Home & Furniture</span>
+                    </div>
+                    <div class="category-tile" onclick="selectCategory(this, 'Jewelry & Accessories')">
+                        <i class="fas fa-gem"></i>
+                        <span>Jewelry & Accs.</span>
+                    </div>
+                    <div class="category-tile" onclick="selectCategory(this, 'Beauty & Wellness')">
+                        <i class="fas fa-leaf"></i>
+                        <span>Beauty & Wellness</span>
+                    </div>
+                    <div class="category-tile" onclick="selectCategory(this, 'Agriculture & Food')">
+                        <i class="fas fa-seedling"></i>
+                        <span>Agriculture & Food</span>
+                    </div>
+                    <div class="category-tile" onclick="selectCategory(this, 'Industrial & Hardware')">
+                        <i class="fas fa-tools"></i>
+                        <span>Hardware & Tools</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="button" class="btn-secondary w-1/3" onclick="prevStep(4)">Back</button>
+                    <button type="button" class="btn-primary w-2/3" onclick="nextStep(4)">Next</button>
+                </div>
+            </div>
+
+            <div class="wizard-step" id="step-5">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900 brand-font mb-2">Final Verification</h2>
+                    <p class="text-sm text-gray-500">Provide official details to get verified faster by enterprise buyers.</p>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label">GST / Tax ID Number <span class="text-gray-400 font-normal ml-1">(Optional for now)</span></label>
+                    <input type="text" id="f_tax" class="form-input" placeholder="Corporate Tax ID, VAT, or GST">
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label">Certifications <span class="text-gray-400 font-normal ml-1">(e.g. ISO, CE, FDA)</span></label>
+                    <input type="text" id="f_certs" class="form-input" placeholder="Separate with commas">
+                </div>
+
+                <div class="mb-8">
+                    <label class="form-label">Product Catalog Link <span class="text-gray-400 font-normal ml-1">(Optional)</span></label>
+                    <input type="url" id="f_catalog" class="form-input" placeholder="Google Drive, Dropbox, or Website">
+                    <p class="text-[11px] text-gray-400 mt-1">Providing a catalog speeds up your approval process significantly.</p>
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="button" class="btn-secondary w-1/3" onclick="prevStep(5)">Back</button>
+                    <button type="button" class="btn-primary w-2/3 bg-[var(--gold-dark)] hover:bg-[var(--gold)] text-black" onclick="submitApplication()">Submit Application</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+  </main>
+
+  <script>
+    // 🟢 Password Toggle
+    function togglePassword() {
+        const passInput = document.getElementById('f_pass');
+        const icon = document.getElementById('eye-icon');
+        if (passInput.type === 'password') {
+            passInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    // 🟢 Category Selection Logic
+    function selectCategory(element, categoryName) {
+        // Remove 'selected' class from all tiles
+        const tiles = document.querySelectorAll('.category-tile');
+        tiles.forEach(t => t.classList.remove('selected'));
+        
+        // Add to clicked tile
+        element.classList.add('selected');
+        
+        // Set hidden input value
+        document.getElementById('f_category').value = categoryName;
+    }
+
+    // 🟢 Navigation Logic
+    function nextStep(current) {
+        // Basic Validation
+        if(current === 1) {
+            if(!document.getElementById('f_name').value || !document.getElementById('f_email').value || !document.getElementById('f_pass').value) {
+                alert("Please fill in all required fields to create your account.");
+                return;
+            }
+        } else if (current === 2) {
+            if(!document.getElementById('f_company').value || !document.getElementById('f_year').value) {
+                alert("Please provide your company name and year established.");
+                return;
+            }
+        } else if (current === 3) {
+            if(!document.getElementById('f_country').value || !document.getElementById('f_city').value) {
+                alert("Please provide your country and city.");
+                return;
+            }
+        } else if (current === 4) {
+            if(!document.getElementById('f_category').value) {
+                alert("Please select a primary category.");
+                return;
+            }
+        }
+
+        document.getElementById('step-' + current).classList.remove('active');
+        document.getElementById('step-' + (current + 1)).classList.add('active');
+    }
+
+    function prevStep(current) {
+        document.getElementById('step-' + current).classList.remove('active');
+        document.getElementById('step-' + (current - 1)).classList.add('active');
+    }
+
+    // 🟢 OAuth Simulation (Hooks up to Firebase later)
+    function simulateOAuth(provider) {
+        // In reality, this would trigger Firebase popup
+        document.getElementById('f_name').value = "John";
+        document.getElementById('l_name').value = "Doe";
+        document.getElementById('f_email').value = "john@example.com";
+        // Auto-advance to Step 2
+        document.getElementById('step-1').classList.remove('active');
+        document.getElementById('step-2').classList.add('active');
+    }
+
+    // 🟢 Final Submission & Loading Screen
+    function submitApplication() {
+        // 1. Show the Loading Overlay
+        document.getElementById('loading-overlay').style.display = 'flex';
+        
+        // 2. Simulate Backend Processing (Firebase Auth + DB Save)
+        setTimeout(() => {
+            // Save data to localStorage to show on Dashboard
+            const companyName = document.getElementById('f_company').value;
+            localStorage.setItem('verifiedCompany', companyName);
+            localStorage.setItem('supplierStatus', 'pending');
+            
+            // 3. Redirect to Dashboard
+            window.location.href = 'supplier-dashboard.html';
+        }, 3000); // Waits 3 seconds to simulate "Getting things ready"
+    }
+  </script>
+
+</body>
+</html>
