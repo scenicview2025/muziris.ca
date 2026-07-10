@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Supplier Terms of Service</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #b89225;
+        --void: #0b0e14;
+        --text-dark: #111827;
+        --text-gray: #6b7280;
+        --border-light: #e5e7eb;
+    }
+
+    body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    .brand-font { font-family: 'Cinzel', serif; }
+    
+    /* 🟢 Pre-Header & Header */
+    .pre-header { background: #fcf9f0; color: #524733; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; padding: 10px 20px; z-index: 101; position: relative; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+    .pre-header i { color: var(--gold-dark); }
+    .glass-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; transition: all 0.3s ease; }
+    
+    /* 🟢 Legal Text Styling */
+    .legal-content h2 { font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 700; color: #111827; margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; }
+    .legal-content h3 { font-size: 1.05rem; font-weight: 700; color: #111827; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    .legal-content p { font-size: 0.95rem; color: #4b5563; line-height: 1.7; margin-bottom: 1.25rem; }
+    .legal-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; color: #4b5563; font-size: 0.95rem; line-height: 1.7; }
+    .legal-content li { margin-bottom: 0.5rem; }
+    .legal-content a { color: var(--gold-dark); font-weight: 600; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+    .legal-content a:hover { border-bottom-color: var(--gold-dark); }
+    
+    /* 🟢 Table Styling */
+    .legal-table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 2rem; font-size: 0.85rem; }
+    .legal-table th { background-color: #f3f4f6; color: #111827; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 12px; border: 1px solid #e5e7eb; text-align: left; }
+    .legal-table td { padding: 12px; border: 1px solid #e5e7eb; color: #4b5563; vertical-align: top; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <div class="pre-header">
+    <i class="fas fa-shield-alt mr-2"></i> Source With Confidence. Succeed With Certainty. <span class="mx-2 opacity-50">|</span> 100% Escrow Protected Contracts
+  </div>
+
+  <header class="glass-header" id="main-header">
+      <div class="max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
+        
+        <div class="flex items-center gap-4 md:gap-6 flex-shrink-0 h-full">
+          <button class="md:hidden text-gray-900 text-[22px] hover:text-[var(--gold)] transition mt-1">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="text-3xl font-bold tracking-[0.1em] text-gray-900 brand-font m-0 leading-none cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
+        </div>
+        
+        <div class="hidden md:block flex-1 max-w-3xl">
+            <div class="relative w-full group">
+                <input type="text" id="nav-search" placeholder="Search for anything..." class="w-full bg-gray-100 border-2 border-transparent hover:border-gray-300 focus:bg-white focus:border-[var(--gold)] text-sm rounded-full py-3 pl-5 pr-12 outline-none transition-all text-gray-900 shadow-inner">
+                <button class="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[var(--gold)] hover:bg-[var(--gold-dark)] text-white w-9 h-9 rounded-full flex items-center justify-center transition shadow-sm">
+                    <i class="fas fa-search text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-5 md:gap-7 text-gray-700 flex-shrink-0">
+            <button class="md:hidden hover:text-[var(--gold)] transition flex items-center">
+                <i class="fas fa-search text-[20px]"></i>
+            </button>
+            
+            <a href="catalog.html" class="hidden md:block text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition">Global Catalog</a>
+            <button onclick="window.location.href='rfq.html'" class="hidden md:block bg-[var(--void)] text-[var(--gold)] px-6 py-2.5 rounded text-xs font-bold uppercase tracking-widest shadow-md hover:bg-gray-800 transition">Submit RFQ</button>
+
+            <button class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700 py-2">
+                <i class="far fa-user text-[22px] md:text-xl"></i> 
+                <span class="hidden md:block text-sm">Sign In</span>
+            </button>
+        </div>
+      </div>
+  </header>
+
+  <main class="flex-grow bg-white py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-6 md:px-12">
+        
+        <div class="text-center mb-16 border-b border-gray-100 pb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 brand-font tracking-tight mb-4 uppercase">Muziris International Inc.<br>Supplier Terms of Service</h1>
+            <p class="text-sm text-gray-500">The translated version of this document is being provided for convenience only. The English version of this document shall control in the event of any conflict.</p>
+            <p class="text-sm text-gray-500 font-bold mt-4">Effective: April 15, 2026</p>
+        </div>
+
+        <div class="legal-content">
+            <h2>1. Overview</h2>
+            <p>Thank you for your interest in becoming a supplier on the Muziris wholesale online marketplace, accessible through its websites (collectively, the “Site”) and mobile applications (collectively, the “Application”) (together, the “Services”).</p>
+            <p>Throughout these Supplier Terms of Service (“Supplier Terms”), the terms “Muziris,” “us,” and/or “we” refer to Muziris International Inc. The terms “you” and/or “your” refer to you as a user of the Services as a Supplier.</p>
+            <p>These Supplier Terms, along with Muziris’s <a href="terms.html">Terms of Service (“General Terms”)</a> and <a href="privacy.html">Privacy Policy</a>, govern your sale of products as a Supplier through the Services. These Supplier Terms reference and link to various Muziris policies that provide additional details regarding the Services, and such policies are incorporated herein by reference and are to be treated as part of these Supplier Terms.</p>
+            <p>You hereby acknowledge and agree to the set forth below. Capitalized terms used herein but not defined shall have the meanings given to them in the General Terms. Throughout these Supplier Terms, the word “include” or “including” means “including, but not limited to”.</p>
+
+            <h2>2. Key Definitions</h2>
+            <p>“Supplier” means a seller who offers to sell and/or sells its products to Buyers through the Services. The term “Supplier” also includes “Distributor” as defined below.</p>
+            <p>“Distributor” means a seller who offers to sell and/or sells a third party brand’s products to Buyers on the Services under express, valid and continuous authorization from such third party brand.</p>
+            <p>“Buyer” means a buyer who purchases products through the Services for the purpose of resale, as well as businesses that purchase goods through the Services for such business’ own use rather than for resale.</p>
+
+            <h2>3. Account Registration – Supplier Account</h2>
+            <p><strong>Supplier Account.</strong> To sell products through the Services as a Supplier, you must submit an application to become a supplier and be approved by Muziris for an account (“Supplier Account”), as further set forth in the General Terms.</p>
+            <p>By accepting these Supplier Terms and providing the requested information (including any necessary documentation evidencing product compliance and safety, and if you are a Distributor, proof that you have the necessary rights from applicable third party brands whose products you seek to distribute on the Services) during the Supplier application process (as detailed in the General Terms), you authorize Muziris and its affiliates and payment processors to settle and disburse funds to you and on your behalf, and on behalf of any third party brands whose products you seek to distribute on the Services.</p>
+            <p>Muziris will use good faith efforts to review your application to become a Supplier as soon as possible. You acknowledge that Muziris is only able to accept a limited number of Suppliers at any given time, and that Muziris is not obligated to accept you as a Supplier. You hereby release Muziris from any liability regarding the acceptance process.</p>
+            
+            <p><strong>Wholesale Relationships.</strong> Muziris understands that Suppliers have sales representatives in certain territories. If you have such sales representatives, Muziris will work with you to block off certain geographical areas where your sales representatives are located so that you do not receive orders from those geographical areas. To initiate geographical blocking, you will need to <a href="contact.html">contact us</a>.</p>
+            
+            <p><strong>Distributors.</strong> If you intend to distribute a third party brand’s products on the Services, you must obtain express written consent from the applicable third party brand. Such consent must include all relevant third party brand details (including, without limitation, brand name, products to be sold, and relevant contact information), all of which Muziris requires for legal and quality purposes. As a Distributor, you acknowledge and agree that a third party brand may in its discretion choose to list its products directly on the Services, in which case the relevant products would be removed from your listing as a Distributor.</p>
+
+            <h2>4. Onboarding</h2>
+            <p><strong>Shop Page.</strong> Each Supplier has its own dedicated store page on the Site featuring its products (including descriptions and other pertinent information) (“Shop Page”). Muziris will create and design your Shop Page with the information you provide. You agree that Muziris may adjust, edit or remove Content you submit in order to comply with Muziris’s internal specifications and requirements. Muziris reserves the right to approve the final look and feel of your Shop Page in its sole discretion. To have Muziris create your Shop Page, you must provide a catalog file, high resolution photography (product and lifestyle) in accordance with Muziris’s photography guidelines, and your minimum order number, all described below. Muziris may ask for additional information as needed. As soon as your Shop Page is created, Muziris will send you an activation email.</p>
+            
+            <p><strong>Catalog File.</strong> As part of the onboarding process, you are required and agree to submit to Muziris a catalog file of your entire and complete wholesale product catalog containing the following information: (i) product name; (ii) individual or prepack; (iii) product variations; (iv) case size; (v) wholesale price by region; (vi) retail price; (vii) product descriptions; and (viii) whether products are active or inactive. The catalog must be in accordance with Muziris’s Product Guidelines.</p>
+            
+            <p><strong>High-Resolution Photographs.</strong> You are required and agree to provide high-resolution photographs of your products in accordance with Muziris’s photography guidelines. Photographs that could reasonably be considered objectionable, profane, indecent, pornographic, harassing, threatening, embarrassing, hateful or otherwise inappropriate are prohibited. You shall submit all photographs as indicated by Muziris, and Muziris will select the best quality and most appropriate photographs for your Shop Page. Muziris reserves the right to reject content that violates Muziris’s guidelines or these Supplier Terms.</p>
+            
+            <p><strong>Order Minimums.</strong> You may set minimum order quantities for your products on a region-by-region basis. If you wish to have minimum order quantities, you agree to provide Muziris with your first order and reorder minimums (together, an “Order Minimum”), which will be displayed on your Shop Page.</p>
+            
+            <p><strong>Shipping Lead Time.</strong> You must set your typical shipping lead time, which should be an accurate estimation of your actual lead times and which you should use all reasonable efforts to meet. Muziris reserves the right to adjust the shipping lead time, based on actual historical lead times. The lead time you set will be displayed on your Shop Page for the purpose of informing Buyers, who may rely on it when making a purchase. You must also enter an expected shipping date once orders are placed in order to approve/accept the order. You may edit your lead time in your Supplier Account settings.</p>
+
+            <h2>5. Content License, Representations and Warranties</h2>
+            <p><strong>License.</strong> In connection with your use of the Services, you hereby grant to Muziris a worldwide, perpetual, non-exclusive, transferable, sublicensable, royalty-free license to use, view, copy, adapt, modify, distribute, publicly display and publicly perform (through any means necessary) your Content on, through or by means of the Services and any of Muziris’s advertising, marketing, publicity and other initiatives and events.</p>
+            <p>Muziris does not claim any ownership rights in any of your Content and nothing in these Supplier Terms will be deemed to restrict any rights that you may have to use and exploit your Content. You hereby agree that Muziris may at its option, grant a limited, revocable sublicense to Buyers to use your Content on their website for the sole purpose of promoting products purchased from you through the Services.</p>
+            
+            <p><strong>Representations and Warranties.</strong> You acknowledge and agree that you are solely responsible for all Content that you make available through the Services. Accordingly, you represent and warrant that: (i) you are either the sole and exclusive owner of the Content that you make available through the Services or you have all rights, licenses, consents and releases necessary to grant to Muziris the rights in such Content as contemplated under these Terms (including, without limitation, all rights, licenses, consents and releases from applicable third party brands if you are a Distributor); and (ii) neither the Content nor your posting, uploading, publication, submission or transmittal of the Content or the use by Muziris or a Buyer of the Content (or any portion thereof) on, through or by means of the Services or social media platforms will infringe, misappropriate or violate a third party’s patent, copyright, trademark, trade secret, moral rights or other intellectual property rights, or rights of publicity or privacy, or contain inaccurate, misleading, libelous, misleading or otherwise unlawful, abusive, harassing or obscene material, or contain any computer virus or other malware that could in any way affect the operation of the Services, or result in the violation of any applicable law or regulation.</p>
+            
+            <p>You agree that you will not use a false e-mail address, pretend to be someone other than yourself or otherwise mislead us or third parties as to the origin of any posts. You are solely responsible for any Content you provide and its accuracy. Muziris takes no responsibility and assumes no liability, and you hereby release Muziris from any such liability related to any Content posted or otherwise made available by you, and you agree to indemnify Muziris per the terms of the Indemnification section herein.</p>
+
+            <h2>6. Product Listing and Compliance</h2>
+            <p><strong>Product Listing.</strong> Muziris requires each Supplier to list their entire wholesale catalog, unless otherwise agreed in writing by Muziris, and provide a description for each product. Muziris reserves the right to accept or reject any products and has final discretion as to the content of the final Shop Page. Supplier's available products will at all times comply with Muziris’s Product Guidelines regarding prohibited products.</p>
+            
+            <p><strong>Maximum List Price.</strong> Muziris has a maximum price for products listed on the Services. Please visit for Muziris’s current policy.</p>
+            
+            <p><strong>Product and Content Compliance.</strong> All products made available on Muziris, and related Content, must meet Muziris’s Product Guidelines. You acknowledge and agree to: (i) abide by Muziris’s Product Guidelines and to refrain from making available any prohibited products identified in Muziris’s Product Guidelines; (ii) comply with all applicable laws, rules and regulations, including safety, labeling, testing, warning, import/export and other consumer protection law requirements; (iii) not infringe upon or misappropriate the intellectual property, publicity or other rights of others; (iv) not provide any false, inaccurate or misleading information about your products; and (v) ensure that you have all necessary rights, licenses, permissions and consents to offer for sale and sell the products through the Services, including (a) that they are allowed to be sold from your jurisdiction and into the Buyer’s jurisdiction and (b) if you are a Distributor, that you are properly authorized to do so by the applicable third party brand(s).</p>
+            
+            <p>You acknowledge and agree that Muziris is not responsible for determining whether you meet the above requirements, you hereby release Muziris from any liability with respect thereto and agree to indemnify Muziris as set forth in the Indemnification section set forth below. Failure to comply with Muziris’s Products Guidelines may result in the temporary suspension or permanent termination of your Supplier Account, in our sole discretion.</p>
+
+            <h2>7. Product Pricing</h2>
+            <p><strong>Pricing Consistency.</strong> You acknowledge and agree that your prices on your Shop Page will be consistent with all other wholesale and retail channels where your products can be found in the applicable region. Product prices on your Shop Page must be displayed exclusive of indirect taxes, such as sales tax (in the U.S.), GST/HST, QST, PST (in Canada) or similar taxes.</p>
+            
+            <p><strong>Price Audits.</strong> You acknowledge and agree that Muziris may perform routine price and content audits of the products listed on your Shop Page. That includes reviewing for wholesale and retail price consistency between your sites, and reviewing discrepancies that are communicated to us from Buyers. In the event a discrepancy is found, Muziris may reach out to you and require certain action be taken to resolve the issue. If you fail to properly and/or timely respond to the discrepancy, Muziris reserves the right to temporarily suspend or permanently terminate your Supplier Account.</p>
+
+            <h2>8. Title, Returns, Promotions</h2>
+            <p><strong>First Orders with a Supplier.</strong> Muziris offers free returns on the first order placed with any Supplier. From the date the order is placed, a Buyer has a limited period of time to return the product for a full refund. Any additional orders (reorders) from a Supplier are not eligible for return unless otherwise determined by Muziris in its sole discretion. However, Muziris, not the Supplier, takes on this return risk, as returned items will not be deducted from your payout for the order.</p>
+            
+            <p><strong>Returned Products.</strong> For products eligible for return, Muziris takes title to all products returned by a Buyer, subject to its return policies. Muziris may, at its option, promote and distribute any returned products through its various redistribution channels. Buyers may purchase these returned products without meeting the Supplier’s Minimum. You acknowledge and agree that Muziris may promote and redistribute such products bearing your brand name through these and/or other avenues. If you do not want your returned products to be re-sold or redistributed by Muziris, you may opt-in to our Buy-Back Program, where available, which will allow you to buy back your returned inventory subject to certain additional terms and conditions made available to you prior to opting in (Muziris will also consider individual buy-backs in its reasonable discretion).</p>
+
+            <h2>9. Muziris Appointment, Commissions, Payment Processing Fees, and Payout Schedules</h2>
+            <p><strong>Acceptance of Terms.</strong> By accepting these Supplier Terms, you acknowledge and agree to the Commissions (defined below), fees (including Payment Processing Fees as defined in this Section), calculations, other identified costs, and payout schedules set forth below. You agree and authorize Muziris and/or any payment processor engaged by Muziris to deduct all Commissions and fees due and owing from your payout amount, and to settle and transfer funds to your bank account as designated by you through your Muziris account. If you are a Distributor, you acknowledge and agree that you have the power and authority to agree to the foregoing with respect to all third party brands whose products you distribute on the Services.</p>
+            
+            <p><strong>Acceptance of Orders on behalf of Suppliers.</strong> You agree that Muziris is authorised on your behalf to accept orders from Buyers for the purchase of the products (each a “Product”) which you make available for sale through the Services and that such acceptance will result in the conclusion of a contract (each an “Order”) for the sale of the relevant Product from you to the applicable Buyer in accordance with these Supplier Terms. By virtue of the above authorisation of Muziris to accept Orders on your behalf, you acknowledge that, where payment of any amount payable to you by a Buyer in respect of an Order is made to Muziris, this shall discharge the relevant Buyer’s obligation to you to the extent of the amount paid.</p>
+            
+            <p><strong>Payment Timings and Trade Credit.</strong> The following provisions shall determine the payment terms which shall apply to the discharge by the relevant Buyer of any amount payable by it in respect of an Order (the “Purchase Price”):</p>
+            <ul>
+                <li>(i) Muziris will act on your behalf in determining which of two payment timings shall be granted to the Buyer in respect of an Order, these being:
+                    <ul class="mt-2">
+                        <li><strong>A. Payment on Shipment:</strong> the Buyer is obliged to make payment of the Purchase Price on the day on which the shipment of the applicable Product is scanned by your shipping provider and the Product is in transit (the “Shipment Date”); or</li>
+                        <li><strong>B. 60-day terms:</strong> the Buyer is granted a period of interest-free trade credit by you as a consequence of which the Buyer is obliged to make payment of the Purchase Price on the day falling 60 days after the date on which the Order is concluded.</li>
+                    </ul>
+                </li>
+                <li>(ii) Muziris will determine which of the above payment timings (each a “Payment Timing”) is granted to the Buyer in respect of an Order, acting on your behalf using its discretion.</li>
+            </ul>
+
+            <p><strong>Commissions.</strong></p>
+            <ul>
+                <li>(i) Except as explicitly stated in these Supplier Terms, Muziris charges Suppliers the following commission(s) (the “Commission” or "Commissions") on orders placed through the Services (at times referred to as the Muziris “marketplace”):
+                    <ul class="mt-2">
+                        <li>For opening orders (i.e., the first order from a Buyer), the Commission charge is 15% of the Order Subtotal (as defined below) plus a new customer fee of ten dollars ($10)(USD); and</li>
+                        <li>For reorders (i.e., subsequent orders from a Buyer), the Commission charged to a Supplier is 15% of the Order Subtotal.</li>
+                    </ul>
+                </li>
+                <li>As used herein “Order Subtotal” means the total product cost, less brand funded discounts as reflected in the invoice provided by Muziris to the applicable Supplier.</li>
+                <li>(ii) As further described in Section 19 (Muziris Direct), Muziris agrees to waive the Commission for Qualified Muziris Direct Orders (as defined below) and a Supplier pays 0% commission on such orders.</li>
+            </ul>
+
+            <p><strong>Calculation.</strong> Commissions are calculated based on the dollar amount of the Order Subtotal. Any items that a Buyer marks as damaged, missing, or otherwise defective are deducted from the payout of the order (Muziris does not receive a commission on these items). If you send a replacement for a damaged, missing, or defective item, Muziris will pay you for the invoiced cost of the replacement item.</p>
+
+            <p><strong>Agent Authorization.</strong> For Suppliers located in North America, the following provision applies: In connection with the Services, you authorize Muziris, and Muziris agrees to act, as your agent for the purposes of holding, receiving and disbursing funds on your behalf. As such, Muziris’s receipt of any payment from the Buyer is deemed by the Supplier as receipt of such funds by the Supplier. Muziris will comply in all respects with instructions originated by you, meaning that you assume sole and complete responsibility, without recourse to Muziris, for any actions in accordance with the payment instructions you provide. You further acknowledge that there is no risk of loss to the Buyer initiating the transaction if Muziris fails to remit any amounts due to you.</p>
+
+            <p><strong>Payout Schedule; Payment Processing Fee.</strong></p>
+            <ul>
+                <li>i. Payout Options. Suppliers can select how fast they want payouts to their designated bank account for orders placed with the Supplier through the Services (each a “Payout Option”) subject to Section 9(d)(iv). Muziris currently offers three Payout Options: (1) a 60 day payout; (2) a 30 day payout; and (3) a next day payout. You can update your Payout Option anytime. If you update your Payout Option, that option will apply to pending and future orders as outlined in Muziris’s then-current policies.</li>
+                <li>ii. Payment Processing Fee. As used herein, “Payment Processing Fee” means the fees from third-party payment processors along with the costs of managing flexible payment terms for buyers and guaranteeing suppliers get paid on time, regardless of when their Buyers pay or what payment method they use, and other costs including the costs of managing fraud, and the costs of chargebacks, late payments and defaults. Please note that while Muziris works to ensure Suppliers are paid on time, a payout to a Supplier may not be completed for various reasons, including a Supplier’s violation of its obligations under these Supplier Terms, in the event of fraud, if ordered products are missing or damaged, or as a result of actions taken by your bank or financial institution.</li>
+                <li>iii. Suppliers will incur a Payment Processing Fee for each Payout Option as follows:</li>
+            </ul>
+
+            <div class="overflow-x-auto mt-4 mb-6">
+                <table class="legal-table">
+                    <thead>
+                        <tr>
+                            <th>Selected Payout Option</th>
+                            <th>60 day</th>
+                            <th>30 day</th>
+                            <th>Next day</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Payment Processing Fee</strong></td>
+                            <td>1.9% + US$0.30</td>
+                            <td>2.4% + US$0.30</td>
+                            <td>3.5% + US$0.30</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <ul>
+                <li>iv. As used herein the “Designated Payout Date” means the number of days applicable to your selected Payout Option (i.e., 60 day, 30 day or the next day). You acknowledge and agree that you are not entitled to any interest or other compensation associated with your selected Payout Option. The Payment Processing Fee is applied to the Order Subtotal and will be deducted from your payout amount and reflected on your Supplier invoice. Subject to your compliance with these Supplier Terms, after a shipment of an order has been scanned by your shipping provider and is in transit, Muziris will initiate the transfer of the amounts owed for such order in accordance with these Supplier Terms to your designated bank account approximately on the next business day following the Designated Payout Date. It is anticipated that funds for any of the Payout Options will appear within 1 to 2 business days of being processed. Muziris is not responsible for any actions taken by your bank or financial institution that may result in some or all of the funds not being made available to you. Muziris reserves the right to suspend payouts to your bank account due to pending disputes, excessive chargebacks or refunds, as necessary to comply with any request from Muziris’s third party payment processors, and/or other improper or illegal activity as determined by Muziris in its sole discretion.</li>
+            </ul>
+
+            <p><strong>Facilitated Payment Terms.</strong> Depending on the jurisdiction in which you are located, you may be notified by Muziris, including but not limited to during the Account Registration process referred to in Section 3, that the following additional terms and conditions (the “Facilitated Payment Terms”) shall apply to enable you to receive payments of the Purchase Price from Buyers as envisaged above. For these purposes:</p>
+            <ul>
+                <li>i. Muziris has entered into arrangements with third-party payment processors to enable them, acting on your behalf, to facilitate payments of the Purchase Price to you in respect of your Orders.</li>
+                <li>ii. The Payment Processor will facilitate payments for your Orders by acting on your behalf in relation to the acquiring and collection of payments of the Purchase Price from Buyers and the making of payments of the Purchase Price to you, each in accordance with the Payment Timing made available to the Buyer and the Payout Option selected by you respectively.</li>
+                <li>iii. You acknowledge that Muziris is designated as your authorised representative for the purposes of giving instructions to the Payment Processor on your behalf in relation to the collection of the Purchase Price of each Order from the Buyer and the payment of the Purchase Price of any Order to you (including in relation to advising the Payment Processor of the amount and timing of to apply to each such payment) and otherwise in relation to the operation of your relationship with the Payment Processor in respect your use of Payment Processor’s services in that respect (including in relation to the access to, and use of, your data processed by the Payment Processor). You agree that Muziris shall be entitled to instruct the Payment Processor to pay to Muziris the amount of any fees or Commissions payable by you to Muziris by way of deduction from any amount at any time being held by the Payment Processor for you.</li>
+                <li>Where, in respect of any Order, by virtue of the Payment Timing granted to the Buyer and the Payout Option that you have selected, payment of the Purchase Price will be made by the Payment Processor to you before the Purchase Price is collected from the Buyer: the Payment Processor will apply the amount of the Purchase Price collected from the Buyer towards reimbursement of the amount of the Purchase Price paid by it to you in advance of collection from the Buyer, minus the agreed fees and other deductions; and to the extent that such arrangements involve the provision of any kind of financial or payment service to you, such service will be provided by the Payment Processor and not by Muziris.</li>
+            </ul>
+
+            <p><strong>Taxes.</strong> All of Muziris’s fees (including Commission and Payment Processing Fees) are exclusive of indirect taxes, including sales tax, fees and similar indirect taxes that may be applicable as a result of applicable U.S., Canadian or other foreign law. Based on applicable U.S. state enacted marketplace facilitator laws, Muziris is responsible for the sales tax compliance associated with sales to retailers in the U.S., including the maintenance of data sufficient to support the treatment of transactions as sales for resale where applicable. To the extent the Services Muziris provides are themselves subject to indirect taxes or fees, Muziris will calculate the applicable indirect taxes and fees payable. Such taxes or fees shall be added to Muziris’s fees for services as provided by law.</p>
+            <p>Applicable to Canada based brands only: All of our fees are exclusive of applicable Canadian federal and/or provincial indirect taxes, including goods and services tax/harmonized sales tax (“GST/HST”), Quebec sales tax (“QST”) and/or provincial sales tax (“PST”). Such taxes shall be added to Muziris’s fees for services as provided by law. In addition Muziris will calculate the applicable indirect taxes payable (generally GST/HST, QST, and PST) for transactions entered into with Buyers through the Services. Depending on your tax registration status, the nature of the supplies, and all other relevant factors, as provided to Muziris, and subject to Muziris’s determination, Muziris may remit such taxes to you as part of the order payout for onward remittance to the appropriate tax authorities or shall remit such taxes directly to the appropriate tax authorities. Where such taxes are remitted to you, you acknowledge and agree that you are solely responsible for the onward remittance of any such taxes as well as any other payments or filings required under applicable law. You hereby release Muziris with respect thereto, and agree to indemnify, defend and hold Muziris harmless against any and all such (withholding or other) taxes, contributions, penalties and/or interest, or any claim or action in relation therewith.</p>
+
+            <h2>10. Shipping - Costs, Lead Times, Shipping Providers, Damaged Products</h2>
+            <p><strong>Shipping Costs.</strong> Suppliers have the option to use “Ship with Muziris”(i.e., Muziris-provided shipping labels) for Muziris negotiated discounted shipping rates. Muziris reimburses Suppliers only for shipping costs incurred by Supplier if Supplier chooses to ship on its own account and not with Muziris. Where a Supplier uses Ship with Muziris, shipping costs may appear on a Buyer’s invoice, in which case such shipping costs together with any applicable taxes will be excluded from the Supplier payout. When you ship on your own account, shipping costs may not be inflated by Supplier in any way.</p>
+            <p>For the avoidance of doubt, Muziris is not responsible for handling transport or customs clearance of any Supplier products, whether you use Ship with Muziris or you ship on your own account. Muziris and its customers have a shared interest in finding the fastest and most cost-effective shipping solutions. In some instances where Muziris is funding shipping costs, Muziris may require you to use Ship with Muziris to ship your goods to Buyers or may limit your reimbursement amount to a rate Muziris has negotiated with carriers if you choose to ship on your own account, at Muziris’s discretion.</p>
+            
+            <p><strong>Tracking Number.</strong> If you ship on your own account, you will be asked by Muziris for, and you agree to provide within your account, tracking information for each order and if an order is shipped in multiple packages, you agree to provide tracking numbers for each package. When you input the tracking number(s), Muziris will automatically send an email to the Buyer letting them know the order is on its way. Although not required, Muziris recommends that you require a signature for your shipments to ensure delivery and provide evidence that an order was in fact received.</p>
+            
+            <p><strong>Damaged or Missing Products.</strong> Buyers are responsible for reaching out to you through the Services to try to resolve issues relating to damaged or missing items in an order. Muziris will notify you if a Buyer reports to Muziris directly that a product is damaged or if an order is missing items. Muziris will pass along any photographs of any damaged item or of the order as a whole that it receives. You acknowledge and agree that you alone are responsible for resolving the issue. If you have shipped on your own account, you alone are responsible for making a claim with your shipping provider. You hereby release Muziris from any liability with regard to any damaged or missing items, whether you used Ship with Muziris or you shipped on your own account. Muziris reserves the right to deduct payouts or charge the bank account or any payment method we have on file associated with your account related to items that are reported as damaged or missing. You have the right to dispute the charge with Muziris, but we reserve the right to reject any dispute/claim created by you about the charge.</p>
+
+            <p><strong>Shipping Insurance.</strong> Muziris does not require you to purchase shipping insurance. However, whether you ship on your own or use Ship with Muziris, Muziris strongly recommends that you do so in order to facilitate any shipping dispute you have with a Buyer. Shipping protection and insurance may be offered by third parties. Unless explicitly agreed to by the parties in writing, Muziris is not responsible for any shipping protection or insurance products.</p>
+            <p>You are responsible for ensuring the customs-related information you provide to Muziris or otherwise list on the Service is accurate, including but not limited to country of origin, shipping location, and compliance with tariff-related treaties such as the USMCA. When shipping orders via the Service internationally, you are also responsible for timely providing any documentation or information with shipment that is necessary for the importer (typically the Buyer) to obtain the lowest appropriate price based on the customs-related information you have provided for your product listing on the Service.</p>
+
+            <h2>11. Inventory, Orders, Recalled Products</h2>
+            <p><strong>Inventory.</strong> You agree to keep sufficient inventory on hand for products advertised as being available, and to keep inventory numbers current. You agree to promptly remove any products that are discontinued or are out of stock through your Supplier Account portal. It is your responsibility to keep your product catalog current and up-to-date based on availability (whether items are back-ordered or discontinued).</p>
+            
+            <p><strong>Orders.</strong> Muziris will send you an email each time a Buyer places an order for your products. Your Supplier Account will also be updated with new order details. You will be able to review the order details, edit inventory availability and accept or cancel the order. You must accept or cancel an order within 2 business days of receiving the email notifying you of the order. If you cancel an order, you will be asked to provide a reason for not being able to fulfill the order. Repeated order cancelation may result in the temporary suspension or permanent termination of your Supplier Account, in our sole discretion.</p>
+            
+            <p><strong>Right to Refuse.</strong> You have the right to refuse any order by a Buyer for any reason. Repeated refusal may impact your visibility and search placement within the Services to Buyers.</p>
+            
+            <p><strong>Recalled Products.</strong> You agree to immediately inform Muziris if any of your products have been recalled, giving at least the following information: (i) product name; (ii) SKU number or other identifying number; (iii) number of units sold to Buyers; (iv) purpose of recall; and (v) any other information necessary so that the products may be properly and quickly recalled.</p>
+            
+            <p><strong>No Circumvention.</strong> Once an order has been placed through your Shop Page by a Buyer, you agree that you will fulfill all orders placed by such Buyer through the Services. You further agree to not influence Buyers to transact offline outside of the Services in any manner, or otherwise circumvent Muziris’s process in order to transact orders with Buyers who were introduced to you through the Services offline or outside of the Services in any manner. Muziris reserves the right to deactivate or terminate your account if you fail to abide by these terms.</p>
+            
+            <p><strong>Pause Mode.</strong> If you are going on vacation, or are unable to accept new orders for a period of time, you may pause your Shop Page for up to 12 weeks at a time using “Pause Mode” found in your Supplier Account tab. You will still be able to access your Supplier Account and we encourage you to fulfill any orders you have already accepted while on “Pause Mode.”</p>
+
+            <h2>12. Commitment to Quality and Service</h2>
+            <p><strong>Minimum Standards.</strong> Supplier and Buyer satisfaction is of utmost importance to the long-term health and success of the Muziris community. Accordingly, Suppliers are subject to the following minimum standards in connection with the Services:</p>
+            <ul>
+                <li>To accurately list and describe available products on your Shop Page;</li>
+                <li>To comply with any governmental guidelines related to product labeling;</li>
+                <li>To timely accept or cancel an order from a Buyer;</li>
+                <li>To timely fulfill and ship orders to Buyers using a reputable shipping provider;</li>
+                <li>To promptly and effectively respond to Buyer inquiries; and</li>
+                <li>To promptly resolve missing or damaged orders with a Buyer.</li>
+            </ul>
+            
+            <p><strong>Metrics.</strong> You acknowledge and agree that in order to ensure that you are meeting the foregoing Supplier’s minimum standard requirements, Muziris will track and measure your performance using a variety of metrics, including collecting reviews and ratings from your Buyers. Reviewed individually and as a whole, these metrics help Muziris determine whether you are meeting Muziris’s expectations on delivering a great experience for the Buyers. Such metrics also include:</p>
+            <ul>
+                <li>Accuracy of product listings;</li>
+                <li>Catalog completeness;</li>
+                <li>How often your shipments are later than the expected shipping date;</li>
+                <li>How often you provide a valid tracking number;</li>
+                <li>How long it takes you to accept or cancel new orders;</li>
+                <li>How often your orders are reported as damaged or missing products:</li>
+                <li>How often your products are on backorder, returned or canceled;</li>
+                <li>How promptly and effectively you respond to Buyer inquiries; and</li>
+                <li>How promptly and effectively you resolve missing or damaged orders with a Buyer.</li>
+            </ul>
+            
+            <p><strong>Volume Considerations.</strong> Muziris takes volume consideration into account when calculating metrics. For example, if a Supplier has only 10 orders, and 1 was damaged, then the damaged order rate is 10%. While that metric is technically over Muziris’s target, it does not necessarily reflect an actual problem with performance given the low volume of orders.</p>
+            
+            <p><strong>Evaluation.</strong> Muziris typically evaluates a Supplier’s performance using the above metrics on an ongoing monthly basis, and more frequently during high volume periods such as the holiday selling season. The length of time between reviews depends on the volume of transactions of each flagged Supplier Account and/or the extent of available data. Muziris reserves the right to adjust its evaluation criteria as needed.</p>
+            
+            <p><strong>Accountability.</strong> If Muziris determines that you are not meeting the minimum standards of quality and service, Muziris may reach out to you in an attempt to resolve the issue and/or temporarily suspend or permanently terminate your Supplier Account. Muziris also reserves the right to put limits on your Supplier Account, lower your visibility and/or search placement across the Services, limit your ability to sell with new Buyers until you resolve outstanding issues, and/or deny signing up any affiliated, related or duplicate accounts.</p>
+            
+            <p><strong>Suspended Accounts.</strong> If your Supplier Account is suspended for performance issues, you may appeal for re-activation by providing Muziris with a plan of action for correcting the problems that contributed to the account being flagged and suspended. If Muziris in its sole discretion approves the plan of action, you may resume selling through the Services. If you believe that the flag on your Supplier Account is erroneous, you may contact Muziris and explain why.</p>
+
+            <h2>13. Promotion; Email and Marketing Tools</h2>
+            <p>Unless you opt out as set forth below, Muziris may feature certain Suppliers, products and Content at the top of their respective category, on Muziris’s landing pages, in advertisements, email, social media accounts or in any other channels or media in its discretion. Muziris may choose to bid on a Supplier’s brand names and keywords relating to the Supplier’s products in advertising products and may create SEO optimized pages or campaigns for Supplier brands. Muziris shall not be liable for any pricing or availability of a particular product featured in a particular ad or marketing. If you do not want to participate in the Marketing and Advertising Program, please <a href="contact.html">contact us</a>.</p>
+            <p>Muziris may also offer Suppliers email and marketing tools to use for their business. Additional terms and conditions may apply, including that all account leads must be sourced by you directly (purchasing lead lists from third parties is not permitted). You represent and warrant that you have and will have all requisite permissions and consents from a Buyer or prospective Buyer to provide their name and email address to Muziris through your use of the Services, including any email and marketing tools. You acknowledge and agree that use of any email or marketing tools made available through the Services by you or your affiliates or agents will be in compliance with applicable laws, including without limitation, CAN-SPAM. Use of any email or marketing tools made available through the Services in a manner that could constitute unsolicited commercial email or “spam” under any applicable law or regulation is expressly prohibited and Muziris reserves the right to throttle or limit the number of emails sent to Buyers via such tools.</p>
+
+            <h2>14. Muziris Messenger</h2>
+            <p>Buyers and Suppliers may contact each other directly through Muziris Messenger on the Services. You agree to use Muziris Messenger only for legitimate business purposes, such as responding to a Buyer’s question about your products or the status of an order, or to resolve business issues. You agree to not abuse Muziris Messenger, to use it only as is reasonably necessary and to not use it for the purpose of harassment or other improper purposes. If you are not able to answer a Buyer’s question or resolve issues, you may contact Muziris directly.</p>
+
+            <h2>15. Product Liability Insurance</h2>
+            <p>All Suppliers are required to maintain, at their own cost and expense, general commercial liability insurance (including comprehensive product liability) with respect to its products listed on Muziris in such amount as is reasonable and customary for companies of comparable size and activities. Muziris reserves the right to request proof of such insurance coverage and other relevant information at any time.</p>
+
+            <h2>16. Indemnity</h2>
+            <p>You agree to defend, indemnify, and hold Muziris, and its parent, subsidiaries, affiliates, partners, successors, and assigns, and each of their owners, members, officers, directors, employees, agents, representatives, contractors, subcontractors, licensors, service providers and third party content providers, harmless from any claims, liabilities, damages, judgments, awards, losses, costs, expenses or fees (including reasonable legal and accounting fees) made by any third party due to or arising out of your violation of these Supplier Terms, the General Terms and/or any law or the rights of a third party, and/or your use of or participation on the Services.</p>
+
+            <h2>17. Prohibited Uses</h2>
+            <p>Muziris will have the right to investigate and prosecute violations of these Supplier Terms to the fullest extent permitted by law. Muziris may involve and cooperate with law enforcement authorities in prosecuting users who violate these Supplier Terms. You acknowledge and agree that Muziris has no obligation to monitor your access to or use of the Services or Content, or to review or edit any Content, but has the right to do so for the purpose of operating the Services, to ensure your compliance with these Supplier Terms, to investigate a complaint or to comply with applicable law or the order or requirement of a court, administrative agency or other governmental body. Company reserves the right, at any time and without prior notice, to remove or disable access to any Content that Muziris, in its sole discretion, considers to be in violation of these Supplier Terms or otherwise harmful to the Services. Muziris reserves the right to cooperate fully with law enforcement, and to involve and share information with law enforcement, governmental agencies or other oversight bodies if Muziris suspects illegal activity may be taking place.</p>
+
+            <h2>18. Termination</h2>
+            <p>If you breach any of these Supplier Terms, Muziris will have the right to temporarily suspend or permanently terminate your Supplier Account, your eligibility to participate in any programs (including Muziris Direct) or promotions offered by Muziris, and/or terminate these Supplier Terms and/or the General Terms, in its sole discretion and without prior notice to you. Muziris reserves the right to revoke your access to and use of the Services at any time, with or without cause. In the event Muziris terminates these Supplier Terms or your Supplier Account for your breach, you will remain liable for all amounts due hereunder.</p>
+            <p>You may terminate your relationship with Muziris at any time by contacting us or as otherwise indicated in your Supplier Account portal. Muziris will take down your Shop Page as soon as practicable and will close your Supplier Account once there has been an accounting of all monies due and owing. In the event of any termination of your Supplier Account, all program benefits or other promotional incentives accrued or earned by you or related to your Supplier Account will cease or otherwise be canceled.</p>
+
+            <h2>19. Muziris Direct</h2>
+            <p>Muziris Direct enables Suppliers to take orders and process payments from their prior buyer relationships using their own personalized Muziris Direct link and the supporting tools (e.g., widget, email) accessible in the supplier portal. As a Supplier on Muziris, you will pay 0% commission on qualified Muziris Direct orders from Buyers, which meet any of the conditions reflected in the “Muziris Direct policy” (each a “Qualified Muziris Direct Order”). You can also establish a Qualified Muziris Direct Order by providing valid documentation to support the existence of a prior relationship with the Buyer. The documentation must meet Muziris’s then current policies and be approved in writing by Muziris.</p>
+            <p>All Qualified Muziris Direct Orders are subject to verification by Muziris and Muziris may audit and/or revoke any prior approval or acceptance of a Qualified Muziris Direct Order (including the underlying Muziris Direct relationship) as eligible for 0% commission. The reasons an order’s status as a Qualified Muziris Direct Order may be revoked include in the event of fraud or error or similar occurrence, or your violation of these Supplier Terms.</p>
+
+        </div>
+    </div>
+  </main>
+
+  <footer class="bg-[#05070a] pt-20 pb-10 px-6 border-t border-gray-900 relative overflow-hidden z-20">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-[var(--gold)]/20 to-transparent"></div>
+
+    <div class="max-w-[1400px] mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-16 mb-16">
+
+            <div class="lg:col-span-2">
+                <div class="text-[var(--gold)] brand-font font-bold tracking-widest text-3xl mb-4">MUZIRIS</div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8 max-w-sm">
+                    North America's premier B2B sourcing network. We bridge the gap between Indian manufacturing excellence and global buyers with 100% escrow protection.
+                </p>
+                <div class="flex gap-4 text-gray-400">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[var(--gold)] hover:text-black transition-colors duration-300"><i class="fab fa-linkedin-in text-sm"></i></a>
+                    <a href="mailto:info@muziris.ca" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[var(--gold)] hover:text-black transition-colors duration-300"><i class="fas fa-envelope text-sm"></i></a>
+                    <a href="https://wa.me/16366894747" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-colors duration-300"><i class="fab fa-whatsapp text-lg"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Platform</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="catalog.html" class="hover:text-[var(--gold)] transition-colors">Global Catalog</a></li>
+                    <li><a href="rfq.html" class="hover:text-[var(--gold)] transition-colors">Submit Custom RFQ</a></li>
+                    <li><a href="join.html" class="hover:text-[var(--gold)] transition-colors">Apply as a Supplier</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors">Buyer Portal Login</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Company</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="about.html" class="hover:text-[var(--gold)] transition-colors">About Us</a></li>
+                    <li><a href="journal.html" class="hover:text-[var(--gold)] transition-colors">The Journal (Insights)</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors">Careers</a></li>
+                    <li><a href="contact.html" class="hover:text-[var(--gold)] transition-colors">Contact Support</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Legal & Trust</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="terms.html" class="hover:text-[var(--gold)] transition-colors">Terms of Service</a></li>
+                    <li><a href="privacy.html" class="hover:text-[var(--gold)] transition-colors">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors flex items-center gap-2">Escrow Policy <i class="fas fa-shield-alt text-[10px] text-[var(--gold)]"></i></a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors flex items-center gap-2">KYC & Verification <i class="fas fa-check-circle text-[10px] text-[#4CAF50]"></i></a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-sm text-gray-600 font-medium text-center md:text-left">
+                &copy; 2026 Muziris International Inc. All rights reserved. <br class="md:hidden">
+                <span class="md:hidden text-[10px] uppercase tracking-widest mt-2 block font-bold">Secure B2B Infrastructure</span>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <span class="text-[10px] uppercase tracking-widest text-gray-500 font-bold flex items-center gap-2"><img src="https://flagcdn.com/w20/ca.png" class="w-4 rounded-sm shadow-sm"> Based in Canada</span>
+                <span class="text-gray-800">•</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-500 font-bold flex items-center gap-2"><img src="https://flagcdn.com/w20/in.png" class="w-4 rounded-sm shadow-sm"> Rooted in India</span>
+            </div>
+        </div>
+    </div>
+  </footer>
+
+</body>
+</html>
