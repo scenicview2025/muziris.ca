@@ -132,16 +132,22 @@
                 <span class="checkbox-text">I'd like to receive marketing emails and text messages from Muziris about new offers, events, and recommendations.</span>
             </label>
 
-            <div id="email-error" class="hidden text-[#ff5252] text-sm mt-4 font-medium text-center">
-                This email is already registered. Please log in.
+            <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 pb-6 z-40 md:static md:bg-transparent md:border-none md:p-0 md:z-auto md:mt-6">
+                <div class="max-w-[420px] mx-auto">
+                    
+                    <div id="email-error" class="hidden text-[#ff5252] text-sm mb-3 font-medium text-center">
+                        This email is already registered. Please log in.
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#333333] hover:bg-[#111827] text-white py-3.5 rounded-[4px] font-medium text-[1rem] transition duration-200 shadow-sm">Next</button>
+
+                    <p class="text-[11px] text-gray-500 mt-3 md:mt-5 text-center leading-relaxed">
+                        By proceeding, you're agreeing to Muziris's <a href="terms.html" target="_blank" class="underline hover:text-gray-900">Terms of Service</a>, 
+                        <a href="supplier-terms.html" target="_blank" class="underline hover:text-gray-900">Supplier Terms</a>, and <a href="privacy.html" target="_blank" class="underline hover:text-gray-900">Privacy Policy</a>.
+                    </p>
+                </div>
             </div>
 
-            <button type="submit" class="btn-next">Next</button>
-
-            <p class="text-[11px] text-gray-500 mt-6 text-center">
-                By proceeding, you're agreeing to Muziris's <a href="terms.html" class="underline hover:text-gray-900">Terms of Service</a>, 
-                <a href="supplier-terms.html" class="underline hover:text-gray-900">Supplier Terms of Service</a>, and <a href="privacy.html" class="underline hover:text-gray-900">Privacy Policy</a>.
-            </p>
         </form>
 
     </div>
