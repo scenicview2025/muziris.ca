@@ -198,39 +198,26 @@
     // 🟢 Step 1 Submission Logic
     function processStep1() {
         const email = document.getElementById('email').value;
-        const btn = document.querySelector('.btn-next');
         const errorMsg = document.getElementById('email-error');
         
         // Hide previous errors if they click again
         errorMsg.classList.add('hidden');
-        
-        btn.innerText = "Checking...";
-        btn.disabled = true;
 
         // Combine Phone Number
         document.getElementById('fullPhone').value = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
 
         /* ============================================================
         YOUR REAL BACKEND LOGIC GOES HERE LATER
-        ============================================================
-        fetch("YOUR_BACKEND_URL/check-email", { ... })
-        */
+        ============================================================ */
        
-        // Temporary Simulation for testing:
-        setTimeout(() => {
-            
-            // Example: Let's pretend "test@muziris.ca" is already registered
-            if (email === "test@muziris.ca") {
-                // ERROR: Show the simple red message and stop
-                errorMsg.classList.remove('hidden');
-                btn.innerText = "Next";
-                btn.disabled = false;
-            } else {
-                // SUCCESS: No popups! Just instantly go to Step 2
-                window.location.href = 'join-step2.html'; 
-            }
-            
-        }, 800); // 800ms delay to make the "Checking..." button feel real
+        // Example: Let's pretend "test@muziris.ca" is already registered
+        if (email === "test@muziris.ca") {
+            // ERROR: Show the simple red message and stop
+            errorMsg.classList.remove('hidden');
+        } else {
+            // SUCCESS: Instantly go to Step 2!
+            window.location.href = 'join-step2.html'; 
+        }
     }
   </script>
 
