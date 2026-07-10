@@ -203,11 +203,19 @@
 
     // 🟢 Step 1 Submission Logic
     function processStep1() {
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value.trim();
         const errorMsg = document.getElementById('email-error');
         
         // Hide previous errors if they click again
         errorMsg.classList.add('hidden');
+
+        // 1. Strict Email Format Validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            errorMsg.innerText = "Please enter a valid email address (e.g., name@company.com).";
+            errorMsg.classList.remove('hidden');
+            return; // Stop here, do not proceed
+        }
 
         // Combine Phone Number
         document.getElementById('fullPhone').value = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
@@ -218,7 +226,8 @@
        
         // Example: Let's pretend "test@muziris.ca" is already registered
         if (email === "test@muziris.ca") {
-            // ERROR: Show the simple red message and stop
+            // ERROR: Show the already registered message
+            errorMsg.innerText = "This email is already registered. Please log in.";
             errorMsg.classList.remove('hidden');
         } else {
             // SUCCESS: Instantly go to Step 2!
