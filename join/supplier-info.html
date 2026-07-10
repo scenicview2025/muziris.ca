@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Supplier Information</title>
+  <link rel="icon" type="image/png" href="../MC.png">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #b89225;
+    }
+
+    body { background-color: #ffffff; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #111827; }
+    .brand-font { font-family: 'Cinzel', serif; }
+    
+    /* Onboarding Top Nav */
+    .onboarding-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+        background: #fff;
+    }
+
+    /* Progress Bar */
+    .progress-container { width: 100%; height: 2px; background-color: #e5e7eb; }
+    .progress-bar { height: 100%; background-color: #111827; width: 25%; transition: width 0.4s ease; } /* 25% because this is step 2 of 4 */
+
+    /* Form Inputs */
+    .form-input { 
+        width: 100%; 
+        padding: 10px 14px; 
+        background: #ffffff; 
+        border: 1px solid #d1d5db; 
+        border-radius: 4px; 
+        font-family: 'Inter', sans-serif; 
+        font-size: 0.95rem; 
+        color: #111827; 
+        outline: none; 
+        transition: all 0.2s ease; 
+    }
+    .form-input:focus { border-color: #111827; box-shadow: 0 0 0 1px #111827; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 400; color: #374151; margin-bottom: 0.4rem; }
+
+    /* Button */
+    .btn-next { 
+        width: 100%; 
+        background-color: #333333; 
+        color: #fff; 
+        padding: 14px; 
+        border-radius: 4px; 
+        font-weight: 500; 
+        font-size: 1rem; 
+        transition: 0.2s; 
+        cursor: pointer; 
+        margin-top: 20px;
+    }
+    .btn-next:hover { background-color: #111827; }
+    
+    /* Minimal Footer */
+    .minimal-footer { border-top: 1px solid #e5e7eb; padding: 24px 0; margin-top: 60px; text-align: center; font-size: 11px; color: #6b7280; }
+    .minimal-footer a { color: #6b7280; text-decoration: none; margin: 0 8px; transition: 0.2s; }
+    .minimal-footer a:hover { color: #111827; }
+  </style>
+</head>
+<body>
+
+  <header class="fixed top-0 left-0 w-full bg-white z-50">
+      <div class="onboarding-header">
+          <div class="w-1/3">
+              <a href="join.html" class="text-gray-500 hover:text-gray-900 transition text-lg"><i class="fas fa-chevron-left"></i></a>
+          </div>
+          
+          <div class="w-1/3 text-center">
+              <h1 class="text-[20px] font-bold tracking-[0.2em] text-gray-900 brand-font uppercase">Muziris</h1>
+          </div>
+          
+          <div class="w-1/3 flex justify-end gap-6 text-sm font-medium text-gray-600">
+              <a href="#" class="hover:text-gray-900 transition">Get help</a>
+              <a href="#" class="hover:text-gray-900 transition">Save & exit</a>
+          </div>
+      </div>
+      
+      <div class="progress-container">
+          <div class="progress-bar"></div>
+      </div>
+  </header>
+
+  <main class="flex justify-center pt-32 pb-10 px-6 min-h-screen items-start">
+    <div class="w-full max-w-[420px]">
+        
+        <div class="mb-8">
+            <h2 class="text-[24px] md:text-[28px] text-gray-900 mb-3 font-serif font-normal tracking-tight">Hi there,<br>tell us about your business.</h2>
+        </div>
+
+        <form id="step2-form" onsubmit="event.preventDefault(); processStep2();">
+            
+            <div class="mb-5">
+                <label class="form-label">Company / Factory name *</label>
+                <input type="text" id="companyName" class="form-input" placeholder="Enter your registered business name" required>
+            </div>
+
+            <div class="mb-5">
+                <label class="form-label">Website URL (Optional)</label>
+                <input type="url" id="websiteUrl" class="form-input" placeholder="https://example.com">
+                <p class="text-[12px] text-gray-500 mt-1.5 leading-relaxed">We'll use your website to verify your brand, set up your account, and import content to build your shop on Muziris.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-5">
+                <div>
+                    <label class="form-label">Year Established *</label>
+                    <input type="number" id="yearEst" class="form-input" placeholder="e.g. 2010" min="1800" max="2026" required>
+                </div>
+                <div>
+                    <label class="form-label">Factory Size *</label>
+                    <select id="factorySize" class="form-input" required>
+                        <option value="">Select size...</option>
+                        <option value="1-50">1 - 50 Employees</option>
+                        <option value="51-200">51 - 200 Employees</option>
+                        <option value="201-500">201 - 500 Employees</option>
+                        <option value="500+">500+ Employees</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 pb-6 z-40 md:static md:bg-transparent md:border-none md:p-0 md:z-auto md:mt-8">
+                <div class="max-w-[420px] mx-auto">
+                    <button type="submit" class="w-full bg-[#333333] hover:bg-[#111827] text-white py-3.5 rounded-[4px] font-medium text-[1rem] transition duration-200 shadow-sm">Next</button>
+                </div>
+            </div>
+
+        </form>
+
+        <div class="minimal-footer hidden md:block">
+            © 2026 Muziris International Inc. &nbsp;|&nbsp; 
+            <a href="../terms.html" target="_blank">Terms of service</a> &nbsp;|&nbsp; 
+            <a href="../privacy.html" target="_blank">Privacy policy</a> &nbsp;|&nbsp; 
+            <a href="../ip-policy.html" target="_blank">IP policy</a>
+        </div>
+
+    </div>
+  </main>
+
+  <script>
+    // 🟢 Step 2 Submission Logic
+    function processStep2() {
+        // Save the company name to localStorage so we can use it in Step 3!
+        const companyName = document.getElementById('companyName').value;
+        localStorage.setItem('onboarding_companyName', companyName);
+
+        // Redirect to Step 3 (Location)
+        window.location.href = 'location.html';
+    }
+  </script>
+
+</body>
+</html>
