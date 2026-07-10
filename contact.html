@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Muziris | Support & Contact</title>
+  <link rel="icon" type="image/png" href="MC.png">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #b89225;
+        --void: #0b0e14;
+        --text-dark: #111827;
+        --text-gray: #6b7280;
+        --border-light: #e5e7eb;
+    }
+
+    body { background-color: #FAFAFA; color: var(--text-dark); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    .brand-font { font-family: 'Cinzel', serif; }
+    
+    /* 🟢 Header */
+    .pre-header { background: #fcf9f0; color: #524733; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; padding: 10px 20px; z-index: 101; position: relative; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+    .pre-header i { color: var(--gold-dark); }
+    .glass-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; transition: all 0.3s ease; }
+    
+    /* 🟢 Form Styling */
+    .form-input { width: 100%; padding: 14px 20px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #111827; outline: none; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .form-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 700; color: #4b5563; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+    /* 🟢 Topic Hover Effects */
+    .topic-link { transition: all 0.2s ease; }
+    .topic-link:hover { color: var(--gold-dark); transform: translateX(5px); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <div class="pre-header">
+    <i class="fas fa-shield-alt mr-2"></i> Source With Confidence. Succeed With Certainty. <span class="mx-2 opacity-50">|</span> 100% Escrow Protected Contracts
+  </div>
+
+  <header class="glass-header" id="main-header">
+      <div class="max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4 md:gap-8">
+        
+        <div class="flex items-center gap-4 md:gap-6 flex-shrink-0 h-full">
+          <button class="md:hidden text-gray-900 text-[22px] hover:text-[var(--gold)] transition mt-1">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="text-3xl font-bold tracking-[0.1em] text-gray-900 brand-font m-0 leading-none cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
+        </div>
+        
+        <div class="hidden md:block flex-1 max-w-3xl"></div>
+
+        <div class="flex items-center gap-5 md:gap-7 text-gray-700 flex-shrink-0">
+            <a href="catalog.html" class="hidden md:block text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition">Global Catalog</a>
+            <button onclick="window.location.href='rfq.html'" class="hidden md:block bg-[var(--void)] text-[var(--gold)] px-6 py-2.5 rounded text-xs font-bold uppercase tracking-widest shadow-md hover:bg-gray-800 transition">Submit RFQ</button>
+
+            <button class="flex items-center gap-2 hover:text-[var(--gold)] transition font-bold text-gray-700 py-2">
+                <i class="far fa-user text-[22px] md:text-xl"></i> 
+                <span class="hidden md:block text-sm">Sign In</span>
+            </button>
+        </div>
+      </div>
+  </header>
+
+  <section class="bg-[var(--void)] py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8ed716d408?auto=format&fit=crop&q=80&w=2000')] opacity-5 bg-cover bg-center mix-blend-overlay"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--gold)]/30 to-transparent"></div>
+    
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        
+        <div class="inline-flex bg-white/10 rounded-full p-1 mb-8 backdrop-blur-md border border-white/10">
+            <button class="px-6 py-2 rounded-full bg-[var(--gold)] text-black font-bold text-sm transition-all shadow-md">Buyers</button>
+            <button class="px-6 py-2 rounded-full text-gray-300 hover:text-white font-bold text-sm transition-all">Suppliers</button>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl font-bold text-white brand-font mb-8">How can we help you?</h1>
+        
+        <div class="relative w-full max-w-2xl mx-auto group shadow-2xl">
+            <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <input type="text" placeholder="Search for guides, policies, or questions..." class="w-full bg-white text-gray-900 rounded-full py-4 pl-12 pr-32 outline-none border-2 border-transparent focus:border-[var(--gold)] transition-all text-lg shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+            <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[var(--void)] hover:bg-gray-800 text-[var(--gold)] px-6 py-2.5 rounded-full font-bold uppercase tracking-widest text-xs transition">
+                Search
+            </button>
+        </div>
+
+        <div class="mt-6 text-sm text-gray-400 font-medium">
+            Common topics: <a href="#" class="underline hover:text-[var(--gold)] transition mx-1">net 60 terms</a>, <a href="#" class="underline hover:text-[var(--gold)] transition mx-1">shipping to Canada</a>, <a href="#" class="underline hover:text-[var(--gold)] transition mx-1">escrow protection</a>
+        </div>
+    </div>
+  </section>
+
+  <section class="max-w-[1200px] mx-auto px-6 -mt-8 relative z-20 mb-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="bg-white p-8 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
+            <div class="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center text-[var(--gold-dark)] text-xl mb-4 group-hover:bg-[var(--gold)] group-hover:text-white transition-colors duration-300">
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Direct Line</h3>
+            <a href="tel:+16366894747" class="text-xl font-bold text-gray-900 brand-font hover:text-[var(--gold-dark)] transition">+1 636 689 4747</a>
+            <p class="text-xs text-gray-500 mt-2">Mon - Fri, 9am - 6pm EST</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
+            <div class="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center text-[var(--gold-dark)] text-2xl mb-4 group-hover:bg-[#25D366] group-hover:text-white transition-colors duration-300">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Fastest Response</h3>
+            <a href="https://wa.me/16366894747" target="_blank" class="text-xl font-bold text-gray-900 brand-font hover:text-[#25D366] transition">Chat on WhatsApp</a>
+            <p class="text-xs text-gray-500 mt-2">Average response: Under 5 mins</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
+            <div class="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center text-[var(--gold-dark)] text-xl mb-4 group-hover:bg-[var(--gold)] group-hover:text-white transition-colors duration-300">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Official Email</h3>
+            <a href="mailto:info@muziris.ca" class="text-xl font-bold text-gray-900 brand-font hover:text-[var(--gold-dark)] transition">info@muziris.ca</a>
+            <p class="text-xs text-gray-500 mt-2">For contracts & verifications</p>
+        </div>
+
+    </div>
+  </section>
+
+  <section class="max-w-[1200px] mx-auto px-6 py-12 mb-10 border-t border-gray-100">
+    <h2 class="text-3xl font-bold text-gray-900 brand-font mb-12">Browse Topics</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+        
+        <div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-900 border-b border-[var(--gold)] pb-3 mb-6 inline-block">Getting Started</h3>
+            <ul class="space-y-4">
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> What does it mean to be a Buyer on Muziris?</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> How do I apply as an Indian Manufacturer?</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> What is a Master Carton / Case Size?</a></li>
+                <li><a href="#" class="text-[var(--gold-dark)] font-bold text-xs uppercase tracking-widest hover:text-black transition mt-2 inline-block">View All (12) &rarr;</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-900 border-b border-[var(--gold)] pb-3 mb-6 inline-block">Orders & Escrow</h3>
+            <ul class="space-y-4">
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> How does the 100% Escrow system protect me?</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> Can I cancel an order after funding escrow?</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> When do suppliers actually receive the payout?</a></li>
+                <li><a href="#" class="text-[var(--gold-dark)] font-bold text-xs uppercase tracking-widest hover:text-black transition mt-2 inline-block">View All (18) &rarr;</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-900 border-b border-[var(--gold)] pb-3 mb-6 inline-block">Shipping & Logistics</h3>
+            <ul class="space-y-4">
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> How are international duties and DDP calculated?</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> What happens if a shipment is lost at customs?</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> How to track a cargo container from India?</a></li>
+                <li><a href="#" class="text-[var(--gold-dark)] font-bold text-xs uppercase tracking-widest hover:text-black transition mt-2 inline-block">View All (24) &rarr;</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-900 border-b border-[var(--gold)] pb-3 mb-6 inline-block">Payments & Net 60</h3>
+            <ul class="space-y-4">
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> How do I apply for Net 60 payment terms?</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> Wire transfers via SWIFT vs. Credit Card</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> How to download official tax invoices</a></li>
+                <li><a href="#" class="text-[var(--gold-dark)] font-bold text-xs uppercase tracking-widest hover:text-black transition mt-2 inline-block">View All (9) &rarr;</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-900 border-b border-[var(--gold)] pb-3 mb-6 inline-block">Returns & Refunds</h3>
+            <ul class="space-y-4">
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> Free returns on your first order with a new brand</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> Reporting damaged goods upon arrival</a></li>
+                <li><a href="#" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-file-alt text-gray-300 mt-1"></i> Buy-back program for unused inventory</a></li>
+                <li><a href="#" class="text-[var(--gold-dark)] font-bold text-xs uppercase tracking-widest hover:text-black transition mt-2 inline-block">View All (5) &rarr;</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-900 border-b border-[var(--gold)] pb-3 mb-6 inline-block">Legal & Compliance</h3>
+            <ul class="space-y-4">
+                <li><a href="terms.html" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-balance-scale text-gray-300 mt-1"></i> General Terms of Service</a></li>
+                <li><a href="privacy.html" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-user-shield text-gray-300 mt-1"></i> Privacy Policy</a></li>
+                <li><a href="ip-policy.html" class="topic-link flex items-start gap-3 text-sm text-gray-600 font-medium"><i class="fas fa-copyright text-gray-300 mt-1"></i> Copyright & IP Policy</a></li>
+                <li><a href="#" class="text-[var(--gold-dark)] font-bold text-xs uppercase tracking-widest hover:text-black transition mt-2 inline-block">View All Legal &rarr;</a></li>
+            </ul>
+        </div>
+
+    </div>
+  </section>
+
+  <section class="bg-[#FDFBF7] py-20 border-t border-gray-200">
+    <div class="max-w-[1200px] mx-auto px-6 flex flex-col lg:flex-row gap-16">
+        
+        <div class="lg:w-5/12">
+            <div class="inline-block p-3 bg-white rounded-lg shadow-sm border border-gray-100 mb-6">
+                <i class="fas fa-paper-plane text-[var(--gold-dark)] text-2xl"></i>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 brand-font mb-4">Submit a Support Ticket</h2>
+            <p class="text-gray-600 leading-relaxed mb-8">Can't find the answer in our guides? Send us a detailed message. Our concierge support team aims to respond to all inquiries within 12 hours.</p>
+            
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <h4 class="font-bold text-gray-900 text-sm mb-3">What happens next?</h4>
+                <ol class="text-sm text-gray-600 space-y-3">
+                    <li class="flex gap-3"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> You will receive an automated email confirmation with your Ticket ID.</li>
+                    <li class="flex gap-3"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> A dedicated agent will review your account details.</li>
+                    <li class="flex gap-3"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> We will resolve the issue directly or arrange a phone call.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="lg:w-7/12">
+            <form class="bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 relative">
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-[var(--gold)] rounded-t-2xl"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" class="form-input" placeholder="e.g. John Doe" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Business Name</label>
+                        <input type="text" class="form-input" placeholder="Your Store / Factory Name">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="form-label">Official Email *</label>
+                        <input type="email" class="form-input" placeholder="name@company.com" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-input" placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="form-label">How can we help you? *</label>
+                    <select class="form-input text-gray-600" required>
+                        <option value="" disabled selected>Select an option...</option>
+                        <option value="buyer">I am a Buyer and need help with an order</option>
+                        <option value="supplier">I am a Supplier and need help with onboarding</option>
+                        <option value="escrow">Question about Payments or Escrow</option>
+                        <option value="logistics">Question about Shipping or Tracking</option>
+                        <option value="other">Other Inquiry</option>
+                    </select>
+                </div>
+
+                <div class="mb-8">
+                    <label class="form-label">Message *</label>
+                    <textarea class="form-input" rows="5" placeholder="Please provide as much detail as possible..." required></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-[var(--void)] hover:bg-gray-800 text-[var(--gold)] py-4 rounded-lg font-bold uppercase tracking-widest text-sm transition-colors shadow-md flex items-center justify-center gap-3">
+                    Send Message <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+    </div>
+  </section>
+
+  <footer class="bg-[#05070a] pt-20 pb-10 px-6 border-t border-gray-900 relative overflow-hidden z-20">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-[var(--gold)]/20 to-transparent"></div>
+
+    <div class="max-w-[1400px] mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-16 mb-16">
+
+            <div class="lg:col-span-2">
+                <div class="text-[var(--gold)] brand-font font-bold tracking-widest text-3xl mb-4">MUZIRIS</div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8 max-w-sm">
+                    North America's premier B2B sourcing network. We bridge the gap between Indian manufacturing excellence and global buyers with 100% escrow protection.
+                </p>
+                <div class="flex gap-4 text-gray-400">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[var(--gold)] hover:text-black transition-colors duration-300"><i class="fab fa-linkedin-in text-sm"></i></a>
+                    <a href="mailto:info@muziris.ca" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[var(--gold)] hover:text-black transition-colors duration-300"><i class="fas fa-envelope text-sm"></i></a>
+                    <a href="https://wa.me/16366894747" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-colors duration-300"><i class="fab fa-whatsapp text-lg"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Platform</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="catalog.html" class="hover:text-[var(--gold)] transition-colors">Global Catalog</a></li>
+                    <li><a href="rfq.html" class="hover:text-[var(--gold)] transition-colors">Submit Custom RFQ</a></li>
+                    <li><a href="join.html" class="hover:text-[var(--gold)] transition-colors">Apply as a Supplier</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors">Buyer Portal Login</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Company</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="about.html" class="hover:text-[var(--gold)] transition-colors">About Us</a></li>
+                    <li><a href="journal.html" class="hover:text-[var(--gold)] transition-colors">The Journal (Insights)</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors">Careers</a></li>
+                    <li><a href="contact.html" class="hover:text-[var(--gold)] transition-colors text-[var(--gold)]">Contact Support</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-xs uppercase tracking-[0.15em] mb-6">Legal & Trust</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-medium">
+                    <li><a href="terms.html" class="hover:text-[var(--gold)] transition-colors">Terms of Service</a></li>
+                    <li><a href="privacy.html" class="hover:text-[var(--gold)] transition-colors">Privacy Policy</a></li>
+                    <li><a href="ip-policy.html" class="hover:text-[var(--gold)] transition-colors">Copyright & IP Policy</a></li>
+                    <li><a href="#" class="hover:text-[var(--gold)] transition-colors flex items-center gap-2">Escrow Policy <i class="fas fa-shield-alt text-[10px] text-[var(--gold)]"></i></a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-sm text-gray-600 font-medium text-center md:text-left">
+                &copy; 2026 Muziris International Inc. All rights reserved. <br class="md:hidden">
+                <span class="md:hidden text-[10px] uppercase tracking-widest mt-2 block font-bold">Secure B2B Infrastructure</span>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <span class="text-[10px] uppercase tracking-widest text-gray-500 font-bold flex items-center gap-2"><img src="https://flagcdn.com/w20/ca.png" class="w-4 rounded-sm shadow-sm"> Based in Canada</span>
+                <span class="text-gray-800">•</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-500 font-bold flex items-center gap-2"><img src="https://flagcdn.com/w20/in.png" class="w-4 rounded-sm shadow-sm"> Rooted in India</span>
+            </div>
+        </div>
+    </div>
+  </footer>
+
+</body>
+</html>
