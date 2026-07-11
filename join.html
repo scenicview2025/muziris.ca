@@ -16,28 +16,18 @@
         --gold-dark: #b89225;
     }
 
-    body { background-color: #ffffff; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #111827; display: flex; flex-direction: column; min-height: 100vh; }
+    body { background-color: #ffffff; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #111827; }
     .brand-font { font-family: 'Cinzel', serif; }
     
-    /* Minimalist Top Nav */
+    /* Minimalist Top Nav - Exact original spacing */
     .minimal-header {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        padding: 24px 32px;
-        background: #fff;
+        padding: 24px 0;
         border-bottom: 1px solid #e5e7eb;
-        position: relative;
+        width: 100%;
     }
-
-    .center-logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .progress-container { width: 100%; height: 2px; background-color: transparent; position: relative; top: -1px; }
-    .progress-bar { height: 100%; background-color: transparent; width: 0%; transition: width 0.4s ease; }
 
     /* Form Inputs */
     .form-input { 
@@ -56,9 +46,9 @@
     .form-label { display: block; font-size: 0.85rem; font-weight: 400; color: #374151; margin-bottom: 0.4rem; }
 
     /* Phone Input Group */
-    .phone-group { display: flex; align-items: stretch; }
+    .phone-group { display: flex; }
     
-    /* 🟢 Pixel-Perfect Phone Code Dropdown */
+    /* 🟢 Updated to match the white, centered dropdown style */
     .phone-code { 
         width: 80px; 
         background: #ffffff; 
@@ -66,20 +56,12 @@
         border: 1px solid #d1d5db; 
         border-right: none; 
         border-radius: 4px 0 0 4px; 
-        padding: 0 10px; 
+        padding: 10px; 
         font-size: 0.95rem; 
         outline: none;
         cursor: pointer;
         text-align: center;
         text-align-last: center;
-        /* Removes clunky default browser styling */
-        appearance: none; 
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        /* Adds a custom, clean dropdown arrow */
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="%236b7280" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>');
-        background-repeat: no-repeat;
-        background-position: right 8px center;
     }
     .phone-code:focus { border-color: #111827; }
     .phone-number { flex: 1; border-radius: 0 4px 4px 0; }
@@ -107,23 +89,11 @@
 </head>
 <body>
 
-  <header class="w-full bg-white z-50">
-      <div class="minimal-header">
-          <div class="w-1/3"></div>
-          
-          <div class="center-logo">
-              <h1 class="text-2xl font-bold tracking-[0.2em] text-gray-900 brand-font uppercase cursor-pointer" onclick="window.location.href='index1.html'">Muziris</h1>
-          </div>
-          
-          <div class="w-1/3 flex justify-end text-sm font-medium text-gray-600 hidden md:flex"></div>
-      </div>
-      
-      <div class="progress-container">
-          <div class="progress-bar"></div>
-      </div>
+  <header class="minimal-header">
+    <h1 class="text-2xl font-bold tracking-[0.2em] text-gray-900 brand-font uppercase">Muziris</h1>
   </header>
 
-  <main class="flex justify-center pt-16 pb-44 md:pb-20 px-6 flex-grow items-start">
+  <main class="flex justify-center pt-12 pb-44 md:pb-20 px-6">
     <div class="w-full max-w-[480px]">
         
         <div class="mb-8">
@@ -152,12 +122,8 @@
             <div class="mb-5">
                 <label class="form-label">Phone number</label>
                 <div class="phone-group">
-                    
-                    <select id="dialCode" class="phone-code" required onchange="handleCodeChange()">
+                    <select id="dialCode" class="phone-code" required>
                         </select>
-
-                    <input type="text" id="customDialCode" class="phone-code hidden" placeholder="+" style="background-image: none;">
-
                     <input type="tel" id="phone" class="form-input phone-number" inputmode="numeric" required>
                 </div>
                 <input type="hidden" id="fullPhone">
@@ -213,27 +179,19 @@
         }
     }
 
-    // 🟢 Shortened list: Only 6 primary global dialing codes
-    const dialCodesList = ["+1", "+44", "+61", "+86", "+91", "+971"];
+    // 🟢 IP Detection & Phone Code Logic added to your script
+    const commonCodes = ["+1", "+91", "+44", "+61", "+971", "+86", "+49", "+33", "+39", "+34"];
 
     window.onload = function() { 
         const dialSelect = document.getElementById("dialCode");
         
-        // Populate the dropdown with the shortened list
-        dialCodesList.forEach(code => { 
+        commonCodes.forEach(code => { 
             let opt = document.createElement("option"); 
             opt.value = code; 
             opt.innerText = code; 
             dialSelect.appendChild(opt); 
         });
 
-        // Add the "Other" option
-        let otherOpt = document.createElement("option");
-        otherOpt.value = "Other";
-        otherOpt.innerText = "Other";
-        dialSelect.appendChild(otherOpt);
-
-        // Fetch IP location automatically
         fetch('https://ipapi.co/json/')
             .then(response => response.json())
             .then(data => {
@@ -244,36 +202,16 @@
                     if (exists) {
                         dialSelect.value = detectedCode;
                     } else {
-                        // If new code detected, trigger custom input
-                        dialSelect.value = "Other";
-                        handleCodeChange();
-                        document.getElementById("customDialCode").value = detectedCode;
+                        let opt = document.createElement("option");
+                        opt.value = detectedCode;
+                        opt.innerText = detectedCode;
+                        dialSelect.appendChild(opt);
+                        dialSelect.value = detectedCode;
                     }
                 }
             })
             .catch(error => console.log("IP Detection failed.", error));
     };
-
-    // Logic to switch dropdown into a text box
-    function handleCodeChange() {
-        const select = document.getElementById('dialCode');
-        if (select.value === 'Other') {
-            select.classList.add('hidden'); // Hide select directly
-            const customInput = document.getElementById('customDialCode');
-            customInput.classList.remove('hidden'); // Show input directly
-            customInput.focus();
-        }
-    }
-
-    // If they delete everything in the custom box, switch back to dropdown
-    document.getElementById('customDialCode').addEventListener('blur', function() {
-        if (this.value.trim() === '' || this.value.trim() === '+') {
-            this.classList.add('hidden'); // Hide custom input
-            const select = document.getElementById('dialCode');
-            select.classList.remove('hidden'); // Show select
-            select.value = '+1'; // Default back to first option
-        }
-    });
 
     // Step 1 Submission Logic
     function processStep1() {
@@ -282,7 +220,7 @@
         
         errorMsg.classList.add('hidden');
 
-        // Strict Email Format Validation
+        // Added Strict Email Format Validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             errorMsg.innerText = "Please enter a valid email address (e.g., name@company.com).";
@@ -290,18 +228,7 @@
             return; 
         }
 
-        // Figure out which dial code to use (Dropdown vs Custom Typed)
-        let finalDialCode = "";
-        if (!document.getElementById('customDialCode').classList.contains('hidden')) {
-            finalDialCode = document.getElementById('customDialCode').value.trim();
-            // Make sure they didn't forget the plus sign
-            if(!finalDialCode.startsWith('+')) finalDialCode = '+' + finalDialCode;
-        } else {
-            finalDialCode = document.getElementById('dialCode').value;
-        }
-
-        // Combine Phone Number
-        document.getElementById('fullPhone').value = finalDialCode + " " + document.getElementById('phone').value;
+        document.getElementById('fullPhone').value = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
 
         /* ============================================================
         YOUR REAL BACKEND LOGIC GOES HERE LATER
@@ -311,6 +238,7 @@
             errorMsg.innerText = "This email is already registered. Please log in.";
             errorMsg.classList.remove('hidden');
         } else {
+            // Points to the new folder structure
             window.location.href = 'supplier-onboarding/supplier-info.html'; 
         }
     }
