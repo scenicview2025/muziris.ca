@@ -16,20 +16,29 @@
         --gold-dark: #b89225;
     }
 
-    body { background-color: #ffffff; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #111827; }
+    body { background-color: #ffffff; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #111827; display: flex; flex-direction: column; min-height: 100vh; }
     .brand-font { font-family: 'Cinzel', serif; }
     
-    /* Onboarding Top Nav */
-    .onboarding-header {
+    /* 🟢 Minimalist Top Nav */
+    .minimal-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px 24px;
+        padding: 24px 32px;
         background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        position: relative;
+    }
+
+    /* Absolute Center Logo */
+    .center-logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     /* Progress Bar (50% for Step 3) */
-    .progress-container { width: 100%; height: 2px; background-color: #e5e7eb; }
+    .progress-container { width: 100%; height: 2px; background-color: transparent; position: relative; top: -1px; }
     .progress-bar { height: 100%; background-color: #111827; width: 50%; transition: width 0.4s ease; } 
 
     /* Form Inputs */
@@ -63,25 +72,33 @@
     }
     .btn-next:hover { background-color: #111827; }
     
-    /* Minimal Footer */
-    .minimal-footer { border-top: 1px solid #e5e7eb; padding: 24px 0; margin-top: 60px; text-align: center; font-size: 11px; color: #6b7280; }
+    /* 🟢 Minimal Footer */
+    .minimal-footer { 
+        border-top: 1px solid #e5e7eb; 
+        padding: 24px 0; 
+        text-align: center; 
+        font-size: 11px; 
+        color: #6b7280; 
+        background: #fff;
+        margin-top: auto; /* Pushes footer to the bottom */
+    }
     .minimal-footer a { color: #6b7280; text-decoration: none; margin: 0 8px; transition: 0.2s; }
     .minimal-footer a:hover { color: #111827; }
   </style>
 </head>
 <body>
 
-  <header class="fixed top-0 left-0 w-full bg-white z-50">
-      <div class="onboarding-header">
+  <header class="w-full bg-white z-50">
+      <div class="minimal-header">
           <div class="w-1/3">
-              <a href="supplier-info.html" class="text-gray-500 hover:text-gray-900 transition text-lg"><i class="fas fa-chevron-left"></i></a>
+              <a href="supplier-info.html" class="text-gray-400 hover:text-gray-900 transition text-lg"><i class="fas fa-chevron-left"></i></a>
           </div>
           
-          <div class="w-1/3 text-center">
-              <h1 class="text-[20px] font-bold tracking-[0.2em] text-gray-900 brand-font uppercase">Muziris</h1>
+          <div class="center-logo">
+              <h1 class="text-2xl font-bold tracking-[0.2em] text-gray-900 brand-font uppercase cursor-pointer" onclick="window.location.href='../index1.html'">Muziris</h1>
           </div>
           
-          <div class="w-1/3 flex justify-end gap-6 text-sm font-medium text-gray-600">
+          <div class="w-1/3 flex justify-end gap-6 text-sm font-medium text-gray-600 hidden md:flex">
               <a href="#" class="hover:text-gray-900 transition">Get help</a>
               <a href="#" class="hover:text-gray-900 transition">Save & exit</a>
           </div>
@@ -96,7 +113,7 @@
     <div class="w-full max-w-[480px]">
         
         <div class="mb-8">
-            <h2 id="dynamic-header" class="text-[24px] md:text-[28px] text-gray-900 mb-3 font-serif font-normal tracking-tight">Where is your business located?</h2>
+            <h2 id="dynamic-header" class="text-[24px] md:text-[28px] text-gray-900 mb-3 font-serif font-normal tracking-tight leading-tight">Where is your business located?</h2>
         </div>
 
         <form id="step3-form" onsubmit="event.preventDefault(); processStep3();">
@@ -131,7 +148,7 @@
 
             <div class="mb-5">
                 <label class="form-label">Default language</label>
-                <select id="language" class="form-input" disabled>
+                <select id="language" class="form-input text-gray-500 bg-gray-50" disabled>
                     <option value="English">English</option>
                 </select>
                 <p class="text-[12px] text-gray-500 mt-1.5 leading-relaxed">This is the language for your workspace and product listings.</p>
@@ -145,15 +162,15 @@
 
         </form>
 
-        <div class="minimal-footer hidden md:block">
-            © 2026 Muziris International Inc. &nbsp;|&nbsp; 
-            <a href="../terms.html" target="_blank">Terms of service</a> &nbsp;|&nbsp; 
-            <a href="../privacy.html" target="_blank">Privacy policy</a> &nbsp;|&nbsp; 
-            <a href="../ip-policy.html" target="_blank">IP policy</a>
-        </div>
-
     </div>
   </main>
+
+  <footer class="minimal-footer hidden md:block w-full">
+      © 2026 Muziris International Inc. &nbsp;|&nbsp; 
+      <a href="../terms.html" target="_blank">Terms of service</a> &nbsp;|&nbsp; 
+      <a href="../privacy.html" target="_blank">Privacy policy</a> &nbsp;|&nbsp; 
+      <a href="../ip-policy.html" target="_blank">IP policy</a>
+  </footer>
 
   <script>
     // 🟢 Load Data on Page Start
