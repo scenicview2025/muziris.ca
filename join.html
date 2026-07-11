@@ -129,16 +129,11 @@
 
             <div class="mb-5">
                 <label class="form-label">Phone number</label>
-                <div class="phone-group relative">
-                    
-                    <div id="selectContainer" class="w-[80px]">
-                        <select id="dialCode" class="phone-code" required onchange="handleCodeChange()">
-                            </select>
-                    </div>
+                <div class="phone-group">
+                    <select id="dialCode" class="phone-code" required onchange="handleCodeChange()">
+                        </select>
 
-                    <div id="customCodeContainer" class="w-[80px] hidden">
-                        <input type="text" id="customDialCode" class="phone-code" placeholder="+" style="text-align: center;">
-                    </div>
+                    <input type="text" id="customDialCode" class="phone-code hidden" placeholder="+" style="background-image: none;">
 
                     <input type="tel" id="phone" class="form-input phone-number" inputmode="numeric" required>
                 </div>
