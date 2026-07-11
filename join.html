@@ -46,9 +46,9 @@
     .form-label { display: block; font-size: 0.85rem; font-weight: 400; color: #374151; margin-bottom: 0.4rem; }
 
     /* Phone Input Group */
-    .phone-group { display: flex; }
+    .phone-group { display: flex; align-items: stretch; }
     
-    /* 🟢 Narrower Phone Code Dropdown for "Numbers Only" */
+    /* 🟢 Pixel-Perfect Phone Code Dropdown */
     .phone-code { 
         width: 80px; 
         background: #ffffff; 
@@ -56,12 +56,20 @@
         border: 1px solid #d1d5db; 
         border-right: none; 
         border-radius: 4px 0 0 4px; 
-        padding: 10px; 
+        padding: 0 10px; 
         font-size: 0.95rem; 
         outline: none;
         cursor: pointer;
-        text-align: left;
-        text-align-last: center; /* Centers the text */
+        text-align: center;
+        text-align-last: center;
+        /* Removes clunky default browser styling */
+        appearance: none; 
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        /* Adds a custom, clean dropdown arrow */
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="%236b7280" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>');
+        background-repeat: no-repeat;
+        background-position: right 8px center;
     }
     .phone-code:focus { border-color: #111827; }
     .phone-number { flex: 1; border-radius: 0 4px 4px 0; }
