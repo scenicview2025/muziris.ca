@@ -241,9 +241,9 @@
     function handleCodeChange() {
         const select = document.getElementById('dialCode');
         if (select.value === 'Other') {
-            document.getElementById('selectContainer').classList.add('hidden');
+            select.classList.add('hidden'); // Hide select directly
             const customInput = document.getElementById('customDialCode');
-            document.getElementById('customCodeContainer').classList.remove('hidden');
+            customInput.classList.remove('hidden'); // Show input directly
             customInput.focus();
         }
     }
@@ -251,9 +251,10 @@
     // If they delete everything in the custom box, switch back to dropdown
     document.getElementById('customDialCode').addEventListener('blur', function() {
         if (this.value.trim() === '' || this.value.trim() === '+') {
-            document.getElementById('customCodeContainer').classList.add('hidden');
-            document.getElementById('selectContainer').classList.remove('hidden');
-            document.getElementById('dialCode').value = '+1'; // Default back to first option
+            this.classList.add('hidden'); // Hide custom input
+            const select = document.getElementById('dialCode');
+            select.classList.remove('hidden'); // Show select
+            select.value = '+1'; // Default back to first option
         }
     });
 
