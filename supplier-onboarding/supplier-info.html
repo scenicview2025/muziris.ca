@@ -19,7 +19,7 @@
     body { background-color: #ffffff; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #111827; display: flex; flex-direction: column; min-height: 100vh; }
     .brand-font { font-family: 'Cinzel', serif; }
     
-    /* 🟢 Minimalist Top Nav (Matching join.html) */
+    /* Minimalist Top Nav */
     .minimal-header {
         display: flex;
         justify-content: space-between;
@@ -72,7 +72,7 @@
     }
     .btn-next:hover { background-color: #111827; }
     
-    /* 🟢 Minimal Footer (Matching Faire) */
+    /* Minimal Footer */
     .minimal-footer { 
         border-top: 1px solid #e5e7eb; 
         padding: 24px 0; 
@@ -80,7 +80,7 @@
         font-size: 11px; 
         color: #6b7280; 
         background: #fff;
-        margin-top: auto; /* Pushes footer to the very bottom of the page */
+        margin-top: auto; 
     }
     .minimal-footer a { color: #6b7280; text-decoration: none; margin: 0 8px; transition: 0.2s; }
     .minimal-footer a:hover { color: #111827; }
@@ -127,23 +127,6 @@
                 <label class="form-label">Website URL (Optional)</label>
                 <input type="url" id="websiteUrl" class="form-input" placeholder="https://example.com">
                 <p class="text-[12px] text-gray-500 mt-1.5 leading-relaxed">We'll use your website to verify your brand, set up your account, and import content to build your shop on Muziris.</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 mb-5">
-                <div>
-                    <label class="form-label">Year Established *</label>
-                    <input type="number" id="yearEst" class="form-input" placeholder="e.g. 2010" min="1800" max="2026" required>
-                </div>
-                <div>
-                    <label class="form-label">Factory Size *</label>
-                    <select id="factorySize" class="form-input" required>
-                        <option value="">Select size...</option>
-                        <option value="1-50">1 - 50 Employees</option>
-                        <option value="51-200">51 - 200 Employees</option>
-                        <option value="201-500">201 - 500 Employees</option>
-                        <option value="500+">500+ Employees</option>
-                    </select>
-                </div>
             </div>
 
             <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 pb-6 z-40 md:static md:bg-transparent md:border-none md:p-0 md:z-auto md:mt-8">
