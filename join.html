@@ -226,11 +226,11 @@
     window.onload = function() { 
         const dialSelect = document.getElementById("dialCode");
         
-        // Populate standard codes
+        // Populate standard codes (Numbers Only)
         commonCodes.forEach(c => { 
             let opt = document.createElement("option"); 
             opt.value = c.code; 
-            opt.innerText = `${c.code} (${c.name})`; 
+            opt.innerText = c.code; 
             dialSelect.appendChild(opt); 
         });
 
@@ -247,10 +247,10 @@
                     if (exists) {
                         dialSelect.value = detectedCode;
                     } else {
-                        // If it's a code we didn't hardcode, add it to the list dynamically!
+                        // If new code detected, add it as a clean number
                         let opt = document.createElement("option");
                         opt.value = detectedCode;
-                        opt.innerText = `${detectedCode} (${data.country_code})`;
+                        opt.innerText = detectedCode;
                         dialSelect.appendChild(opt);
                         dialSelect.value = detectedCode;
                     }
