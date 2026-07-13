@@ -213,14 +213,20 @@
             .catch(error => console.log("IP Detection failed.", error));
     };
 
-    // Step 1 Submission Logic
-    function processStep1() {
+   // Step 1 Submission Logic
+    async function processStep1() {
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
         const email = document.getElementById('email').value.trim();
+        const dialCode = document.getElementById('dialCode').value;
+        const phoneStr = document.getElementById('phone').value.trim();
+        const fullPhone = dialCode + " " + phoneStr;
         const errorMsg = document.getElementById('email-error');
+        const submitBtn = document.querySelector('button[type="submit"]');
         
         errorMsg.classList.add('hidden');
 
-        // Added Strict Email Format Validation
+        // Strict Email Format Validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             errorMsg.innerText = "Please enter a valid email address (e.g., name@company.com).";
@@ -228,18 +234,52 @@
             return; 
         }
 
-        document.getElementById('fullPhone').value = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
+        // 1. Change button state to show it's loading
+        submitBtn.innerText = "Submitting...";
+        submitBtn.disabled = true;
 
-        /* ============================================================
-        YOUR REAL BACKEND LOGIC GOES HERE LATER
-        ============================================================ */
-       
-        if (email === "test@muziris.ca") {
-            errorMsg.innerText = "This email is already registered. Please log in.";
+        try {
+            // 2. Send the captured data directly to your Muziris Render Server
+            const response = await fetch('https://muziris-api.onrender.com/api/staff/leads', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'Supplier',
+                    contactPerson: firstName + ' ' + lastName,
+                    email: email,
+                    phone: fullPhone,
+                    companyName: 'Pending Review',
+                    country: dialCode // Temporarily using dial code to guess country
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // 3. Wipe the form and show the elegant Success Message
+                const formContainer = document.getElementById('step1-form');
+                formContainer.innerHTML = `
+                    <div style="text-align:center; padding: 40px 10px; animation: fadeIn 0.5s;">
+                        <i class="fas fa-check-circle" style="color: #D4AF37; font-size: 54px; margin-bottom: 20px;"></i>
+                        <h2 style="font-size: 24px; color: #111827; font-family: 'Cinzel', serif; font-weight: bold; margin-bottom: 15px;">Application Received</h2>
+                        <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">
+                            Thank you for your interest in joining the Muziris network. <br><br>
+                            Our sourcing team is currently reviewing applications and will contact you shortly with the next steps.
+                        </p>
+                    </div>
+                `;
+            } else {
+                // Handle duplicate emails or server errors
+                errorMsg.innerText = data.error || "Something went wrong. Please try again.";
+                errorMsg.classList.remove('hidden');
+                submitBtn.innerText = "Next";
+                submitBtn.disabled = false;
+            }
+        } catch (error) {
+            errorMsg.innerText = "Network error. Please check your connection and try again.";
             errorMsg.classList.remove('hidden');
-        } else {
-            // Points to the new folder structure
-            window.location.href = 'supplier-onboarding/supplier-info.html'; 
+            submitBtn.innerText = "Next";
+            submitBtn.disabled = false;
         }
     }
   </script>
