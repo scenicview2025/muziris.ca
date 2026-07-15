@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+ <title>Muziris | Supplier Registration</title>
+  <link rel="icon" type="image/png" href="MC.svg">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --gold: #D4AF37; 
+      --gold-dim: #b89225; 
+      --dark-bg: #0b0e14; 
+      --card-bg: #151922; 
+      --text: #e0e0e0; 
+      --input-bg: #080a0f; 
+      --alert: #ff5252; 
+    }
+    body { margin: 0; padding: 0; font-family: 'Lato', sans-serif; background-color: var(--dark-bg); color: var(--text); height: 100vh; overflow: hidden; }
+    
+    .container { display: flex; height: 100vh; width: 100%; }
+    
+    /* LEFT PANEL (Branding & 3D Globe) */
+    .left-panel {
+      flex: 1;
+      background-color: var(--dark-bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 60px;
+      overflow: hidden;
+    }
+    .left-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(11,14,20,0.1), rgba(11,14,20,0.95)); z-index: 2;}
+    
+    /* 3D CANVAS STYLING */
+    #networkGlobe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.85; }
+
+    /* TOP NAVIGATION */
+    .top-nav { position: absolute; top: 30px; left: 40px; z-index: 3; }
+    .back-home { color: var(--gold); text-decoration: none; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+    .back-home:hover { color: #fff; }
+
+    .brand-content { position: relative; z-index: 3; max-width: 500px; margin-top: 15vh; }
+    .brand-content a { text-decoration: none; }
+    .brand-content h1 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 48px; margin: 0; letter-spacing: 2px; transition: 0.3s; }
+    .brand-content h1:hover { color: #fff; }
+    .brand-content p { font-size: 18px; line-height: 1.6; margin-top: 15px; color: #ccc; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+    /* TRUST LINK STYLING */
+    .trust-link-box {
+      margin-top: 40px;
+      background: rgba(212, 175, 55, 0.05);
+      border-left: 3px solid var(--gold);
+      display: inline-flex;
+      flex-direction: column;
+      border-radius: 0 4px 4px 0;
+      overflow: hidden;
+    }
+    .trust-link-box a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 25px;
+      transition: background 0.3s, color 0.3s, padding-left 0.3s;
+    }
+    .trust-link-box a:hover { 
+      background: rgba(212, 175, 55, 0.15);
+      color: #fff; 
+      padding-left: 30px;
+    }
+    .trust-link-box a:not(:last-child) {
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    /* ECO PLEDGE STYLING */
+    .eco-pledge {
+      margin-top: auto; 
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 25px;
+      max-width: 450px;
+      position: relative;
+      z-index: 3;
+    }
+    .eco-icon svg {
+      width: 48px;
+      height: 48px;
+      opacity: 0.95;
+    }
+    .eco-text strong {
+      color: #e0e0e0;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 2px;
+      font-size: 13px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .eco-text p {
+      color: #888;
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0;
+      text-shadow: none;
+    }
+    .eco-text span {
+      color: #4CAF50;
+      font-style: italic;
+      font-weight: bold;
+    }
+
+    /* TOOLTIP STYLING */
+    .info-icon {
+      display: inline-block;
+      margin-left: 6px;
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      text-align: center;
+      line-height: 14px;
+      font-size: 10px;
+      cursor: help;
+      position: relative;
+      font-weight: bold;
+    }
+    .info-icon:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 150%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0b0e14;
+      color: #e0e0e0;
+      padding: 10px;
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      white-space: normal;
+      width: 220px;
+      font-size: 11px;
+      z-index: 10;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+      text-transform: none;
+      letter-spacing: 0.5px;
+      font-weight: normal;
+      text-align: left;
+      line-height: 1.4;
+    }
+    .info-icon:hover::before {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--gold) transparent transparent transparent;
+    }
+
+    /* RIGHT PANEL (Form) */
+    .right-panel { flex: 1; background-color: var(--dark-bg); display: flex; flex-direction: column; justify-content: flex-start; padding: 100px 80px 200px 80px; overflow-y: auto; max-width: 650px; position: relative; border-left: 1px solid #222; z-index: 4; box-shadow: -10px 0 30px rgba(0,0,0,0.5);}
+
+    /* LOGIN LINK */
+    .login-link-container { display: flex; justify-content: flex-end; margin-bottom: 30px; }
+    .login-btn { border: 1px solid var(--gold); color: var(--gold); text-decoration: none; padding: 8px 20px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .login-btn:hover { background: var(--gold); color: #000; }
+
+    /* PROGRESS BAR */
+    .progress-container { margin-bottom: 30px; }
+    .progress-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); width: 25%; transition: width 0.4s ease; }
+    .step-indicator { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    .step-active { color: var(--gold); font-weight: bold; }
+
+    /* FORM STYLING */
+    .form-step { display: none; animation: fadeIn 0.5s ease; }
+    .form-step.active { display: block; }
+    h2 { font-family: 'Cinzel', serif; color: white; margin-bottom: 25px; font-size: 24px; }
+    .form-group { margin-bottom: 20px; }
+    
+    /* Input Split grid */
+    .input-row { display: flex; gap: 15px; margin-bottom: 20px; }
+    .input-row .form-group { flex: 1; margin-bottom: 0; }
+
+    label { display: block; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+    input, select, textarea { width: 100%; padding: 15px; background: var(--input-bg); border: 1px solid #333; color: white; border-radius: 4px; font-family: 'Lato', sans-serif; box-sizing: border-box; transition: 0.3s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
+
+    /* Phone Input Group */
+    .phone-group { display: flex; gap: 10px; }
+    .phone-code { width: 80px; background: #0f1219; color: #ffffff; font-weight: bold; text-align: center; border: 1px solid #333; cursor: not-allowed; }
+    .phone-code::placeholder { color: #666; font-weight: normal; }
+    .phone-number { flex: 1; }
+
+    /* BUTTONS */
+    .btn-group { display: flex; justify-content: space-between; margin-top: 30px; }
+    button { padding: 15px 30px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .btn-next { background: var(--gold); color: #000; }
+    .btn-next:hover { background: var(--gold-dim); }
+    .btn-prev { background: transparent; color: #666; border: 1px solid #333; }
+    .btn-prev:hover { border-color: #666; color: #ccc; }
+
+    /* SUCCESS SCREEN & OAUTH BUTTONS */
+    #success-screen { display: none; text-align: center; }
+    .id-box { background: var(--card-bg); border: 1px solid var(--gold); padding: 20px; margin: 30px 0; border-radius: 8px; }
+    .id-text { font-size: 32px; color: var(--gold); font-family: 'Cinzel', serif; letter-spacing: 3px; margin: 10px 0; }
+    
+    .oauth-btn { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: none; letter-spacing: 0; }
+    .oauth-google { background-color: #fff; color: #444; border: 1px solid #ccc; }
+    .oauth-google:hover { background-color: #f1f1f1; }
+    .oauth-microsoft { background-color: #2F2F2F; color: #fff; border: 1px solid #444; }
+    .oauth-microsoft:hover { background-color: #404040; }
+    .oauth-linkedin { background-color: #0077b5; color: #fff; border: 1px solid #0077b5; }
+    .oauth-linkedin:hover { background-color: #006097; }
+    
+    .oauth-email { background-color: #1a1e29; color: #fff; border: 1px solid #444; }
+    .oauth-email:hover { background-color: #252b3b; border-color: var(--gold); }
+
+    /* CUSTOM ALERT MODAL */
+    /* 🟢 BUMPED Z-INDEX TO 100000 🟢 */
+    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100000; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+    .alert-box { background: var(--card-bg); border: 1px solid var(--alert); padding: 30px 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .alert-box h3 { color: var(--alert); font-family: 'Cinzel', serif; margin-top: 0; font-size: 20px; letter-spacing: 1px; text-transform: uppercase; }
+    .alert-box p { font-size: 15px; color: #ccc; line-height: 1.5; margin-bottom: 25px; }
+    .alert-btn { background: transparent; border: 1px solid var(--alert); color: var(--alert); padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    .alert-btn:hover { background: var(--alert); color: #000; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 900px) {
+      .container { flex-direction: column; overflow-y: auto; }
+      .left-panel { min-height: 500px; padding: 30px; flex: none; justify-content: center; }
+      .brand-content { margin-top: 60px; }
+      .top-nav { top: 20px; left: 20px; }
+      .right-panel { padding: 30px 20px; flex: none; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; border-left: none; }
+      body { overflow-y: auto; }
+      .input-row { flex-direction: column; gap: 20px; }
+      .eco-pledge { margin-top: 40px; }
+    }
+
+    /* 🟢 NEW: SLEEK PILL CONCIERGE (MATCHING YOUR SCREENSHOT) */
+    .concierge-widget {
+      position: fixed;
+      bottom: -100px; /* Starts hidden below screen */
+      left: 50%;
+      transform: translateX(-50%);
+      background: #11151c; /* Deep dark blue/black pill background */
+      border: 1px solid rgba(212, 175, 55, 0.6); /* Thin gold border */
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 6px 20px 6px 6px;
+      z-index: 9990;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+      transition: bottom 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+      min-width: 320px;
+    }
+    .concierge-widget.active {
+      bottom: 40px; /* Slides up into the center */
+    }
+    
+    /* The Avatar Circle */
+    .concierge-avatar {
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); /* Slight gold glow */
+      background: var(--gold); /* Background behind cartoon if it's transparent */
+    }
+    .concierge-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Text Area */
+    .concierge-text-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .concierge-text {
+      font-size: 14px;
+      color: #fff;
+      font-weight: 700;
+    }
+    
+    /* Blinking Cursor */
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 15px;
+      background-color: var(--gold);
+      margin-left: 5px;
+      animation: blink 0.7s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* The Close 'X' */
+    .close-concierge {
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      transition: 0.2s;
+      font-size: 16px;
+    }
+    .close-concierge:hover {
+      color: var(--alert);
+    }
+  </style>
+</head>
+<body>
+
+<div id="animated-concierge" class="concierge-widget" onclick="document.getElementById('support-modal').style.display='flex'">
+  
+  <div class="concierge-avatar">
+    <img src="avatar.png" alt="Support Agent">
+  </div>
+  
+  <div class="concierge-text-area">
+    <span class="concierge-text" id="concierge-text"></span>
+    <span class="typing-cursor" id="typing-cursor"></span>
+  </div>
+
+  <div class="close-concierge" onclick="event.stopPropagation(); document.getElementById('animated-concierge').style.display='none';">
+    <i class="fas fa-times"></i>
+  </div>
+  
+</div>
+
+<div id="custom-alert">
+  <div class="alert-box">
+    <h3 id="alert-title">Notice</h3>
+    <p id="alert-message">Message goes here.</p>
+    <button class="alert-btn" onclick="closeAlert()">Dismiss</button>
+  </div>
+</div>
+<div id="support-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease;">
+  <div class="alert-box" style="text-align: left; max-width: 400px; border-color: var(--gold);">
+    <h3 style="color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; text-align: left;">Need Assistance?</h3>
+    <p style="font-size: 13px; color: #aaa; margin-bottom: 20px; text-align: left; line-height: 1.5;">Feel confused or need support filling out the document? Provide your WhatsApp or Phone number and our onboarding team will call you shortly.</p>
+    
+    <div class="form-group" style="text-align: left;">
+      <label style="color: #888;">Phone / WhatsApp Number</label>
+      <input type="text" id="support-phone" placeholder="+1 234 567 8900" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: 'Lato', sans-serif;">
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px;">
+      <button class="alert-btn" style="border-color: #555; color: #aaa;" onclick="document.getElementById('support-modal').style.display='none'">Cancel</button>
+      <button class="btn-next" style="padding: 10px 20px; border: none; font-size: 12px; font-family: 'Cinzel', serif;" onclick="submitSupportRequest()">Request Call</button>
+    </div>
+  </div>
+</div>
+
+<div id="email-auth-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; animation: fadeIn 0.3s ease;">
+  <div class="alert-box" style="text-align: left; max-width: 450px; border-color: var(--gold);">
+    <h3 style="color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; text-align: left;">Secure Account Setup</h3>
+    <p style="font-size: 13px; color: #aaa; margin-bottom: 20px; text-align: left;">Please confirm your email address and create a secure password to finalize your global profile.</p>
+    
+    <div class="form-group" style="text-align: left;">
+      <label style="color: #888;">Email Address</label>
+      <input type="email" id="auth-email" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box;">
+    </div>
+    
+    <div class="form-group" style="margin-top: 15px; text-align: left; position: relative;">
+      <label style="color: #888;">Create Password</label>
+      <input type="password" id="auth-password" placeholder="Minimum 6 characters" style="background: #080a0f; border: 1px solid #333; padding: 12px; width: 100%; color: #fff; border-radius: 4px; box-sizing: border-box; padding-right: 45px;">
+      <span id="togglePassword" style="position: absolute; right: 15px; top: 34px; cursor: pointer; color: var(--gold); transition: 0.3s;" title="Toggle Password Visibility">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </span>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 30px;">
+      <button class="alert-btn" style="border-color: #555; color: #aaa;" onclick="document.getElementById('email-auth-modal').style.display='none'">Cancel</button>
+      <button class="btn-next" style="padding: 10px 25px; border: none; font-family: 'Cinzel', serif;" onclick="processEmailRegistration()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="left-panel">
+    <canvas id="networkGlobe"></canvas>
+    
+    <div class="top-nav">
+      <a href="/" class="back-home">← Back to Home</a>
+    </div>
+    
+    <div class="brand-content">
+      <a href="/"><h1>Muziris</h1></a>
+      <p>Connect with international buyers through our secure Global Trade Network. Register today to expand your reach.</p>
+      
+      <div class="trust-link-box">
+        <a href="sell">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+          Why Partner With Muziris?
+        </a>
+        <a href="how-it-works">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          How It Works
+        </a>
+        <a href="zero-risk">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-2.82-1.36-2.86-2.92l2.5-.12c.11.83.74 1.39 1.76 1.39 1.25 0 1.83-.69 1.83-1.42 0-1.04-.96-1.33-2.58-1.76-1.92-.53-2.99-1.57-2.99-3.04 0-1.48 1.07-2.5 2.53-2.84V5.5h2.67v1.85c1.3.26 2.37 1.05 2.56 2.55l-2.43.21c-.13-.74-.7-1.19-1.58-1.19-.94 0-1.62.61-1.62 1.35 0 1.06 1.11 1.34 2.68 1.8 1.95.56 2.89 1.64 2.89 3.09 0 1.54-1.11 2.55-2.69 2.93z"/></svg>
+          Zero-Risk Expansion
+        </a>
+        <a href="concierge">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+          24/7 Trade Concierge
+        </a>
+      </div>
+    </div>
+
+    <div class="eco-pledge">
+      <div class="eco-icon">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="30" cy="34" r="22" fill="#0b0e14" stroke="#4CAF50" stroke-width="2.5"/>
+          <path d="M8 34h44" stroke="#4CAF50" stroke-width="1.5" stroke-opacity="0.5"/>
+          <path d="M30 12c8 0 14 9.8 14 22s-6 22-14 22-14-9.8-14-22 6-22 14-22z" stroke="#4CAF50" stroke-width="1.5" stroke-opacity="0.5"/>
+          <path d="M62 18 C 64 42, 46 62, 22 62 C 42 56, 52 42, 62 18 Z" fill="#4CAF50"/>
+          <path d="M62 18 C 52 30, 42 46, 22 62" stroke="#0b0e14" stroke-width="2"/>
+          <path d="M12 20 C 12 8, 28 4, 46 8" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round"/>
+          <polygon points="44,2 52,8 42,12" fill="#4CAF50"/>
+        </svg>
+      </div>
+      <div class="eco-text">
+        <strong>PROTECT OUR PLANET</strong>
+        <p>Muziris is committed to sustainable global trade. We support eco-conscious manufacturing and the universal principles to <span>Reduce, Reuse, and Recycle</span>.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-panel">
+    
+    <div id="success-screen">
+      <h2 style="color:var(--gold)">Profile Generated</h2>
+      <p style="color:#aaa; line-height: 1.6;">Your company profile has been created successfully.</p>
+      <div class="id-box">
+        <div style="font-size:10px; color:#888; text-transform:uppercase;">Your Official Supplier ID</div>
+        <div class="id-text" id="final-id">GENERATING...</div>
+      </div>
+      <p style="font-size:13px; color:#666; margin-bottom: 30px; line-height: 1.6;">To ensure enterprise-grade security, Muziris utilizes Single Sign-On (SSO) and Secure Magic Links. Please authenticate below to finalize account creation.</p>
+      
+      <div style="max-width: 350px; margin: 0 auto;">
+        <button class="oauth-btn oauth-google" onclick="triggerOAuth('Google')">
+          <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+          Sign up with Google
+        </button>
+        <button class="oauth-btn oauth-microsoft" onclick="triggerOAuth('Microsoft')">
+          <svg width="20" height="20" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"><path d="M10 0H0v10h10V0z" fill="#f25022"/><path d="M21 0H11v10h10V0z" fill="#7fba00"/><path d="M10 11H0v10h10V11z" fill="#00a4ef"/><path d="M21 11H11v10h10V11z" fill="#ffb900"/></svg>
+          Sign up with Microsoft
+        </button>
+        <button class="oauth-btn oauth-linkedin" onclick="triggerOAuth('LinkedIn')">
+          <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Sign up with LinkedIn
+        </button>
+        
+        <div style="display: flex; align-items: center; margin: 20px 0; color: #666; font-size: 12px; text-transform: uppercase;">
+          <hr style="flex: 1; border: none; border-top: 1px solid #333;">
+          <span style="padding: 0 10px;">OR</span>
+          <hr style="flex: 1; border: none; border-top: 1px solid #333;">
+        </div>
+
+        <button class="oauth-btn oauth-email" onclick="triggerEmailAuth()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          Continue with Email
+        </button>
+
+      </div>
+    </div>
+
+    <div id="form-container">
+      
+      <div class="login-link-container" style="justify-content: space-between; align-items: center;">
+        <button type="button" onclick="document.getElementById('support-modal').style.display='flex'" style="background: transparent; border: none; color: #888; font-size: 13px; text-decoration: underline; padding: 0; text-transform: none; letter-spacing: normal; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#888'">
+          <i class="fas fa-headset mr-1"></i> Need help filling this out?
+        </button>
+        <a href="suppliers" class="login-btn">Already Registered? Sign In</a>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="step-indicator">
+          <span id="step1-ind" class="step-active">Company</span>
+          <span id="step2-ind">Address</span>
+          <span id="step3-ind">Business</span>
+          <span id="step4-ind">Review</span>
+        </div>
+      </div>
+
+      <form id="regForm">
+        
+        <div class="form-step active" id="step1">
+          <span style="color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; display: block; margin-bottom: 5px;">Zero Upfront Fees &bull; Takes 2 Minutes</span>
+          <h2 style="margin-top: 0;">Company Details</h2>
+          
+          <div class="form-group"><label>Company Name *</label><input type="text" name="companyName" id="companyName" required></div>
+          <div class="form-group"><label>Contact Person *</label><input type="text" name="contactPerson" id="contactPerson" required></div>
+          <div class="form-group"><label>Official Email *</label><input type="email" name="email" id="email" required></div>
+          
+          <div class="form-group">
+            <label>Country *</label>
+            <select name="country" id="countrySelect" required onchange="updatePhoneCode()">
+              <option value="">Select Country...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>WhatsApp / Mobile Number *</label>
+            <div class="phone-group">
+              <input type="text" id="dialCode" class="phone-code" readonly placeholder="+00">
+              <input type="text" id="phone" placeholder="Phone Number" inputmode="numeric" required>
+            </div>
+            <input type="hidden" name="phone" id="fullPhone">
+          </div>
+
+          <div class="btn-group" style="justify-content: flex-end;"><button type="button" class="btn-next" onclick="nextStep(1)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step2">
+          <h2>Registered Address</h2>
+          
+          <div class="form-group"><label>Address Line 1 *</label><input type="text" name="address1" id="address1" placeholder="Street address, company building" required></div>
+          <div class="form-group"><label>Address Line 2 (Optional)</label><input type="text" name="address2" id="address2" placeholder="Suite, unit, building, floor, etc."></div>
+          
+          <div class="input-row">
+            <div class="form-group"><label>City *</label><input type="text" name="city" id="city" placeholder="e.g. Toronto, Mumbai" required></div>
+            <div class="form-group"><label>State / Province *</label><input type="text" name="state" id="state" placeholder="e.g. Ontario, Gujarat" required></div>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group"><label>Zip / Postal Code *</label><input type="text" name="zipcode" id="zipcode" placeholder="Postal Code" required></div>
+            <div class="form-group"><label>Do you currently export?</label><select name="exports"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+          </div>
+          
+          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(2)">Back</button><button type="button" class="btn-next" onclick="nextStep(2)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step3">
+          <h2>Business Profile</h2>
+          
+          <div class="input-row">
+            <div class="form-group"><label>Primary Industry</label><select name="industry" id="industrySelect"></select></div>
+            <div class="form-group"><label>Primary Category</label><select name="category" id="categorySelect"></select></div>
+          </div>
+
+          <div class="input-row">
+            <div class="form-group">
+              <label>Year Established</label>
+              <input type="number" name="yearEstablished" placeholder="e.g. 2010" min="1900" max="2026">
+            </div>
+            <div class="form-group">
+              <label>Factory Size (Employees)</label>
+              <select name="employeeCount">
+                <option value="">Select Size...</option>
+                <option value="1-50">1 - 50 Employees</option>
+                <option value="51-200">51 - 200 Employees</option>
+                <option value="201-500">201 - 500 Employees</option>
+                <option value="500+">500+ Employees</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group"><label>Website URL</label><input type="text" name="website" placeholder="https://..."></div>
+          
+          <div class="btn-group"><button type="button" class="btn-prev" onclick="prevStep(3)">Back</button><button type="button" class="btn-next" onclick="nextStep(3)">Next Step</button></div>
+        </div>
+
+        <div class="form-step" id="step4">
+          <h2>Verification</h2>
+          
+          <div class="form-group">
+            <label>
+              GST / Tax ID Number 
+              <span class="info-icon" data-tooltip="Optional for now. However, providing your official tax ID fast-tracks your profile to 'Verified' status for enterprise buyers.">?</span>
+            </label>
+            <input type="text" name="taxId" placeholder="Corporate Tax ID, VAT, or GST">
+          </div>
+          
+          <div class="form-group">
+            <label>
+              Certifications 
+              <span class="info-icon" data-tooltip="e.g. ISO 9001, CE, FDA, FSC, GMP, OEKO-TEX. Separate multiple certifications with commas.">?</span>
+            </label>
+            <input type="text" name="certifications" placeholder="e.g. ISO 9001, CE, FDA...">
+          </div>
+          
+          <div class="form-group">
+            <label>Product Catalog Link</label>
+            <input type="text" name="catalogLink" placeholder="Google Drive, Dropbox, or Website URL">
+          </div>
+          
+          <div style="margin-top: 30px; padding: 15px; border: 1px dashed rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.02); font-size: 11px; color: #888; border-radius: 4px; line-height: 1.5;">
+            By clicking submit, you agree to the <a href="terms.html" target="_blank" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(212, 175, 55, 0.5); transition: 0.3s;">Muziris Terms of Trade</a>. Your default payment term is <strong style="color:var(--gold);">Muziris Secure Escrow</strong>.
+          </div>
+          
+          <div class="btn-group">
+            <button type="button" class="btn-prev" onclick="prevStep(4)">Back</button>
+            <button type="button" class="btn-next" id="submitBtn" onclick="submitForm()">Create Profile</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  let globeAnimating = true;
+
+  function initGlobe() {
+    const canvas = document.getElementById('networkGlobe');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const parent = canvas.parentElement;
+    let width, height;
+    
+    let nodes = [];
+    const numNodes = 200; 
+    
+    function resize() {
+      width = canvas.width = parent.clientWidth;
+      height = canvas.height = parent.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const radius = Math.min(width, height) * 0.45;
+
+    for (let i = 0; i < numNodes; i++) {
+      const phi = Math.acos(-1 + (2 * i) / numNodes);
+      const theta = Math.sqrt(numNodes * Math.PI) * phi;
+      nodes.push({
+        baseX: radius * Math.cos(theta) * Math.sin(phi),
+        baseY: radius * Math.sin(theta) * Math.sin(phi),
+        baseZ: radius * Math.cos(phi)
+      });
+    }
+
+    let rotationY = 0;
+    let rotationX = 0.2; 
+
+    function animate() {
+      if(!globeAnimating) return; 
+      ctx.clearRect(0, 0, width, height);
+      rotationY += 0.0015;
+      
+      const cx = width / 2;
+      const cy = height / 2;
+      
+      const projectedNodes = [];
+      
+      for (let i = 0; i < numNodes; i++) {
+        let node = nodes[i];
+        let y1 = node.baseY * Math.cos(rotationX) - node.baseZ * Math.sin(rotationX);
+        let z1 = node.baseZ * Math.cos(rotationX) + node.baseY * Math.sin(rotationX);
+        let x2 = node.baseX * Math.cos(rotationY) - z1 * Math.sin(rotationY);
+        let z2 = z1 * Math.cos(rotationY) + node.baseX * Math.sin(rotationY);
+        const scale = 800 / (800 + z2);
+        projectedNodes.push({ x: cx + x2 * scale, y: cy + y1 * scale, z: z2, scale: scale });
+      }
+      
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < numNodes; i++) {
+        for (let j = i + 1; j < numNodes; j++) {
+          const p1 = projectedNodes[i];
+          const p2 = projectedNodes[j];
+          const dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+          
+          if (dist < 80 * p1.scale) {
+            const alpha = Math.max(0, 1 - (dist / (80 * p1.scale))) * (p1.z > -100 ? 0.6 : 0.05);
+            ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      for (let i = 0; i < numNodes; i++) {
+        const p = projectedNodes[i];
+        const alpha = p.z > -100 ? 0.8 : 0.1;
+        ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
+</script>
+
+<script>
+  const WEB_APP_URL = "https://muziris-api.onrender.com/register-supplier";
+  
+  const lists = {
+    countries: [
+      { name: "Canada", code: "+1" }, { name: "United States", code: "+1" }, { name: "India", code: "+91" }, 
+      { name: "China", code: "+86" }, { name: "United Kingdom", code: "+44" }, { name: "Australia", code: "+61" }, 
+      { name: "Germany", code: "+49" }, { name: "France", code: "+33" }, { name: "Italy", code: "+39" }, 
+      { name: "Spain", code: "+34" }, { name: "Brazil", code: "+55" }, { name: "Mexico", code: "+52" }, 
+      { name: "Japan", code: "+81" }, { name: "South Korea", code: "+82" }, { name: "Vietnam", code: "+84" }, 
+      { name: "Thailand", code: "+66" }, { name: "Indonesia", code: "+62" }, { name: "Malaysia", code: "+60" }, 
+      { name: "Singapore", code: "+65" }, { name: "Philippines", code: "+63" }, { name: "Bangladesh", code: "+880" }, 
+      { name: "Sri Lanka", code: "+94" }, { name: "Pakistan", code: "+92" }, { name: "UAE", code: "+971" }, 
+      { name: "Saudi Arabia", code: "+966" }, { name: "South Africa", code: "+27" }, { name: "Nigeria", code: "+234" }, 
+      { name: "Kenya", code: "+254" }, { name: "Egypt", code: "+20" }, { name: "Turkey", code: "+90" }, 
+      { name: "Netherlands", code: "+31" }, { name: "Belgium", code: "+32" }, { name: "Sweden", code: "+46" }, 
+      { name: "Norway", code: "+47" }, { name: "Denmark", code: "+45" }, { name: "Switzerland", code: "+41" }, 
+      { name: "Poland", code: "+48" }, { name: "Russia", code: "+7" }, { name: "Argentina", code: "+54" }, 
+      { name: "Chile", code: "+56" }, { name: "Colombia", code: "+57" }, { name: "Peru", code: "+51" }, 
+      { name: "New Zealand", code: "+64" }, { name: "Ireland", code: "+353" }, { name: "Portugal", code: "+351" }, 
+      { name: "Other", code: "+" }
+    ],
+    industries: ["Agriculture & Food", "Apparel & Textiles", "Automotive & Transport", "Chemicals & Plastics", "Construction & Real Estate", "Consumer Electronics", "Energy & Environment", "Health & Medical", "Home & Garden", "Industrial Machinery", "Jewelry & Luxury", "Minerals & Metals", "Packaging & Printing", "Personal Care & Beauty", "Security & Protection"],
+    categories: ["Raw Materials", "Finished Goods", "Components & Parts", "Machinery & Equipment", "Tools & Hardware", "Packaging Materials", "Services & Logistics", "Private Label / OEM"]
+  };
+
+  window.onload = function() { 
+    populateLists(lists); 
+    initGlobe();
+
+    // 🟢 NEW: Slide in, then Typewriter Effect!
+    setTimeout(() => {
+      const concierge = document.getElementById('animated-concierge');
+      if(concierge) {
+        concierge.classList.add('active'); // Slides up from bottom
+        
+        // Wait 600ms for slide animation to finish, then start typing
+        setTimeout(typeConciergeText, 600);
+      }
+    }, 3000);
+
+   // 🟢 SHOW/HIDE PASSWORD LOGIC
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('auth-password');
+
+    // Define our two SVG icons (Open Eye & Closed Eye)
+    const eyeOpenSVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+    const eyeClosedSVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Swap the icon instantly
+        this.innerHTML = type === 'password' ? eyeOpenSVG : eyeClosedSVG;
+        
+        // Change color for visual feedback
+        this.style.color = type === 'password' ? 'var(--gold)' : '#fff';
+      });
+    }
+  };
+  // 🟢 The Typewriter Engine
+  const textToType = "Need help filling this out? 👋";
+  let typeIndex = 0;
+  
+  function typeConciergeText() {
+    if (typeIndex < textToType.length) {
+      document.getElementById('concierge-text').innerHTML += textToType.charAt(typeIndex);
+      typeIndex++;
+      setTimeout(typeConciergeText, 45); // Adjust this number for typing speed
+    } else {
+      // After it finishes typing, wait 3 seconds and hide the blinking cursor
+      setTimeout(() => { 
+        const cursor = document.getElementById('typing-cursor');
+        if(cursor) cursor.style.display = 'none'; 
+      }, 3000);
+    }
+  }
+  function showAlert(title, message, redirectUrl = null) {
+    document.getElementById('alert-title').innerText = title;
+    document.getElementById('alert-message').innerText = message;
+    
+    // Grab the dismiss button
+    const alertBtn = document.querySelector('#custom-alert .alert-btn');
+    
+    // If we passed a URL, tell the button to redirect after closing. Otherwise, just close it normally.
+    alertBtn.onclick = function() {
+      closeAlert();
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      }
+    };
+    
+    document.getElementById('custom-alert').style.display = 'flex';
+  }
+
+  function closeAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+  // 🟢 NEW: Submit Support Request to CRM
+  function submitSupportRequest() {
+    const phone = document.getElementById('support-phone').value.trim();
+    if(!phone) return alert("Please enter a valid phone or WhatsApp number.");
+
+    const btn = document.querySelector('#support-modal .btn-next');
+    btn.innerText = "Sending...";
+    btn.disabled = true;
+    
+    // Pull any data they've already typed into the form to help the agent
+    const company = document.getElementById('companyName') ? document.getElementById('companyName').value : "";
+    const contact = document.getElementById('contactPerson') ? document.getElementById('contactPerson').value : "";
+    const email = document.getElementById('email') ? document.getElementById('email').value : "";
+
+    fetch("https://muziris-api.onrender.com/api/staff/leads", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            type: "Supplier Support",
+            companyName: company || "Pending Registration",
+            contactPerson: contact || "Unknown",
+            email: email,
+            phone: phone,
+            whatsapp: phone,
+            country: "Unknown"
+        })
+    })
+    .then(r => r.json())
+    .then(d => {
+        document.getElementById('support-modal').style.display = 'none';
+        btn.innerText = "Request Call";
+        btn.disabled = false;
+        showAlert("Request Received", "Our onboarding team will contact you shortly at " + phone + ".");
+    })
+    .catch(e => {
+        document.getElementById('support-modal').style.display = 'none';
+        btn.innerText = "Request Call";
+        btn.disabled = false;
+        showAlert("Request Received", "Our onboarding team will contact you shortly.");
+    });
+  }
+
+  function populateLists(data) {
+    var cSelect = document.getElementById("countrySelect");
+    data.countries.forEach(c => { 
+      var opt = document.createElement("option"); 
+      opt.value = c.name; 
+      opt.innerText = c.name; 
+      opt.setAttribute("data-code", c.code);
+      cSelect.appendChild(opt); 
+    });
+
+    var iSelect = document.getElementById("industrySelect");
+    data.industries.forEach(i => { var opt = document.createElement("option"); opt.value = i; opt.innerText = i; iSelect.appendChild(opt); });
+
+    var catSelect = document.getElementById("categorySelect");
+    data.categories.forEach(c => { var opt = document.createElement("option"); opt.value = c; opt.innerText = c; catSelect.appendChild(opt); });
+  }
+
+  function updatePhoneCode() {
+    const select = document.getElementById("countrySelect");
+    const selectedOption = select.options[select.selectedIndex];
+    const dialCodeInput = document.getElementById("dialCode");
+    
+    if(selectedOption && selectedOption.value !== "") {
+      dialCodeInput.value = selectedOption.getAttribute("data-code");
+      document.getElementById("phone").focus(); 
+    } else {
+      dialCodeInput.value = "";
+    }
+  }
+
+  function nextStep(current) {
+    if(current === 1) {
+      if(!document.getElementById('companyName').value || !document.getElementById('email').value || !document.getElementById('phone').value || !document.getElementById('countrySelect').value) { 
+        document.getElementById('alert-title').innerText = "Missing Information";
+        document.getElementById('alert-message').innerText = "Please fill in all required Company Details before proceeding.";
+        document.getElementById('custom-alert').style.display = 'flex';
+        return; 
+      }
+    }
+    if(current === 2) {
+      if(!document.getElementById('address1').value || !document.getElementById('city').value || !document.getElementById('state').value || !document.getElementById('zipcode').value) {
+        document.getElementById('alert-title').innerText = "Missing Information";
+        document.getElementById('alert-message').innerText = "Please fill in all required Address fields to ensure successful registration.";
+        document.getElementById('custom-alert').style.display = 'flex';
+        return;
+      }
+    }
+
+    document.getElementById('step' + current).classList.remove('active');
+    document.getElementById('step' + (current+1)).classList.add('active');
+    document.getElementById('progress').style.width = (((current + 1) / 4) * 100) + "%";
+    document.getElementById('step' + current + '-ind').classList.remove('step-active');
+    document.getElementById('step' + (current+1) + '-ind').classList.add('step-active');
+  }
+
+  function prevStep(current) {
+    document.getElementById('step' + current).classList.remove('active');
+    document.getElementById('step' + (current-1)).classList.add('active');
+    document.getElementById('progress').style.width = (((current - 1) / 4) * 100) + "%";
+    document.getElementById('step' + current + '-ind').classList.remove('step-active');
+    document.getElementById('step' + (current-1) + '-ind').classList.add('step-active');
+  }
+
+  function submitForm() {
+    var btn = document.getElementById('submitBtn');
+    btn.innerText = "Processing...";
+    btn.disabled = true;
+    
+    const finalPhone = document.getElementById('dialCode').value + " " + document.getElementById('phone').value;
+    document.getElementById('fullPhone').value = finalPhone;
+
+    var form = document.getElementById('regForm');
+    var data = {};
+    new FormData(form).forEach((value, key) => data[key] = value);
+
+    fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(response => {
+      if(response.success) {
+        globeAnimating = false; 
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+        document.getElementById('final-id').innerText = response.id;
+        localStorage.setItem('tempCompany', data.companyName);
+      } else {
+        document.getElementById('alert-title').innerText = "Registration Error";
+        document.getElementById('alert-message').innerText = response.error || "An unexpected server error occurred.";
+        document.getElementById('custom-alert').style.display = 'flex';
+        btn.innerText = "Create Profile";
+        btn.disabled = false;
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      document.getElementById('alert-title').innerText = "Connection Error";
+      document.getElementById('alert-message').innerText = "Could not connect to the server. Please try again.";
+      document.getElementById('custom-alert').style.display = 'flex';
+      btn.innerText = "Create Profile";
+      btn.disabled = false;
+    });
+  }
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+  // 🟢 ADDED: OAuthProvider is imported here to support Microsoft
+  import { getAuth, signInWithPopup, GoogleAuthProvider, OAuthProvider, createUserWithEmailAndPassword, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+    authDomain: "muziris-ac9dd.firebaseapp.com",
+    projectId: "muziris-ac9dd",
+    storageBucket: "muziris-ac9dd.firebasestorage.app",
+    messagingSenderId: "929662963272",
+    appId: "1:929662963272:web:a2ed63f56ffc90940ed27d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  
+  // 🟢 Initialize both providers
+  const googleProvider = new GoogleAuthProvider();
+  const microsoftProvider = new OAuthProvider('microsoft.com');
+
+  window.triggerOAuth = function(provider) {
+    // Keep LinkedIn disabled for now until a custom backend handshake is built
+    if (provider === 'LinkedIn') {
+      document.getElementById('alert-title').innerText = "Coming Soon";
+      document.getElementById('alert-message').innerText = "LinkedIn Single Sign-On is currently pending API approval. Please use Google, Microsoft, or Email for now.";
+      document.getElementById('custom-alert').style.display = 'flex';
+      return;
+    }
+
+    const generatedId = document.getElementById('final-id').innerText;
+    const tempCompany = localStorage.getItem('tempCompany') || "Supplier";
+    const registeredEmail = document.getElementById('email').value.trim().toLowerCase();
+
+    // 🟢 Determine which provider button they clicked
+    const activeProvider = provider === 'Microsoft' ? microsoftProvider : googleProvider;
+
+    signInWithPopup(auth, activeProvider)
+      .then((result) => {
+        const user = result.user;
+        const authEmail = user.email.toLowerCase();
+        
+        // Check if the emails match!
+        if (authEmail !== registeredEmail) {
+           signOut(auth);
+           document.getElementById('alert-title').innerText = "Email Mismatch";
+           document.getElementById('alert-message').innerText = `You registered your company with ${registeredEmail}, but tried to link a different ${provider} account (${authEmail}). Please use the matching account.`;
+           document.getElementById('custom-alert').style.display = 'flex';
+           return; 
+        }
+        
+        // Push the email straight to the backend
+        fetch("https://muziris-api.onrender.com/api/login-supplier-sso", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: authEmail })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if(data.success) {
+            localStorage.setItem('verifiedSupplierId', data.supplierId);
+            localStorage.setItem('verifiedCompany', data.companyName);
+            localStorage.setItem('verifiedCurrency', data.currency);
+            
+            document.getElementById('alert-title').innerText = "Authentication Successful";
+            document.getElementById('alert-message').innerText = "Your Muziris profile is now securely linked to: " + user.email;
+            document.getElementById('custom-alert').style.display = 'flex';
+            
+            setTimeout(() => { window.location.href = 'supplier-dashboard.html'; }, 2000);
+          } else {
+             document.getElementById('alert-title').innerText = "Access Denied";
+             document.getElementById('alert-message').innerText = data.error;
+             document.getElementById('custom-alert').style.display = 'flex';
+          }
+        });
+      }).catch((error) => {
+        document.getElementById('alert-title').innerText = "Authentication Failed";
+        document.getElementById('alert-message').innerText = error.message;
+        document.getElementById('custom-alert').style.display = 'flex';
+      });
+  };
+
+  // OPEN THE CUSTOM MODAL
+  window.triggerEmailAuth = function() { 
+    const formEmail = document.getElementById('email').value.trim();
+    document.getElementById('auth-email').value = formEmail;
+    document.getElementById('auth-password').value = "";
+    document.getElementById('email-auth-modal').style.display = 'flex';
+  };
+
+  // PROCESS THE DATA FROM THE MODAL
+  window.processEmailRegistration = function() {
+    const loginEmail = document.getElementById('auth-email').value.trim().toLowerCase();
+    const loginPassword = document.getElementById('auth-password').value;
+    const registeredEmail = document.getElementById('email').value.trim().toLowerCase();
+
+    if (!loginEmail) {
+      alert("Please provide an email address.");
+      return;
+    }
+
+    if (loginEmail !== registeredEmail) {
+      alert(`The email must match the one you registered with (${registeredEmail}).`);
+      return;
+    }
+
+    if (!loginPassword || loginPassword.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
+    document.getElementById('email-auth-modal').style.display = 'none';
+
+    createUserWithEmailAndPassword(auth, loginEmail, loginPassword)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        
+        sendEmailVerification(user)
+          .then(() => {
+            signOut(auth);
+            
+            showAlert(
+              "Verify Your Email", 
+              "Profile Secured! A verification link has been sent to " + user.email + ". Please check your inbox and click the link to activate your account.",
+              "suppliers"
+            );
+          });
+      })
+      .catch((error) => {
+        showAlert("Registration Failed", error.message);
+      });
+  };
+</script>
+
+  <script src="muziris-bot.js"></script>
+
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/69a0bc742b22dd1c3aff0a36/1jidu0a5g';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+
+</body>
+</html>
