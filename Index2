@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muziris | Ask for anything. We source it.</title>
+<meta name="description" content="Tell us what you need and see live wholesale products with MOQ and landed price. Muziris connects Canadian buyers with verified Indian suppliers.">
+<link rel="icon" type="image/png" href="MC.svg">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GBXY659LSC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GBXY659LSC');
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --gold:#D4AF37;
+  --gold-soft:rgba(212,175,55,.35);
+  --void:#0b0e14;
+  --slate:#151922;
+  --slate-2:#1c2130;
+  --text:#f3f4f6;
+  --muted:#9ca3af;
+  --line:rgba(255,255,255,.07);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:'Lato',sans-serif;background:var(--void);color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+button,input,textarea,select{font-family:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;overflow:hidden}
+.hero-media{position:absolute;inset:0;z-index:0}
+.hero-media video{width:100%;height:100%;object-fit:cover;opacity:.55}
+.hero-media::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(120% 80% at 50% 0%,rgba(11,14,20,.25) 0%,rgba(11,14,20,.8) 55%,var(--void) 100%),
+    linear-gradient(180deg,rgba(11,14,20,.5),rgba(11,14,20,.95));
+}
+.hero-inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:90px 20px 40px;max-width:900px;margin:0 auto;width:100%}
+
+.wordmark{font-family:'Cinzel',serif;color:var(--gold);font-size:clamp(2.6rem,7vw,4.4rem);
+  font-weight:700;letter-spacing:.16em;margin:0 0 6px;text-shadow:0 0 40px rgba(212,175,55,.35)}
+.kicker{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.35em;color:var(--muted);margin:0 0 28px}
+.hero-line{font-size:clamp(1.3rem,3.4vw,2rem);line-height:1.45;font-weight:300;margin:0 auto 10px;max-width:22ch}
+.hero-line b{font-weight:700;color:var(--gold)}
+.hero-sub{color:var(--muted);font-weight:300;max-width:56ch;margin:0 auto 34px;line-height:1.8}
+
+/* ask bar */
+.askbar{display:flex;gap:10px;width:100%;max-width:620px;margin:0 auto;
+  background:rgba(21,25,34,.85);backdrop-filter:blur(12px);
+  border:1px solid var(--gold-soft);border-radius:14px;padding:10px 10px 10px 18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03) inset}
+.askbar input{flex:1;background:none;border:none;color:var(--text);font-size:1.05rem;outline:none;min-width:0}
+.askbar input::placeholder{color:#6b7280}
+.askbar button{background:var(--gold);color:#0b0e14;border:none;border-radius:9px;
+  padding:13px 24px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:filter .25s,transform .25s}
+.askbar button:hover{filter:brightness(1.12);transform:translateY(-1px)}
+
+.chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:22px;max-width:640px}
+.chip{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);
+  padding:8px 15px;border-radius:999px;font-size:.87rem;cursor:pointer;transition:.25s}
+.chip:hover{border-color:var(--gold-soft);color:var(--gold);background:rgba(212,175,55,.07)}
+
+.scroll-hint{position:relative;z-index:2;text-align:center;padding-bottom:26px;color:#4b5563;font-size:.75rem;letter-spacing:.25em}
+
+/* ---------- SHELL ---------- */
+.shell{max-width:1180px;margin:0 auto;padding:0 20px 90px}
+.section-head{font-family:'Cinzel',serif;font-size:1.5rem;letter-spacing:.12em;margin:70px 0 6px}
+.section-head span{color:var(--gold)}
+.section-note{color:var(--muted);font-weight:300;margin:0 0 26px}
+
+/* ---------- CHAT ---------- */
+.chat{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
+.panel{background:var(--slate);border:1px solid var(--line);border-radius:16px}
+.chat-log{padding:24px;min-height:340px;max-height:70vh;overflow-y:auto;scroll-behavior:smooth}
+.chat-log::-webkit-scrollbar{width:7px}
+.chat-log::-webkit-scrollbar-thumb{background:#2c3242;border-radius:4px}
+
+.msg{margin-bottom:20px;max-width:92%}
+.msg.you{margin-left:auto;text-align:right}
+.bubble{display:inline-block;padding:13px 17px;border-radius:14px;line-height:1.65;font-weight:300}
+.msg.bot .bubble{background:var(--slate-2);border:1px solid var(--line);border-top-left-radius:4px}
+.msg.you .bubble{background:rgba(212,175,55,.14);border:1px solid var(--gold-soft);color:var(--text);border-bottom-right-radius:4px}
+.who{font-size:.68rem;letter-spacing:.22em;color:#5b6270;margin-bottom:7px;font-family:'Cinzel',serif}
+
+.typing span{display:inline-block;width:6px;height:6px;margin:0 2px;background:var(--gold);border-radius:50%;animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+
+/* product results */
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-top:14px}
+.card{background:var(--void);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  display:flex;flex-direction:column;transition:border-color .25s}
+.card:hover{border-color:var(--gold-soft)}
+.card .thumb{aspect-ratio:1;background:#0f131b;display:block;width:100%;object-fit:cover}
+.card .body{padding:13px 14px 14px;display:flex;flex-direction:column;gap:7px;flex:1}
+.card h4{margin:0;font-size:.95rem;font-weight:700;line-height:1.35}
+.card .cat{font-size:.72rem;color:#6b7280;letter-spacing:.08em}
+.card .meta{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:auto;padding-top:6px}
+.card .price{font-size:1.15rem;color:var(--gold);font-weight:700}
+.card .price small{font-size:.66rem;color:var(--muted);font-weight:400;display:block;letter-spacing:.05em}
+.card .moq{font-size:.75rem;color:var(--muted);text-align:right;line-height:1.4}
+.card button{margin:0 14px 14px;background:transparent;border:1px solid var(--gold-soft);color:var(--gold);
+  padding:9px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;letter-spacing:.06em;transition:.25s}
+.card button:hover{background:var(--gold);color:#0b0e14}
+.card button.added{background:rgba(212,175,55,.15);border-color:var(--gold);cursor:default}
+
+.chat-input{display:flex;gap:10px;border-top:1px solid var(--line);padding:14px}
+.chat-input input{flex:1;background:var(--void);border:1px solid var(--line);border-radius:9px;
+  padding:13px 15px;color:var(--text);outline:none;min-width:0}
+.chat-input input:focus{border-color:var(--gold-soft)}
+.chat-input button{background:var(--gold);color:#0b0e14;border:none;border-radius:9px;padding:0 20px;font-weight:700;cursor:pointer}
+
+/* ---------- QUOTE LIST ---------- */
+.quote{position:sticky;top:20px;padding:20px}
+.quote h3{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:.14em;margin:0 0 4px}
+.quote .hint{color:var(--muted);font-size:.82rem;font-weight:300;margin:0 0 16px;line-height:1.6}
+.qlist{display:flex;flex-direction:column;gap:10px;max-height:44vh;overflow-y:auto}
+.qempty{border:1px dashed var(--line);border-radius:10px;padding:26px 16px;text-align:center;color:#5b6270;font-size:.85rem;line-height:1.7}
+.qitem{background:var(--void);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.qitem .top{display:flex;justify-content:space-between;gap:8px}
+.qitem strong{font-size:.85rem;font-weight:700;line-height:1.3}
+.qitem .rm{background:none;border:none;color:#6b7280;cursor:pointer;font-size:1.1rem;line-height:1;padding:0 2px}
+.qitem .rm:hover{color:#ef4444}
+.qitem .row{display:flex;align-items:center;justify-content:space-between;margin-top:9px;gap:8px}
+.qitem label{font-size:.7rem;color:var(--muted);letter-spacing:.08em}
+.qitem input{width:92px;background:var(--slate-2);border:1px solid var(--line);border-radius:6px;
+  color:var(--text);padding:7px 9px;font-size:.85rem;text-align:right}
+.qitem .sum{font-size:.8rem;color:var(--gold)}
+.qtotal{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:16px;padding-top:14px;font-size:.9rem}
+.qtotal b{color:var(--gold);font-size:1.1rem}
+.qsend{width:100%;margin-top:14px;background:var(--gold);color:#0b0e14;border:none;border-radius:9px;
+  padding:14px;font-weight:700;letter-spacing:.07em;cursor:pointer;transition:filter .25s}
+.qsend:disabled{background:#2c3242;color:#5b6270;cursor:not-allowed}
+.qsend:not(:disabled):hover{filter:brightness(1.12)}
+
+/* ---------- MODAL ---------- */
+.modal{position:fixed;inset:0;background:rgba(5,7,11,.82);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
+.modal.open{display:flex}
+.modal-card{background:var(--slate);border:1px solid var(--gold-soft);border-radius:16px;
+  padding:30px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto}
+.modal-card h3{font-family:'Cinzel',serif;margin:0 0 6px;letter-spacing:.1em;font-size:1.2rem}
+.modal-card p{color:var(--muted);font-weight:300;font-size:.88rem;margin:0 0 20px;line-height:1.7}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:.72rem;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}
+.field input,.field textarea{width:100%;background:var(--void);border:1px solid var(--line);border-radius:8px;
+  padding:12px;color:var(--text);outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--gold-soft)}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions button{flex:1;padding:13px;border-radius:9px;font-weight:700;cursor:pointer;letter-spacing:.06em}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.btn-gold{background:var(--gold);border:none;color:#0b0e14}
+
+/* ---------- FOOTER ---------- */
+.foot{border-top:1px solid var(--line);padding:46px 20px;text-align:center}
+.foot .links{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:22px}
+.foot a{display:inline-flex;align-items:center;gap:9px;color:var(--text);text-decoration:none;
+  background:var(--slate);border:1px solid var(--line);padding:11px 18px;border-radius:9px;font-size:.92rem;transition:.25s}
+.foot a:hover{border-color:var(--gold-soft);color:var(--gold)}
+.foot svg{width:17px;height:17px;fill:var(--gold)}
+.foot small{color:#4b5563;letter-spacing:.14em;font-size:.72rem}
+
+@media (max-width:880px){
+  .chat{grid-template-columns:1fr}
+  .quote{position:static}
+  .chat-log{max-height:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="hero-media">
+    <video autoplay loop muted playsinline poster="MC.svg">
+      <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="hero-inner">
+    <h1 class="wordmark">Muziris</h1>
+    <p class="kicker">Opening soon</p>
+    <p class="hero-line">Tell us what you need.<br><b>See it priced in seconds.</b></p>
+    <p class="hero-sub">Type a product and our sourcing desk shows you what our verified Indian factories already make — with minimum order quantity and landed price in Canadian dollars.</p>
+
+    <form class="askbar" id="heroForm">
+      <input id="heroInput" type="text" placeholder="Try &ldquo;pens&rdquo;, &ldquo;cotton towels&rdquo;, &ldquo;spices&rdquo;&hellip;" aria-label="What are you sourcing?" autocomplete="off">
+      <button type="submit">Show me</button>
+    </form>
+
+    <div class="chips" id="heroChips"></div>
+  </div>
+
+  <div class="scroll-hint">SCROLL</div>
+</header>
+
+<!-- ===================== CHAT + QUOTE ===================== -->
+<main class="shell">
+  <h2 class="section-head">Sourcing <span>desk</span></h2>
+  <p class="section-note">Ask in plain English. Add anything you like to your quote list and we'll come back with firm pricing.</p>
+
+  <div class="chat">
+    <section class="panel">
+      <div class="chat-log" id="log" aria-live="polite"></div>
+      <form class="chat-input" id="chatForm">
+        <input id="chatInput" type="text" placeholder="What are you looking for?" aria-label="Message" autocomplete="off">
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <aside class="panel quote">
+      <h3>Your quote list</h3>
+      <p class="hint">Prices shown are indicative per piece. Send the list and we confirm freight, duties and final terms within one business day.</p>
+      <div class="qlist" id="qlist"></div>
+      <div class="qtotal" id="qtotal" hidden><span>Indicative total</span><b id="qtotalVal">C$0</b></div>
+      <button class="qsend" id="qsend" disabled>Request pricing</button>
+    </aside>
+  </div>
+</main>
+
+<!-- ===================== MODAL ===================== -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <h3 id="modalTitle">Where should we send it?</h3>
+    <p>We'll reply with firm pricing, lead time and a sample plan.</p>
+    <form id="quoteForm">
+      <div class="field"><label for="fName">Your name</label><input id="fName" required></div>
+      <div class="field"><label for="fCompany">Company</label><input id="fCompany" required></div>
+      <div class="field"><label for="fEmail">Work email</label><input id="fEmail" type="email" required></div>
+      <div class="field"><label for="fCountry">Delivery city and country</label><input id="fCountry" placeholder="Toronto, Canada" required></div>
+      <div class="field"><label for="fNotes">Anything else</label><textarea id="fNotes" rows="3" placeholder="Branding, packaging, target price, deadline"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="modalClose">Back</button>
+        <button type="submit" class="btn-gold">Send request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="foot">
+  <div class="links">
+    <a href="join.html"><svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5zm0 2.3L5 8v8l7 3.9L19 16V8l-7-3.7z"/></svg>Supplier registration</a>
+    <a href="mailto:info@muziris.ca"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>info@muziris.ca</a>
+    <a href="https://wa.me/16366894747" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp us</a>
+  </div>
+  <small>&copy; 2026 Muziris International Inc. &nbsp;·&nbsp; Based in Canada, rooted in India</small>
+</footer>
+
+<script>
+/* =========================================================
+   CONFIG
+   ========================================================= */
+const API_BASE   = '';                       // same origin. Use 'https://muziris-api.onrender.com' if split.
+const WA_NUMBER  = '16366894747';            // fallback delivery if the API is down
+let   PRODUCTS   = [];
+let   CATEGORIES = {};
+const quote      = new Map();
+
+/* Demo rows so the page works before the catalog fills up.
+   Delete this array once /api/catalog returns data. */
+const DEMO = [
+  {id:'D1',name:'Brass-Tip Gel Pen',category:'Stationery',subCategory:'Pens',moq:1000,priceCAD:0.42,image:''},
+  {id:'D2',name:'Recycled Paper Barrel Pen',category:'Stationery',subCategory:'Pens',moq:2000,priceCAD:0.28,image:''},
+  {id:'D3',name:'Metal Twist Executive Pen',category:'Stationery',subCategory:'Pens',moq:500,priceCAD:1.85,image:''},
+  {id:'D4',name:'Bamboo Ballpoint Pen',category:'Stationery',subCategory:'Pens',moq:1500,priceCAD:0.61,image:''},
+  {id:'D5',name:'Waffle Weave Cotton Towel',category:'Textiles & Apparel',subCategory:'Towels',moq:300,priceCAD:4.90,image:''},
+  {id:'D6',name:'Turkish Cotton Bath Sheet',category:'Textiles & Apparel',subCategory:'Towels',moq:200,priceCAD:11.40,image:''},
+  {id:'D7',name:'Whole Malabar Black Pepper 1kg',category:'Food & Spices',subCategory:'Spices',moq:100,priceCAD:13.75,image:''},
+  {id:'D8',name:'Alleppey Turmeric Powder 500g',category:'Food & Spices',subCategory:'Spices',moq:150,priceCAD:5.20,image:''},
+  {id:'D9',name:'Hand-Beaten Brass Planter',category:'Handicrafts',subCategory:'Decor',moq:100,priceCAD:17.60,image:''},
+  {id:'D10',name:'Jute Webbing Tote Bag',category:'Handicrafts',subCategory:'Bags',moq:500,priceCAD:3.15,image:''},
+  {id:'D11',name:'Stainless Steel Hose Clamp',category:'Industrial & Hardware',subCategory:'Fasteners',moq:5000,priceCAD:0.19,image:''},
+  {id:'D12',name:'Cold-Pressed Coconut Oil 500ml',category:'Beauty & Wellness',subCategory:'Oils',moq:400,priceCAD:3.80,image:''}
+];
+
+/* =========================================================
+   LOAD CATALOG
+   ========================================================= */
+async function loadCatalog(){
+  try{
+    const r = await fetch(API_BASE + '/api/catalog');
+    const d = await r.json();
+    if(d.success && d.products.length){
+      PRODUCTS = d.products; CATEGORIES = d.categories || {};
+      return;
+    }
+  }catch(e){ /* offline or not deployed yet */ }
+  PRODUCTS = DEMO;
+  CATEGORIES = DEMO.reduce((a,p)=>{ (a[p.category] ||= []).push(p.subCategory); return a; },{});
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+const SYNONYM = {pen:'pen',pens:'pen',biro:'pen',towel:'towel',towels:'towel',
+  spice:'spice',spices:'spice',bag:'bag',bags:'bag',oil:'oil'};
+
+function search(q){
+  const raw = q.toLowerCase().trim();
+  const words = raw.split(/[^a-z0-9]+/).filter(w => w.length > 2)
+                   .map(w => SYNONYM[w] || w.replace(/(ies|es|s)$/,''));
+  if(!words.length) return [];
+  const hay = p => (p.name+' '+p.category+' '+p.subCategory+' '+(p.tagline||'')+' '+(p.desc||'')).toLowerCase();
+  const scored = PRODUCTS.map(p => {
+    const h = hay(p);
+    return {p, score: words.reduce((s,w) => s + (h.includes(w) ? 1 : 0), 0)};
+  }).filter(x => x.score > 0).sort((a,b) => b.score - a.score);
+  return scored.map(x => x.p);
+}
+
+/* =========================================================
+   CHAT RENDERING
+   ========================================================= */
+const log = document.getElementById('log');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const money = n => 'C$' + Number(n).toFixed(2);
+
+function placeholder(name){
+  const letter = esc((name||'?').trim()[0] || '?').toUpperCase();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1c2130"/><stop offset="1" stop-color="#0b0e14"/></linearGradient></defs>
+    <rect width="200" height="200" fill="url(#g)"/>
+    <text x="100" y="128" font-family="Georgia,serif" font-size="86" fill="#D4AF37"
+      fill-opacity="0.35" text-anchor="middle">${letter}</text></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+function say(who, html){
+  const el = document.createElement('div');
+  el.className = 'msg ' + (who === 'you' ? 'you' : 'bot');
+  el.innerHTML = `<div class="who">${who === 'you' ? 'You' : 'Muziris'}</div><div class="bubble">${html}</div>`;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+  return el;
+}
+
+function thinking(){
+  const el = say('bot','<span class="typing"><span></span><span></span><span></span></span>');
+  return el;
+}
+
+function cardHTML(p){
+  const img = p.image ? esc(p.image) : placeholder(p.name);
+  const inList = quote.has(String(p.id));
+  return `<article class="card">
+    <img class="thumb" src="${img}" alt="${esc(p.name)}" loading="lazy"
+         onerror="this.src='${placeholder(p.name)}'">
+    <div class="body">
+      <div class="cat">${esc(p.category||'')}${p.subCategory ? ' · ' + esc(p.subCategory) : ''}</div>
+      <h4>${esc(p.name)}</h4>
+      <div class="meta">
+        <div class="price">${money(p.priceCAD)}<small>per piece</small></div>
+        <div class="moq">MOQ<br>${Number(p.moq||0).toLocaleString()}</div>
+      </div>
+    </div>
+    <button data-add="${esc(p.id)}" class="${inList?'added':''}">${inList?'In your list':'Add to quote'}</button>
+  </article>`;
+}
+
+function showResults(q){
+  const hits = search(q);
+  const el = thinking();
+  setTimeout(() => {
+    if(!hits.length){
+      el.querySelector('.bubble').innerHTML =
+        `I don't have <b>${esc(q)}</b> in the catalog yet, but we source to order.<br>
+         Add a note in the quote list or <a href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Looking for: '+q)}"
+         target="_blank" rel="noopener" style="color:var(--gold)">message us on WhatsApp</a> and we'll find a factory for it.`;
+      log.scrollTop = log.scrollHeight;
+      return;
+    }
+    const line = hits.length === 1
+      ? `Here's the one we have.`
+      : `${hits.length} ${hits.length > 1 ? 'options' : 'option'} for <b>${esc(q)}</b>. Prices are per piece, delivered pricing confirmed once you send the list.`;
+    el.querySelector('.bubble').innerHTML =
+      line + `<div class="results">${hits.map(cardHTML).join('')}</div>`;
+    log.scrollTop = log.scrollHeight;
+  }, 450);
+}
+
+function ask(q){
+  if(!q.trim()) return;
+  say('you', esc(q));
+  gtag && gtag('event','catalog_search',{search_term:q});
+  showResults(q);
+}
+
+/* =========================================================
+   QUOTE LIST
+   ========================================================= */
+const qlist = document.getElementById('qlist');
+const qsend = document.getElementById('qsend');
+const qtotal = document.getElementById('qtotal');
+
+function renderQuote(){
+  if(!quote.size){
+    qlist.innerHTML = `<div class="qempty">Nothing here yet.<br>Search above and add what you need.</div>`;
+    qsend.disabled = true; qtotal.hidden = true; return;
+  }
+  let total = 0;
+  qlist.innerHTML = [...quote.values()].map(i => {
+    const sum = i.qty * i.priceCAD; total += sum;
+    return `<div class="qitem">
+      <div class="top"><strong>${esc(i.name)}</strong>
+        <button class="rm" data-rm="${esc(i.id)}" aria-label="Remove">×</button></div>
+      <div class="row">
+        <label for="q_${esc(i.id)}">Quantity (MOQ ${Number(i.moq).toLocaleString()})</label>
+        <input id="q_${esc(i.id)}" type="number" min="${i.moq}" step="1" value="${i.qty}" data-qty="${esc(i.id)}">
+      </div>
+      <div class="row"><span class="sum">${money(i.priceCAD)} each</span><span class="sum">${money(sum)}</span></div>
+    </div>`;
+  }).join('');
+  qtotal.hidden = false;
+  document.getElementById('qtotalVal').textContent = money(total);
+  qsend.disabled = false;
+}
+
+document.addEventListener('click', e => {
+  const add = e.target.closest('[data-add]');
+  if(add){
+    const p = PRODUCTS.find(x => String(x.id) === add.dataset.add);
+    if(p && !quote.has(String(p.id))){
+      quote.set(String(p.id), {id:String(p.id), name:p.name, moq:p.moq||1, priceCAD:p.priceCAD, qty:p.moq||1});
+      add.textContent = 'In your list'; add.classList.add('added');
+      renderQuote();
+      gtag && gtag('event','add_to_quote',{item_name:p.name});
+    }
+    return;
+  }
+  const rm = e.target.closest('[data-rm]');
+  if(rm){
+    quote.delete(rm.dataset.rm);
+    document.querySelectorAll(`[data-add="${CSS.escape(rm.dataset.rm)}"]`).forEach(b => {
+      b.textContent = 'Add to quote'; b.classList.remove('added');
+    });
+    renderQuote();
+  }
+});
+
+qlist.addEventListener('change', e => {
+  const f = e.target.closest('[data-qty]'); if(!f) return;
+  const item = quote.get(f.dataset.qty); if(!item) return;
+  item.qty = Math.max(item.moq, parseInt(f.value, 10) || item.moq);
+  renderQuote();
+});
+
+/* =========================================================
+   SUBMIT
+   ========================================================= */
+const modal = document.getElementById('modal');
+qsend.addEventListener('click', () => { modal.classList.add('open'); document.getElementById('fName').focus(); });
+document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
+modal.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('open'); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') modal.classList.remove('open'); });
+
+document.getElementById('quoteForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const payload = {
+    name:    fName.value.trim(),
+    company: fCompany.value.trim(),
+    email:   fEmail.value.trim(),
+    destination: fCountry.value.trim(),
+    notes:   fNotes.value.trim(),
+    items:   [...quote.values()].map(i => ({productId:i.id, name:i.name, qty:i.qty, indicativeCAD:i.priceCAD}))
+  };
+
+  let sent = false;
+  try{
+    const r = await fetch(API_BASE + '/api/quote-request', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    sent = r.ok;
+  }catch(err){ sent = false; }
+
+  modal.classList.remove('open');
+  gtag && gtag('event','quote_request',{value: payload.items.length});
+
+  if(sent){
+    say('bot', `Thanks ${esc(payload.name)} — your list is with our sourcing desk. You'll have firm pricing at <b>${esc(payload.email)}</b> within one business day.`);
+  }else{
+    const text = `Quote request from ${payload.name} (${payload.company}, ${payload.email})\nShip to: ${payload.destination}\n\n` +
+      payload.items.map(i => `• ${i.name} — ${i.qty.toLocaleString()} pcs`).join('\n') +
+      (payload.notes ? `\n\nNotes: ${payload.notes}` : '');
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`,'_blank');
+    say('bot', `Our form is offline right now, so I've opened WhatsApp with your list ready to send.`);
+  }
+  quote.clear(); renderQuote();
+  document.querySelectorAll('[data-add].added').forEach(b => { b.textContent='Add to quote'; b.classList.remove('added'); });
+  document.getElementById('quoteForm').reset();
+});
+
+/* =========================================================
+   BOOT
+   ========================================================= */
+document.getElementById('heroForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const v = heroInput.value; heroInput.value = '';
+  document.querySelector('.shell').scrollIntoView({behavior:'smooth'});
+  setTimeout(() => ask(v), 380);
+});
+document.getElementById('chatForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const v = chatInput.value; chatInput.value = ''; ask(v);
+});
+
+(async function init(){
+  await loadCatalog();
+
+  const cats = Object.keys(CATEGORIES).slice(0,6);
+  document.getElementById('heroChips').innerHTML =
+    cats.map(c => `<button class="chip" type="button" data-q="${esc(c)}">${esc(c)}</button>`).join('');
+  document.getElementById('heroChips').addEventListener('click', e => {
+    const c = e.target.closest('.chip'); if(!c) return;
+    document.querySelector('.shell').scrollIntoView({behavior:'smooth'});
+    setTimeout(() => ask(c.dataset.q), 380);
+  });
+
+  say('bot',
+    `Hello — I'm the Muziris sourcing desk.<br>
+     Type a product name and I'll show what our factories make, with minimum order quantity and price per piece.<br><br>
+     <div class="chips" style="justify-content:flex-start;margin-top:4px">${
+       cats.map(c => `<button class="chip" type="button" data-add-q="${esc(c)}">${esc(c)}</button>`).join('')
+     }</div>`);
+
+  log.addEventListener('click', e => {
+    const c = e.target.closest('[data-add-q]'); if(c) ask(c.dataset.addQ);
+  });
+
+  renderQuote();
+})();
+</script>
+</body>
+</html>
