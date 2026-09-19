@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Muziris | Ask for anything. We source it.</title>
-<meta name="description" content="Tell us what you need and see live wholesale products with MOQ and landed price. Muziris connects Canadian buyers with verified Indian suppliers.">
+<title>Muziris | Source inventory that keeps your margins green</title>
+<meta name="description" content="Sourcing for Canadian Amazon FBA, Etsy, Faire, Shopify and social sellers. See landed cost, MOQ and margin on verified India-made products in seconds.">
 <link rel="icon" type="image/png" href="MC.svg">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GBXY659LSC"></script>
@@ -15,222 +15,331 @@
   gtag('config', 'G-GBXY659LSC');
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
+  --ink:#12151A;
+  --muted:#5B6470;
+  --faint:#8B93A0;
+  --line:#E7E5DE;
+  --paper:#FFFFFF;
+  --sand:#F7F5F0;
+  --sand-2:#EFEDE5;
   --gold:#D4AF37;
-  --gold-soft:rgba(212,175,55,.35);
-  --void:#0b0e14;
-  --slate:#151922;
-  --slate-2:#1c2130;
-  --text:#f3f4f6;
-  --muted:#9ca3af;
-  --line:rgba(255,255,255,.07);
+  --gold-deep:#B8912B;
+  --gold-wash:#FBF3DC;
+  --shadow:0 20px 50px rgba(18,21,26,.06);
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0;font-family:'Lato',sans-serif;background:var(--void);color:var(--text);
-  -webkit-font-smoothing:antialiased;
-}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
 button,input,textarea,select{font-family:inherit}
+a{color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
 
-/* ---------- HERO ---------- */
-.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;overflow:hidden}
-.hero-media{position:absolute;inset:0;z-index:0}
-.hero-media video{width:100%;height:100%;object-fit:cover;opacity:.55}
-.hero-media::after{
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(120% 80% at 50% 0%,rgba(11,14,20,.25) 0%,rgba(11,14,20,.8) 55%,var(--void) 100%),
-    linear-gradient(180deg,rgba(11,14,20,.5),rgba(11,14,20,.95));
-}
-.hero-inner{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;text-align:center;padding:90px 20px 40px;max-width:900px;margin:0 auto;width:100%}
+/* ---------------- NAV ---------------- */
+.nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.15rem;
+  color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--gold);color:#fff!important;padding:10px 18px;border-radius:8px;font-weight:600!important}
+.nav-cta:hover{background:var(--gold-deep)!important}
+@media (max-width:760px){.nav-links a:not(.nav-cta){display:none}}
 
-.wordmark{font-family:'Cinzel',serif;color:var(--gold);font-size:clamp(2.6rem,7vw,4.4rem);
-  font-weight:700;letter-spacing:.16em;margin:0 0 6px;text-shadow:0 0 40px rgba(212,175,55,.35)}
-.kicker{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.35em;color:var(--muted);margin:0 0 28px}
-.hero-line{font-size:clamp(1.3rem,3.4vw,2rem);line-height:1.45;font-weight:300;margin:0 auto 10px;max-width:22ch}
-.hero-line b{font-weight:700;color:var(--gold)}
-.hero-sub{color:var(--muted);font-weight:300;max-width:56ch;margin:0 auto 34px;line-height:1.8}
+/* ---------------- HERO ---------------- */
+.hero{position:relative;overflow:hidden;padding:64px 0 0;background:
+  radial-gradient(60% 50% at 82% 8%,var(--gold-wash) 0%,transparent 60%)}
+.hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:50px;align-items:center;padding-bottom:70px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--gold);font-weight:600;
+  font-size:.86rem;margin-bottom:20px}
+.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold)}
+h1.headline{font-size:clamp(2.2rem,4.4vw,3.4rem);font-weight:700;line-height:1.12;letter-spacing:-.02em;
+  margin:0 0 22px;max-width:14ch;color:var(--ink)}
+h1.headline .accent{color:var(--gold)}
+.hero-sub{font-size:1.08rem;line-height:1.7;color:var(--muted);max-width:46ch;margin:0 0 30px}
 
-/* ask bar */
-.askbar{display:flex;gap:10px;width:100%;max-width:620px;margin:0 auto;
-  background:rgba(21,25,34,.85);backdrop-filter:blur(12px);
-  border:1px solid var(--gold-soft);border-radius:14px;padding:10px 10px 10px 18px;
-  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03) inset}
-.askbar input{flex:1;background:none;border:none;color:var(--text);font-size:1.05rem;outline:none;min-width:0}
-.askbar input::placeholder{color:#6b7280}
-.askbar button{background:var(--gold);color:#0b0e14;border:none;border-radius:9px;
-  padding:13px 24px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:filter .25s,transform .25s}
-.askbar button:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.platform-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px}
+.platform-tag{border:1px solid var(--line);color:var(--muted);font-size:.82rem;font-weight:500;
+  padding:7px 13px;border-radius:999px;background:#fff}
 
-.chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:22px;max-width:640px}
-.chip{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);
-  padding:8px 15px;border-radius:999px;font-size:.87rem;cursor:pointer;transition:.25s}
-.chip:hover{border-color:var(--gold-soft);color:var(--gold);background:rgba(212,175,55,.07)}
+.askbar{display:flex;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:6px 6px 6px 16px;max-width:560px;box-shadow:var(--shadow)}
+.askbar input{flex:1;background:none;border:none;color:var(--ink);font-size:1rem;outline:none;min-width:0}
+.askbar input::placeholder{color:var(--faint)}
+.askbar button{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:13px 22px;
+  font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap}
+.askbar button:hover{background:var(--gold-deep)}
+.hero-hint{color:var(--faint);font-size:.82rem;margin-top:12px}
 
-.scroll-hint{position:relative;z-index:2;text-align:center;padding-bottom:26px;color:#4b5563;font-size:.75rem;letter-spacing:.25em}
+/* margin ticker card */
+.ticker{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:var(--shadow)}
+.ticker-label{font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:18px}
+.ticker-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}
+.ticker-row:last-child{border-bottom:none}
+.ticker-row .k{color:var(--muted);font-size:.88rem}
+.ticker-row .v{font-family:'Space Grotesk';font-weight:600;font-size:1.15rem;color:var(--ink)}
+.ticker-row .v.pos{color:var(--gold)}
+.ticker-product{font-size:.82rem;color:var(--muted);margin-top:16px;padding-top:16px;border-top:1px dashed var(--line)}
+.ticker-product b{color:var(--ink);font-weight:600}
 
-/* ---------- SHELL ---------- */
-.shell{max-width:1180px;margin:0 auto;padding:0 20px 90px}
-.section-head{font-family:'Cinzel',serif;font-size:1.5rem;letter-spacing:.12em;margin:70px 0 6px}
-.section-head span{color:var(--gold)}
-.section-note{color:var(--muted);font-weight:300;margin:0 0 26px}
+/* ---------------- SECTIONS ---------------- */
+.section{padding:76px 0}
+.section-tag{color:var(--gold);font-weight:600;font-size:.86rem;margin-bottom:10px}
+.section-h{font-size:clamp(1.6rem,3vw,2.1rem);font-weight:700;letter-spacing:-.02em;margin:0 0 14px;max-width:22ch}
+.section-sub{color:var(--muted);font-size:1.02rem;line-height:1.7;max-width:60ch;margin:0 0 40px}
 
-/* ---------- CHAT ---------- */
-.chat{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
-.panel{background:var(--slate);border:1px solid var(--line);border-radius:16px}
-.chat-log{padding:24px;min-height:340px;max-height:70vh;overflow-y:auto;scroll-behavior:smooth}
+/* channel fit */
+.channels{border-top:1px solid var(--line)}
+.channel-row{display:grid;grid-template-columns:220px 1fr;gap:28px;padding:28px 0;border-bottom:1px solid var(--line)}
+.channel-row h4{margin:0;font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:10px;color:var(--ink)}
+.channel-row h4 svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.8}
+.channel-row p{margin:0;color:var(--muted);line-height:1.7;max-width:62ch}
+@media (max-width:680px){.channel-row{grid-template-columns:1fr;gap:8px}}
+
+/* how it works */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.step{border-left:2px solid var(--line);padding-left:18px}
+.step .num{font-family:'Space Grotesk';font-weight:700;font-size:1.6rem;color:var(--gold);display:block;margin-bottom:10px}
+.step h5{margin:0 0 8px;font-size:1.02rem;font-weight:700;color:var(--ink)}
+.step p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.65}
+@media (max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+
+/* ---------------- COPILOT ---------------- */
+.copilot-wrap{background:var(--sand)}
+.chat-shell{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.chat-log{padding:22px;min-height:320px;max-height:66vh;overflow-y:auto}
 .chat-log::-webkit-scrollbar{width:7px}
-.chat-log::-webkit-scrollbar-thumb{background:#2c3242;border-radius:4px}
+.chat-log::-webkit-scrollbar-thumb{background:var(--sand-2);border-radius:4px}
 
-.msg{margin-bottom:20px;max-width:92%}
-.msg.you{margin-left:auto;text-align:right}
-.bubble{display:inline-block;padding:13px 17px;border-radius:14px;line-height:1.65;font-weight:300}
-.msg.bot .bubble{background:var(--slate-2);border:1px solid var(--line);border-top-left-radius:4px}
-.msg.you .bubble{background:rgba(212,175,55,.14);border:1px solid var(--gold-soft);color:var(--text);border-bottom-right-radius:4px}
-.who{font-size:.68rem;letter-spacing:.22em;color:#5b6270;margin-bottom:7px;font-family:'Cinzel',serif}
+.msg{margin-bottom:20px;max-width:94%}
+.msg.you{margin-left:auto}
+.bubble{display:inline-block;padding:13px 16px;border-radius:12px;line-height:1.65;font-size:.95rem}
+.msg.bot .bubble{background:var(--sand);border-top-left-radius:3px;color:var(--ink)}
+.msg.you .bubble{background:var(--gold);color:#fff;border-bottom-right-radius:3px}
+.who{font-size:.7rem;font-weight:600;color:var(--faint);margin-bottom:6px}
+.msg.you .who{text-align:right}
 
 .typing span{display:inline-block;width:6px;height:6px;margin:0 2px;background:var(--gold);border-radius:50%;animation:blink 1.2s infinite}
 .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
 
-/* product results */
-.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-top:14px}
-.card{background:var(--void);border:1px solid var(--line);border-radius:12px;overflow:hidden;
-  display:flex;flex-direction:column;transition:border-color .25s}
-.card:hover{border-color:var(--gold-soft)}
-.card .thumb{aspect-ratio:1;background:#0f131b;display:block;width:100%;object-fit:cover}
-.card .body{padding:13px 14px 14px;display:flex;flex-direction:column;gap:7px;flex:1}
-.card h4{margin:0;font-size:.95rem;font-weight:700;line-height:1.35}
-.card .cat{font-size:.72rem;color:#6b7280;letter-spacing:.08em}
-.card .meta{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:auto;padding-top:6px}
-.card .price{font-size:1.15rem;color:var(--gold);font-weight:700}
-.card .price small{font-size:.66rem;color:var(--muted);font-weight:400;display:block;letter-spacing:.05em}
-.card .moq{font-size:.75rem;color:var(--muted);text-align:right;line-height:1.4}
-.card button{margin:0 14px 14px;background:transparent;border:1px solid var(--gold-soft);color:var(--gold);
-  padding:9px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;letter-spacing:.06em;transition:.25s}
-.card button:hover{background:var(--gold);color:#0b0e14}
-.card button.added{background:rgba(212,175,55,.15);border-color:var(--gold);cursor:default}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  display:flex;flex-direction:column;transition:border-color .2s,transform .2s,box-shadow .2s}
+.card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:var(--shadow)}
+.card .thumb{aspect-ratio:1;width:100%;object-fit:cover;background:var(--sand)}
+.card .body{padding:13px 14px 4px;display:flex;flex-direction:column;gap:6px}
+.card .cat{font-size:.7rem;color:var(--faint);font-weight:600}
+.card h4{margin:0;font-size:.92rem;font-weight:700;line-height:1.35;color:var(--ink)}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 4px}
+.badge{font-size:.66rem;font-weight:600;color:var(--gold);background:var(--gold-wash);padding:3px 8px;border-radius:999px}
+.card .meta{display:flex;justify-content:space-between;align-items:baseline;padding-top:4px}
+.card .price{font-size:1.08rem;color:var(--gold);font-weight:700}
+.card .price small{display:block;font-size:.63rem;color:var(--faint);font-weight:500}
+.card .moq{font-size:.72rem;color:var(--muted);text-align:right;line-height:1.4}
+.margin-line{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);
+  background:var(--sand);margin:8px 14px 0;padding:8px 10px;border-radius:8px}
+.margin-line b{color:var(--ink)}
+.card button{margin:10px 14px 14px;background:transparent;border:1px solid var(--gold);color:var(--gold);
+  padding:9px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;transition:.2s}
+.card button:hover{background:var(--gold);color:#fff}
+.card button.added{background:var(--gold-wash);border-color:var(--gold);color:var(--gold);cursor:default}
 
 .chat-input{display:flex;gap:10px;border-top:1px solid var(--line);padding:14px}
-.chat-input input{flex:1;background:var(--void);border:1px solid var(--line);border-radius:9px;
-  padding:13px 15px;color:var(--text);outline:none;min-width:0}
-.chat-input input:focus{border-color:var(--gold-soft)}
-.chat-input button{background:var(--gold);color:#0b0e14;border:none;border-radius:9px;padding:0 20px;font-weight:700;cursor:pointer}
+.chat-input input{flex:1;background:var(--sand);border:1px solid transparent;border-radius:9px;
+  padding:13px 15px;color:var(--ink);outline:none;min-width:0}
+.chat-input input:focus{border-color:var(--gold)}
+.chat-input button{background:var(--gold);color:#fff;border:none;border-radius:9px;padding:0 20px;font-weight:600;cursor:pointer}
+.chat-input button:hover{background:var(--gold-deep)}
 
-/* ---------- QUOTE LIST ---------- */
-.quote{position:sticky;top:20px;padding:20px}
-.quote h3{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:.14em;margin:0 0 4px}
-.quote .hint{color:var(--muted);font-size:.82rem;font-weight:300;margin:0 0 16px;line-height:1.6}
-.qlist{display:flex;flex-direction:column;gap:10px;max-height:44vh;overflow-y:auto}
-.qempty{border:1px dashed var(--line);border-radius:10px;padding:26px 16px;text-align:center;color:#5b6270;font-size:.85rem;line-height:1.7}
-.qitem{background:var(--void);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+/* quote sidebar */
+.quote{position:sticky;top:88px;padding:20px}
+.quote h3{font-size:1rem;font-weight:700;margin:0 0 4px;color:var(--ink)}
+.quote .hint{color:var(--muted);font-size:.82rem;margin:0 0 16px;line-height:1.6}
+.qlist{display:flex;flex-direction:column;gap:10px;max-height:40vh;overflow-y:auto}
+.qempty{border:1px dashed var(--line);border-radius:10px;padding:26px 16px;text-align:center;color:var(--faint);font-size:.85rem;line-height:1.7}
+.qitem{background:var(--sand);border-radius:10px;padding:11px 12px}
 .qitem .top{display:flex;justify-content:space-between;gap:8px}
-.qitem strong{font-size:.85rem;font-weight:700;line-height:1.3}
-.qitem .rm{background:none;border:none;color:#6b7280;cursor:pointer;font-size:1.1rem;line-height:1;padding:0 2px}
-.qitem .rm:hover{color:#ef4444}
+.qitem strong{font-size:.85rem;font-weight:700;line-height:1.3;color:var(--ink)}
+.qitem .rm{background:none;border:none;color:var(--faint);cursor:pointer;font-size:1.1rem;line-height:1;padding:0 2px}
+.qitem .rm:hover{color:#c0392b}
 .qitem .row{display:flex;align-items:center;justify-content:space-between;margin-top:9px;gap:8px}
-.qitem label{font-size:.7rem;color:var(--muted);letter-spacing:.08em}
-.qitem input{width:92px;background:var(--slate-2);border:1px solid var(--line);border-radius:6px;
-  color:var(--text);padding:7px 9px;font-size:.85rem;text-align:right}
-.qitem .sum{font-size:.8rem;color:var(--gold)}
+.qitem label{font-size:.68rem;color:var(--muted)}
+.qitem input{width:88px;background:#fff;border:1px solid var(--line);border-radius:6px;
+  color:var(--ink);padding:7px 9px;font-size:.85rem;text-align:right}
+.qitem .sum{font-size:.78rem;color:var(--gold);font-weight:600}
 .qtotal{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:16px;padding-top:14px;font-size:.9rem}
 .qtotal b{color:var(--gold);font-size:1.1rem}
-.qsend{width:100%;margin-top:14px;background:var(--gold);color:#0b0e14;border:none;border-radius:9px;
-  padding:14px;font-weight:700;letter-spacing:.07em;cursor:pointer;transition:filter .25s}
-.qsend:disabled{background:#2c3242;color:#5b6270;cursor:not-allowed}
-.qsend:not(:disabled):hover{filter:brightness(1.12)}
+.qsend{width:100%;margin-top:14px;background:var(--gold);color:#fff;border:none;border-radius:9px;
+  padding:14px;font-weight:700;cursor:pointer;transition:.2s}
+.qsend:disabled{background:var(--sand-2);color:var(--faint);cursor:not-allowed}
+.qsend:not(:disabled):hover{background:var(--gold-deep)}
 
-/* ---------- MODAL ---------- */
-.modal{position:fixed;inset:0;background:rgba(5,7,11,.82);backdrop-filter:blur(6px);
+@media (max-width:880px){.chat-shell{grid-template-columns:1fr}.quote{position:static}.chat-log{max-height:none}}
+
+/* ---------------- MODAL ---------------- */
+.modal{position:fixed;inset:0;background:rgba(18,21,26,.5);backdrop-filter:blur(4px);
   display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
 .modal.open{display:flex}
-.modal-card{background:var(--slate);border:1px solid var(--gold-soft);border-radius:16px;
-  padding:30px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto}
-.modal-card h3{font-family:'Cinzel',serif;margin:0 0 6px;letter-spacing:.1em;font-size:1.2rem}
-.modal-card p{color:var(--muted);font-weight:300;font-size:.88rem;margin:0 0 20px;line-height:1.7}
+.modal-card{background:#fff;border-radius:16px;padding:30px;width:100%;max-width:430px;
+  max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(18,21,26,.25)}
+.modal-card h3{margin:0 0 6px;font-size:1.25rem;font-weight:700;color:var(--ink)}
+.modal-card p{color:var(--muted);font-size:.88rem;margin:0 0 20px;line-height:1.7}
 .field{margin-bottom:13px}
-.field label{display:block;font-size:.72rem;letter-spacing:.14em;color:var(--muted);margin-bottom:6px}
-.field input,.field textarea{width:100%;background:var(--void);border:1px solid var(--line);border-radius:8px;
-  padding:12px;color:var(--text);outline:none}
-.field input:focus,.field textarea:focus{border-color:var(--gold-soft)}
+.field label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;background:var(--sand);border:1px solid var(--line);
+  border-radius:8px;padding:12px;color:var(--ink);outline:none}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold)}
 .modal-actions{display:flex;gap:10px;margin-top:20px}
-.modal-actions button{flex:1;padding:13px;border-radius:9px;font-weight:700;cursor:pointer;letter-spacing:.06em}
+.modal-actions button{flex:1;padding:13px;border-radius:9px;font-weight:700;cursor:pointer}
 .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
-.btn-gold{background:var(--gold);border:none;color:#0b0e14}
+.btn-green{background:var(--gold);border:none;color:#fff}
+.btn-green:hover{background:var(--gold-deep)}
 
-/* ---------- FOOTER ---------- */
-.foot{border-top:1px solid var(--line);padding:46px 20px;text-align:center}
-.foot .links{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:22px}
-.foot a{display:inline-flex;align-items:center;gap:9px;color:var(--text);text-decoration:none;
-  background:var(--slate);border:1px solid var(--line);padding:11px 18px;border-radius:9px;font-size:.92rem;transition:.25s}
-.foot a:hover{border-color:var(--gold-soft);color:var(--gold)}
-.foot svg{width:17px;height:17px;fill:var(--gold)}
-.foot small{color:#4b5563;letter-spacing:.14em;font-size:.72rem}
-
-@media (max-width:880px){
-  .chat{grid-template-columns:1fr}
-  .quote{position:static}
-  .chat-log{max-height:none}
-}
+/* ---------------- FOOTER ---------------- */
+.foot{background:var(--ink);color:#9aa3ae;padding:56px 0 30px}
+.foot-top{display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;padding-bottom:36px;
+  border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:24px}
+.foot-brand .brand{color:#fff;margin-bottom:10px}
+.foot-brand .brand .dot{background:#D4AF37}
+.foot-brand p{max-width:34ch;font-size:.9rem;line-height:1.7;margin:0}
+.foot-links{display:flex;gap:12px;flex-wrap:wrap}
+.foot-links a{display:inline-flex;align-items:center;gap:9px;color:#fff;text-decoration:none;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:11px 16px;border-radius:9px;
+  font-size:.88rem;font-weight:500;transition:.2s}
+.foot-links a:hover{border-color:#D4AF37;color:#D4AF37}
+.foot-links svg{width:16px;height:16px;fill:#D4AF37}
+.foot small{display:block;color:#5b6470;font-size:.75rem;line-height:1.8}
 </style>
 </head>
 <body>
 
+<!-- ===================== NAV ===================== -->
+<nav class="nav">
+  <div class="wrap">
+    <a href="#" class="brand"><span class="dot"></span>Muziris</a>
+    <div class="nav-links">
+      <a href="#channels">For sellers</a>
+      <a href="#how">How it works</a>
+      <a href="#copilot">Find products</a>
+      <a href="join.html" class="nav-cta">Sell on Muziris</a>
+    </div>
+  </div>
+</nav>
+
 <!-- ===================== HERO ===================== -->
 <header class="hero">
-  <div class="hero-media">
-    <video autoplay loop muted playsinline poster="MC.svg">
-      <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">
-    </video>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Opening to Canadian sellers soon</div>
+      <h1 class="headline">Source inventory that keeps your <span class="accent">margins green</span>.</h1>
+      <p class="hero-sub">Built for Amazon FBA, Etsy, Faire, Shopify and social sellers who import from India. See landed cost, MOQ and factory pricing before you ever message a supplier.</p>
+
+      <div class="platform-row">
+        <span class="platform-tag">Amazon FBA</span>
+        <span class="platform-tag">Etsy</span>
+        <span class="platform-tag">Faire</span>
+        <span class="platform-tag">Shopify</span>
+        <span class="platform-tag">TikTok Shop</span>
+      </div>
+
+      <form class="askbar" id="heroForm">
+        <input id="heroInput" type="text" placeholder="What are you selling right now?" aria-label="What are you selling?" autocomplete="off">
+        <button type="submit">Show products</button>
+      </form>
+      <div class="hero-hint">Try "phone accessories," "candles," "pet supplies," "jewelry"</div>
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-label">Landed cost, worked out for you</div>
+      <div class="ticker-row"><span class="k">Factory price</span><span class="v" id="tkFactory">C$1.10</span></div>
+      <div class="ticker-row"><span class="k">Landed in Canada, all-in</span><span class="v" id="tkLanded">C$1.42</span></div>
+      <div class="ticker-row"><span class="k">Typical resale on Etsy</span><span class="v pos" id="tkResale">C$9.99</span></div>
+      <div class="ticker-row"><span class="k">Gross margin</span><span class="v pos" id="tkMargin">86%</span></div>
+      <div class="ticker-product">Based on <b id="tkName">Bamboo Phone Stand</b> — recalculates for every product below.</div>
+    </div>
   </div>
-
-  <div class="hero-inner">
-    <h1 class="wordmark">Muziris</h1>
-    <p class="kicker">Opening soon</p>
-    <p class="hero-line">Tell us what you need.<br><b>See it priced in seconds.</b></p>
-    <p class="hero-sub">Type a product and our sourcing desk shows you what our verified Indian factories already make — with minimum order quantity and landed price in Canadian dollars.</p>
-
-    <form class="askbar" id="heroForm">
-      <input id="heroInput" type="text" placeholder="Try &ldquo;pens&rdquo;, &ldquo;cotton towels&rdquo;, &ldquo;spices&rdquo;&hellip;" aria-label="What are you sourcing?" autocomplete="off">
-      <button type="submit">Show me</button>
-    </form>
-
-    <div class="chips" id="heroChips"></div>
-  </div>
-
-  <div class="scroll-hint">SCROLL</div>
 </header>
 
-<!-- ===================== CHAT + QUOTE ===================== -->
-<main class="shell">
-  <h2 class="section-head">Sourcing <span>desk</span></h2>
-  <p class="section-note">Ask in plain English. Add anything you like to your quote list and we'll come back with firm pricing.</p>
+<!-- ===================== CHANNEL FIT ===================== -->
+<section class="section" id="channels">
+  <div class="wrap">
+    <div class="section-tag">Built for how you sell</div>
+    <h2 class="section-h">One catalog, priced for every channel you run.</h2>
+    <p class="section-sub">Margins, pack sizes and lead times matter differently on each platform. We flag which of our factory listings tend to work best for yours.</p>
 
-  <div class="chat">
-    <section class="panel">
-      <div class="chat-log" id="log" aria-live="polite"></div>
-      <form class="chat-input" id="chatForm">
-        <input id="chatInput" type="text" placeholder="What are you looking for?" aria-label="Message" autocomplete="off">
-        <button type="submit">Send</button>
-      </form>
-    </section>
-
-    <aside class="panel quote">
-      <h3>Your quote list</h3>
-      <p class="hint">Prices shown are indicative per piece. Send the list and we confirm freight, duties and final terms within one business day.</p>
-      <div class="qlist" id="qlist"></div>
-      <div class="qtotal" id="qtotal" hidden><span>Indicative total</span><b id="qtotalVal">C$0</b></div>
-      <button class="qsend" id="qsend" disabled>Request pricing</button>
-    </aside>
+    <div class="channels">
+      <div class="channel-row">
+        <h4><svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>Amazon FBA</h4>
+        <p>Case-pack friendly quantities, barcode-ready product photos, and factories used to FBA prep requirements — so you can go from sample to a live ASIN without a second sourcing trip.</p>
+      </div>
+      <div class="channel-row">
+        <h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>Etsy &amp; Faire</h4>
+        <p>Handmade-adjacent, small-batch and artisan-style goods with low MOQs, so you can test a new listing without tying up cash in inventory you haven't sold yet.</p>
+      </div>
+      <div class="channel-row">
+        <h4><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 9h16M9 4v16"/></svg>Shopify</h4>
+        <p>Private-label ready products with room for your branding — custom packaging, hang tags and inserts — for sellers building a brand buyers come back to directly.</p>
+      </div>
+      <div class="channel-row">
+        <h4><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 11-4-8"/><path d="M22 4l-10 8"/></svg>Social &amp; live selling</h4>
+        <p>Photogenic, trend-ready products with fast turnaround, so you can restock what sells on TikTok or Instagram before the moment passes.</p>
+      </div>
+    </div>
   </div>
-</main>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-tag">How it works</div>
+    <h2 class="section-h">From idea to landed inventory, four steps.</h2>
+    <div class="steps">
+      <div class="step"><span class="num">01</span><h5>Tell us what you sell</h5><p>Search a product or browse by category — no account needed to look.</p></div>
+      <div class="step"><span class="num">02</span><h5>See real factory listings</h5><p>MOQ, price per piece and landed CAD cost, from suppliers we've verified.</p></div>
+      <div class="step"><span class="num">03</span><h5>Get samples &amp; firm pricing</h5><p>Add what you need to a quote list and we confirm freight and duties.</p></div>
+      <div class="step"><span class="num">04</span><h5>Reorder without the back-and-forth</h5><p>Once a product's tested, repeat orders take minutes, not weeks.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COPILOT + QUOTE ===================== -->
+<section class="section copilot-wrap" id="copilot">
+  <div class="wrap">
+    <div class="section-tag">Sourcing copilot</div>
+    <h2 class="section-h">Ask for a product. Get the numbers.</h2>
+    <p class="section-sub">Every result shows MOQ, factory price and a margin estimate for your typical resale price — add anything that fits to your quote list.</p>
+
+    <div class="chat-shell">
+      <div class="panel">
+        <div class="chat-log" id="log" aria-live="polite"></div>
+        <form class="chat-input" id="chatForm">
+          <input id="chatInput" type="text" placeholder="e.g. candles, jewelry, kitchen gadgets" aria-label="Message" autocomplete="off">
+          <button type="submit">Send</button>
+        </form>
+      </div>
+
+      <aside class="panel quote">
+        <h3>Your quote list</h3>
+        <p class="hint">These are indicative unit prices. Send the list and we confirm freight, duties and final landed cost within one business day.</p>
+        <div class="qlist" id="qlist"></div>
+        <div class="qtotal" id="qtotal" hidden><span>Indicative total</span><b id="qtotalVal">C$0</b></div>
+        <button class="qsend" id="qsend" disabled>Request pricing</button>
+      </aside>
+    </div>
+  </div>
+</section>
 
 <!-- ===================== MODAL ===================== -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -239,13 +348,19 @@ button,input,textarea,select{font-family:inherit}
     <p>We'll reply with firm pricing, lead time and a sample plan.</p>
     <form id="quoteForm">
       <div class="field"><label for="fName">Your name</label><input id="fName" required></div>
-      <div class="field"><label for="fCompany">Company</label><input id="fCompany" required></div>
-      <div class="field"><label for="fEmail">Work email</label><input id="fEmail" type="email" required></div>
-      <div class="field"><label for="fCountry">Delivery city and country</label><input id="fCountry" placeholder="Toronto, Canada" required></div>
+      <div class="field"><label for="fCompany">Store / business name</label><input id="fCompany" placeholder="e.g. your Etsy shop or Shopify store name" required></div>
+      <div class="field"><label for="fEmail">Email</label><input id="fEmail" type="email" required></div>
+      <div class="field"><label for="fChannel">Where do you sell?</label>
+        <select id="fChannel">
+          <option>Amazon FBA</option><option>Etsy</option><option>Faire</option>
+          <option>Shopify</option><option>TikTok Shop / Instagram</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label for="fCountry">Delivery city, Canada</label><input id="fCountry" placeholder="Toronto, ON" required></div>
       <div class="field"><label for="fNotes">Anything else</label><textarea id="fNotes" rows="3" placeholder="Branding, packaging, target price, deadline"></textarea></div>
       <div class="modal-actions">
         <button type="button" class="btn-ghost" id="modalClose">Back</button>
-        <button type="submit" class="btn-gold">Send request</button>
+        <button type="submit" class="btn-green">Send request</button>
       </div>
     </form>
   </div>
@@ -253,39 +368,62 @@ button,input,textarea,select{font-family:inherit}
 
 <!-- ===================== FOOTER ===================== -->
 <footer class="foot">
-  <div class="links">
-    <a href="join.html"><svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5zm0 2.3L5 8v8l7 3.9L19 16V8l-7-3.7z"/></svg>Supplier registration</a>
-    <a href="mailto:info@muziris.ca"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>info@muziris.ca</a>
-    <a href="https://wa.me/16366894747" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp us</a>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="#" class="brand"><span class="dot"></span>Muziris</a>
+        <p>Sourcing infrastructure for Canadian sellers on Amazon, Etsy, Faire, Shopify and social. Based in Canada, rooted in India.</p>
+      </div>
+      <div class="foot-links">
+        <a href="join.html"><svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5zm0 2.3L5 8v8l7 3.9L19 16V8l-7-3.7z"/></svg>Supplier registration</a>
+        <a href="mailto:info@muziris.ca"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>info@muziris.ca</a>
+        <a href="https://wa.me/16366894747" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp us</a>
+      </div>
+    </div>
+    <small>© 2026 Muziris International Inc. — All rights reserved.<br>
+    Amazon, Etsy, Faire, Shopify and TikTok Shop are trademarks of their respective owners. Muziris is an independent sourcing platform and is not affiliated with or endorsed by any of them.</small>
   </div>
-  <small>&copy; 2026 Muziris International Inc. &nbsp;·&nbsp; Based in Canada, rooted in India</small>
 </footer>
 
 <script>
 /* =========================================================
    CONFIG
    ========================================================= */
-const API_BASE   = '';                       // same origin. Use 'https://muziris-api.onrender.com' if split.
-const WA_NUMBER  = '16366894747';            // fallback delivery if the API is down
-let   PRODUCTS   = [];
-let   CATEGORIES = {};
-const quote      = new Map();
+const API_BASE  = '';
+const WA_NUMBER = '16366894747';
+let   PRODUCTS  = [];
+let   CATEGORIES= {};
+const quote     = new Map();
+const MARKUP_X  = 3;   // used only for the illustrative "typical resale" figure
 
-/* Demo rows so the page works before the catalog fills up.
-   Delete this array once /api/catalog returns data. */
+const CHANNEL_FIT = {
+  'Home & Kitchen':['Etsy','Faire','Shopify'],
+  'Handicrafts':['Etsy','Faire'],
+  'Beauty & Wellness':['Shopify','TikTok Shop'],
+  'Food & Spices':['Etsy','Shopify'],
+  'Textiles & Apparel':['Etsy','Faire','Shopify'],
+  'Industrial & Hardware':['Amazon FBA','Shopify'],
+  'Packaging':['Amazon FBA','Shopify'],
+  'Furniture':['Faire','Shopify'],
+  'Pet Supplies':['Etsy','Shopify','Amazon FBA'],
+  'General':['Amazon FBA','Shopify']
+};
+const channelsFor = cat => CHANNEL_FIT[cat] || CHANNEL_FIT.General;
+
+/* Demo rows — SME-reseller relevant. Delete once /api/catalog has real data. */
 const DEMO = [
-  {id:'D1',name:'Brass-Tip Gel Pen',category:'Stationery',subCategory:'Pens',moq:1000,priceCAD:0.42,image:''},
-  {id:'D2',name:'Recycled Paper Barrel Pen',category:'Stationery',subCategory:'Pens',moq:2000,priceCAD:0.28,image:''},
-  {id:'D3',name:'Metal Twist Executive Pen',category:'Stationery',subCategory:'Pens',moq:500,priceCAD:1.85,image:''},
-  {id:'D4',name:'Bamboo Ballpoint Pen',category:'Stationery',subCategory:'Pens',moq:1500,priceCAD:0.61,image:''},
-  {id:'D5',name:'Waffle Weave Cotton Towel',category:'Textiles & Apparel',subCategory:'Towels',moq:300,priceCAD:4.90,image:''},
-  {id:'D6',name:'Turkish Cotton Bath Sheet',category:'Textiles & Apparel',subCategory:'Towels',moq:200,priceCAD:11.40,image:''},
-  {id:'D7',name:'Whole Malabar Black Pepper 1kg',category:'Food & Spices',subCategory:'Spices',moq:100,priceCAD:13.75,image:''},
-  {id:'D8',name:'Alleppey Turmeric Powder 500g',category:'Food & Spices',subCategory:'Spices',moq:150,priceCAD:5.20,image:''},
-  {id:'D9',name:'Hand-Beaten Brass Planter',category:'Handicrafts',subCategory:'Decor',moq:100,priceCAD:17.60,image:''},
-  {id:'D10',name:'Jute Webbing Tote Bag',category:'Handicrafts',subCategory:'Bags',moq:500,priceCAD:3.15,image:''},
-  {id:'D11',name:'Stainless Steel Hose Clamp',category:'Industrial & Hardware',subCategory:'Fasteners',moq:5000,priceCAD:0.19,image:''},
-  {id:'D12',name:'Cold-Pressed Coconut Oil 500ml',category:'Beauty & Wellness',subCategory:'Oils',moq:400,priceCAD:3.80,image:''}
+  {id:'D1',name:'Bamboo Phone Stand',category:'Home & Kitchen',subCategory:'Desk accessories',moq:500,priceCAD:1.10,image:''},
+  {id:'D2',name:'Marble-Effect Resin Coasters (Set of 4)',category:'Home & Kitchen',subCategory:'Tableware',moq:200,priceCAD:3.40,image:''},
+  {id:'D3',name:'Hand-Block Printed Scrunchies (Pack of 6)',category:'Textiles & Apparel',subCategory:'Accessories',moq:300,priceCAD:1.85,image:''},
+  {id:'D4',name:'Braided Leather Dog Collar',category:'Pet Supplies',subCategory:'Collars',moq:250,priceCAD:2.60,image:''},
+  {id:'D5',name:'Brass Boho Drawer Knobs (Set of 6)',category:'Handicrafts',subCategory:'Hardware decor',moq:150,priceCAD:4.20,image:''},
+  {id:'D6',name:'Copper Moscow Mule Mugs (Set of 2)',category:'Home & Kitchen',subCategory:'Barware',moq:100,priceCAD:6.90,image:''},
+  {id:'D7',name:'Ayurvedic Rose Face Mist 100ml',category:'Beauty & Wellness',subCategory:'Skincare',moq:500,priceCAD:1.35,image:''},
+  {id:'D8',name:'Chunky Knit Cotton Throw Blanket',category:'Textiles & Apparel',subCategory:'Home textiles',moq:100,priceCAD:9.80,image:''},
+  {id:'D9',name:'Beaded Boho Keychains (Pack of 10)',category:'Handicrafts',subCategory:'Accessories',moq:400,priceCAD:2.10,image:''},
+  {id:'D10',name:'Kraft Mailer Boxes 10x10x4"',category:'Packaging',subCategory:'Shipping supplies',moq:1000,priceCAD:0.38,image:''},
+  {id:'D11',name:'Turmeric & Honey Soap Bar',category:'Beauty & Wellness',subCategory:'Bath & body',moq:600,priceCAD:0.95,image:''},
+  {id:'D12',name:'Rattan Wall Hanging Mirror',category:'Furniture',subCategory:'Wall decor',moq:50,priceCAD:14.50,image:''}
 ];
 
 /* =========================================================
@@ -295,20 +433,37 @@ async function loadCatalog(){
   try{
     const r = await fetch(API_BASE + '/api/catalog');
     const d = await r.json();
-    if(d.success && d.products.length){
-      PRODUCTS = d.products; CATEGORIES = d.categories || {};
-      return;
-    }
-  }catch(e){ /* offline or not deployed yet */ }
+    if(d.success && d.products.length){ PRODUCTS = d.products; CATEGORIES = d.categories || {}; return; }
+  }catch(e){}
   PRODUCTS = DEMO;
   CATEGORIES = DEMO.reduce((a,p)=>{ (a[p.category] ||= []).push(p.subCategory); return a; },{});
 }
 
 /* =========================================================
+   HERO MARGIN TICKER
+   ========================================================= */
+function animateTicker(p){
+  const landed = p.priceCAD * 1.28;               // illustrative freight+duty allowance
+  const resale = Math.ceil(landed * MARKUP_X) - 0.01;
+  const margin = Math.round((1 - landed / resale) * 100);
+  document.getElementById('tkFactory').textContent = 'C$' + p.priceCAD.toFixed(2);
+  document.getElementById('tkLanded').textContent  = 'C$' + landed.toFixed(2);
+  document.getElementById('tkResale').textContent  = 'C$' + resale.toFixed(2);
+  document.getElementById('tkMargin').textContent  = margin + '%';
+  document.getElementById('tkName').textContent    = p.name;
+}
+function cycleTicker(){
+  if(!PRODUCTS.length) return;
+  let i = 0;
+  animateTicker(PRODUCTS[0]);
+  setInterval(() => { i = (i + 1) % Math.min(PRODUCTS.length, 6); animateTicker(PRODUCTS[i]); }, 4200);
+}
+
+/* =========================================================
    SEARCH
    ========================================================= */
-const SYNONYM = {pen:'pen',pens:'pen',biro:'pen',towel:'towel',towels:'towel',
-  spice:'spice',spices:'spice',bag:'bag',bags:'bag',oil:'oil'};
+const SYNONYM = {pen:'pen',pens:'pen',candle:'candle',candles:'candle',jewel:'jewel',jewelry:'jewel',
+  jewellery:'jewel',mug:'mug',mugs:'mug',pet:'pet',dog:'dog',cat:'cat',phone:'phone',soap:'soap'};
 
 function search(q){
   const raw = q.toLowerCase().trim();
@@ -316,11 +471,9 @@ function search(q){
                    .map(w => SYNONYM[w] || w.replace(/(ies|es|s)$/,''));
   if(!words.length) return [];
   const hay = p => (p.name+' '+p.category+' '+p.subCategory+' '+(p.tagline||'')+' '+(p.desc||'')).toLowerCase();
-  const scored = PRODUCTS.map(p => {
-    const h = hay(p);
-    return {p, score: words.reduce((s,w) => s + (h.includes(w) ? 1 : 0), 0)};
-  }).filter(x => x.score > 0).sort((a,b) => b.score - a.score);
-  return scored.map(x => x.p);
+  return PRODUCTS
+    .map(p => ({p, score: words.reduce((s,w) => s + (hay(p).includes(w) ? 1 : 0), 0)}))
+    .filter(x => x.score > 0).sort((a,b) => b.score - a.score).map(x => x.p);
 }
 
 /* =========================================================
@@ -333,11 +486,9 @@ const money = n => 'C$' + Number(n).toFixed(2);
 function placeholder(name){
   const letter = esc((name||'?').trim()[0] || '?').toUpperCase();
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1c2130"/><stop offset="1" stop-color="#0b0e14"/></linearGradient></defs>
-    <rect width="200" height="200" fill="url(#g)"/>
+    <rect width="200" height="200" fill="#F7F5F0"/>
     <text x="100" y="128" font-family="Georgia,serif" font-size="86" fill="#D4AF37"
-      fill-opacity="0.35" text-anchor="middle">${letter}</text></svg>`;
+      fill-opacity="0.3" text-anchor="middle">${letter}</text></svg>`;
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
@@ -345,30 +496,29 @@ function say(who, html){
   const el = document.createElement('div');
   el.className = 'msg ' + (who === 'you' ? 'you' : 'bot');
   el.innerHTML = `<div class="who">${who === 'you' ? 'You' : 'Muziris'}</div><div class="bubble">${html}</div>`;
-  log.appendChild(el);
-  log.scrollTop = log.scrollHeight;
-  return el;
+  log.appendChild(el); log.scrollTop = log.scrollHeight; return el;
 }
-
-function thinking(){
-  const el = say('bot','<span class="typing"><span></span><span></span><span></span></span>');
-  return el;
-}
+function thinking(){ return say('bot','<span class="typing"><span></span><span></span><span></span></span>'); }
 
 function cardHTML(p){
   const img = p.image ? esc(p.image) : placeholder(p.name);
   const inList = quote.has(String(p.id));
+  const landed = p.priceCAD * 1.28;
+  const resale = Math.ceil(landed * MARKUP_X) - 0.01;
+  const margin = Math.round((1 - landed / resale) * 100);
+  const badges = channelsFor(p.category).slice(0,3).map(c => `<span class="badge">${esc(c)}</span>`).join('');
   return `<article class="card">
-    <img class="thumb" src="${img}" alt="${esc(p.name)}" loading="lazy"
-         onerror="this.src='${placeholder(p.name)}'">
+    <img class="thumb" src="${img}" alt="${esc(p.name)}" loading="lazy" onerror="this.src='${placeholder(p.name)}'">
     <div class="body">
       <div class="cat">${esc(p.category||'')}${p.subCategory ? ' · ' + esc(p.subCategory) : ''}</div>
       <h4>${esc(p.name)}</h4>
+      <div class="badges">${badges}</div>
       <div class="meta">
-        <div class="price">${money(p.priceCAD)}<small>per piece</small></div>
+        <div class="price">${money(p.priceCAD)}<small>factory price</small></div>
         <div class="moq">MOQ<br>${Number(p.moq||0).toLocaleString()}</div>
       </div>
     </div>
+    <div class="margin-line"><span>Landed ~${money(landed)}</span><span>Resale <b>${money(resale)}</b> · ${margin}% margin</span></div>
     <button data-add="${esc(p.id)}" class="${inList?'added':''}">${inList?'In your list':'Add to quote'}</button>
   </article>`;
 }
@@ -380,24 +530,21 @@ function showResults(q){
     if(!hits.length){
       el.querySelector('.bubble').innerHTML =
         `I don't have <b>${esc(q)}</b> in the catalog yet, but we source to order.<br>
-         Add a note in the quote list or <a href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Looking for: '+q)}"
-         target="_blank" rel="noopener" style="color:var(--gold)">message us on WhatsApp</a> and we'll find a factory for it.`;
-      log.scrollTop = log.scrollHeight;
-      return;
+         <a href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Looking for: '+q)}"
+         target="_blank" rel="noopener" style="color:var(--gold);font-weight:600">Message us on WhatsApp</a> and we'll find a factory for it.`;
+      log.scrollTop = log.scrollHeight; return;
     }
-    const line = hits.length === 1
-      ? `Here's the one we have.`
-      : `${hits.length} ${hits.length > 1 ? 'options' : 'option'} for <b>${esc(q)}</b>. Prices are per piece, delivered pricing confirmed once you send the list.`;
-    el.querySelector('.bubble').innerHTML =
-      line + `<div class="results">${hits.map(cardHTML).join('')}</div>`;
+    const line = hits.length === 1 ? `Here's the one we have.`
+      : `${hits.length} options for <b>${esc(q)}</b>. Landed cost and a typical resale margin are estimated below — adjust freely.`;
+    el.querySelector('.bubble').innerHTML = line + `<div class="results">${hits.map(cardHTML).join('')}</div>`;
     log.scrollTop = log.scrollHeight;
-  }, 450);
+  }, 420);
 }
 
 function ask(q){
   if(!q.trim()) return;
   say('you', esc(q));
-  gtag && gtag('event','catalog_search',{search_term:q});
+  if(window.gtag) gtag('event','catalog_search',{search_term:q});
   showResults(q);
 }
 
@@ -410,19 +557,16 @@ const qtotal = document.getElementById('qtotal');
 
 function renderQuote(){
   if(!quote.size){
-    qlist.innerHTML = `<div class="qempty">Nothing here yet.<br>Search above and add what you need.</div>`;
+    qlist.innerHTML = `<div class="qempty">Nothing here yet.<br>Search above and add what fits your store.</div>`;
     qsend.disabled = true; qtotal.hidden = true; return;
   }
   let total = 0;
   qlist.innerHTML = [...quote.values()].map(i => {
     const sum = i.qty * i.priceCAD; total += sum;
     return `<div class="qitem">
-      <div class="top"><strong>${esc(i.name)}</strong>
-        <button class="rm" data-rm="${esc(i.id)}" aria-label="Remove">×</button></div>
-      <div class="row">
-        <label for="q_${esc(i.id)}">Quantity (MOQ ${Number(i.moq).toLocaleString()})</label>
-        <input id="q_${esc(i.id)}" type="number" min="${i.moq}" step="1" value="${i.qty}" data-qty="${esc(i.id)}">
-      </div>
+      <div class="top"><strong>${esc(i.name)}</strong><button class="rm" data-rm="${esc(i.id)}" aria-label="Remove">×</button></div>
+      <div class="row"><label for="q_${esc(i.id)}">Qty (MOQ ${Number(i.moq).toLocaleString()})</label>
+        <input id="q_${esc(i.id)}" type="number" min="${i.moq}" step="1" value="${i.qty}" data-qty="${esc(i.id)}"></div>
       <div class="row"><span class="sum">${money(i.priceCAD)} each</span><span class="sum">${money(sum)}</span></div>
     </div>`;
   }).join('');
@@ -439,7 +583,7 @@ document.addEventListener('click', e => {
       quote.set(String(p.id), {id:String(p.id), name:p.name, moq:p.moq||1, priceCAD:p.priceCAD, qty:p.moq||1});
       add.textContent = 'In your list'; add.classList.add('added');
       renderQuote();
-      gtag && gtag('event','add_to_quote',{item_name:p.name});
+      if(window.gtag) gtag('event','add_to_quote',{item_name:p.name});
     }
     return;
   }
@@ -472,14 +616,10 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') modal.classLi
 document.getElementById('quoteForm').addEventListener('submit', async e => {
   e.preventDefault();
   const payload = {
-    name:    fName.value.trim(),
-    company: fCompany.value.trim(),
-    email:   fEmail.value.trim(),
-    destination: fCountry.value.trim(),
-    notes:   fNotes.value.trim(),
-    items:   [...quote.values()].map(i => ({productId:i.id, name:i.name, qty:i.qty, indicativeCAD:i.priceCAD}))
+    name: fName.value.trim(), company: fCompany.value.trim(), email: fEmail.value.trim(),
+    channel: fChannel.value, destination: fCountry.value.trim(), notes: fNotes.value.trim(),
+    items: [...quote.values()].map(i => ({productId:i.id, name:i.name, qty:i.qty, indicativeCAD:i.priceCAD}))
   };
-
   let sent = false;
   try{
     const r = await fetch(API_BASE + '/api/quote-request', {
@@ -489,12 +629,12 @@ document.getElementById('quoteForm').addEventListener('submit', async e => {
   }catch(err){ sent = false; }
 
   modal.classList.remove('open');
-  gtag && gtag('event','quote_request',{value: payload.items.length});
+  if(window.gtag) gtag('event','quote_request',{value: payload.items.length});
 
   if(sent){
     say('bot', `Thanks ${esc(payload.name)} — your list is with our sourcing desk. You'll have firm pricing at <b>${esc(payload.email)}</b> within one business day.`);
   }else{
-    const text = `Quote request from ${payload.name} (${payload.company}, ${payload.email})\nShip to: ${payload.destination}\n\n` +
+    const text = `Quote request from ${payload.name} (${payload.company}, ${payload.channel})\nEmail: ${payload.email}\nShip to: ${payload.destination}\n\n` +
       payload.items.map(i => `• ${i.name} — ${i.qty.toLocaleString()} pcs`).join('\n') +
       (payload.notes ? `\n\nNotes: ${payload.notes}` : '');
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`,'_blank');
@@ -511,7 +651,7 @@ document.getElementById('quoteForm').addEventListener('submit', async e => {
 document.getElementById('heroForm').addEventListener('submit', e => {
   e.preventDefault();
   const v = heroInput.value; heroInput.value = '';
-  document.querySelector('.shell').scrollIntoView({behavior:'smooth'});
+  document.getElementById('copilot').scrollIntoView({behavior:'smooth'});
   setTimeout(() => ask(v), 380);
 });
 document.getElementById('chatForm').addEventListener('submit', e => {
@@ -521,22 +661,13 @@ document.getElementById('chatForm').addEventListener('submit', e => {
 
 (async function init(){
   await loadCatalog();
+  cycleTicker();
 
   const cats = Object.keys(CATEGORIES).slice(0,6);
-  document.getElementById('heroChips').innerHTML =
-    cats.map(c => `<button class="chip" type="button" data-q="${esc(c)}">${esc(c)}</button>`).join('');
-  document.getElementById('heroChips').addEventListener('click', e => {
-    const c = e.target.closest('.chip'); if(!c) return;
-    document.querySelector('.shell').scrollIntoView({behavior:'smooth'});
-    setTimeout(() => ask(c.dataset.q), 380);
-  });
-
   say('bot',
-    `Hello — I'm the Muziris sourcing desk.<br>
-     Type a product name and I'll show what our factories make, with minimum order quantity and price per piece.<br><br>
-     <div class="chips" style="justify-content:flex-start;margin-top:4px">${
-       cats.map(c => `<button class="chip" type="button" data-add-q="${esc(c)}">${esc(c)}</button>`).join('')
-     }</div>`);
+    `Hey — I'm the Muziris sourcing copilot.<br>
+     Tell me what you sell and I'll show factory listings with MOQ, price and an estimated margin for your store.<br><br>
+     ${cats.map(c => `<button class="badge" style="cursor:pointer;border:none" data-add-q="${esc(c)}">${esc(c)}</button>`).join(' ')}`);
 
   log.addEventListener('click', e => {
     const c = e.target.closest('[data-add-q]'); if(c) ask(c.dataset.addQ);
