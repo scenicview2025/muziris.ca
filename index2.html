@@ -63,6 +63,7 @@
             font-size: 1rem;
             color: #1f2937;
             border-radius: 0; /* Sharp edges */
+            -webkit-appearance: none;
         }
         .ref-input:focus {
             outline: none;
@@ -85,10 +86,32 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 flex min-h-screen antialiased overflow-x-hidden">
+<body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden">
 
-    <!-- Fixed Left Sidebar -->
-    <aside class="fixed left-0 top-0 h-full w-sidebar md:w-sidebar-md bg-navy-900 border-r border-gray-700 flex flex-col justify-between items-center py-6 z-50">
+    <!-- Mobile Header (Sticky Top) -->
+    <header class="md:hidden fixed top-0 left-0 w-full h-16 bg-navy-900 flex items-center justify-between px-4 z-[60] border-b border-gray-700 shadow-md">
+        <span class="text-white font-extrabold text-lg tracking-widest uppercase">Muziris Inc.</span>
+        <button id="mobile-menu-btn" class="text-white p-2 focus:outline-none">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </header>
+
+    <!-- Mobile Fullscreen Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-navy-900 z-[55] hidden flex-col pt-24 px-6 pb-6 transform transition-transform duration-300">
+        <a href="#services" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">SOURCING</a>
+        <a href="#services" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">LOGISTICS</a>
+        <a href="#contact" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">CONTACT US</a>
+        
+        <div class="mt-auto pt-8">
+            <p class="text-gray-400 text-sm mb-2 font-bold tracking-widest">CALL US TODAY</p>
+            <p class="text-white text-2xl font-black">1-888-689-4747</p>
+        </div>
+    </div>
+
+    <!-- Fixed Left Sidebar (Desktop Only) -->
+    <aside class="hidden md:flex fixed left-0 top-0 h-full w-sidebar md:w-sidebar-md bg-navy-900 border-r border-gray-700 flex-col justify-between items-center py-6 z-50">
         <!-- Top Menu Icon -->
         <div class="w-full flex justify-center pb-6 border-b border-gray-700 cursor-pointer hover:bg-navy-800 transition py-2">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,24 +120,24 @@
         </div>
 
         <!-- Middle Vertical Links -->
-        <div class="flex-grow flex flex-col justify-center items-center gap-12 text-gray-400 text-xs md:text-sm font-bold tracking-widest">
+        <div class="flex-grow flex flex-col justify-center items-center gap-12 text-gray-400 text-sm font-bold tracking-widest">
             <a href="#services" class="vertical-text hover:text-white transition cursor-pointer">SOURCING</a>
             <a href="#services" class="vertical-text hover:text-white transition cursor-pointer">LOGISTICS</a>
         </div>
 
         <!-- Bottom Brand Name -->
         <div class="pb-8">
-            <span class="vertical-text text-white font-extrabold text-lg md:text-xl tracking-widest">
+            <span class="vertical-text text-white font-extrabold text-xl tracking-widest">
                 MUZIRIS INC.
             </span>
         </div>
     </aside>
 
-    <!-- Main Content Wrapper (offset by sidebar width) -->
-    <main class="ml-sidebar md:ml-sidebar-md flex-1 w-full flex flex-col">
+    <!-- Main Content Wrapper (offset by sidebar width on desktop, padding top for mobile header) -->
+    <main class="flex-1 w-full flex flex-col mt-16 md:mt-0 md:ml-sidebar-md relative">
         
-        <!-- Top Right Navigation (Absolute) -->
-        <div class="absolute top-0 right-0 z-40 flex">
+        <!-- Top Right Navigation (Absolute, hidden on mobile) -->
+        <div class="absolute top-0 right-0 z-40 hidden md:flex">
             <a href="#services" class="bg-brandBlue text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-brandBlue-dark transition">
                 ALL SERVICES 
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
@@ -127,56 +150,57 @@
         </div>
 
         <!-- HERO SECTION -->
-        <section class="min-h-screen relative flex flex-col justify-center px-8 md:px-16 pt-24 pb-12 overflow-hidden">
+        <section class="min-h-[calc(100vh-4rem)] md:min-h-screen relative flex flex-col justify-center px-6 md:px-16 pt-16 md:pt-24 pb-12 overflow-hidden">
             <!-- Video Background -->
             <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0">
                 <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">
             </video>
             <!-- Gradient Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-r from-[rgba(10,25,47,0.85)] to-[rgba(10,25,47,0.4)] z-0"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[rgba(10,25,47,0.9)] to-[rgba(10,25,47,0.4)] z-0"></div>
 
-            <div class="max-w-4xl pt-12 relative z-10">
-                <p class="text-white font-bold tracking-widest mb-4">Muziris International Inc.</p>
-                <h1 class="text-5xl md:text-7xl font-black text-white leading-tight uppercase mb-6 drop-shadow-lg">
-                    Bridging India & Canada <br />Through Global Waters.
+            <div class="max-w-4xl pt-8 md:pt-12 relative z-10">
+                <p class="text-white font-bold tracking-widest mb-3 md:mb-4 text-xs md:text-sm">Muziris International Inc.</p>
+                <!-- Scaled down font size for mobile -->
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white leading-tight uppercase mb-4 md:mb-6 drop-shadow-lg">
+                    Bridging India & Canada <br class="hidden sm:block" />Through Global Waters.
                 </h1>
-                <p class="text-gray-200 text-lg md:text-xl font-medium max-w-2xl leading-relaxed mb-10">
+                <p class="text-gray-200 text-base md:text-xl font-medium max-w-2xl leading-relaxed mb-8 md:mb-10">
                     We are your trusted Canadian Importer. Connecting premium manufacturers in India directly to Canadian buyers with Tier 1 shipping and tariff-free sourcing pipelines.
                 </p>
                 
-                <a href="#contact" class="inline-flex items-center gap-3 bg-white text-brandBlue font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-lg group">
+                <a href="#contact" class="inline-flex items-center justify-center w-full sm:w-auto gap-3 bg-white text-brandBlue font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-lg group">
                     CONTACT US
                     <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </a>
             </div>
 
             <!-- Bottom Partners & Certs -->
-            <div class="mt-auto pt-16 flex flex-col lg:flex-row justify-between items-end gap-12 relative z-10">
+            <div class="mt-auto pt-16 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10 relative z-10">
                 
                 <div class="w-full lg:w-1/2">
-                    <p class="text-white font-bold text-sm tracking-widest mb-4">SHIPPING AGENTS</p>
-                    <div class="flex flex-wrap gap-6 items-center opacity-80">
-                        <span class="text-white font-bold text-xl md:text-2xl uppercase font-sans tracking-tighter">MAERSK</span>
-                        <span class="text-white font-black text-xl md:text-2xl italic tracking-tighter">MSC</span>
-                        <span class="text-white font-bold text-xl md:text-2xl tracking-tighter">Hapag-Lloyd</span>
-                        <span class="text-white font-bold text-xl md:text-2xl tracking-widest">ONE</span>
-                        <span class="text-white font-bold text-xl md:text-2xl tracking-tighter">ZIM</span>
+                    <p class="text-white font-bold text-xs md:text-sm tracking-widest mb-4">SHIPPING AGENTS</p>
+                    <div class="flex flex-wrap gap-4 md:gap-6 items-center opacity-80">
+                        <span class="text-white font-bold text-lg sm:text-xl md:text-2xl uppercase font-sans tracking-tighter">MAERSK</span>
+                        <span class="text-white font-black text-lg sm:text-xl md:text-2xl italic tracking-tighter">MSC</span>
+                        <span class="text-white font-bold text-lg sm:text-xl md:text-2xl tracking-tighter">Hapag-Lloyd</span>
+                        <span class="text-white font-bold text-lg sm:text-xl md:text-2xl tracking-widest">ONE</span>
+                        <span class="text-white font-bold text-lg sm:text-xl md:text-2xl tracking-tighter">ZIM</span>
                     </div>
                 </div>
 
                 <div class="w-full lg:w-1/2">
-                    <p class="text-white font-bold text-sm tracking-widest mb-4">CERTIFICATIONS</p>
-                    <div class="flex flex-wrap gap-8 items-center opacity-80">
+                    <p class="text-white font-bold text-xs md:text-sm tracking-widest mb-4">CERTIFICATIONS</p>
+                    <div class="flex flex-wrap gap-6 md:gap-8 items-center opacity-80">
                         <div class="flex items-center gap-2">
-                            <span class="text-white font-bold text-2xl tracking-tighter">IMO</span>
+                            <span class="text-white font-bold text-xl md:text-2xl tracking-tighter">IMO</span>
                         </div>
                         <div class="flex flex-col text-white leading-none">
-                            <span class="font-bold text-lg">CRA</span>
+                            <span class="font-bold text-base md:text-lg">CRA</span>
                             <span class="text-[10px] tracking-widest">REGISTERED</span>
                         </div>
                         <div class="flex items-center gap-2 text-white">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span class="font-bold text-lg">GLOBAL</span>
+                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="font-bold text-base md:text-lg">GLOBAL</span>
                         </div>
                     </div>
                 </div>
@@ -185,18 +209,18 @@
         </section>
 
         <!-- SERVICES / WHY US SECTION -->
-        <section id="services" class="services-bg text-white py-20 px-8 md:px-16">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <section id="services" class="services-bg text-white py-16 md:py-20 px-6 md:px-16">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
                 
                 <!-- Left Column: Why Us -->
                 <div>
-                    <h2 class="text-4xl md:text-5xl font-black mb-6 uppercase">Why Muziris?</h2>
-                    <p class="text-gray-100 font-medium leading-relaxed mb-8">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mb-6 uppercase">Why Muziris?</h2>
+                    <p class="text-gray-100 font-medium leading-relaxed mb-8 text-sm sm:text-base">
                         Whether it's raw industrial materials or finished consumer goods, our sourcing team has a solution for you. Operating directly out of Canada, our network gives you the best direct rates from Indian manufacturers – bypassing heavy tariffs and streamlining supply chains. Whatever the size, shape, and frequency of your cargo, there's a Muziris expert for you.
                     </p>
 
                     <!-- Two column bullet list -->
-                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm font-bold uppercase tracking-wide">
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs sm:text-sm font-bold uppercase tracking-wide">
                         <li class="flex items-start gap-2">
                             <span class="text-white mt-1">•</span>
                             DIRECT INDIAN MANUFACTURER ACCESS
@@ -223,7 +247,7 @@
                         </li>
                     </ul>
 
-                    <a href="#contact" class="inline-block mt-12 bg-white text-navy-900 font-bold px-8 py-4 uppercase text-sm hover:bg-gray-200 transition">
+                    <a href="#contact" class="inline-block mt-10 md:mt-12 w-full sm:w-auto text-center bg-white text-navy-900 font-bold px-8 py-4 uppercase text-sm hover:bg-gray-200 transition">
                         MEET OUR TEAM &rarr;
                     </a>
                 </div>
@@ -232,45 +256,45 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     
                     <!-- Card 1 -->
-                    <div class="bg-white text-center p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-12 h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-3 text-sm tracking-widest">DIRECT SOURCING</h3>
-                        <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">DIRECT SOURCING</h3>
+                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
                             Bypassing middlemen. We connect you directly to audited, high-capacity Indian manufacturing hubs for plastics, packaging, and more.
                         </p>
                     </div>
 
                     <!-- Card 2 -->
-                    <div class="bg-white text-center p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-12 h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-3 text-sm tracking-widest">OCEAN & AIR FREIGHT</h3>
-                        <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">OCEAN & AIR FREIGHT</h3>
+                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
                             Whether moving thousands of containers globally or expediting air freight, we secure Tier 1 rates on every major international route.
                         </p>
                     </div>
 
                     <!-- Card 3 -->
-                    <div class="bg-white text-center p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-12 h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-3 text-sm tracking-widest">CUSTOMS CLEARANCE</h3>
-                        <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">CUSTOMS CLEARANCE</h3>
+                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
                             Our compliance experts navigate CBSA regulations seamlessly, ensuring your goods cross the Canadian border without delays.
                         </p>
                     </div>
 
                     <!-- Card 4 -->
-                    <div class="bg-white text-center p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-12 h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                         </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-3 text-sm tracking-widest">DOOR TO DOOR HANDLING</h3>
-                        <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">DOOR TO DOOR HANDLING</h3>
+                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
                             Regardless of DDP, CIF, or any other INCO term, our logistics team manages pickup in India to final delivery at your Canadian facility.
                         </p>
                     </div>
@@ -280,30 +304,31 @@
         </section>
 
         <!-- CONTACT SECTION -->
-        <section id="contact" class="bg-[#d5d7db] py-20 px-8 md:px-16">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <section id="contact" class="bg-[#d5d7db] py-16 md:py-20 px-6 md:px-16">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
                 
                 <!-- Left Column: Big Text & Info -->
                 <div class="flex flex-col justify-between">
                     <div>
-                        <p class="text-gray-800 font-bold text-xl mb-4">1-888-MUZIRIS (689-4747)</p>
-                        <h2 class="text-5xl md:text-7xl font-black text-brandBlue leading-[0.95] tracking-tight uppercase mb-8">
+                        <p class="text-gray-800 font-bold text-lg md:text-xl mb-3 md:mb-4">1-888-MUZIRIS (689-4747)</p>
+                        <!-- Scaled down font size for mobile -->
+                        <h2 class="text-4xl sm:text-5xl md:text-7xl font-black text-brandBlue leading-[1.0] md:leading-[0.95] tracking-tight uppercase mb-6 md:mb-8">
                             TRUSTED GLOBAL SOURCING.<br />
                             CONTACT US TODAY.
                         </h2>
                         
-                        <p class="text-gray-700 font-medium text-lg mb-6 max-w-md">
+                        <p class="text-gray-700 font-medium text-base md:text-lg mb-4 md:mb-6 max-w-md">
                             Muziris International Inc. is your preferred Canadian Importer & Sourcing Partner.
                         </p>
-                        <p class="text-gray-700 font-medium text-lg mb-12 max-w-md">
+                        <p class="text-gray-700 font-medium text-base md:text-lg mb-8 md:mb-12 max-w-md">
                             By Air, Land, and Sea, our expert team is ready to connect you with India's best manufacturers. Contact us today to secure your supply chain.
                         </p>
                         
-                        <div class="flex flex-wrap gap-4">
-                            <a href="#" class="bg-white text-brandBlue font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-sm flex items-center gap-2">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#" class="w-full sm:w-auto bg-white text-brandBlue text-center font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-sm flex items-center justify-center gap-2">
                                 OUR BLOG <span class="font-normal">&rarr;</span>
                             </a>
-                            <a href="#" class="bg-white text-brandBlue font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-sm flex items-center gap-2">
+                            <a href="#" class="w-full sm:w-auto bg-white text-brandBlue text-center font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-sm flex items-center justify-center gap-2">
                                 TEAM DIRECTORY <span class="font-normal">&rarr;</span>
                             </a>
                         </div>
@@ -312,48 +337,48 @@
 
                 <!-- Right Column: Minimalist Form -->
                 <div class="flex flex-col justify-between">
-                    <form class="space-y-6 max-w-lg w-full">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form class="space-y-4 md:space-y-6 max-w-lg w-full mt-8 lg:mt-0">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                             <div>
-                                <label class="block text-brandBlue font-bold text-xs uppercase mb-2">NAME *</label>
-                                <input type="text" class="ref-input" required>
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">NAME *</label>
+                                <input type="text" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                             <div>
-                                <label class="block text-brandBlue font-bold text-xs uppercase mb-2">COMPANY</label>
-                                <input type="text" class="ref-input">
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">COMPANY</label>
+                                <input type="text" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0">
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                             <div>
-                                <label class="block text-brandBlue font-bold text-xs uppercase mb-2">PHONE *</label>
-                                <input type="tel" class="ref-input" required>
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">PHONE *</label>
+                                <input type="tel" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                             <div>
-                                <label class="block text-brandBlue font-bold text-xs uppercase mb-2">EMAIL *</label>
-                                <input type="email" class="ref-input" required>
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">EMAIL *</label>
+                                <input type="email" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-brandBlue font-bold text-xs uppercase mb-2">MESSAGE</label>
-                            <textarea rows="4" class="ref-input resize-none"></textarea>
+                            <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">MESSAGE</label>
+                            <textarea rows="4" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0 resize-none"></textarea>
                         </div>
 
-                        <button type="submit" class="bg-brandBlue text-white font-bold px-10 py-4 uppercase text-sm hover:bg-brandBlue-dark transition flex items-center gap-2">
+                        <button type="submit" class="w-full sm:w-auto bg-brandBlue text-white font-bold px-10 py-4 uppercase text-sm hover:bg-brandBlue-dark transition flex justify-center items-center gap-2">
                             SUBMIT &rarr;
                         </button>
                     </form>
 
                     <!-- Office Address Info -->
-                    <div class="mt-16 text-brandBlue">
-                        <p class="font-bold text-sm uppercase tracking-widest mb-4">CONTACT OUR HAMILTON<br>SOURCING TEAM</p>
+                    <div class="mt-12 md:mt-16 pt-8 border-t border-gray-400 md:border-none md:pt-0 text-brandBlue">
+                        <p class="font-bold text-sm uppercase tracking-widest mb-3 md:mb-4">CONTACT OUR HAMILTON<br>SOURCING TEAM</p>
                         <p class="text-gray-600 font-medium text-sm leading-relaxed">
                             Muziris International Inc.<br>
                             Hamilton, Ontario<br>
                             Canada
                         </p>
-                        <p class="text-gray-600 font-medium text-sm mt-4">
+                        <p class="text-gray-600 font-medium text-sm mt-3 md:mt-4">
                             1-888-689-4747
                         </p>
                     </div>
@@ -365,12 +390,12 @@
     </main>
 
     <!-- AI Chatbot Toggle Button -->
-    <button id="ai-chat-toggle" class="fixed bottom-6 right-6 md:bottom-10 md:right-10 bg-brandBlue text-white p-4 shadow-2xl hover:bg-brandBlue-dark transition-transform hover:scale-105 z-50 flex items-center justify-center border-2 border-white/20">
+    <button id="ai-chat-toggle" class="fixed bottom-6 right-4 md:bottom-10 md:right-10 bg-brandBlue text-white p-4 shadow-2xl hover:bg-brandBlue-dark transition-transform hover:scale-105 z-50 flex items-center justify-center border-2 border-white/20 rounded-full md:rounded-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
     </button>
 
     <!-- AI Chatbot Window -->
-    <div id="ai-chat-window" class="fixed bottom-24 right-6 md:bottom-28 md:right-10 w-[90vw] md:w-96 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] z-50 flex-col hidden overflow-hidden border border-gray-300">
+    <div id="ai-chat-window" class="fixed bottom-24 right-4 md:bottom-28 md:right-10 w-[calc(100vw-2rem)] md:w-96 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] z-50 flex-col hidden overflow-hidden border border-gray-300">
         <!-- Header -->
         <div class="bg-navy-900 text-white p-4 flex justify-between items-center border-b-[3px] border-brandBlue">
             <div class="flex items-center gap-3">
@@ -400,6 +425,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Mobile Menu Toggle Logic ---
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const path = document.getElementById('menu-icon-path');
+            const links = document.querySelectorAll('.mobile-link');
+
+            function toggleMobileMenu() {
+                const isHidden = menu.classList.contains('hidden');
+                if (isHidden) {
+                    menu.classList.remove('hidden');
+                    menu.classList.add('flex');
+                    path.setAttribute('d', 'M6 18L18 6M6 6l12 12'); // Change to X icon
+                    document.body.style.overflow = 'hidden'; // Prevent background scroll
+                } else {
+                    menu.classList.add('hidden');
+                    menu.classList.remove('flex');
+                    path.setAttribute('d', 'M4 6h16M4 12h16M4 18h16'); // Change to Hamburger icon
+                    document.body.style.overflow = ''; 
+                }
+            }
+
+            if(btn) btn.addEventListener('click', toggleMobileMenu);
+            links.forEach(link => link.addEventListener('click', toggleMobileMenu));
+
+            // --- AI Chatbot Logic ---
             const toggleBtn = document.getElementById('ai-chat-toggle');
             const closeBtn = document.getElementById('ai-chat-close');
             const chatWindow = document.getElementById('ai-chat-window');
@@ -407,7 +457,6 @@
             const inputField = document.getElementById('ai-chat-input');
             const sendBtn = document.getElementById('ai-chat-send');
 
-            // Toggle Chat Window
             const toggleChat = () => {
                 if (chatWindow.classList.contains('hidden')) {
                     chatWindow.classList.remove('hidden');
@@ -422,8 +471,7 @@
             toggleBtn.addEventListener('click', toggleChat);
             closeBtn.addEventListener('click', toggleChat);
 
-            // Gemini API Setup
-            const apiKey = ""; // Left empty as per Canvas environment requirements
+            const apiKey = ""; // Left empty as per constraints
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
             
             const systemPrompt = `You are a highly professional sourcing expert and sales assistant for Muziris International Inc., a Canadian Importer based in Hamilton, Ontario. 
