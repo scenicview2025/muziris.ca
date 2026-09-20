@@ -1,420 +1,352 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Muziris | B2B Sourcing from India to Canada</title>
-<meta name="description" content="Muziris connects Canadian SME buyers with verified Indian factories. We handle sourcing, quality control, freight, and customs clearance.">
-<link rel="icon" type="image/png" href="MC.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muziris International Inc. | Global Sourcing & Logistics</title>
+    
+    <!-- Google Fonts: Montserrat for that clean, industrial, corporate look -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            900: '#0a192f',
+                            800: '#112240',
+                        },
+                        brandBlue: {
+                            DEFAULT: '#0033a0', // Deep corporate blue matching reference
+                            dark: '#002277'
+                        },
+                        ocean: {
+                            DEFAULT: '#0d5c75', // Teal/ocean blue background for services
+                        },
+                        lightGrey: '#d1d5db', // Contact section background
+                    },
+                    spacing: {
+                        'sidebar': '4rem', // 64px width for the left sidebar
+                        'sidebar-md': '5rem', // 80px width for larger screens
+                    }
+                }
+            }
+        }
+    </script>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GBXY659LSC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-GBXY659LSC');
-</script>
+    <style>
+        /* Custom styles for the rotated sidebar text */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+        }
+        
+        .hero-bg {
+            background-image: linear-gradient(to right, rgba(10, 25, 47, 0.85) 0%, rgba(10, 25, 47, 0.4) 100%), url('https://images.unsplash.com/photo-1586528116311-ad8ed7451214?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        .services-bg {
+            background-image: linear-gradient(rgba(13, 92, 117, 0.85), rgba(13, 92, 117, 0.85)), url('https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
 
-<style>
-:root{
-  --ink:#111827;
-  --muted:#6b7280;
-  --faint:#9ca3af;
-  --line:#e5e7eb;
-  --paper:#ffffff;
-  --sand:#f9fafb;
-
-  --saffron:#f59e0b;   --saffron-deep:#d97706;  --saffron-wash:#fef3c7;
-  --teal:#0d9488;      --teal-deep:#0f766e;     --teal-wash:#ccfbf1;
-  --indigo:#4f46e5;    --indigo-deep:#4338ca;   --indigo-wash:#e0e7ff;
-  --maple:#ef4444;     --maple-deep:#dc2626;    --maple-wash:#fee2e2;
-
-  --shadow:0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-sm:0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-}
-*,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;margin:0}
-button,input,textarea{font-family:inherit}
-a{color:inherit}
-:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
-.reveal.in{opacity:1;transform:translateY(0)}
-
-/* ---------------- NAV ---------------- */
-.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
-.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.15rem;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
-.brand .dot{width:11px;height:11px;border-radius:50%;background:conic-gradient(from 200deg,var(--saffron),var(--maple),var(--indigo),var(--teal))}
-.nav-links{display:flex;align-items:center;gap:26px}
-.nav-links a{color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:color .2s}
-.nav-links a:hover{color:var(--ink)}
-.nav-cta{background:var(--ink);color:#fff!important;padding:10px 18px;border-radius:8px;font-weight:600!important;transition:background .2s}
-.nav-cta:hover{background:var(--saffron);color:var(--ink)!important}
-@media (max-width:780px){.nav-links a:not(.nav-cta){display:none}}
-
-/* ---------------- HERO ---------------- */
-.hero{position:relative;overflow:hidden;padding:80px 0;background:var(--sand);color:var(--ink);border-bottom:1px solid var(--line);}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
-.hero-content {position:relative;z-index:2;max-width:540px;}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--saffron-deep);font-weight:700;font-size:.84rem;margin-bottom:18px;text-transform:uppercase;letter-spacing:.05em;}
-.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--saffron)}
-h1.headline{font-size:clamp(2.4rem,4.6vw,3.8rem);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:24px;}
-h1.headline .accent{color:var(--indigo-deep);}
-.hero-sub{font-size:1.1rem;line-height:1.6;color:var(--muted);margin:0 0 36px;}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:15px 28px;border-radius:8px;font-weight:600;font-size:1rem;text-decoration:none;cursor:pointer;border:none;transition:.2s}
-.btn-primary{background:var(--ink);color:#fff;box-shadow:var(--shadow-sm);}
-.btn-primary:hover{background:var(--saffron);color:var(--ink);transform:translateY(-1px);box-shadow:var(--shadow);}
-.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line);}
-.btn-ghost:hover{background:var(--line);}
-
-/* Hero Image Area */
-.hero-image-wrap {position:relative;z-index:1;}
-.hero-image-container {position:relative;width:100%;padding-top:75%;border-radius:24px;overflow:hidden;background:#e5e7eb;box-shadow:var(--shadow);}
-.hero-image-container img {position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;}
-
-/* floating stat chips over the illustration */
-.hero-chips{display:flex;flex-wrap:wrap;gap:12px;margin:32px 0 0;position:relative;z-index:3}
-.hchip{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;color:var(--ink);box-shadow:var(--shadow-sm);}
-.hchip i{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-
-@media (max-width:960px){
-  .hero-grid{grid-template-columns:1fr;text-align:center;}
-  .hero-content{margin:0 auto;align-items:center;display:flex;flex-direction:column;}
-  .hero-ctas{justify-content:center;}
-  .hero-chips{justify-content:center;}
-}
-
-/* ---------------- STRIP ---------------- */
-.strip{border-bottom:1px solid var(--line);background:var(--paper)}
-.strip .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:34px;padding:20px 24px;text-align:center}
-.strip span{font-size:.82rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px}
-.strip span i{width:7px;height:7px;border-radius:50%;display:inline-block}
-
-/* ---------------- SECTION ---------------- */
-.section{padding:90px 0}
-.section-tag{font-weight:700;font-size:.85rem;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;}
-.section-h{font-size:clamp(1.7rem,3.2vw,2.4rem);font-weight:700;letter-spacing:-.02em;margin-bottom:16px;max-width:24ch}
-.section-sub{color:var(--muted);font-size:1.1rem;line-height:1.6;max-width:62ch;margin-bottom:56px}
-
-/* ---------------- JOURNEY (vertical colorful timeline) ---------------- */
-.journey{position:relative}
-.journey::before{content:'';position:absolute;left:39px;top:6px;bottom:6px;width:3px;border-radius:3px;
-  background:linear-gradient(180deg,var(--saffron),var(--teal),var(--indigo),var(--maple))}
-.jrow{display:grid;grid-template-columns:80px 1fr;gap:30px;padding:0 0 62px;position:relative}
-.jrow:last-child{padding-bottom:0}
-.jicon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  position:relative;z-index:2;box-shadow:var(--shadow-sm);flex-shrink:0;background:var(--paper);border:2px solid var(--line);}
-.jicon svg{width:30px;height:30px;fill:none;stroke-width:2;}
-.j1 .jicon{border-color:var(--saffron-deep);} .j1 .jicon svg{stroke:var(--saffron-deep);}
-.j2 .jicon{border-color:var(--teal-deep);}   .j2 .jicon svg{stroke:var(--teal-deep);}
-.j3 .jicon{border-color:var(--indigo-deep);} .j3 .jicon svg{stroke:var(--indigo-deep);}
-.j4 .jicon{border-color:var(--maple-deep);}  .j4 .jicon svg{stroke:var(--maple-deep);}
-.jbody{padding-top:6px}
-.jtag{font-weight:700;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
-.j1 .jtag{color:var(--saffron-deep)} .j2 .jtag{color:var(--teal-deep)} .j3 .jtag{color:var(--indigo-deep)} .j4 .jtag{color:var(--maple-deep)}
-.jbody h3{font-size:1.3rem;font-weight:700;margin-bottom:10px}
-.jbody p{margin:0 0 14px;color:var(--muted);font-size:.98rem;line-height:1.6;max-width:60ch}
-.jnote{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;padding:8px 13px;border-radius:999px}
-.j1 .jnote{background:var(--saffron-wash);color:var(--saffron-deep)}
-.j2 .jnote{background:var(--teal-wash);color:var(--teal-deep)}
-.j3 .jnote{background:var(--indigo-wash);color:var(--indigo-deep)}
-.j4 .jnote{background:var(--maple-wash);color:var(--maple-deep)}
-@media (max-width:600px){
-  .journey::before{left:31px}
-  .jrow{grid-template-columns:64px 1fr;gap:18px}
-  .jicon{width:64px;height:64px}
-  .jicon svg{width:24px;height:24px}
-}
-
-/* ---------------- WHY (tinted bento) ---------------- */
-.why{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
-.why-card{border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:16px;border:1px solid var(--line);box-shadow:var(--shadow-sm);}
-.why-card .ico{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);}
-.why-card .ico svg{width:22px;height:22px;fill:none;stroke-width:2;}
-.why-card h4{font-size:1.1rem;font-weight:700;margin:0;}
-.why-card p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.6}
-.w1{background:var(--saffron-wash)} .w1 .ico svg{stroke:var(--saffron-deep)}
-.w2{background:var(--teal-wash)} .w2 .ico svg{stroke:var(--teal-deep)}
-.w3{background:var(--indigo-wash)} .w3 .ico svg{stroke:var(--indigo-deep)}
-.w4{background:var(--maple-wash)} .w4 .ico svg{stroke:var(--maple-deep)}
-@media (max-width:760px){.why{grid-template-columns:1fr}}
-
-/* ---------------- CTA ---------------- */
-.cta-wrap{position:relative;background:var(--ink);color:#fff;overflow:hidden;padding:100px 0;}
-.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;position:relative;z-index:2}
-.cta-grid h2{color:#fff}
-.cta-grid .section-sub{color:#9ca3af}
-.cta-list{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-direction:column;gap:16px}
-.cta-list li{display:flex;gap:12px;align-items:flex-start;font-size:.95rem;color:#f3f4f6}
-.cta-list svg{width:20px;height:20px;stroke:var(--saffron);fill:none;stroke-width:2.4;flex-shrink:0;}
-
-.quote-card{background:#fff;color:var(--ink);border-radius:16px;padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);}
-.quote-card h3{font-size:1.2rem;font-weight:700;margin-bottom:8px}
-.quote-card p.lead{color:var(--muted);font-size:.9rem;margin:0 0 24px;line-height:1.5}
-.field{margin-bottom:16px}
-.field label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;}
-.field input,.field textarea{width:100%;background:var(--sand);border:1px solid var(--line);border-radius:8px;
-  padding:14px;color:var(--ink);outline:none;transition:border-color .2s;}
-.field input:focus,.field textarea:focus{border-color:var(--indigo);background:#fff;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.quote-submit{width:100%;background:var(--ink);color:#fff;border:none;
-  border-radius:8px;padding:16px;font-weight:600;cursor:pointer;transition:background .2s;margin-top:8px;font-size:1rem;}
-.quote-submit:hover{background:var(--saffron);color:var(--ink);}
-.quote-note{font-size:.8rem;color:var(--faint);margin-top:16px;text-align:center}
-.form-msg{font-size:.85rem;margin-top:12px;padding:12px;border-radius:8px;display:none}
-.form-msg.ok{display:block;background:var(--teal-wash);color:var(--teal-deep);border:1px solid var(--teal);}
-.form-msg.wa{display:block;background:var(--sand);color:var(--muted);border:1px solid var(--line);}
-@media (max-width:860px){.cta-grid{grid-template-columns:1fr}.field-row{grid-template-columns:1fr}}
-
-/* ---------------- FOOTER ---------------- */
-.foot{background:var(--paper);color:var(--muted);padding:48px 0 32px;border-top:1px solid var(--line);}
-.foot-top{display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;align-items:center;padding-bottom:32px;
-  border-bottom:1px solid var(--line);margin-bottom:24px}
-.foot-brand .brand{color:var(--ink)}
-.foot-links{display:flex;gap:12px;flex-wrap:wrap}
-.foot-links a{display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;
-  background:var(--sand);border:1px solid var(--line);padding:10px 16px;border-radius:8px;
-  font-size:.86rem;font-weight:500;transition:.2s}
-.foot-links a:hover{border-color:var(--saffron);background:#fff;}
-.foot-links svg{width:16px;height:16px;fill:var(--saffron-deep)}
-.foot small{display:block;color:var(--faint);font-size:.78rem;line-height:1.5}
-</style>
+        /* Custom form input styling to match reference exactly */
+        .ref-input {
+            width: 100%;
+            background-color: white;
+            border: none;
+            padding: 0.75rem;
+            font-size: 1rem;
+            color: #1f2937;
+            border-radius: 0; /* Sharp edges */
+        }
+        .ref-input:focus {
+            outline: none;
+            box-shadow: inset 0 0 0 2px #0033a0;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 flex min-h-screen antialiased overflow-x-hidden">
 
-<!-- ===================== NAV ===================== -->
-<nav class="nav">
-  <div class="wrap">
-    <a href="#" class="brand"><span class="dot"></span>Muziris</a>
-    <div class="nav-links">
-      <a href="#journey">The journey</a>
-      <a href="#why">Why Muziris</a>
-      <a href="join.html">For suppliers</a>
-      <a href="#quote" class="nav-cta">Get a quote</a>
-    </div>
-  </div>
-</nav>
-
-<!-- ===================== HERO ===================== -->
-<header class="hero">
-  <div class="wrap hero-grid">
-    <div class="hero-content">
-      <div class="eyebrow">India to Canada, Simplified</div>
-      <h1 class="headline">Direct sourcing for <span class="accent">Canadian SMEs.</span></h1>
-      <p class="hero-sub">Muziris connects Amazon sellers, boutiques, and SME brands with verified Indian manufacturers. We handle sourcing, QC, and logistics so you can focus on selling.</p>
-      <div class="hero-ctas">
-        <a href="#quote" class="btn btn-primary">Start a Quote</a>
-        <a href="#journey" class="btn btn-ghost">See How It Works</a>
-      </div>
-      <div class="hero-chips">
-        <div class="hchip"><i style="background:var(--saffron)"></i>Verified factories</div>
-        <div class="hchip"><i style="background:var(--teal)"></i>QC Inspections</div>
-        <div class="hchip"><i style="background:var(--indigo)"></i>Customs cleared</div>
-        <div class="hchip"><i style="background:var(--maple)"></i>Doorstep delivery</div>
-      </div>
-    </div>
-
-    <div class="hero-image-wrap">
-      <div class="hero-image-container">
-        <!-- Placeholder for a nice hero image. You should replace this src with a real image. -->
-        <!-- Example: A clean, modern photo of products, a warehouse, or a person working. -->
-        <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c663c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Boxes stacked in a warehouse" loading="lazy">
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- ===================== STRIP ===================== -->
-<div class="strip">
-  <div class="wrap">
-    <span><i style="background:var(--saffron)"></i>Sourcing</span>
-    <span><i style="background:var(--teal)"></i>Quality assurance</span>
-    <span><i style="background:var(--indigo)"></i>Freight &amp; customs</span>
-    <span><i style="background:var(--maple)"></i>Delivery</span>
-  </div>
-</div>
-
-<!-- ===================== JOURNEY ===================== -->
-<section class="section" id="journey">
-  <div class="wrap">
-    <div class="section-tag" style="color:var(--indigo-deep)">The journey</div>
-    <h2 class="section-h">From idea to inventory.</h2>
-    <p class="section-sub">We've built a seamless supply chain tailored for Canadian small and medium businesses. Here's how your product moves.</p>
-
-    <div class="journey">
-      <div class="jrow j1 reveal">
-        <div class="jicon"><svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6"/></svg></div>
-        <div class="jbody">
-          <div class="jtag">Stage 1 · Sourcing & Sampling</div>
-          <h3>We find the right factory</h3>
-          <p>Tell us what you need. We match your specs to a verified Indian manufacturer, negotiate MOQs that work for SMEs, and manage sample production until it's perfect.</p>
-          <span class="jnote">Factory vetting already done.</span>
+    <!-- Fixed Left Sidebar -->
+    <aside class="fixed left-0 top-0 h-full w-sidebar md:w-sidebar-md bg-navy-900 border-r border-gray-700 flex flex-col justify-between items-center py-6 z-50">
+        <!-- Top Menu Icon -->
+        <div class="w-full flex justify-center pb-6 border-b border-gray-700 cursor-pointer hover:bg-navy-800 transition py-2">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
         </div>
-      </div>
 
-      <div class="jrow j2 reveal">
-        <div class="jicon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-        <div class="jbody">
-          <div class="jtag">Stage 2 · Production & QC</div>
-          <h3>We inspect every run</h3>
-          <p>We monitor production and conduct pre-shipment inspections against your approved sample. Issues are caught and resolved before the goods ever leave the country.</p>
-          <span class="jnote">Quality assured at the source.</span>
+        <!-- Middle Vertical Links -->
+        <div class="flex-grow flex flex-col justify-center items-center gap-12 text-gray-400 text-xs md:text-sm font-bold tracking-widest">
+            <a href="#services" class="vertical-text hover:text-white transition cursor-pointer">SOURCING</a>
+            <a href="#services" class="vertical-text hover:text-white transition cursor-pointer">LOGISTICS</a>
         </div>
-      </div>
 
-      <div class="jrow j3 reveal">
-        <div class="jicon"><svg viewBox="0 0 24 24"><path d="M2 8h13l4 5v6H2zM2 8V5h11v3M17 13h5M5 21a2 2 0 100-4 2 2 0 000 4zM15 21a2 2 0 100-4 2 2 0 000 4z"/></svg></div>
-        <div class="jbody">
-          <div class="jtag">Stage 3 · Logistics</div>
-          <h3>We clear the borders</h3>
-          <p>Air or ocean, we book the freight. We handle all export documentation from India and manage Canadian import clearance, keeping your goods moving smoothly.</p>
-          <span class="jnote">No customs headaches.</span>
+        <!-- Bottom Brand Name -->
+        <div class="pb-8">
+            <span class="vertical-text text-white font-extrabold text-lg md:text-xl tracking-widest">
+                MUZIRIS INC.
+            </span>
         </div>
-      </div>
+    </aside>
 
-      <div class="jrow j4 reveal">
-        <div class="jicon"><svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3v13h2m15-9l3 4v5h-3m-13 0h13m0 0a2 2 0 11-4 0m4 0a2 2 0 10-4 0M6 17a2 2 0 104 0 2 2 0 00-4 0z"/></svg></div>
-        <div class="jbody">
-          <div class="jtag">Stage 4 · Delivery</div>
-          <h3>We deliver to your door</h3>
-          <p>Final-mile delivery straight to your Canadian warehouse, retail shop, or directly to an Amazon FBA prep center. All with a landed cost confirmed upfront.</p>
-          <span class="jnote">Ready to sell.</span>
+    <!-- Main Content Wrapper (offset by sidebar width) -->
+    <main class="ml-sidebar md:ml-sidebar-md flex-1 w-full flex flex-col">
+        
+        <!-- Top Right Navigation (Absolute) -->
+        <div class="absolute top-0 right-0 z-40 flex">
+            <a href="#services" class="bg-brandBlue text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-brandBlue-dark transition">
+                ALL SERVICES 
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+            </a>
+            <a href="#contact" class="bg-navy-900 text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-navy-800 transition border-l border-gray-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                CONTACT US 
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ===================== WHY MUZIRIS ===================== -->
-<section class="section" id="why" style="background:var(--sand)">
-  <div class="wrap">
-    <div class="section-tag" style="color:var(--maple-deep)">Why Muziris</div>
-    <h2 class="section-h">Sourcing made simple for SMEs.</h2>
-    <p class="section-sub">Stop juggling timezones, language barriers, freight forwarders, and customs brokers. We are your single point of contact.</p>
+        <!-- HERO SECTION -->
+        <section class="hero-bg min-h-screen relative flex flex-col justify-center px-8 md:px-16 pt-24 pb-12">
+            <div class="max-w-4xl pt-12">
+                <p class="text-white font-bold tracking-widest mb-4">Muziris International Inc.</p>
+                <h1 class="text-5xl md:text-7xl font-black text-white leading-tight uppercase mb-6 drop-shadow-lg">
+                    Bridging India & Canada <br />Through Global Waters.
+                </h1>
+                <p class="text-gray-200 text-lg md:text-xl font-medium max-w-2xl leading-relaxed mb-10">
+                    We are your trusted Canadian Importer. Connecting premium manufacturers in India directly to Canadian buyers with Tier 1 shipping and tariff-free sourcing pipelines.
+                </p>
+                
+                <a href="#contact" class="inline-flex items-center gap-3 bg-white text-brandBlue font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-lg group">
+                    CONTACT US
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+            </div>
 
-    <div class="why">
-      <div class="why-card w1 reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-        <h4>One Partner, End-to-End</h4>
-        <p>From sample request to final delivery, you work with one accountable team based in Canada, with boots on the ground in India.</p>
-      </div>
-      <div class="why-card w2 reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-        <h4>Built for Amazon & Shopify</h4>
-        <p>We understand FBA requirements, DDP shipping, and the packaging needs of modern e-commerce brands.</p>
-      </div>
-      <div class="why-card w3 reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-        <h4>Transparent Landed Costs</h4>
-        <p>We quote in Canadian Dollars. Your price includes the product, freight, and estimated duties before you sign.</p>
-      </div>
-      <div class="why-card w4 reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
-        <h4>Secure Payments</h4>
-        <p>Pay locally in Canada. We handle international wire transfers and hold funds securely until milestones are met.</p>
-      </div>
-    </div>
-  </div>
-</section>
+            <!-- Bottom Partners & Certs -->
+            <div class="mt-auto pt-16 flex flex-col lg:flex-row justify-between items-end gap-12">
+                
+                <div class="w-full lg:w-1/2">
+                    <p class="text-white font-bold text-sm tracking-widest mb-4">SHIPPING AGENTS</p>
+                    <div class="flex flex-wrap gap-6 items-center opacity-80">
+                        <span class="text-white font-bold text-xl md:text-2xl uppercase font-sans tracking-tighter">MAERSK</span>
+                        <span class="text-white font-black text-xl md:text-2xl italic tracking-tighter">MSC</span>
+                        <span class="text-white font-bold text-xl md:text-2xl tracking-tighter">Hapag-Lloyd</span>
+                        <span class="text-white font-bold text-xl md:text-2xl tracking-widest">ONE</span>
+                        <span class="text-white font-bold text-xl md:text-2xl tracking-tighter">ZIM</span>
+                    </div>
+                </div>
 
-<!-- ===================== CTA / QUOTE ===================== -->
-<section class="section cta-wrap" id="quote">
-  <div class="wrap cta-grid">
-    <div>
-      <div class="section-tag" style="color:var(--saffron)">Get started</div>
-      <h2 class="section-h">Tell us what you want to source.</h2>
-      <p class="section-sub">Describe your product, target quantity, and where it needs to go. We'll evaluate the request and get back to you with next steps.</p>
-      <ul class="cta-list">
-        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Fast evaluation of your product needs</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Clear pricing and timeline estimates</li>
-        <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Connect directly on WhatsApp</li>
-      </ul>
-    </div>
+                <div class="w-full lg:w-1/2">
+                    <p class="text-white font-bold text-sm tracking-widest mb-4">CERTIFICATIONS</p>
+                    <div class="flex flex-wrap gap-8 items-center opacity-80">
+                        <div class="flex items-center gap-2">
+                            <span class="text-white font-bold text-2xl tracking-tighter">IMO</span>
+                        </div>
+                        <div class="flex flex-col text-white leading-none">
+                            <span class="font-bold text-lg">CRA</span>
+                            <span class="text-[10px] tracking-widest">REGISTERED</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-white">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="font-bold text-lg">GLOBAL</span>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="quote-card">
-      <h3>Request a Quote</h3>
-      <p class="lead">Fill out the details below to start the conversation.</p>
-      <form id="quoteForm">
-        <div class="field-row">
-          <div class="field"><label for="fName">Name</label><input id="fName" required></div>
-          <div class="field"><label for="fCompany">Company / Brand</label><input id="fCompany" required></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label for="fEmail">Email</label><input id="fEmail" type="email" required></div>
-          <div class="field"><label for="fCity">Delivery City, Canada</label><input id="fCity" placeholder="Toronto, ON" required></div>
-        </div>
-        <div class="field"><label for="fProduct">Product Details</label><input id="fProduct" placeholder="e.g. Cotton tote bags, 500 units" required></div>
-        <div class="field"><label for="fNotes">Additional Specs</label><textarea id="fNotes" rows="3" placeholder="Materials, target price, Amazon FBA needs..."></textarea></div>
-        <button type="submit" class="quote-submit">Submit Request</button>
-        <div class="form-msg" id="formMsg"></div>
-        <div class="quote-note">Prefer to chat? <a href="https://wa.me/16366894747" target="_blank" rel="noopener" style="color:var(--indigo);font-weight:600">Message us on WhatsApp</a>.</div>
-      </form>
-    </div>
-  </div>
-</section>
+            </div>
+        </section>
 
-<!-- ===================== FOOTER ===================== -->
-<footer class="foot">
-  <div class="wrap">
-    <div class="foot-top">
-      <a href="#" class="brand"><span class="dot"></span>Muziris</a>
-      <div class="foot-links">
-        <a href="join.html"><svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5zm0 2.3L5 8v8l7 3.9L19 16V8l-7-3.7z"/></svg>Supplier registration</a>
-        <a href="mailto:info@muziris.ca"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>info@muziris.ca</a>
-        <a href="https://wa.me/16366894747" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp us</a>
-      </div>
-    </div>
-    <small>&copy; 2026 Muziris International Inc. — All rights reserved. Based in Canada, rooted in India.</small>
-  </div>
-</footer>
+        <!-- SERVICES / WHY US SECTION -->
+        <section id="services" class="services-bg text-white py-20 px-8 md:px-16">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <!-- Left Column: Why Us -->
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-black mb-6 uppercase">Why Muziris?</h2>
+                    <p class="text-gray-100 font-medium leading-relaxed mb-8">
+                        Whether it's raw industrial materials or finished consumer goods, our sourcing team has a solution for you. Operating directly out of Canada, our network gives you the best direct rates from Indian manufacturers – bypassing heavy tariffs and streamlining supply chains. Whatever the size, shape, and frequency of your cargo, there's a Muziris expert for you.
+                    </p>
 
-<script>
-/* Scroll-reveal for the journey rows and why-cards */
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-}, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+                    <!-- Two column bullet list -->
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm font-bold uppercase tracking-wide">
+                        <li class="flex items-start gap-2">
+                            <span class="text-white mt-1">•</span>
+                            DIRECT INDIAN MANUFACTURER ACCESS
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-white mt-1">•</span>
+                            TARIFF-FREE SOURCING ALTERNATIVES
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-white mt-1">•</span>
+                            CANADIAN REGISTERED IMPORTER
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-white mt-1">•</span>
+                            QUICK AND EFFICIENT CUSTOMS CLEARANCE
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-white mt-1">•</span>
+                            END-TO-END SUPPLY CHAIN MANAGEMENT
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-white mt-1">•</span>
+                            BUYERS CONSOLIDATION SERVICES
+                        </li>
+                    </ul>
 
-/* Quote form */
-const form = document.getElementById('quoteForm');
-const msg  = document.getElementById('formMsg');
-const WA_NUMBER = '16366894747';
+                    <a href="#contact" class="inline-block mt-12 bg-white text-navy-900 font-bold px-8 py-4 uppercase text-sm hover:bg-gray-200 transition">
+                        MEET OUR TEAM &rarr;
+                    </a>
+                </div>
 
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  const payload = {
-    name: fName.value.trim(), company: fCompany.value.trim(), email: fEmail.value.trim(),
-    destination: fCity.value.trim(), product: fProduct.value.trim(), notes: fNotes.value.trim()
-  };
+                <!-- Right Column: 2x2 Grid of Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    
+                    <!-- Card 1 -->
+                    <div class="bg-white text-center p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <svg class="w-12 h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <h3 class="text-brandBlue font-extrabold uppercase mb-3 text-sm tracking-widest">DIRECT SOURCING</h3>
+                        <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                            Bypassing middlemen. We connect you directly to audited, high-capacity Indian manufacturing hubs for plastics, packaging, and more.
+                        </p>
+                    </div>
 
-  let sent = false;
-  try{
-    const r = await fetch('/api/quote-request', {
-      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-    });
-    sent = r.ok;
-  }catch(err){ sent = false; }
+                    <!-- Card 2 -->
+                    <div class="bg-white text-center p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <svg class="w-12 h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 class="text-brandBlue font-extrabold uppercase mb-3 text-sm tracking-widest">OCEAN & AIR FREIGHT</h3>
+                        <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                            Whether moving thousands of containers globally or expediting air freight, we secure Tier 1 rates on every major international route.
+                        </p>
+                    </div>
 
-  if(window.gtag) gtag('event','quote_request',{method: sent ? 'form' : 'whatsapp_fallback'});
+                    <!-- Card 3 -->
+                    <div class="bg-white text-center p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <svg class="w-12 h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        <h3 class="text-brandBlue font-extrabold uppercase mb-3 text-sm tracking-widest">CUSTOMS CLEARANCE</h3>
+                        <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                            Our compliance experts navigate CBSA regulations seamlessly, ensuring your goods cross the Canadian border without delays.
+                        </p>
+                    </div>
 
-  if(sent){
-    msg.textContent = `Thanks ${payload.name} — we'll reply at ${payload.email} within one business day.`;
-    msg.className = 'form-msg ok';
-    form.reset();
-  }else{
-    const text = `Quote request from ${payload.name} (${payload.company})\nEmail: ${payload.email}\nDeliver to: ${payload.destination}\nProduct: ${payload.product}\n${payload.notes ? 'Notes: ' + payload.notes : ''}`;
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
-    msg.textContent = `Our form is offline right now, so we've opened WhatsApp with your request ready to send.`;
-    msg.className = 'form-msg wa';
-  }
-});
-</script>
+                    <!-- Card 4 -->
+                    <div class="bg-white text-center p-8 flex flex-col items-center justify-center shadow-2xl">
+                        <svg class="w-12 h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                        </svg>
+                        <h3 class="text-brandBlue font-extrabold uppercase mb-3 text-sm tracking-widest">DOOR TO DOOR HANDLING</h3>
+                        <p class="text-gray-600 text-sm font-medium leading-relaxed">
+                            Regardless of DDP, CIF, or any other INCO term, our logistics team manages pickup in India to final delivery at your Canadian facility.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="bg-[#d5d7db] py-20 px-8 md:px-16">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <!-- Left Column: Big Text & Info -->
+                <div class="flex flex-col justify-between">
+                    <div>
+                        <p class="text-gray-800 font-bold text-xl mb-4">1-888-MUZIRIS (689-4747)</p>
+                        <h2 class="text-5xl md:text-7xl font-black text-brandBlue leading-[0.95] tracking-tight uppercase mb-8">
+                            TRUSTED GLOBAL SOURCING.<br />
+                            CONTACT US TODAY.
+                        </h2>
+                        
+                        <p class="text-gray-700 font-medium text-lg mb-6 max-w-md">
+                            Muziris International Inc. is your preferred Canadian Importer & Sourcing Partner.
+                        </p>
+                        <p class="text-gray-700 font-medium text-lg mb-12 max-w-md">
+                            By Air, Land, and Sea, our expert team is ready to connect you with India's best manufacturers. Contact us today to secure your supply chain.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#" class="bg-white text-brandBlue font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-sm flex items-center gap-2">
+                                OUR BLOG <span class="font-normal">&rarr;</span>
+                            </a>
+                            <a href="#" class="bg-white text-brandBlue font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-sm flex items-center gap-2">
+                                TEAM DIRECTORY <span class="font-normal">&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Minimalist Form -->
+                <div class="flex flex-col justify-between">
+                    <form class="space-y-6 max-w-lg w-full">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-2">NAME *</label>
+                                <input type="text" class="ref-input" required>
+                            </div>
+                            <div>
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-2">COMPANY</label>
+                                <input type="text" class="ref-input">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-2">PHONE *</label>
+                                <input type="tel" class="ref-input" required>
+                            </div>
+                            <div>
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-2">EMAIL *</label>
+                                <input type="email" class="ref-input" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-brandBlue font-bold text-xs uppercase mb-2">MESSAGE</label>
+                            <textarea rows="4" class="ref-input resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="bg-brandBlue text-white font-bold px-10 py-4 uppercase text-sm hover:bg-brandBlue-dark transition flex items-center gap-2">
+                            SUBMIT &rarr;
+                        </button>
+                    </form>
+
+                    <!-- Office Address Info -->
+                    <div class="mt-16 text-brandBlue">
+                        <p class="font-bold text-sm uppercase tracking-widest mb-4">CONTACT OUR HAMILTON<br>SOURCING TEAM</p>
+                        <p class="text-gray-600 font-medium text-sm leading-relaxed">
+                            Muziris International Inc.<br>
+                            Hamilton, Ontario<br>
+                            Canada
+                        </p>
+                        <p class="text-gray-600 font-medium text-sm mt-4">
+                            1-888-689-4747
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
 </body>
 </html>
