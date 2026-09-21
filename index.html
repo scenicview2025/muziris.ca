@@ -337,39 +337,38 @@
 
                 <!-- Right Column: Minimalist Form -->
                 <div class="flex flex-col justify-between">
-                    <form class="space-y-4 md:space-y-6 max-w-lg w-full mt-8 lg:mt-0">
+                    <form id="contact-form" class="space-y-4 md:space-y-6 max-w-lg w-full mt-8 lg:mt-0">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                             <div>
                                 <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">NAME *</label>
-                                <input type="text" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
+                                <input type="text" id="contact-name" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                             <div>
                                 <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">COMPANY</label>
-                                <input type="text" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0">
+                                <input type="text" id="contact-company" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                             <div>
                                 <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">PHONE *</label>
-                                <input type="tel" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
+                                <input type="tel" id="contact-phone" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                             <div>
                                 <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">EMAIL *</label>
-                                <input type="email" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
+                                <input type="email" id="contact-email" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">MESSAGE</label>
-                            <textarea rows="4" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0 resize-none"></textarea>
+                            <textarea id="contact-message" rows="4" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0 resize-none"></textarea>
                         </div>
 
                         <button type="submit" class="w-full sm:w-auto bg-brandBlue text-white font-bold px-10 py-4 uppercase text-sm hover:bg-brandBlue-dark transition flex justify-center items-center gap-2">
                             SUBMIT &rarr;
                         </button>
                     </form>
-
                     <!-- Office Address Info -->
                     <div class="mt-12 md:mt-16 pt-8 border-t border-gray-400 md:border-none md:pt-0 text-brandBlue">
                         <p class="font-bold text-sm uppercase tracking-widest mb-3 md:mb-4">CONTACT OUR HAMILTON<br>SOURCING TEAM</p>
