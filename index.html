@@ -424,163 +424,135 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Mobile Menu Toggle Logic ---
-            const btn = document.getElementById('mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            const path = document.getElementById('menu-icon-path');
-            const links = document.querySelectorAll('.mobile-link');
+    document.addEventListener('DOMContentLoaded', () => {
+        const RENDER_API_URL = "https://muziris-api.onrender.com";
 
-            function toggleMobileMenu() {
-                const isHidden = menu.classList.contains('hidden');
-                if (isHidden) {
-                    menu.classList.remove('hidden');
-                    menu.classList.add('flex');
-                    path.setAttribute('d', 'M6 18L18 6M6 6l12 12'); // Change to X icon
-                    document.body.style.overflow = 'hidden'; // Prevent background scroll
+        // ==========================================
+        // 1. CONTACT FORM LOGIC
+        // ==========================================
+        const contactForm = document.getElementById('contact-form'); // Ensure your <form> has id="contact-form"
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = "SENDING... <i class='fas fa-spinner fa-spin'></i>";
+            submitBtn.disabled = true;
+
+            const formData = {
+                name: document.getElementById('contact-name').value, // Add these IDs to your inputs!
+                company: document.getElementById('contact-company').value,
+                phone: document.getElementById('contact-phone').value,
+                email: document.getElementById('contact-email').value,
+                message: document.getElementById('contact-message').value
+            };
+
+            try {
+                const response = await fetch(`${RENDER_API_URL}/api/contact`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert("Message sent successfully! We will contact you shortly.");
+                    contactForm.reset();
                 } else {
-                    menu.classList.add('hidden');
-                    menu.classList.remove('flex');
-                    path.setAttribute('d', 'M4 6h16M4 12h16M4 18h16'); // Change to Hamburger icon
-                    document.body.style.overflow = ''; 
+                    alert("Something went wrong. Please try again or call us.");
                 }
+            } catch (err) {
+                alert("Network error. Please try again.");
+            } finally {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // ==========================================
+        // 2. AI CHATBOT LOGIC (Connected to Server)
+        // ==========================================
+        const toggleBtn = document.getElementById('ai-chat-toggle');
+        const closeBtn = document.getElementById('ai-chat-close');
+        const chatWindow = document.getElementById('ai-chat-window');
+        const messagesContainer = document.getElementById('ai-chat-messages');
+        const inputField = document.getElementById('ai-chat-input');
+        const sendChatBtn = document.getElementById('ai-chat-send');
+
+        let chatHistory = [];
+
+        const toggleChat = () => {
+            chatWindow.classList.toggle('hidden');
+            chatWindow.classList.toggle('flex');
+            if (!chatWindow.classList.contains('hidden')) setTimeout(() => inputField.focus(), 100);
+        };
+
+        toggleBtn.addEventListener('click', toggleChat);
+        closeBtn.addEventListener('click', toggleChat);
+
+        const addMessageToUI = (text, isUser) => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `p-3 max-w-[85%] shadow-sm leading-relaxed text-sm font-medium ${
+                isUser 
+                ? 'bg-navy-900 text-white self-end rounded-tl-xl rounded-br-xl rounded-bl-xl' 
+                : 'bg-white border border-gray-200 text-gray-800 self-start rounded-tr-xl rounded-br-xl rounded-bl-xl'
+            }`;
+            msgDiv.textContent = text;
+            messagesContainer.appendChild(msgDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        };
+
+        const handleSend = async () => {
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            inputField.value = '';
+            inputField.disabled = true;
+            sendChatBtn.disabled = true;
+
+            addMessageToUI(text, true);
+
+            // Add Loading dots
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'ai-loading';
+            loadingDiv.className = 'bg-white border border-gray-200 text-gray-500 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm flex items-center gap-2';
+            loadingDiv.innerHTML = '<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>';
+            messagesContainer.appendChild(loadingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                // Send to YOUR Render server, NOT directly to Gemini
+                const response = await fetch(`${RENDER_API_URL}/api/public-web-chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, chatHistory: chatHistory })
+                });
+
+                const data = await response.json();
+                document.getElementById('ai-loading').remove();
+                
+                if (data.success) {
+                    addMessageToUI(data.reply, false);
+                    
+                    // Save history in Gemini format
+                    chatHistory.push({ role: "user", parts: [{ text: text }] });
+                    chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
+                } else {
+                    addMessageToUI(data.reply || "Error connecting to AI.", false);
+                }
+            } catch (error) {
+                document.getElementById('ai-loading').remove();
+                addMessageToUI("Network error. Please use the contact form.", false);
             }
 
-            if(btn) btn.addEventListener('click', toggleMobileMenu);
-            links.forEach(link => link.addEventListener('click', toggleMobileMenu));
+            inputField.disabled = false;
+            sendChatBtn.disabled = false;
+            inputField.focus();
+        };
 
-            // --- AI Chatbot Logic ---
-            const toggleBtn = document.getElementById('ai-chat-toggle');
-            const closeBtn = document.getElementById('ai-chat-close');
-            const chatWindow = document.getElementById('ai-chat-window');
-            const messagesContainer = document.getElementById('ai-chat-messages');
-            const inputField = document.getElementById('ai-chat-input');
-            const sendBtn = document.getElementById('ai-chat-send');
-
-            const toggleChat = () => {
-                if (chatWindow.classList.contains('hidden')) {
-                    chatWindow.classList.remove('hidden');
-                    chatWindow.classList.add('flex');
-                    setTimeout(() => inputField.focus(), 100);
-                } else {
-                    chatWindow.classList.add('hidden');
-                    chatWindow.classList.remove('flex');
-                }
-            };
-
-            toggleBtn.addEventListener('click', toggleChat);
-            closeBtn.addEventListener('click', toggleChat);
-
-            const apiKey = ""; // Left empty as per constraints
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-            
-            const systemPrompt = `You are a highly professional sourcing expert and sales assistant for Muziris International Inc., a Canadian Importer based in Hamilton, Ontario. 
-            Context: The Canada-U.S. trade war has resulted in a 50% tariff on many US goods (especially plastics, tapes, packaging, and molds) entering Canada. 
-            Your Goal: Help Canadian buyers understand that sourcing from India through Muziris completely bypasses these tariffs, offering massive savings.
-            Tone: Professional, knowledgeable, concise, and trustworthy. Do not use complex markdown formatting (like asterisks for bolding), keep it natural text. 
-            Action: Always encourage the user to fill out the contact form on the page to speak with a human specialist for exact rates.`;
-
-            let chatHistory = [];
-
-            const addMessageToUI = (text, isUser) => {
-                const msgDiv = document.createElement('div');
-                msgDiv.className = `p-3 max-w-[85%] shadow-sm leading-relaxed ${
-                    isUser 
-                    ? 'bg-navy-900 text-white self-end rounded-tl-xl rounded-br-xl rounded-bl-xl' 
-                    : 'bg-white border border-gray-200 text-gray-800 self-start rounded-tr-xl rounded-br-xl rounded-bl-xl'
-                }`;
-                msgDiv.textContent = text;
-                messagesContainer.appendChild(msgDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            };
-
-            const addLoadingIndicator = () => {
-                const loadingDiv = document.createElement('div');
-                loadingDiv.id = 'ai-loading';
-                loadingDiv.className = 'bg-white border border-gray-200 text-gray-500 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm flex items-center gap-2';
-                loadingDiv.innerHTML = '<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>';
-                messagesContainer.appendChild(loadingDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            };
-
-            const removeLoadingIndicator = () => {
-                const loadingDiv = document.getElementById('ai-loading');
-                if (loadingDiv) loadingDiv.remove();
-            };
-
-            const fetchAIResponse = async (userText, retryCount = 0) => {
-                const payload = {
-                    contents: [
-                        ...chatHistory,
-                        { role: "user", parts: [{ text: userText }] }
-                    ],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (response.status === 429) {
-                        if (retryCount < 3) {
-                            const delay = Math.pow(2, retryCount) * 1000;
-                            await new Promise(res => setTimeout(res, delay));
-                            return fetchAIResponse(userText, retryCount + 1);
-                        } else {
-                            throw new Error("Rate limit exceeded.");
-                        }
-                    }
-
-                    if (!response.ok) throw new Error("API Error");
-
-                    const result = await response.json();
-                    const candidate = result.candidates?.[0];
-                    if (candidate && candidate.content?.parts?.[0]?.text) {
-                        const botText = candidate.content.parts[0].text;
-                        
-                        // Update history
-                        chatHistory.push({ role: "user", parts: [{ text: userText }] });
-                        chatHistory.push(candidate.content); // Add model response to history
-                        
-                        return botText;
-                    } else {
-                        throw new Error("Invalid response format");
-                    }
-                } catch (error) {
-                    console.error("AI Error:", error);
-                    return "I'm currently experiencing high volume. Please use the contact form on this page to reach our team directly.";
-                }
-            };
-
-            const handleSend = async () => {
-                const text = inputField.value.trim();
-                if (!text) return;
-
-                inputField.value = '';
-                inputField.disabled = true;
-                sendBtn.disabled = true;
-
-                addMessageToUI(text, true);
-                addLoadingIndicator();
-
-                const aiResponse = await fetchAIResponse(text);
-                
-                removeLoadingIndicator();
-                addMessageToUI(aiResponse, false);
-
-                inputField.disabled = false;
-                sendBtn.disabled = false;
-                inputField.focus();
-            };
-
-            sendBtn.addEventListener('click', handleSend);
-            inputField.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleSend();
-            });
-        });
-    </script>
+        sendChatBtn.addEventListener('click', handleSend);
+        inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
+    });
+</script>
 </body>
 </html>
