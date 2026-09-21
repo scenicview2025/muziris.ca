@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sourcing Catalog | Muziris International Inc.</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Montserrat', 'sans-serif'], },
+                    colors: {
+                        navy: { 900: '#0a192f', 800: '#112240', },
+                        brandBlue: { DEFAULT: '#0033a0', dark: '#002277' },
+                        lightGrey: '#d1d5db',
+                    },
+                    spacing: { 'sidebar': '4rem', 'sidebar-md': '5rem', }
+                }
+            }
+        }
+    </script>
+    <style>
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+        
+        .ref-input {
+            width: 100%;
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            font-size: 1rem;
+            color: #1f2937;
+            border-radius: 4px;
+            -webkit-appearance: none;
+            transition: all 0.3s;
+        }
+        .ref-input:focus {
+            outline: none;
+            border-color: #0033a0;
+            box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
+            background-color: #ffffff;
+        }
+
+        /* Custom Scrollbar for Chat */
+        #ai-chat-messages::-webkit-scrollbar { width: 6px; }
+        #ai-chat-messages::-webkit-scrollbar-track { background: #f1f1f1; }
+        #ai-chat-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        #ai-chat-messages::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Glassmorphism for Modal */
+        .modal-overlay {
+            background-color: rgba(10, 25, 47, 0.7);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden">
+
+    <header class="md:hidden fixed top-0 left-0 w-full h-16 bg-navy-900 flex items-center justify-between px-4 z-[60] border-b border-gray-700 shadow-md">
+        <a href="index.html" class="text-white font-extrabold text-lg tracking-widest uppercase">Muziris Inc.</a>
+        <button id="mobile-menu-btn" class="text-white p-2 focus:outline-none">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </header>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-navy-900 z-[55] hidden flex-col pt-24 px-6 pb-6 transform transition-transform duration-300">
+        <a href="index.html" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">HOME</a>
+        <a href="products.html" class="mobile-link text-brandBlue text-2xl font-bold py-4 border-b border-gray-700 transition">CATALOG</a>
+        <a href="index.html#contact" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">CONTACT US</a>
+        
+        <div class="mt-auto pt-8">
+            <p class="text-gray-400 text-sm mb-2 font-bold tracking-widest">CALL US TODAY</p>
+            <p class="text-white text-2xl font-black">+1-636-689-4747</p>
+        </div>
+    </div>
+
+    <aside class="hidden md:flex fixed left-0 top-0 h-full w-sidebar md:w-sidebar-md bg-navy-900 border-r border-gray-700 flex-col justify-between items-center py-6 z-50">
+        <a href="index.html" class="w-full flex justify-center pb-6 border-b border-gray-700 hover:bg-navy-800 transition py-2">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+        </a>
+        <div class="flex-grow flex flex-col justify-center items-center gap-12 text-gray-400 text-sm font-bold tracking-widest">
+            <a href="products.html" class="vertical-text text-white transition cursor-pointer">CATALOG</a>
+            <a href="index.html#services" class="vertical-text hover:text-white transition cursor-pointer">SOURCING</a>
+            <a href="index.html#services" class="vertical-text hover:text-white transition cursor-pointer">LOGISTICS</a>
+        </div>
+        <div class="pb-8">
+            <span class="vertical-text text-white font-extrabold text-xl tracking-widest">MUZIRIS INC.</span>
+        </div>
+    </aside>
+
+    <main class="flex-1 w-full flex flex-col mt-16 md:mt-0 md:ml-sidebar-md relative bg-white">
+        
+        <div class="absolute top-0 right-0 z-40 hidden md:flex">
+            <a href="index.html" class="bg-navy-800 text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-navy-700 transition">
+                HOME
+            </a>
+            <a href="index.html#contact" class="bg-brandBlue text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-brandBlue-dark transition shadow-md">
+                CONTACT US <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>
+
+        <section class="bg-navy-900 pt-16 md:pt-24 pb-16 px-6 md:px-16 text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=2000&auto=format&fit=crop')] opacity-10 bg-cover bg-center"></div>
+            <div class="relative z-10 max-w-4xl mx-auto mt-4">
+                <p class="text-brandBlue font-bold tracking-widest mb-3 md:mb-4 text-xs md:text-sm">B2B SOURCING CATALOG</p>
+                <h1 class="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight mb-6 leading-tight">
+                    Tariff-Free Industrial Plastics Pipeline
+                </h1>
+                <p class="text-gray-300 text-base md:text-lg font-medium leading-relaxed max-w-3xl mx-auto">
+                    Exempt from the 50% U.S. Surtax. Connect directly with audited, high-capacity Indian manufacturing hubs for commercial films, packaging, and tapes.
+                </p>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 px-6 md:px-16 bg-gray-50 border-b border-gray-200">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-10 border-b border-gray-300 pb-4">
+                    <span class="inline-block bg-brandBlue text-white text-xs font-bold px-3 py-1 uppercase tracking-widest mb-3">HS 3919.1</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-navy-900 uppercase tracking-tight">Narrow Self-Adhesive Tapes & Rolls</h2>
+                    <p class="text-gray-500 mt-2 font-medium">Width ≤ 20 cm</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                    <!-- Item 1 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1605381831804-9492e864816c?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="BOPP Packaging Tape"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">BOPP Packaging Tape</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Clear, brown, or custom-branded box-sealing tapes used by logistics companies.</p>
+                            <button onclick="openQuoteModal('BOPP Packaging Tape (HS 3919.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1584282470051-5186b5103a11?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Foam Tape"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Double-Sided Acrylic Foam Tape</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">High-strength mounting tape used in automotive and construction assemblies.</p>
+                            <button onclick="openQuoteModal('Double-Sided Acrylic Foam Tape (HS 3919.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1621905251918-4841cbe817ba?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Insulation Tape"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Electrical Insulation Tape</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">PVC self-adhesive tape rolls used heavily by electrical contractors.</p>
+                            <button onclick="openQuoteModal('Electrical Insulation Tape (HS 3919.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1583307559196-1e6498ecae05?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Masking Tape"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Masking & Painter's Tape</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Plastic-backed, low-tack tape used for precision clean-line automotive painting.</p>
+                            <button onclick="openQuoteModal('Masking & Painter\\'s Tape (HS 3919.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 5 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1603533867307-b354255e3c32?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Labels"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Retail Barcode & Price Labels</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Small blank adhesive rolls used in thermal desktop printers for retail.</p>
+                            <button onclick="openQuoteModal('Retail Barcode & Price Labels (HS 3919.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 px-6 md:px-16 bg-white border-b border-gray-200">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-10 border-b border-gray-300 pb-4">
+                    <span class="inline-block bg-brandBlue text-white text-xs font-bold px-3 py-1 uppercase tracking-widest mb-3">HS 3919.9</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-navy-900 uppercase tracking-tight">Wide Sheets, Decals & Large Formats</h2>
+                    <p class="text-gray-500 mt-2 font-medium">Width > 20 cm</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                    <!-- Item 1 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Stickers"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Die-Cut Vinyl Stickers</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Waterproof custom laptop, bumper, and window decals and stickers.</p>
+                            <button onclick="openQuoteModal('Die-Cut Vinyl Stickers & Decals (HS 3919.9)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1598448556858-693dfa996bd3?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Vinyl Wrap"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Vinyl Wrap & Signage Film</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Large printable PVC rolls used for vehicle wraps and outdoor billboards.</p>
+                            <button onclick="openQuoteModal('Vinyl Wrap & Signage Film (HS 3919.9)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Product Labels"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Product Labels (Roll-fed)</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">High-volume, glossy or matte printed labels for food jars and cosmetics.</p>
+                            <button onclick="openQuoteModal('Product Labels - Roll-fed (HS 3919.9)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1596001550992-0b1968edc8de?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Protection Film"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Surface Protection Film</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Clear, low-tack self-adhesive sheets to protect appliances during transit.</p>
+                            <button onclick="openQuoteModal('Surface Protection Film (HS 3919.9)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 5 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1444044205806-38f3ed106c10?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Reflective Sheeting"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Reflective Sheeting</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Adhesive plastic sheets used for traffic signs and commercial fleet visibility.</p>
+                            <button onclick="openQuoteModal('Reflective Sheeting (HS 3919.9)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 px-6 md:px-16 bg-gray-50 border-b border-gray-200">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-10 border-b border-gray-300 pb-4">
+                    <span class="inline-block bg-brandBlue text-white text-xs font-bold px-3 py-1 uppercase tracking-widest mb-3">HS 3920.1</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-navy-900 uppercase tracking-tight">Non-Adhesive Polyethylene Films & Sheets</h2>
+                    <p class="text-gray-500 mt-2 font-medium">Logistics, Agriculture & Construction</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                    <!-- Item 1 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1586528116311-ad8ed716d408?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Pallet Wrap"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Pallet Stretch Wrap (LLDPE)</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Heavy-duty clear stretch film used to secure boxes onto pallets for shipping.</p>
+                            <button onclick="openQuoteModal('Pallet Stretch Wrap - LLDPE (HS 3920.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Shrink Film"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Polyethylene Shrink Film</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">Heat-activated wrap used for multi-packs of beverage cans or box bundles.</p>
+                            <button onclick="openQuoteModal('Polyethylene Shrink Film (HS 3920.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1592982537447-6f2a6a0c5c1c?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Mulch Film"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Agricultural Mulch Film</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">PE sheeting used by commercial farms to preserve soil moisture and prevent weeds.</p>
+                            <button onclick="openQuoteModal('Agricultural Mulch Film (HS 3920.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Vapor Barrier"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Construction Vapor Barrier</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">High-density polyethylene (HDPE) sheets for building foundations.</p>
+                            <button onclick="openQuoteModal('Construction Vapor Barrier Sheeting (HS 3920.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                    <!-- Item 5 -->
+                    <div class="bg-white border border-gray-200 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="h-48 bg-gray-200 overflow-hidden"><img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Cling Wrap"></div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <h3 class="font-bold text-navy-900 text-lg mb-2">Food-Grade Cling Wrap</h3>
+                            <p class="text-gray-600 text-sm mb-4 flex-1">High-clarity freshness film supplied to commercial kitchens and grocery stores.</p>
+                            <button onclick="openQuoteModal('Food-Grade Cling Wrap / Freshness Film (HS 3920.1)')" class="w-full text-center bg-gray-100 text-brandBlue font-bold py-3 uppercase text-xs hover:bg-brandBlue hover:text-white transition border border-gray-200">Get Quote</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-navy-900 border-t border-gray-800 text-center py-10 flex flex-col items-center justify-center">
+            <p class="text-gray-400 font-bold text-sm tracking-widest uppercase mb-2">© 2026 Muziris International Inc.</p>
+            <div class="flex items-center gap-3 text-xs tracking-widest uppercase font-bold">
+                <span class="text-brandBlue">Based in Hamilton, Ontario</span>
+                <span class="text-gray-600">•</span>
+                <span class="text-gray-400">Rooted in India</span>
+            </div>
+        </footer>
+
+    </main>
+
+    
+    <!-- AI Chatbot Toggle Button -->
+    <button id="ai-chat-toggle" class="fixed bottom-6 right-4 md:bottom-10 md:right-10 bg-brandBlue text-white p-4 shadow-2xl hover:bg-brandBlue-dark transition-transform hover:scale-105 z-50 flex items-center justify-center border-2 border-white/20 rounded-full md:rounded-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+    </button>
+
+    <!-- AI Chatbot Window -->
+    <div id="ai-chat-window" class="fixed bottom-24 right-4 md:bottom-28 md:right-10 w-[calc(100vw-2rem)] md:w-96 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] z-50 flex-col hidden overflow-hidden border border-gray-300">
+        <div class="bg-navy-900 text-white p-4 flex justify-between items-center border-b-[3px] border-brandBlue">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span class="font-bold text-sm tracking-widest uppercase">Muziris AI Expert</span>
+            </div>
+            <button id="ai-chat-close" class="text-gray-400 hover:text-white transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div id="ai-chat-messages" class="p-5 h-80 overflow-y-auto flex flex-col gap-4 bg-[#f8fafc] text-sm font-medium">
+            <div class="bg-white border border-gray-200 text-gray-800 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm leading-relaxed">
+                Hello! I'm the Muziris AI Sourcing Assistant. Need help finding a specific packaging material or plastic wrap to bypass the 50% US tariff?
+            </div>
+        </div>
+        <div class="p-3 border-t border-gray-200 bg-white flex gap-2">
+            <input type="text" id="ai-chat-input" placeholder="Type your question..." class="flex-1 bg-gray-100 border-none p-3 text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue/50 text-gray-800 transition-all rounded-sm">
+            <button id="ai-chat-send" class="bg-brandBlue text-white px-4 hover:bg-brandBlue-dark transition flex items-center justify-center disabled:opacity-50">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Get Quote Modal -->
+    <div id="quote-modal" class="fixed inset-0 modal-overlay z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-md shadow-2xl overflow-hidden relative transform transition-all">
+            <button onclick="closeQuoteModal()" class="absolute top-4 right-4 text-gray-500 hover:text-navy-900 transition focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="p-6 md:p-8">
+                <h3 class="text-2xl font-black text-navy-900 uppercase tracking-tight mb-1">Request a Quote</h3>
+                <p class="text-gray-500 text-sm mb-6 font-medium">Our Canadian team will secure the best rate directly from India.</p>
+                
+                <form id="quote-form" class="space-y-4">
+                    <div>
+                        <label class="block text-brandBlue font-bold text-xs uppercase mb-1">Requested Product</label>
+                        <input type="text" id="quote-product" class="ref-input bg-gray-100 text-gray-500 cursor-not-allowed" readonly>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-brandBlue font-bold text-xs uppercase mb-1">Name *</label>
+                            <input type="text" id="quote-name" class="ref-input" required>
+                        </div>
+                        <div>
+                            <label class="block text-brandBlue font-bold text-xs uppercase mb-1">Company</label>
+                            <input type="text" id="quote-company" class="ref-input">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-brandBlue font-bold text-xs uppercase mb-1">Phone *</label>
+                            <input type="tel" id="quote-phone" class="ref-input" required>
+                        </div>
+                        <div>
+                            <label class="block text-brandBlue font-bold text-xs uppercase mb-1">Email *</label>
+                            <input type="email" id="quote-email" class="ref-input" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-brandBlue font-bold text-xs uppercase mb-1">Volume Needed / Additional Notes</label>
+                        <textarea id="quote-message" rows="3" class="ref-input resize-none" placeholder="E.g., 5,000 rolls per month..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-brandBlue text-white font-bold py-4 uppercase text-sm hover:bg-brandBlue-dark transition mt-4">
+                        Submit RFQ &rarr;
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification UI -->
+    <div id="toast-notification" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[110] transition-all duration-500 ease-in-out translate-y-32 opacity-0 pointer-events-none flex items-center gap-3 bg-navy-900 text-white px-6 py-4 rounded shadow-2xl border-l-4 min-w-[300px]">
+        <div id="toast-icon" class="flex-shrink-0"></div>
+        <div id="toast-message" class="font-medium text-sm"></div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const RENDER_API_URL = "https://muziris-api.onrender.com";
+
+        // --- Toast Logic ---
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                toast.classList.remove('border-red-500');
+                toast.classList.add('border-green-500');
+                toastIcon.innerHTML = `<svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+            } else {
+                toast.classList.remove('border-green-500');
+                toast.classList.add('border-red-500');
+                toastIcon.innerHTML = `<svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+            }
+
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 4000);
+        }
+
+        // --- Modal Logic ---
+        const quoteModal = document.getElementById('quote-modal');
+        const quoteProductInput = document.getElementById('quote-product');
+        const quoteForm = document.getElementById('quote-form');
+        const quoteSubmitBtn = quoteForm.querySelector('button[type="submit"]');
+
+        window.openQuoteModal = function(productName) {
+            quoteProductInput.value = productName;
+            quoteModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closeQuoteModal = function() {
+            quoteModal.classList.add('hidden');
+            document.body.style.overflow = '';
+            quoteForm.reset();
+        }
+
+        // Close on outside click
+        quoteModal.addEventListener('click', (e) => {
+            if(e.target === quoteModal) closeQuoteModal();
+        });
+
+        // --- Quote Form Submit Logic ---
+        quoteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const originalBtnText = quoteSubmitBtn.innerHTML;
+            quoteSubmitBtn.innerHTML = "SENDING... <svg class='w-4 h-4 animate-spin inline' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'></path></svg>";
+            quoteSubmitBtn.disabled = true;
+
+            const formData = {
+                name: document.getElementById('quote-name').value,
+                company: document.getElementById('quote-company').value,
+                phone: document.getElementById('quote-phone').value,
+                email: document.getElementById('quote-email').value,
+                message: `[Product Request: ${quoteProductInput.value}] \n\n${document.getElementById('quote-message').value}`
+            };
+
+            try {
+                const response = await fetch(`${RENDER_API_URL}/api/contact`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    showToast("Quote Request Sent Successfully!", "success");
+                    closeQuoteModal();
+                } else {
+                    showToast("Something went wrong. Please try again or call us.", "error");
+                }
+            } catch (err) {
+                showToast("Network error. Please try again.", "error");
+            } finally {
+                quoteSubmitBtn.innerHTML = originalBtnText;
+                quoteSubmitBtn.disabled = false;
+            }
+        });
+
+        // --- AI Chatbot Logic ---
+        const aiToggleBtn = document.getElementById('ai-chat-toggle');
+        const aiCloseBtn = document.getElementById('ai-chat-close');
+        const chatWindow = document.getElementById('ai-chat-window');
+        const messagesContainer = document.getElementById('ai-chat-messages');
+        const inputField = document.getElementById('ai-chat-input');
+        const sendChatBtn = document.getElementById('ai-chat-send');
+
+        let chatHistory = [];
+
+        const toggleChat = () => {
+            chatWindow.classList.toggle('hidden');
+            chatWindow.classList.toggle('flex');
+            if (!chatWindow.classList.contains('hidden')) setTimeout(() => inputField.focus(), 100);
+        };
+
+        aiToggleBtn.addEventListener('click', toggleChat);
+        aiCloseBtn.addEventListener('click', toggleChat);
+
+        const addMessageToUI = (text, isUser) => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `p-3 max-w-[85%] shadow-sm leading-relaxed text-sm font-medium ${
+                isUser 
+                ? 'bg-navy-900 text-white self-end rounded-tl-xl rounded-br-xl rounded-bl-xl' 
+                : 'bg-white border border-gray-200 text-gray-800 self-start rounded-tr-xl rounded-br-xl rounded-bl-xl'
+            }`;
+            msgDiv.textContent = text;
+            messagesContainer.appendChild(msgDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        };
+
+        const handleSend = async () => {
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            inputField.value = '';
+            inputField.disabled = true;
+            sendChatBtn.disabled = true;
+
+            addMessageToUI(text, true);
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'ai-loading';
+            loadingDiv.className = 'bg-white border border-gray-200 text-gray-500 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm flex items-center gap-2';
+            loadingDiv.innerHTML = '<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>';
+            messagesContainer.appendChild(loadingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                const response = await fetch(`${RENDER_API_URL}/api/public-web-chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, chatHistory: chatHistory })
+                });
+
+                const data = await response.json();
+                document.getElementById('ai-loading').remove();
+                
+                if (data.success) {
+                    addMessageToUI(data.reply, false);
+                    chatHistory.push({ role: "user", parts: [{ text: text }] });
+                    chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
+                } else {
+                    addMessageToUI(data.reply || "Error connecting to AI.", false);
+                }
+            } catch (error) {
+                document.getElementById('ai-loading').remove();
+                addMessageToUI("Network error. Please call our team directly.", false);
+            }
+
+            inputField.disabled = false;
+            sendChatBtn.disabled = false;
+            inputField.focus();
+        };
+
+        sendChatBtn.addEventListener('click', handleSend);
+        inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
+
+        // --- Mobile Menu Toggle Logic ---
+        const mobBtn = document.getElementById('mobile-menu-btn');
+        const mobMenu = document.getElementById('mobile-menu');
+        const mobPath = document.getElementById('menu-icon-path');
+        const mobLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMobileMenu() {
+            const isHidden = mobMenu.classList.contains('hidden');
+            if (isHidden) {
+                mobMenu.classList.remove('hidden');
+                mobMenu.classList.add('flex');
+                mobPath.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                document.body.style.overflow = 'hidden'; 
+            } else {
+                mobMenu.classList.add('hidden');
+                mobMenu.classList.remove('flex');
+                mobPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                document.body.style.overflow = ''; 
+            }
+        }
+
+        if(mobBtn) mobBtn.addEventListener('click', toggleMobileMenu);
+        mobLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
+    });
+    </script>
+</body>
+</html>
