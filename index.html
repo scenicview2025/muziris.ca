@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Muziris International Inc. | Global Sourcing & Logistics</title>
     
     <!-- 🟢 B2B SEO META TAGS -->
     <meta name="description" content="Muziris International Inc. is a Canadian Importer based in Hamilton, Ontario. We connect Canadian buyers directly to audited Indian manufacturers for tariff-free industrial sourcing and door-to-door logistics.">
     <meta name="keywords" content="sourcing agent Canada, import from India to Canada, tariff-free packaging, BOPP tape supplier Ontario, stretch wrap distributor Canada, logistics forwarder Hamilton, bypass US tariffs">
     <meta name="author" content="Muziris International Inc.">
+    <link rel="canonical" href="https://muziris.ca/index.html" />
     
     <!-- 🟢 OPEN GRAPH (FOR LINKEDIN & EMAIL SHARING) -->
     <meta property="og:title" content="Muziris International Inc. | Global Sourcing & Logistics">
@@ -21,6 +22,7 @@
       "@context": "https://schema.org",
       "@type": "WholesaleStore",
       "name": "Muziris International Inc.",
+      "alternateName": "Muziris",
       "description": "Canadian B2B Importer specializing in tariff-free industrial plastics, packaging, and global logistics.",
       "address": {
         "@type": "PostalAddress",
@@ -51,17 +53,17 @@
                             800: '#112240',
                         },
                         brandBlue: {
-                            DEFAULT: '#0033a0', // Deep corporate blue matching reference
+                            DEFAULT: '#0033a0', 
                             dark: '#002277'
                         },
                         ocean: {
-                            DEFAULT: '#0d5c75', // Teal/ocean blue background for services
+                            DEFAULT: '#0d5c75', 
                         },
-                        lightGrey: '#d1d5db', // Contact section background
+                        lightGrey: '#d1d5db', 
                     },
                     spacing: {
-                        'sidebar': '4rem', // 64px width for the left sidebar
-                        'sidebar-md': '5rem', // 80px width for larger screens
+                        'sidebar': '4rem', 
+                        'sidebar-md': '5rem', 
                     }
                 }
             }
@@ -115,11 +117,11 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden">
+<body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden w-full max-w-[100vw]">
 
     <!-- Mobile Header (Sticky Top) -->
     <header class="md:hidden fixed top-0 left-0 w-full h-16 bg-navy-900 flex items-center justify-between px-4 z-[60] border-b border-gray-700 shadow-md">
-        <span class="text-white font-extrabold text-lg tracking-widest uppercase">Muziris Inc.</span>
+        <span class="text-white font-extrabold text-lg tracking-widest uppercase">Muziris</span>
         <button id="mobile-menu-btn" class="text-white p-2 focus:outline-none">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -159,13 +161,13 @@
         <!-- Bottom Brand Name -->
         <div class="pb-8">
             <span class="vertical-text text-white font-extrabold text-xl tracking-widest">
-                MUZIRIS INC.
+                MUZIRIS
             </span>
         </div>
     </aside>
 
     <!-- Main Content Wrapper (offset by sidebar width on desktop, padding top for mobile header) -->
-    <main class="flex-1 w-full flex flex-col mt-16 md:mt-0 md:ml-sidebar-md relative">
+    <main class="flex-1 w-full flex flex-col mt-16 md:mt-0 md:ml-sidebar-md relative overflow-x-hidden">
         
         <!-- Top Right Navigation (Absolute, hidden on mobile) -->
         <div class="absolute top-0 right-0 z-40 hidden md:flex">
@@ -276,7 +278,7 @@
 
                 <a href="products.html" class="group block cursor-pointer sm:hidden lg:block">
                     <div class="bg-gray-100 h-64 w-full mb-4 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1565439390234-fc5629472ba1?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Manufacturing Molds">
+                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Manufacturing Molds">
                         <div class="absolute inset-0 bg-navy-900/10 group-hover:bg-transparent transition"></div>
                     </div>
                     <h3 class="text-xl font-bold text-navy-900 uppercase tracking-tight mb-1">Manufacturing Molds</h3>
@@ -558,7 +560,7 @@
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const originalBtnText = submitBtn.innerHTML;
-            submitBtn.innerHTML = "SENDING... <svg class='w-4 h-4 animate-spin' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'></path></svg>";
+            submitBtn.innerHTML = "SENDING... <svg class='w-4 h-4 animate-spin inline' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'></path></svg>";
             submitBtn.disabled = true;
 
             const formData = {
