@@ -585,12 +585,19 @@
         if (contactForm) {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
 
-            contactForm.addEventListener('submit', async (e) => {
+            contactForm.addEventListener('submit', (e) => {
                 e.preventDefault();
+                
+                // 1. Instantly change button to a short success message (No loading spinner)
                 const originalBtnText = submitBtn.innerHTML;
-                submitBtn.innerHTML = "SENDING... <svg class='w-4 h-4 animate-spin inline' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'></path></svg>";
+                submitBtn.innerHTML = "MESSAGE SENT ✓";
+                submitBtn.classList.add('!bg-green-600'); // Turn button green
                 submitBtn.disabled = true;
 
+                // 2. Instantly show the success toast
+                showToast("Thanks! We will contact you shortly.", "success");
+
+                // 3. Gather form data
                 const formData = {
                     name: document.getElementById('contact-name').value,
                     company: document.getElementById('contact-company').value,
@@ -599,26 +606,21 @@
                     message: document.getElementById('contact-message').value
                 };
 
-                try {
-                    const response = await fetch(`${RENDER_API_URL}/api/contact`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(formData)
-                    });
-                    
-                    const data = await response.json();
-                    if (data.success) {
-                        showToast("Message sent successfully! We will contact you shortly.", "success");
-                        contactForm.reset();
-                    } else {
-                        showToast("Something went wrong. Please try again or call us.", "error");
-                    }
-                } catch (err) {
-                    showToast("Network error. Please try again.", "error");
-                } finally {
+                // 4. Send in the background! (keepalive ensures it sends even if they close the tab)
+                fetch(`${RENDER_API_URL}/api/contact`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                    keepalive: true 
+                }).catch(err => console.log("Background email send error", err));
+
+                // 5. Reset the form and button after 4 seconds
+                setTimeout(() => {
+                    contactForm.reset();
                     submitBtn.innerHTML = originalBtnText;
+                    submitBtn.classList.remove('!bg-green-600');
                     submitBtn.disabled = false;
-                }
+                }, 4000);
             });
         }
 
