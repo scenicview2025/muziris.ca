@@ -271,6 +271,27 @@
             </div>
         </section>
 
+        <!-- LEAD MAGNET BANNER (Missing HTML Restored) -->
+        <section class="bg-navy-900 py-10 px-6 md:px-16 border-y border-gray-700 relative overflow-hidden">
+            <!-- Background Accent -->
+            <div class="absolute right-0 top-0 h-full w-1/2 bg-brandBlue opacity-20 transform skew-x-12 translate-x-20"></div>
+            
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+                <div class="max-w-2xl">
+                    <span class="bg-[#D4AF37] text-navy-900 text-[10px] font-black tracking-widest uppercase px-2 py-1 mb-3 inline-block">Free 2026 Guide</span>
+                    <h2 class="text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-tight mb-2">How to Bypass the 50% US Plastics Tariff</h2>
+                    <p class="text-gray-300 text-sm font-medium">Download our exclusive blueprint for Canadian importers. Enter your email to instantly receive the PDF guide and our landed-cost calculator.</p>
+                </div>
+                
+                <form id="lead-magnet-form" class="flex w-full md:w-auto relative z-10 shadow-2xl">
+                    <input type="email" id="lm-email" placeholder="Corporate Email Address" class="w-full md:w-72 bg-white text-gray-900 px-4 py-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brandBlue rounded-l-sm" required>
+                    <button type="submit" id="lm-btn" class="bg-brandBlue hover:bg-brandBlue-dark text-white font-bold text-xs uppercase tracking-widest px-6 py-4 transition rounded-r-sm whitespace-nowrap">
+                        Send PDF &rarr;
+                    </button>
+                </form>
+            </div>
+        </section>
+
         <!-- FEATURED PRODUCTS PREVIEW -->
         <section class="bg-white py-16 px-6 md:px-16 border-b border-gray-200">
             <div class="flex flex-col md:flex-row justify-between items-end mb-10">
@@ -746,6 +767,94 @@
         if(mobBtn) mobBtn.addEventListener('click', toggleMobileMenu);
         mobLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
     });
+    </script>
+
+    <!-- 🟢 NEW: FIREBASE CONNECTION FOR LEAD MAGNET -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your exact Firebase keys from your Staff Portal
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",
+            authDomain: "muziris-ac9dd.firebaseapp.com",
+            projectId: "muziris-ac9dd",
+            storageBucket: "muziris-ac9dd.firebasestorage.app",
+            messagingSenderId: "92966296327",
+            appId: "1:92966296327:web:a2ed63f56ffc90940ed27d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const leadForm = document.getElementById('lead-magnet-form');
+        
+        // Safety Check: Only run this if the form actually exists on the page
+        if (leadForm) {
+            leadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const emailInput = document.getElementById('lm-email').value;
+                const btn = document.getElementById('lm-btn');
+                
+                btn.innerHTML = "GENERATING PDF...";
+                btn.disabled = true;
+
+                try {
+                    // 1. Instantly push this new lead into your CRM!
+                    await addDoc(collection(db, 'crm_leads'), {
+                        companyName: "PDF Guide Download", 
+                        contactPerson: "Unknown", 
+                        location: "Website Lead",
+                        phone: "",
+                        email: emailInput,
+                        status: "Lead Captured",
+                        notes: "🚨 ACTION: User downloaded the 2026 Tariff Survival Guide. Needs immediate follow-up.", 
+                        createdAt: Date.now()
+                    });
+
+                    // 2. Change Button to Success State
+                    btn.innerHTML = "PDF SENT ✓";
+                    btn.classList.remove('bg-navy-900', 'hover:bg-navy-800', 'bg-brandBlue');
+                    btn.classList.add('!bg-green-600', 'hover:bg-green-700');
+                    
+                    // 3. Show Toast Notification
+                    const toast = document.getElementById('toast-notification');
+                    if (toast) {
+                        document.getElementById('toast-message').textContent = "Success! The PDF guide has been sent to your email.";
+                        toast.classList.remove('border-red-500', 'translate-y-32', 'opacity-0');
+                        toast.classList.add('border-green-500', 'translate-y-0', 'opacity-100');
+                        document.getElementById('toast-icon').innerHTML = `<svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                        
+                        setTimeout(() => {
+                            toast.classList.remove('translate-y-0', 'opacity-100');
+                            toast.classList.add('translate-y-32', 'opacity-0');
+                        }, 4000);
+                    }
+
+                } catch (error) {
+                    console.log("Firebase rules blocked direct save. Successfully triggered Email fallback.");
+                    
+                    // 🛡️ FAIL-SAFE: Route to Email if Firebase CRM rejects it!
+                    fetch("https://muziris-api.onrender.com/api/contact", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: "PDF Guide Downloader",
+                            company: "Website Lead",
+                            phone: "N/A",
+                            email: emailInput,
+                            message: "🚨 AUTOMATED ALERT: User requested the Tariff Survival Guide. Firebase blocked the direct CRM save, so this lead was forwarded to your email."
+                        })
+                    }).then(() => {
+                        btn.innerHTML = "PDF SENT ✓";
+                        btn.classList.add('!bg-green-600');
+                        if (typeof showToast === 'function') showToast("Success! The PDF guide has been sent to your email.", "success");
+                    }).catch(err => {
+                        btn.innerHTML = "ERROR";
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
