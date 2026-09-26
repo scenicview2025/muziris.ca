@@ -446,42 +446,32 @@
 
                 <!-- Right Column: Minimalist Form -->
                 <div class="flex flex-col justify-between relative">
-                    <form action="https://formsubmit.co/YOUR_EMAIL@DOMAIN.COM" method="POST" class="space-y-4 md:space-y-6 max-w-lg w-full mt-8 lg:mt-0 relative z-10">
-                        
-                        <!-- Anti-Spam Honeypot (Hidden) -->
-                        <input type="text" name="_honey" style="display:none">
-                        
-                        <!-- Disable reCAPTCHA (Optional, remove if you get too much spam) -->
-                        <input type="hidden" name="_captcha" value="false">
-                        
-                        <!-- Success Redirect (Sends them back to your site instead of a generic page) -->
-                        <input type="hidden" name="_next" value="https://muziris.ca">
-
+                    <form id="contact-form" class="space-y-4 md:space-y-6 max-w-lg w-full mt-8 lg:mt-0 relative z-10">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                             <div>
                                 <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">NAME *</label>
-                                <input type="text" name="name" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
+                                <input type="text" id="contact-name" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                             <div>
                                 <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">COMPANY</label>
-                                <input type="text" name="company" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0">
+                                <input type="text" id="contact-company" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                             <div>
                                 <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">PHONE *</label>
-                                <input type="tel" name="phone" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
+                                <input type="tel" id="contact-phone" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                             <div>
                                 <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">EMAIL *</label>
-                                <input type="email" name="email" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
+                                <input type="email" id="contact-email" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">MESSAGE</label>
-                            <textarea name="message" rows="4" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0 resize-none" required></textarea>
+                            <textarea id="contact-message" rows="4" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0 resize-none" required></textarea>
                         </div>
 
                         <button type="submit" class="w-full sm:w-auto bg-brandBlue text-white font-bold px-10 py-4 uppercase text-sm hover:bg-brandBlue-dark transition flex justify-center items-center gap-2">
