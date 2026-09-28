@@ -1,0 +1,936 @@
+<!DOCTYPE html> 
+<html lang="en" class="scroll-smooth overflow-x-hidden"> 
+<head>     
+    <meta charset="UTF-8">     
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">     
+    <title>Muziris International Inc. | Global Sourcing & Logistics</title>          
+    
+    <!-- 🟢 B2B SEO META TAGS -->     
+    <meta name="description" content="Muziris International Inc. is a Canadian Importer based in Hamilton, Ontario. We connect Canadian buyers directly to audited Indian manufacturers for tariff-free industrial sourcing and door-to-door logistics.">     
+    <meta name="keywords" content="sourcing agent Canada, import from India to Canada, tariff-free packaging, BOPP tape supplier Ontario, stretch wrap distributor Canada, logistics forwarder Hamilton, bypass US tariffs">     
+    <meta name="author" content="Muziris International Inc.">          
+    
+    <!-- 🟢 OPEN GRAPH (FOR LINKEDIN & EMAIL SHARING) -->     
+    <meta property="og:title" content="Muziris International Inc. | Global Sourcing & Logistics">     
+    <meta property="og:description" content="Bypass 50% US Tariffs. Direct access to Tier-1 Indian manufacturers for industrial plastics, packaging, and tapes.">     
+    <meta property="og:type" content="website">          
+    
+    <!-- 🟢 GOOGLE SCHEMA MARKUP (CORPORATE ENTITY) -->     
+    <script type="application/ld+json">     
+    {       
+      "@context": "https://schema.org",       
+      "@type": "WholesaleStore",       
+      "name": "Muziris International Inc.",       
+      "alternateName": "Muziris",       
+      "description": "Canadian B2B Importer specializing in tariff-free industrial plastics, packaging, and global logistics.",       
+      "address": {         
+        "@type": "PostalAddress",         
+        "addressLocality": "Hamilton",         
+        "addressRegion": "ON",         
+        "addressCountry": "CA"       
+      },       
+      "telephone": "+1-905-689-4747",       
+      "areaServed": "Canada",       
+      "knowsAbout": ["B2B Sourcing", "Industrial Packaging", "Supply Chain Logistics", "Importing from India"]     
+    }     
+    </script>      
+    
+    <!-- Google Fonts: Montserrat for that clean, industrial, corporate look -->     
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">          
+    
+    <script src="https://cdn.tailwindcss.com"></script>     
+    <script>         
+        tailwind.config = {             
+            theme: {                 
+                extend: {                     
+                    fontFamily: {                         
+                        sans: ['Montserrat', 'sans-serif'],                     
+                    },                     
+                    colors: {                         
+                        navy: {                             
+                            900: '#0a192f',                             
+                            800: '#112240',                         
+                        },                         
+                        brandBlue: {                             
+                            DEFAULT: '#0033a0',                             
+                            dark: '#002277'                         
+                        },                         
+                        ocean: {                             
+                            DEFAULT: '#0d5c75',                         
+                        },                         
+                        lightGrey: '#d1d5db',                     
+                    },                     
+                    spacing: {                         
+                        'sidebar': '4rem',                         
+                        'sidebar-md': '5rem',                     
+                    }                 
+                }             
+            }         
+        }     
+    </script>      
+    <style>         
+        /* Custom styles for the rotated sidebar text */         
+        .vertical-text {             
+            writing-mode: vertical-rl;             
+            transform: rotate(180deg);             
+            white-space: nowrap;         
+        }          
+        .services-bg {             
+            background-image: linear-gradient(rgba(10, 25, 47, 0.95), rgba(10, 25, 47, 0.95)), url('https://images.unsplash.com/photo-1565793298595-6a879b1d9492?q=80&w=2000&auto=format&fit=crop');             
+            background-size: cover;             
+            background-position: center;             
+            background-attachment: fixed;         
+        }          
+        /* Custom form input styling */         
+        .ref-input {             
+            width: 100%;             
+            background-color: white;             
+            border: none;             
+            padding: 0.75rem;             
+            font-size: 1rem;             
+            color: #1f2937;             
+            border-radius: 0;             
+            -webkit-appearance: none;         
+        }         
+        .ref-input:focus {             
+            outline: none;             
+            box-shadow: inset 0 0 0 2px #0033a0;         
+        }          
+        /* Custom Scrollbar for Chat */         
+        #chat-history::-webkit-scrollbar { width: 6px; }         
+        #chat-history::-webkit-scrollbar-track { background: transparent; }         
+        #chat-history::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }         
+        #chat-history::-webkit-scrollbar-thumb:hover { background: #94a3b8; }                  
+        
+        /* Shipping Logo Filter to make them white */         
+        .logo-white {             
+            filter: brightness(0) invert(1);             
+            opacity: 0.8;             
+            transition: opacity 0.3s ease;         
+        }         
+        .logo-white:hover {             
+            opacity: 1;         
+        }     
+    </style> 
+</head> 
+<body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden w-full max-w-[100vw]">      
+    
+    <!-- Mobile Header (Sticky Top) -->     
+    <header class="md:hidden fixed top-0 left-0 w-full h-16 bg-navy-900 flex items-center justify-between px-4 z-[60] border-b border-gray-700 shadow-md">         
+        <span class="text-white font-extrabold text-lg tracking-widest uppercase">Muziris</span>         
+        <button id="mobile-menu-btn" class="text-white p-2 focus:outline-none">             
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">                 
+                <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>             
+            </svg>         
+        </button>     
+    </header>      
+    
+    <!-- Mobile Fullscreen Menu Overlay -->     
+    <div id="mobile-menu" class="fixed inset-0 bg-navy-900 z-[55] hidden flex-col pt-24 px-6 pb-6 transform transition-transform duration-300">         
+        <a href="products.html" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">PRODUCTS</a>         
+        <a href="#services" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">OUR PROCESS</a>         
+        <a href="#services" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">QUALITY CONTROL</a>         
+        <a href="#contact" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">CONTACT US</a>                  
+        <div class="mt-auto pt-8">             
+            <p class="text-gray-400 text-sm mb-2 font-bold tracking-widest">CALL US TODAY</p>             
+            <p class="text-white text-2xl font-black">+1-905-689-4747</p>         
+        </div>     
+    </div>      
+    
+    <!-- Fixed Left Sidebar (Desktop Only) -->     
+    <aside class="hidden md:flex fixed left-0 top-0 h-full w-sidebar md:w-sidebar-md bg-navy-900 border-r border-gray-700 flex-col justify-between items-center py-6 z-50">         
+        <!-- Top Menu Icon -->         
+        <div class="w-full flex justify-center pb-6 border-b border-gray-700 cursor-pointer hover:bg-navy-800 transition py-2">             
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">                 
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>             
+            </svg>         
+        </div>          
+        <!-- Middle Vertical Links -->         
+        <div class="flex-grow flex flex-col justify-center items-center gap-12 text-gray-400 text-sm font-bold tracking-widest">             
+            <a href="products.html" class="vertical-text hover:text-white transition cursor-pointer">PRODUCTS</a>             
+            <a href="#services" class="vertical-text hover:text-white transition cursor-pointer">PROCESS</a>             
+            <a href="#services" class="vertical-text hover:text-white transition cursor-pointer">INSPECTIONS</a>         
+        </div>          
+        <!-- Bottom Brand Name -->         
+        <div class="pb-8">             
+            <span class="vertical-text text-white font-extrabold text-xl tracking-widest">                 
+                MUZIRIS             
+            </span>         
+        </div>     
+    </aside>      
+    
+    <!-- Main Content Wrapper -->     
+    <main class="flex-1 w-full flex flex-col mt-16 md:mt-0 md:ml-sidebar-md relative overflow-x-hidden">                  
+        
+        <!-- Top Right Navigation (Absolute, hidden on mobile) -->         
+        <div class="absolute top-0 right-0 z-40 hidden md:flex">             
+            <a href="products.html" class="bg-navy-800 text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-navy-700 transition">                 
+                CATALOG                 
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>             
+            </a>             
+            <a href="#services" class="bg-brandBlue text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-brandBlue-dark transition">                 
+                OUR PROCESS                 
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>             
+            </a>             
+            <a href="#contact" class="bg-navy-900 text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-navy-800 transition border-l border-gray-700">                 
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>                 
+                CONTACT US                  
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>             
+            </a>         
+        </div>          
+        
+        <!-- HERO SECTION -->         
+        <section class="min-h-[calc(100vh-4rem)] md:min-h-screen relative flex flex-col justify-center px-6 md:px-16 pt-16 md:pt-24 pb-12 overflow-hidden">             
+            <!-- Video Background -->             
+            <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0">                 
+                <source src="https://muziris.ca/muziris-bg.mp4" type="video/mp4">             
+            </video>             
+            <!-- Gradient Overlay -->             
+            <div class="absolute inset-0 bg-gradient-to-r from-[rgba(10,25,47,0.9)] to-[rgba(10,25,47,0.4)] z-0"></div>              
+            
+            <div class="max-w-4xl pt-8 md:pt-12 relative z-10">                 
+                <p class="text-white font-bold tracking-widest mb-3 md:mb-4 text-xs md:text-sm">Muziris International Inc.</p>                 
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white leading-tight uppercase mb-4 md:mb-6 drop-shadow-lg">                     
+                    Bridging India & Canada <br class="hidden sm:block" />Through Global Waters.                 
+                </h1>                 
+                <p class="text-gray-200 text-base md:text-xl font-medium max-w-2xl leading-relaxed mb-8 md:mb-10">                     
+                    We are your trusted Sourcing Agents. We secure tier-1 factory pricing in India, conduct rigorous on-the-ground quality control, and deliver DDP straight to your Canadian facility.                 
+                </p>                                  
+                <a href="#contact" class="inline-flex items-center justify-center w-full sm:w-auto gap-3 bg-white text-brandBlue font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-lg group">                     
+                    CONTACT US                     
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>                 
+                </a>             
+            </div>              
+            
+            <!-- Bottom Partners & Certs -->             
+            <div class="mt-auto pt-16 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10 relative z-10">                                  
+                <div class="w-full lg:w-1/2">                     
+                    <p class="text-white font-bold text-xs md:text-sm tracking-widest mb-4">SHIPPING PARTNERS</p>                     
+                    <div class="flex flex-wrap gap-4 md:gap-6 items-center opacity-80">                         
+                        <!-- Typographic Logos -->                         
+                        <div class="flex items-center gap-1.5 text-white font-bold text-lg sm:text-xl md:text-2xl uppercase font-sans tracking-tighter">                             
+                            <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>                             
+                            MAERSK                         
+                        </div>                         
+                        <span class="text-white font-black text-lg sm:text-xl md:text-2xl italic tracking-tighter lowercase">msc</span>                         
+                        <span class="text-white font-bold text-lg sm:text-xl md:text-2xl tracking-tighter">Hapag-Lloyd</span>                         
+                        <span class="text-white font-black text-lg sm:text-xl md:text-2xl tracking-widest">ONE</span>                         
+                        <span class="text-white font-black text-lg sm:text-xl md:text-2xl tracking-tighter">ZIM</span>                     
+                    </div>                 
+                </div>                  
+                <div class="w-full lg:w-1/2">                     
+                    <p class="text-white font-bold text-xs md:text-sm tracking-widest mb-4">COMPLIANCE & VETTING</p>                     
+                    <div class="flex flex-wrap gap-4 md:gap-6 items-center">                                                  
+                        <!-- CRA Badge -->                         
+                        <div class="flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-sm backdrop-blur-sm">                             
+                            <div class="w-6 h-6 rounded bg-red-600 flex items-center justify-center text-white">                                 
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>                             
+                            </div>                             
+                            <div class="flex flex-col text-white leading-none">                                 
+                                <span class="font-black text-sm tracking-wide">CBSA</span>                                 
+                                <span class="text-[8px] tracking-widest uppercase opacity-80">Registered Importer</span>                             
+                            </div>                         
+                        </div>                          
+                        <!-- ISO Badge -->                         
+                        <div class="flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-sm backdrop-blur-sm">                             
+                            <div class="w-6 h-6 rounded bg-gray-800 flex items-center justify-center text-white border border-gray-500">                                 
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>                             
+                            </div>                             
+                            <div class="flex flex-col text-white leading-none">                                 
+                                <span class="font-black text-sm tracking-wide">ISO/BSCI</span>                                 
+                                <span class="text-[8px] tracking-widest uppercase opacity-80">Audited Factories</span>                             
+                            </div>                         
+                        </div>                      
+                    </div>                 
+                </div>              
+            </div>         
+        </section>          
+        
+        <!-- LEAD MAGNET BANNER -->         
+        <section class="bg-navy-900 py-10 px-6 md:px-16 border-y border-gray-700 relative overflow-hidden">             
+            <!-- Background Accent -->             
+            <div class="absolute right-0 top-0 h-full w-1/2 bg-brandBlue opacity-20 transform skew-x-12 translate-x-20"></div>                          
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">                 
+                <div class="max-w-2xl">                     
+                    <span class="bg-[#D4AF37] text-navy-900 text-[10px] font-black tracking-widest uppercase px-2 py-1 mb-3 inline-block">Free 2026 Guide</span>                     
+                    <h2 class="text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-tight mb-2">How to Bypass the 50% US Plastics Tariff</h2>                     
+                    <p class="text-gray-300 text-sm font-medium">Download our exclusive blueprint for Canadian importers. Enter your email to instantly receive the PDF guide and our landed-cost calculator.</p>                 
+                </div>                                  
+                <form id="lead-magnet-form" class="flex w-full md:w-auto relative z-10 shadow-2xl">                     
+                    <input type="email" id="lm-email" placeholder="Corporate Email Address" class="w-full md:w-72 bg-white text-gray-900 px-4 py-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brandBlue rounded-l-sm" required>                     
+                    <button type="submit" id="lm-btn" class="bg-brandBlue hover:bg-brandBlue-dark text-white font-bold text-xs uppercase tracking-widest px-6 py-4 transition rounded-r-sm whitespace-nowrap">                         
+                        Send PDF &rarr;                     
+                    </button>                 
+                </form>             
+            </div>         
+        </section>          
+        
+        <!-- FACTORY IMAGERY: AUTHENTICITY SECTION -->         
+        <section class="bg-white py-16 px-6 md:px-16 border-b border-gray-200">             
+            <div class="flex flex-col md:flex-row justify-between items-end mb-10">                 
+                <div class="max-w-2xl">                     
+                    <p class="text-brandBlue font-bold text-sm tracking-widest mb-2 uppercase">From Factory Floor to Canada</p>                     
+                    <h2 class="text-3xl md:text-5xl font-black uppercase text-navy-900 leading-tight">Authentic Sourcing. Rigorous QC.</h2>                 
+                </div>             
+            </div>              
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">                 
+                <!-- Factory Floor -->                 
+                <div class="group block">                     
+                    <div class="bg-gray-100 h-64 w-full mb-4 overflow-hidden relative">                         
+                        <img src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Indian Factory Floor">                         
+                        <div class="absolute inset-0 bg-navy-900/20 group-hover:bg-transparent transition"></div>                     
+                    </div>                     
+                    <h3 class="text-xl font-bold text-navy-900 uppercase tracking-tight mb-1">Direct Factory Vetting</h3>                     
+                    <p class="text-gray-500 text-sm font-medium">We don't buy from brokers. We conduct site visits and audit Tier-1 Indian manufacturers.</p>                 
+                </div>                                  
+                <!-- Quality Control (Calipers/Testing) -->                 
+                <div class="group block">                     
+                    <div class="bg-gray-100 h-64 w-full mb-4 overflow-hidden relative">                         
+                        <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Quality Control Measurement">                         
+                        <div class="absolute inset-0 bg-navy-900/20 group-hover:bg-transparent transition"></div>                     
+                    </div>                     
+                    <h3 class="text-xl font-bold text-navy-900 uppercase tracking-tight mb-1">Pre-Shipment Inspections</h3>                     
+                    <p class="text-gray-500 text-sm font-medium">We inspect your goods on the factory floor with strict QC checklists before containers are loaded.</p>                 
+                </div>                  
+                <!-- Logistics Loading -->                 
+                <div class="group block sm:hidden lg:block">                     
+                    <div class="bg-gray-100 h-64 w-full mb-4 overflow-hidden relative">                         
+                        <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c83a00?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Container Loading">                         
+                        <div class="absolute inset-0 bg-navy-900/20 group-hover:bg-transparent transition"></div>                     
+                    </div>                     
+                    <h3 class="text-xl font-bold text-navy-900 uppercase tracking-tight mb-1">Container Loading</h3>                     
+                    <p class="text-gray-500 text-sm font-medium">We oversee the loading process to ensure proper packaging and zero transit damage.</p>                 
+                </div>             
+            </div>         
+        </section>          
+        
+        <!-- NEW SERVICES SECTION: THE PROCESS -->         
+        <section id="services" class="services-bg text-white py-16 md:py-24 px-6 md:px-16 border-t-8 border-brandBlue">             
+            <div class="max-w-5xl mx-auto text-center mb-16">                 
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight mb-6">How We Build Trust & Margins</h2>                 
+                <p class="text-gray-300 font-medium text-lg max-w-3xl mx-auto leading-relaxed">                     
+                    We don't just find suppliers; we build secure supply chains. As your sourcing agent, we work on transparent margins built into your landed DDP cost—meaning no hidden fees, and zero surprises.                 
+                </p>             
+            </div>              
+            <!-- 4-Step Process Pipeline -->             
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative max-w-7xl mx-auto">                 
+                <!-- Connecting Line (Desktop Only) -->                 
+                <div class="hidden md:block absolute top-12 left-[12%] right-[12%] h-1 bg-gray-600 z-0"></div>                 
+                <div class="hidden md:block absolute top-12 left-[12%] h-1 bg-brandBlue z-0 w-3/4"></div> <!-- Progress indicator -->                  
+                <!-- Step 1 -->                 
+                <div class="relative z-10 text-center flex flex-col items-center">                     
+                    <div class="w-24 h-24 rounded-full bg-navy-900 border-4 border-brandBlue flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(0,51,160,0.5)]">                         
+                        <span class="text-3xl font-black text-white">1</span>                     
+                    </div>                     
+                    <h3 class="font-bold text-xl uppercase tracking-widest mb-2">Vetted Sourcing</h3>                     
+                    <p class="text-sm text-gray-400 font-medium leading-relaxed px-4">You tell us what you need. We source directly from our network of ISO/BSCI audited factories in India.</p>                 
+                </div>                  
+                <!-- Step 2 -->                 
+                <div class="relative z-10 text-center flex flex-col items-center">                     
+                    <div class="w-24 h-24 rounded-full bg-navy-900 border-4 border-brandBlue flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(0,51,160,0.5)]">                         
+                        <span class="text-3xl font-black text-white">2</span>                     
+                    </div>                     
+                    <h3 class="font-bold text-xl uppercase tracking-widest mb-2">Sample & Quote</h3>                     
+                    <p class="text-sm text-gray-400 font-medium leading-relaxed px-4">We provide physical samples and a transparent landed DDP cost. You approve the quality before bulk orders.</p>                 
+                </div>                  
+                <!-- Step 3 -->                 
+                <div class="relative z-10 text-center flex flex-col items-center">                     
+                    <div class="w-24 h-24 rounded-full bg-navy-900 border-4 border-brandBlue flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(0,51,160,0.5)]">                         
+                        <span class="text-3xl font-black text-white">3</span>                     
+                    </div>                     
+                    <h3 class="font-bold text-xl uppercase tracking-widest mb-2">On-Site QC</h3>                     
+                    <p class="text-sm text-gray-400 font-medium leading-relaxed px-4">Our agents conduct rigorous pre-shipment inspections on the factory floor with video/photo evidence for you.</p>                 
+                </div>                  
+                <!-- Step 4 -->                 
+                <div class="relative z-10 text-center flex flex-col items-center">                     
+                    <div class="w-24 h-24 rounded-full bg-navy-900 border-4 border-gray-600 flex items-center justify-center mb-6">                         
+                        <span class="text-3xl font-black text-white">4</span>                     
+                    </div>                     
+                    <h3 class="font-bold text-xl uppercase tracking-widest mb-2">Door to Door</h3>                     
+                    <p class="text-sm text-gray-400 font-medium leading-relaxed px-4">We handle ocean freight, CBSA customs clearance, and deliver the container straight to your Canadian dock.</p>                 
+                </div>             
+            </div>         
+        </section>          
+        
+        <!-- CONTACT SECTION -->         
+        <section id="contact" class="bg-[#d5d7db] py-16 md:py-20 px-6 md:px-16 relative">             
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">                                  
+                <!-- Left Column: Big Text & Info -->                 
+                <div class="flex flex-col justify-between">                     
+                    <div>                         
+                        <p class="text-gray-800 font-bold text-lg md:text-xl mb-3 md:mb-4">+1-905-689-4747</p>                         
+                        <h2 class="text-4xl sm:text-5xl md:text-7xl font-black text-brandBlue leading-[1.0] md:leading-[0.95] tracking-tight uppercase mb-6 md:mb-8">                             
+                            TRUSTED GLOBAL SOURCING.<br />                             
+                            CONTACT US TODAY.                         
+                        </h2>                                                  
+                        <p class="text-gray-700 font-medium text-base md:text-lg mb-4 md:mb-6 max-w-md">                             
+                            Muziris International Inc. is your preferred Canadian Sourcing Agent.                         
+                        </p>                         
+                        <p class="text-gray-700 font-medium text-base md:text-lg mb-8 md:mb-12 max-w-md">                             
+                            Stop worrying about what's inside the container. We ensure quality on the ground in India and deliver seamlessly to your door.                         
+                        </p>                     
+                    </div>                 
+                </div>                  
+                <!-- Right Column: Minimalist Form -->                 
+                <div class="flex flex-col justify-between relative">                     
+                    <form id="contact-form" class="space-y-4 md:space-y-6 max-w-lg w-full mt-8 lg:mt-0 relative z-10">                         
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">                             
+                            <div>                                 
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">NAME *</label>                                 
+                                <input type="text" id="contact-name" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>                             
+                            </div>                             
+                            <div>                                 
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">COMPANY</label>                                 
+                                <input type="text" id="contact-company" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0">                             
+                            </div>                         
+                        </div>                          
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">                             
+                            <div>                                 
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">PHONE *</label>                                 
+                                <input type="tel" id="contact-phone" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>                             
+                            </div>                             
+                            <div>                                 
+                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">EMAIL *</label>                                 
+                                <input type="email" id="contact-email" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>                             
+                            </div>                         
+                        </div>                          
+                        <div>                             
+                            <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">WHAT ARE YOU LOOKING TO SOURCE?</label>                             
+                            <textarea id="contact-message" rows="4" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0 resize-none" required></textarea>                         
+                        </div>                          
+                        <button type="submit" id="contact-btn" class="w-full sm:w-auto bg-brandBlue text-white font-bold px-10 py-4 uppercase text-sm hover:bg-brandBlue-dark transition flex justify-center items-center gap-2">                             
+                            SUBMIT &rarr;                         
+                        </button>                     
+                    </form>                                          
+                    <!-- Office Address Info -->                     
+                    <div class="mt-12 md:mt-16 pt-8 border-t border-gray-400 md:border-none md:pt-0 text-brandBlue">                         
+                        <p class="font-bold text-sm uppercase tracking-widest mb-3 md:mb-4">CONTACT OUR HAMILTON<br>SOURCING TEAM</p>                         
+                        <p class="text-gray-600 font-medium text-sm leading-relaxed">                             
+                            Muziris International Inc.<br>                             
+                            Hamilton, Ontario<br>                             
+                            Canada                         
+                        </p>                         
+                        <p class="text-gray-600 font-medium text-sm mt-3 md:mt-4 mb-6">                             
+                            +1-905-689-4747                         
+                        </p>                         
+                        <div class="inline-block border-l-2 border-brandBlue pl-3">                             
+                            <p class="font-bold text-xs uppercase tracking-widest text-brandBlue">Based in Hamilton, Ontario.</p>                             
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Inspecting in India.</p>                         
+                        </div>                     
+                    </div>                 
+                </div>              
+            </div>         
+        </section>      
+    </main>      
+
+    <!-- NEW FULL-SCREEN GLASS AI MODAL (Scroll Triggered) -->
+    <div id="ai-modal" class="fixed inset-0 z-[100] backdrop-blur-lg bg-white/95 transition-all duration-1000 opacity-0 pointer-events-none flex flex-col items-center justify-center p-4">
+        
+        <button onclick="closeChat()" class="absolute top-6 right-6 p-3 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 hover:text-navy-900 transition-colors shadow-sm">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="w-full max-w-3xl flex flex-col h-[85vh] bg-white rounded-3xl shadow-2xl border border-gray-200 overflow-hidden transform scale-95 transition-transform duration-1000" id="ai-modal-content">
+            
+            <div class="bg-gray-50 px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-black text-navy-900 tracking-tight flex items-center gap-3">
+                        <svg class="w-6 h-6 text-brandBlue animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Sourcing Assistant
+                    </h2>
+                    <p class="text-sm text-gray-500 font-medium mt-1">Powered by Muziris AI • Vision Enabled</p>
+                </div>
+            </div>
+
+            <div id="chat-history" class="flex-1 p-8 overflow-y-auto space-y-6 bg-white">
+                <!-- Content injected via JS -->
+            </div>
+
+            <div id="image-preview-area" class="px-8 hidden">
+                <div class="bg-gray-100 inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold text-gray-600 mb-2">
+                    <svg class="w-4 h-4 text-brandBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span id="preview-filename">Image attached</span>
+                    <button type="button" onclick="clearImage()" class="ml-2 text-gray-400 hover:text-red-500 font-bold">&times;</button>
+                </div>
+            </div>
+
+            <div class="p-6 bg-white border-t border-gray-50">
+                <form id="chat-form" class="relative flex items-center">
+                    
+                    <input type="file" id="chat-file" accept="image/*" class="hidden">
+                    
+                    <button type="button" onclick="document.getElementById('chat-file').click()" class="absolute left-4 p-2 text-gray-400 hover:text-brandBlue transition-colors rounded-full hover:bg-gray-100" title="Upload Reference Image">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                    </button>
+
+                    <input type="text" id="chat-input" class="w-full py-4 pl-14 pr-16 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:border-brandBlue focus:bg-white focus:ring-4 focus:ring-brandBlue/10 transition-all text-sm font-medium text-navy-900" placeholder="Describe the product you need, or upload a photo...">
+                    
+                    <button type="submit" id="ai-chat-send" class="absolute right-3 p-2 bg-navy-900 text-white rounded-full hover:bg-brandBlue transition shadow-md">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Quote Email Capture Modal (Hidden by Default) -->     
+    <div id="quote-modal" class="fixed inset-0 bg-navy-900/90 z-[110] hidden items-center justify-center backdrop-blur-md p-4">         
+        <div class="bg-white p-8 max-w-md w-full relative shadow-2xl border-t-4 border-brandBlue rounded-sm">             
+            <button onclick="closeQuoteModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors">                 
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>             
+            </button>             
+            <h3 class="text-2xl font-black uppercase text-navy-900 tracking-tight mb-2">Request Quote</h3>             
+            <p class="text-gray-600 text-sm mb-6 font-medium leading-relaxed">You are requesting pricing for: <br><span id="quote-product-name" class="font-bold text-brandBlue text-lg"></span></p>                          
+            <form id="quick-quote-form" class="space-y-4">                 
+                <input type="hidden" id="qq-product" value="">                 
+                <input type="hidden" id="qq-image-data" value="">                                  
+                <input type="email" id="qq-email" placeholder="Your Corporate Email" class="w-full bg-gray-50 border border-gray-300 p-4 text-sm focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition" required>                 
+                <button type="submit" id="qq-btn" class="w-full bg-brandBlue text-white font-bold py-4 uppercase tracking-widest hover:bg-brandBlue-dark transition text-sm shadow-md">                     
+                    SEND TO SOURCING TEAM                 
+                </button>             
+            </form>         
+        </div>     
+    </div>      
+    
+    <!-- Custom Toast Notification UI -->     
+    <div id="toast-notification" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[120] transition-all duration-500 ease-in-out translate-y-32 opacity-0 pointer-events-none flex items-center gap-3 bg-navy-900 text-white px-6 py-4 rounded shadow-2xl border-l-4 min-w-[300px]">         
+        <div id="toast-icon" class="flex-shrink-0">             
+            <!-- Icon injected via JS -->         
+        </div>         
+        <div id="toast-message" class="font-medium text-sm"></div>     
+    </div>      
+    
+    <script type="module">         
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";         
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";          
+        
+        // Firebase Setup         
+        const firebaseConfig = {             
+            apiKey: "AIzaSyBCECnPXh4baRlDwSINyifarwXSUEMNha8",             
+            authDomain: "muziris-ac9dd.firebaseapp.com",             
+            projectId: "muziris-ac9dd",             
+            storageBucket: "muziris-ac9dd.firebasestorage.app",             
+            messagingSenderId: "92966296327",             
+            appId: "1:92966296327:web:a2ed63f56ffc90940ed27d"         
+        };         
+        const app = initializeApp(firebaseConfig);         
+        const db = getFirestore(app);          
+        
+        // --- Custom Toast Notification Logic ---         
+        window.showToast = function(message, type = 'success') {             
+            const toast = document.getElementById('toast-notification');             
+            const toastMessage = document.getElementById('toast-message');             
+            const toastIcon = document.getElementById('toast-icon');              
+            toastMessage.textContent = message;                          
+            
+            if (type === 'success') {                 
+                toast.classList.remove('border-red-500');                 
+                toast.classList.add('border-green-500');                 
+                toastIcon.innerHTML = `<svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;             
+            } else {                 
+                toast.classList.remove('border-green-500');                 
+                toast.classList.add('border-red-500');                 
+                toastIcon.innerHTML = `<svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;             
+            }              
+            toast.classList.remove('translate-y-32', 'opacity-0');             
+            toast.classList.add('translate-y-0', 'opacity-100');              
+            
+            setTimeout(() => {                 
+                toast.classList.remove('translate-y-0', 'opacity-100');                 
+                toast.classList.add('translate-y-32', 'opacity-0');             
+            }, 4000);         
+        }          
+        
+        // ==========================================         
+        // MULTIMODAL AI VISUAL CHATBOT LOGIC (SCROLL-TRIGGERED)
+        // ==========================================         
+        const aiModal = document.getElementById('ai-modal');
+        const modalContent = document.getElementById('ai-modal-content');
+        const chatHistory = document.getElementById('chat-history');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const chatFile = document.getElementById('chat-file');
+        const previewArea = document.getElementById('image-preview-area');
+        const sendChatBtn = document.getElementById('ai-chat-send');
+        
+        let chatTriggered = false;
+        let base64Image = null;
+        let mimeType = null;
+
+        // Global functions for inline HTML handlers
+        window.clearImage = function() {
+            chatFile.value = '';
+            base64Image = null;
+            mimeType = null;
+            previewArea.classList.add('hidden');
+        };
+
+        window.closeChat = function() {
+            aiModal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+            // Remember they closed it so it doesn't pop up again this session
+            sessionStorage.setItem('chatClosed', 'true');
+        };
+
+        // --- Handle Image Selection ---         
+        chatFile.addEventListener('change', (e) => {             
+            const file = e.target.files[0];             
+            if (file) {                 
+                document.getElementById('preview-filename').textContent = file.name;
+                previewArea.classList.remove('hidden');
+                mimeType = file.type;
+
+                const reader = new FileReader();                 
+                reader.onloadend = () => {                     
+                    base64Image = reader.result.split(',')[1];                 
+                };                 
+                reader.readAsDataURL(file);             
+            }         
+        });          
+        
+        // --- Auto-resize Textarea ---         
+        chatInput.addEventListener('input', function() {             
+            this.style.height = 'auto';             
+            this.style.height = (this.scrollHeight) + 'px';             
+            if (this.scrollHeight > 150) {                 
+                this.style.overflowY = 'auto';             
+            } else {                 
+                this.style.overflowY = 'hidden';             
+            }         
+        });          
+
+        const addMessageToUI = (text, isUser, productName = null, imageUrl = null) => {             
+            const msgDiv = document.createElement('div');                          
+            msgDiv.className = `flex w-full ${isUser ? 'justify-end' : 'justify-start'}`;
+
+            if (isUser) {                 
+                // User Bubble (Brand Blue)                 
+                let content = '';                 
+                if (imageUrl) {                     
+                    content += `<img src="${imageUrl}" class="w-48 rounded-lg mb-3 border border-white/20 shadow-sm" alt="User Upload">`;                 
+                }                 
+                if (text) content += `<div>${text}</div>`;                 
+                
+                msgDiv.innerHTML = `<div class="p-4 md:p-5 px-6 max-w-[85%] md:max-w-[75%] shadow-sm leading-relaxed text-sm font-medium bg-brandBlue text-white rounded-[2rem] rounded-tr-sm">${content}</div>`;                              
+            } else {                 
+                // AI Bubble (Light Mode with Avatar)                 
+                let innerHtml = `                     
+                    <div class="flex gap-4 max-w-[90%] md:max-w-[85%] self-start">
+                        <div class="w-8 h-8 rounded-full bg-navy-900 flex-shrink-0 flex items-center justify-center mt-1 shadow-md">                         
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>                     
+                        </div>                     
+                        <div class="bg-gray-100 border border-gray-200 text-navy-900 p-5 md:p-6 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden flex flex-col">                         
+                            <div class="text-sm font-medium leading-relaxed whitespace-pre-wrap">${text}</div>`;                                  
+                
+                // If AI detected a product and we should show the Quote CTA                 
+                if (productName) {                     
+                    innerHtml += `                         
+                            <div class="border-t border-gray-200 bg-white p-5 mt-4 rounded-xl border">                             
+                                <p class="font-black text-navy-900 text-lg leading-tight uppercase tracking-widest mb-4 flex items-center gap-2">                                     
+                                    <svg class="w-5 h-5 text-brandBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>                                     
+                                    Product Identified                             
+                                </p>                             
+                                <button onclick="openQuoteModal('${productName}')" class="w-full bg-brandBlue text-white font-black py-4 text-xs md:text-sm uppercase tracking-widest hover:bg-brandBlue-dark transition rounded-lg shadow-md">                                     
+                                    Request Sourcing Quote                             
+                                </button>                         
+                            </div>`;                 
+                }                                  
+                innerHtml += `</div></div>`;                 
+                msgDiv.innerHTML = innerHtml;             
+            }                          
+            
+            chatHistory.appendChild(msgDiv);             
+            chatHistory.scrollTop = chatHistory.scrollHeight;         
+        };          
+
+        // --- Trigger AI Chat on Scroll ---
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400 && !chatTriggered && !sessionStorage.getItem('chatClosed')) {
+                chatTriggered = true;
+                
+                aiModal.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+
+                // Simulate AI typing its first proactive question
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'flex justify-start w-full';
+                typingDiv.innerHTML = `<div class="flex gap-4 max-w-[90%] self-start"><div class="w-8 h-8 rounded-full bg-navy-900 flex-shrink-0 flex items-center justify-center mt-1 shadow-md opacity-50"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg></div><div class="bg-gray-100 border border-gray-200 p-4 rounded-2xl rounded-tl-sm text-gray-400 text-sm flex gap-1"><span class="animate-bounce">•</span><span class="animate-bounce delay-75">•</span><span class="animate-bounce delay-150">•</span></div></div>`;
+                chatHistory.appendChild(typingDiv);
+
+                setTimeout(() => {
+                    chatHistory.removeChild(typingDiv);
+                    addMessageToUI("Hello! I am the Muziris Sourcing AI. You can describe the product you are looking for, or upload a photo of it. How can I help you bypass the tariffs today?", false);
+                }, 1500);
+            }
+        });
+
+        const handleSend = async (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();             
+            const hasImage = base64Image !== null;             
+            const previewUrl = hasImage ? `data:${mimeType};base64,${base64Image}` : null;                          
+            
+            if (!text && !hasImage) return;              
+            
+            // Reset UI             
+            chatInput.value = '';             
+            chatInput.style.height = 'auto';             
+            chatInput.disabled = true;             
+            sendChatBtn.disabled = true;             
+            clearImage();
+            
+            addMessageToUI(text, true, null, previewUrl);              
+            
+            const loadingDiv = document.createElement('div');             
+            loadingDiv.id = 'ai-loading';             
+            loadingDiv.className = 'flex justify-start w-full mt-2';             
+            loadingDiv.innerHTML = `                 
+                <div class="flex gap-4 max-w-[90%] self-start">
+                    <div class="w-8 h-8 rounded-full bg-navy-900 flex-shrink-0 flex items-center justify-center mt-1 shadow-md opacity-50">                     
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>                 
+                    </div>                 
+                    <div class="bg-gray-100 border border-gray-200 p-5 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-2">                     
+                        <div class="w-2 h-2 bg-brandBlue rounded-full animate-bounce"></div>                     
+                        <div class="w-2 h-2 bg-brandBlue rounded-full animate-bounce" style="animation-delay: 0.1s"></div>                     
+                        <div class="w-2 h-2 bg-brandBlue rounded-full animate-bounce" style="animation-delay: 0.2s"></div>                     
+                        <span class="text-xs text-gray-500 uppercase tracking-widest ml-2 font-bold">Analyzing...</span>                 
+                    </div>
+                </div>`;             
+            chatHistory.appendChild(loadingDiv);             
+            chatHistory.scrollTop = chatHistory.scrollHeight;              
+            
+            try {                 
+                // 🟢 GEMINI MULTIMODAL API CONFIGURATION                 
+                const parts = [];                 
+                if (text) parts.push({ text: `User request: "${text}".` });                 
+                if (hasImage) {                     
+                    parts.push({                         
+                        inlineData: {                             
+                            mimeType: mimeType,                             
+                            data: base64Image                         
+                        }                     
+                    });                 
+                }                  
+                
+                const payload = {                     
+                    contents: [{ parts: parts }],                     
+                    systemInstruction: {                         
+                        parts: [{ text: `You are the Muziris Vision AI Sourcing Assistant. Analyze the user's text and/or image.                          
+                        If they upload an image, identify the industrial product, machinery part, or material.                          
+                        Provide a very brief, professional response acknowledging what you see and stating that Muziris can source it from our Indian factories.                         
+                        Format your response as JSON. If a specific product is identified, provide a short name for it in 'identifiedProduct' so the user can request a quote. If no specific product is found, leave it empty.` }]                     
+                    },                     
+                    generationConfig: {                         
+                        responseMimeType: "application/json",                         
+                        responseSchema: {                             
+                            type: "OBJECT",                             
+                            properties: {                                 
+                                replyText: { type: "STRING", description: "The conversational response to the user." },                                 
+                                identifiedProduct: { type: "STRING", description: "A short, 2-4 word name of the identified product. Leave empty if not sure." }                             
+                            }                         
+                        }                     
+                    }                 
+                };                  
+                
+                // Use API Key if deployed. Using standard Gemini 1.5 Flash endpoint for structured JSON.
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;                  
+                
+                const response = await fetch(apiUrl, {                     
+                    method: 'POST',                     
+                    headers: { 'Content-Type': 'application/json' },                     
+                    body: JSON.stringify(payload)                 
+                });                  
+                
+                const result = await response.json();                 
+                document.getElementById('ai-loading').remove();                                  
+                
+                if (result.candidates && result.candidates[0].content) {                     
+                    const aiResponse = JSON.parse(result.candidates[0].content.parts[0].text);                     
+                    const prodName = aiResponse.identifiedProduct && aiResponse.identifiedProduct.trim() !== "" ? aiResponse.identifiedProduct : null;                                          
+                    
+                    // Save image data to hidden field so the quote form can grab it later if needed                     
+                    if (hasImage && prodName) {                         
+                        document.getElementById('qq-image-data').value = "User uploaded an image for analysis.";                      
+                    }                      
+                    addMessageToUI(aiResponse.replyText, false, prodName);                                      
+                } else {                     
+                    addMessageToUI("I'm currently undergoing maintenance. Please use the contact form.", false);                 
+                }             
+            } catch (error) {                 
+                console.error(error);                 
+                document.getElementById('ai-loading')?.remove();                 
+                addMessageToUI("Network connection error. Please use the main contact form to reach our team.", false);             
+            }              
+            
+            // Cleanup             
+            chatInput.disabled = false;             
+            sendChatBtn.disabled = false;             
+            chatInput.focus();         
+        };          
+        
+        chatForm.addEventListener('submit', handleSend);         
+        chatInput.addEventListener('keypress', (e) => {              
+            if (e.key === 'Enter' && !e.shiftKey) {                 
+                e.preventDefault();                 
+                handleSend(e);              
+            }         
+        });          
+        
+        // ==========================================         
+        // QUICK QUOTE MODAL LOGIC (Lead Capture)         
+        // ==========================================         
+        window.openQuoteModal = function(productName) {             
+            document.getElementById('quote-product-name').textContent = productName;             
+            document.getElementById('qq-product').value = productName;             
+            document.getElementById('quote-modal').classList.remove('hidden');             
+            document.getElementById('quote-modal').classList.add('flex');         
+        };          
+        
+        window.closeQuoteModal = function() {             
+            document.getElementById('quote-modal').classList.add('hidden');             
+            document.getElementById('quote-modal').classList.remove('flex');             
+            document.getElementById('quick-quote-form').reset();             
+            document.getElementById('qq-image-data').value = ""; // clear         
+        };          
+        
+        document.getElementById('quick-quote-form').addEventListener('submit', async (e) => {             
+            e.preventDefault();             
+            const email = document.getElementById('qq-email').value;             
+            const product = document.getElementById('qq-product').value;             
+            const imageNote = document.getElementById('qq-image-data').value;             
+            const btn = document.getElementById('qq-btn');                          
+            
+            btn.disabled = true;             
+            btn.innerHTML = "SAVING LEADS...";              
+            
+            const notesString = `🚨 ACTION: User clicked "Request Sourcing Quote" via the AI Vision Chatbot for product: ${product}. ${imageNote}`;              
+            
+            try {                 
+                // Save directly to Firebase CRM Pipeline!                 
+                await addDoc(collection(db, 'crm_leads'), {                     
+                    companyName: "AI Vision Sourcing Request",                      
+                    contactPerson: "Unknown",                      
+                    location: "Website Chatbot",                     
+                    phone: "",                     
+                    email: email,                     
+                    status: "Lead Captured",                     
+                    notes: notesString,                      
+                    createdAt: Date.now()                 
+                });                  
+                
+                closeQuoteModal();                 
+                showToast("Request sent! Our Indian sourcing team will contact you shortly.", "success");                 
+                addMessageToUI(`Thanks! I have dispatched your sourcing request for **${product}** to our team in India. We will email you shortly.`, false);                                  
+                
+                // Hide chat window after 4 seconds so they can see the main site again                 
+                setTimeout(() => { closeChat(); }, 4000);              
+            } catch (error) {                 
+                // Fail-safe to email API if Firebase is locked                 
+                fetch("https://muziris-api.onrender.com/api/contact", {                     
+                    method: 'POST',                     
+                    headers: { 'Content-Type': 'application/json' },                     
+                    body: JSON.stringify({                         
+                        name: "AI Sourcing Lead",                         
+                        company: "Website Chatbot",                         
+                        phone: "N/A",                         
+                        email: email,                         
+                        message: notesString                     
+                    })                 
+                }).then(() => {                     
+                    closeQuoteModal();                     
+                    showToast("Request sent! Our team will contact you shortly.", "success");                 
+                }).catch(err => {                     
+                    btn.innerHTML = "ERROR";                 
+                });             
+            } finally {                 
+                btn.disabled = false;                 
+                btn.innerHTML = "SEND TO SOURCING TEAM";             
+            }         
+        });                  
+        
+        // --- Lead Magnet Form Background Submitter ---         
+        const leadForm = document.getElementById('lead-magnet-form');         
+        if (leadForm) {             
+            leadForm.addEventListener('submit', async (e) => {                 
+                e.preventDefault();                 
+                const emailInput = document.getElementById('lm-email').value;                 
+                const btn = document.getElementById('lm-btn');                 
+                btn.innerHTML = "GENERATING PDF...";                 
+                btn.disabled = true;                  
+                
+                try {                     
+                    await addDoc(collection(db, 'crm_leads'), {                         
+                        companyName: "PDF Guide Download",                          
+                        contactPerson: "Unknown",                          
+                        location: "Website Lead",                         
+                        phone: "",                         
+                        email: emailInput,                         
+                        status: "Lead Captured",                         
+                        notes: "🚨 ACTION: User downloaded the 2026 Tariff Survival Guide. Needs immediate follow-up.",                          
+                        createdAt: Date.now()                     
+                    });                     
+                    btn.innerHTML = "PDF SENT ✓";                     
+                    btn.classList.add('!bg-green-600');                     
+                    showToast("Success! The PDF guide has been sent to your email.", "success");                 
+                } catch (error) {                     
+                    fetch("https://muziris-api.onrender.com/api/contact", {                         
+                        method: 'POST',                         
+                        headers: { 'Content-Type': 'application/json' },                         
+                        body: JSON.stringify({ name: "PDF Guide Downloader", company: "Website Lead", phone: "N/A", email: emailInput, message: "🚨 AUTOMATED ALERT: User requested the Tariff Survival Guide." })                     
+                    }).then(() => {                         
+                        btn.innerHTML = "PDF SENT ✓";                         
+                        btn.classList.add('!bg-green-600');                         
+                        showToast("Success! The PDF guide has been sent to your email.", "success");                     
+                    });                 
+                }             
+            });         
+        }          
+        
+        // --- Main Contact Form Submitter ---         
+        const contactForm = document.getElementById('contact-form');         
+        if (contactForm) {             
+            contactForm.addEventListener('submit', function(e) {                 
+                e.preventDefault();                 
+                const btn = document.getElementById('contact-btn');                 
+                btn.disabled = true;                 
+                btn.innerHTML = 'SENDING...';                  
+                
+                const formData = {                     
+                    name: document.getElementById('contact-name').value,                     
+                    company: document.getElementById('contact-company').value,                     
+                    phone: document.getElementById('contact-phone').value,                     
+                    email: document.getElementById('contact-email').value,                     
+                    message: document.getElementById('contact-message').value                 
+                };                  
+                
+                fetch('https://muziris-api.onrender.com/api/contact', {                     
+                    method: 'POST',                     
+                    headers: { 'Content-Type': 'application/json' },                     
+                    body: JSON.stringify(formData),                     
+                    keepalive: true                 
+                })                 
+                .then(response => {                     
+                    if (response.ok) {                         
+                        btn.innerHTML = 'MESSAGE SENT ✓';                         
+                        btn.classList.add('bg-green-600');                         
+                        btn.classList.remove('bg-brandBlue', 'hover:bg-brandBlue-dark');                         
+                        contactForm.reset();                         
+                        showToast("Your message has been sent successfully!", "success");                     
+                    } else {                         
+                        throw new Error('Server returned an error');                     
+                    }                 
+                })                 
+                .catch(error => {                     
+                    console.error('Error:', error);                     
+                    btn.innerHTML = 'ERROR. TRY AGAIN.';                     
+                    btn.disabled = false;                     
+                    showToast("Failed to send message. Please try again.", "error");                 
+                });             
+            });         
+        }     
+    </script> 
+</body> 
+</html>
