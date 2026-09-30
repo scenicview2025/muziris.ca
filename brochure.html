@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muziris International Inc. | B2B Sourcing Brochure</title>
     
-    <!-- Google Fonts: Montserrat -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Montserrat for general text, Cinzel for the brand name -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,7 +18,10 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Montserrat', 'sans-serif'] },
+                    fontFamily: { 
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Cinzel', 'serif'] // Adding Cinzel font for the brand
+                    },
                     colors: {
                         navy: { 900: '#002147' }, // Oxford Navy
                         gold: { DEFAULT: '#D4AF37' } // Muziris Gold
@@ -70,7 +73,8 @@
             <!-- HEADER -->
             <div class="bg-navy-900 text-white p-10 flex justify-between items-center border-b-4 border-gold">
                 <div>
-                    <h1 class="text-4xl font-black uppercase tracking-widest text-gold mb-1">MUZIRIS</h1>
+                    <!-- Applied font-serif to match the requested Cinzel font -->
+                    <h1 class="text-5xl font-serif font-bold uppercase tracking-widest text-gold mb-1">MUZIRIS</h1>
                     <p class="text-xs tracking-widest font-bold opacity-90 uppercase">International Inc.</p>
                 </div>
                 <div class="text-right text-xs font-medium opacity-80 leading-relaxed">
@@ -101,12 +105,12 @@
                 </div>
                 
                 <div class="w-2/5 bg-gray-50 p-5 border border-gray-200 shadow-sm border-t-2 border-t-gold">
-                    <h3 class="text-navy-900 font-black uppercase text-sm mb-3">Order Sizes & MOQs</h3>
-                    <p class="text-xs text-gray-600 mb-3 font-medium">We scale with your business. We handle:</p>
+                    <h3 class="text-navy-900 font-black uppercase text-sm mb-3">Scalable Logistics Solutions</h3>
+                    <p class="text-xs text-gray-600 mb-3 font-medium">We accommodate diverse sourcing requirements with adaptable minimum order quantities:</p>
                     <ul class="text-xs text-gray-800 space-y-2 font-bold">
-                        <li>📦 <span class="text-navy-900">Small Parcels:</span> Urgent components.</li>
-                        <li>🚛 <span class="text-navy-900">LCL Cargo:</span> Mid-sized commercial orders.</li>
-                        <li>🚢 <span class="text-navy-900">FCL Containers:</span> High-volume supply.</li>
+                        <li>📦 <span class="text-navy-900">Courier & Air Freight:</span> For urgent, time-sensitive components.</li>
+                        <li>🚛 <span class="text-navy-900">LCL (Less than Container Load):</span> Efficient transit for mid-volume commercial orders.</li>
+                        <li>🚢 <span class="text-navy-900">FCL (Full Container Load):</span> Optimized solutions for high-volume supply chains.</li>
                     </ul>
                 </div>
             </div>
