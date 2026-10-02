@@ -352,7 +352,7 @@ ipt>
                 .then(data => {
                     if (!data || !data.success || !Array.isArray(data.products) || !data.products.length) return;
                     const publishedCatalog = groupPublishedProducts(data.products);
-                    if (publishedCatalog.length) renderProductCatalog(publishedCatalog);
+                    if (publishedCatalog.length) renderProductCatalog(productCatalog.concat(publishedCatalog));
                 })
                 .catch(() => {
                     // Keep the existing catalog visible when the API is unavailable.
