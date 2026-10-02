@@ -397,89 +397,80 @@
         </section>
 
         <!-- CONTACT SECTION -->
-        <section id="contact" class="bg-[#d5d7db] py-16 md:py-20 px-6 md:px-16 relative">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
-                
-                <!-- Left Column: Big Text & Info -->
-                <div class="flex flex-col justify-between">
-                    <div>
-                        <p class="text-gray-800 font-bold text-lg md:text-xl mb-3 md:mb-4">+1-636-MUZIRIS (689-4747)</p>
-                        <h2 class="text-4xl sm:text-5xl md:text-7xl font-black text-brandBlue leading-[1.0] md:leading-[0.95] tracking-tight uppercase mb-6 md:mb-8">
-                            Let’s make your next shipment simpler.
-                        </h2>
-                        
-                        <p class="text-gray-700 font-medium text-base md:text-lg mb-4 md:mb-6 max-w-md">
-                            A Canada-based partner for sourcing and logistics between India and Canada.
-                        </p>
-                        <p class="text-gray-700 font-medium text-base md:text-lg mb-8 md:mb-12 max-w-md">
-                            Tell us what you need to source, your target volume and where it needs to go. Our team will help you plan the next steps.
-                        </p>
-                        
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="products.html" class="w-full sm:w-auto bg-white text-brandBlue text-center font-bold px-8 py-4 uppercase text-sm hover:bg-gray-100 transition shadow-sm flex items-center justify-center gap-2">
-                                EXPLORE PRODUCTS <span class="font-normal">&rarr;</span>
-                            </a>
+        <section id="contact" class="relative overflow-hidden bg-gradient-to-br from-navy-900 via-[#12395c] to-[#0d5c75] py-16 md:py-24 px-6 md:px-16">
+            <div class="absolute -top-28 -right-24 w-96 h-96 rounded-full border border-white/10" aria-hidden="true"></div>
+            <div class="absolute -bottom-40 -left-28 w-[28rem] h-[28rem] rounded-full border border-white/10" aria-hidden="true"></div>
+
+            <div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-start">
+                <div class="lg:col-span-2 text-white pt-2 md:pt-6">
+                    <p class="text-blue-100 font-extrabold text-xs md:text-sm tracking-[0.2em] uppercase mb-4">Get in touch</p>
+                    <h2 class="text-4xl sm:text-5xl md:text-6xl font-black leading-[1.05] tracking-tight mb-6">
+                        Let’s plan your next shipment.
+                    </h2>
+                    <p class="text-blue-100 text-base md:text-lg leading-relaxed mb-9 max-w-xl">
+                        Tell us what you need, how much you’re sourcing and where it needs to go. The MUZIRIS team in Hamilton will help you plan the next step.
+                    </p>
+
+                    <div class="rounded-xl border border-white/15 bg-white/10 backdrop-blur-sm p-5 md:p-6 max-w-xl">
+                        <p class="font-bold text-xs tracking-[0.16em] uppercase text-blue-100/75 mb-4">Talk to the MUZIRIS team</p>
+                        <a href="tel:+16366894747" class="flex items-center gap-4 text-white hover:text-blue-100 transition group">
+                            <span class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-lg" aria-hidden="true">↗</span>
+                            <span>
+                                <span class="block text-[10px] uppercase tracking-widest text-blue-100/70 mb-1">Call us</span>
+                                <span class="font-bold text-base md:text-lg">+1-636-689-4747</span>
+                            </span>
+                        </a>
+                        <div class="flex items-center gap-4 border-t border-white/15 mt-5 pt-5">
+                            <span class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center" aria-hidden="true">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 21s7-4.5 7-11a7 7 0 10-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.2" stroke-width="1.8"/></svg>
+                            </span>
+                            <span>
+                                <span class="block text-[10px] uppercase tracking-widest text-blue-100/70 mb-1">Based in</span>
+                                <span class="font-semibold">Hamilton, Ontario, Canada</span>
+                            </span>
                         </div>
                     </div>
+                    <p class="mt-6 text-xs md:text-sm font-semibold tracking-wide text-blue-100/80">Canada-based <span class="mx-2 text-white/40">•</span> Connected with suppliers in India</p>
                 </div>
 
-                <!-- Right Column: Minimalist Form -->
-                <div class="flex flex-col justify-between relative">
-                    <form id="contact-form" class="space-y-4 md:space-y-6 max-w-lg w-full mt-8 lg:mt-0 relative z-10">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                <div class="lg:col-span-3">
+                    <form id="contact-form" class="rounded-2xl bg-white p-6 sm:p-8 md:p-10 shadow-2xl">
+                        <div class="mb-7">
+                            <h3 class="text-2xl md:text-3xl font-black text-navy-900 mb-2">Tell us what you’re looking for.</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">Share a few details and our team can follow up about your enquiry.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">NAME *</label>
-                                <input type="text" id="contact-name" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
+                                <label for="contact-name" class="block text-slate-700 font-bold text-xs uppercase tracking-wide mb-2">Name <span class="text-brandBlue">*</span></label>
+                                <input type="text" id="contact-name" autocomplete="name" class="contact-field w-full rounded-lg bg-slate-50 border border-slate-200 px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 transition focus:outline-none focus:border-brandBlue focus:ring-4 focus:ring-blue-100" placeholder="Your name" required>
                             </div>
                             <div>
-                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">COMPANY</label>
-                                <input type="text" id="contact-company" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0">
+                                <label for="contact-company" class="block text-slate-700 font-bold text-xs uppercase tracking-wide mb-2">Company</label>
+                                <input type="text" id="contact-company" autocomplete="organization" class="contact-field w-full rounded-lg bg-slate-50 border border-slate-200 px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 transition focus:outline-none focus:border-brandBlue focus:ring-4 focus:ring-blue-100" placeholder="Company name">
+                            </div>
+                            <div>
+                                <label for="contact-phone" class="block text-slate-700 font-bold text-xs uppercase tracking-wide mb-2">Phone <span class="text-brandBlue">*</span></label>
+                                <input type="tel" id="contact-phone" autocomplete="tel" class="contact-field w-full rounded-lg bg-slate-50 border border-slate-200 px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 transition focus:outline-none focus:border-brandBlue focus:ring-4 focus:ring-blue-100" placeholder="Your phone number" required>
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-slate-700 font-bold text-xs uppercase tracking-wide mb-2">Email <span class="text-brandBlue">*</span></label>
+                                <input type="email" id="contact-email" autocomplete="email" class="contact-field w-full rounded-lg bg-slate-50 border border-slate-200 px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 transition focus:outline-none focus:border-brandBlue focus:ring-4 focus:ring-blue-100" placeholder="you@company.com" required>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="contact-message" class="block text-slate-700 font-bold text-xs uppercase tracking-wide mb-2">How can we help? <span class="text-brandBlue">*</span></label>
+                                <textarea id="contact-message" rows="5" class="contact-field w-full rounded-lg bg-slate-50 border border-slate-200 px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 transition focus:outline-none focus:border-brandBlue focus:ring-4 focus:ring-blue-100 resize-y" placeholder="Product, quantity, destination or any other details..." required></textarea>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                            <div>
-                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">PHONE *</label>
-                                <input type="tel" id="contact-phone" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
-                            </div>
-                            <div>
-                                <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">EMAIL *</label>
-                                <input type="email" id="contact-email" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0" required>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-brandBlue font-bold text-xs uppercase mb-1 md:mb-2">MESSAGE</label>
-                            <textarea id="contact-message" rows="4" class="ref-input border border-gray-300 md:border-none focus:border-brandBlue focus:ring-0 resize-none" required></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full sm:w-auto bg-brandBlue text-white font-bold px-10 py-4 uppercase text-sm hover:bg-brandBlue-dark transition flex justify-center items-center gap-2">
-                            SUBMIT &rarr;
+                        <button type="submit" class="mt-6 w-full sm:w-auto inline-flex justify-center items-center gap-3 rounded-lg bg-brandBlue text-white font-bold px-8 py-4 text-sm hover:bg-brandBlue-dark transition shadow-lg shadow-blue-900/15">
+                            SEND ENQUIRY
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </button>
                     </form>
-                    
-                    <!-- Office Address Info -->
-                    <div class="mt-12 md:mt-16 pt-8 border-t border-gray-400 md:border-none md:pt-0 text-brandBlue">
-                        <p class="font-bold text-sm uppercase tracking-widest mb-3 md:mb-4">CONTACT OUR HAMILTON<br>SOURCING TEAM</p>
-                        <p class="text-gray-600 font-medium text-sm leading-relaxed">
-                            Muziris International Inc.<br>
-                            Hamilton, Ontario<br>
-                            Canada
-                        </p>
-                        <p class="text-gray-600 font-medium text-sm mt-3 md:mt-4 mb-6">
-                            +1-636-689-4747
-                        </p>
-                        <div class="inline-block border-l-2 border-brandBlue pl-3">
-                            <p class="font-bold text-xs uppercase tracking-widest text-brandBlue">Based in Canada 🇨🇦 .</p>
-                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Rooted in India 🇮🇳 .</p>
-                        </div>
-                    </div>
                 </div>
-
             </div>
         </section>
-
-    </main>
 
     <!-- AI Chatbot Toggle Button -->
     <button id="ai-chat-toggle" class="fixed bottom-6 right-4 md:bottom-10 md:right-10 bg-brandBlue text-white p-4 shadow-2xl hover:bg-brandBlue-dark transition-transform hover:scale-105 z-50 flex items-center justify-center border-2 border-white/20 rounded-full md:rounded-none">
