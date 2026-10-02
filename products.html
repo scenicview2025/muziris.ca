@@ -268,50 +268,95 @@ ipt>
         ];
 
         const catalogRenderer = document.getElementById('catalog-renderer');
-        if (catalogRenderer) {
-            let htmlContent = `
-                <div class="bg-slate-50 px-6 md:px-16 py-8 border-b border-gray-200">
-                    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-                        <div><p class="text-blue-700 text-xs font-extrabold uppercase tracking-[0.2em]">Browse by category</p><p class="text-slate-600 text-sm mt-1">Find the right material for your application.</p></div>
-                        <nav aria-label="Catalog categories" class="flex flex-wrap gap-2">
-                            <a href="#catalog-category-0" class="rounded-full bg-white border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:border-blue-600 hover:text-blue-700 transition">Adhesive tapes</a>
-                            <a href="#catalog-category-1" class="rounded-full bg-white border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:border-blue-600 hover:text-blue-700 transition">Vinyl &amp; decals</a>
-                            <a href="#catalog-category-2" class="rounded-full bg-white border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:border-blue-600 hover:text-blue-700 transition">Films &amp; sheets</a>
-                        </nav>
-                    </div>
-                </div>`;
-            productCatalog.forEach((section, sectionIndex) => {
-                htmlContent += `
-                <section id="catalog-category-${sectionIndex}" class="scroll-mt-6 py-14 md:py-20 px-6 md:px-16 ${section.bgClass} border-b border-gray-200">
-                    <div class="max-w-7xl mx-auto">
-                        <div class="mb-10 border-b border-gray-200 pb-6">
-                            <span class="inline-flex items-center gap-2 bg-blue-50 text-blue-800 text-xs font-extrabold px-3 py-1.5 uppercase tracking-widest mb-4 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> ${section.code}</span>
-                            <h2 class="text-3xl md:text-4xl font-black text-navy-900 tracking-tight">${section.title}</h2>
-                            <p class="text-gray-600 mt-2 font-medium">${section.desc} <span class="text-gray-400 mx-2">·</span> ${section.items.length} product options</p>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">`;
-                
+        const productImageFallback = "https://placehold.co/600x400/cbd5e1/1e293b?text=Muziris+Product";
+
+        function escapeCatalogText(value) {
+            return String(value ?? "").replace(/[&<>"']/g, character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[character]);
+        }
+
+        function safeCatalogImageUrl(value) {
+            try {
+                const url = new URL(value);
+                return url.protocol === "https:" ? url.href : "";
+            } catch {
+                return "";
+            }
+        }
+
+        function renderProductCatalog(sections) {
+            if (!catalogRenderer) return;
+
+            let htmlContent = '<div class="bg-slate-50 px-6 md:px-16 py-8 border-b border-gray-200"><div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-5"><div><p class="text-blue-700 text-xs font-extrabold uppercase tracking-[0.2em]">Browse by category</p><p class="text-slate-600 text-sm mt-1">Find the right material for your application.</p></div><nav aria-label="Catalog categories" class="flex flex-wrap gap-2">';
+            sections.forEach((section, sectionIndex) => {
+                htmlContent += '<a href="#catalog-category-' + sectionIndex + '" class="rounded-full bg-white border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:border-blue-600 hover:text-blue-700 transition">' + escapeCatalogText(section.title) + '</a>';
+            });
+            htmlContent += '</nav></div></div>';
+
+            sections.forEach((section, sectionIndex) => {
+                htmlContent += '<section id="catalog-category-' + sectionIndex + '" class="scroll-mt-6 py-14 md:py-20 px-6 md:px-16 ' + section.bgClass + ' border-b border-gray-200"><div class="max-w-7xl mx-auto"><div class="mb-10 border-b border-gray-200 pb-6"><span class="inline-flex items-center gap-2 bg-blue-50 text-blue-800 text-xs font-extrabold px-3 py-1.5 uppercase tracking-widest mb-4 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> ' + escapeCatalogText(section.code) + '</span><h2 class="text-3xl md:text-4xl font-black text-navy-900 tracking-tight">' + escapeCatalogText(section.title) + '</h2><p class="text-gray-600 mt-2 font-medium">' + escapeCatalogText(section.desc) + ' <span class="text-gray-400 mx-2">·</span> ' + section.items.length + ' product options</p></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">';
+
                 section.items.forEach(item => {
-                    const safeName = item.name.replace(/'/g, "\\'"); // Prevent JS breaking if a name has quotes
-                    htmlContent += `
-                        <article class="group bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 transition duration-300">
-                            <div class="h-48 bg-slate-100 overflow-hidden">
-                                <img src="${item.img}" onerror="this.onerror=null; this.src='https://placehold.co/600x400/cbd5e1/1e293b?text=Muziris+Product';" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="${item.name}" loading="lazy">
-                            </div>
-                            <div class="p-5 md:p-6 flex flex-col flex-1">
-                                <h3 class="font-bold text-navy-900 text-lg mb-2 leading-snug">${item.name}</h3>
-                                <p class="text-gray-600 text-sm mb-4 flex-1">${item.desc}</p>
-                                <button onclick="openQuoteModal('${safeName} (${section.code})')" class="w-full text-center bg-white text-blue-800 font-extrabold py-3 uppercase text-xs tracking-wider hover:bg-blue-700 hover:text-white transition border border-blue-200 rounded-md">Request pricing <span aria-hidden="true">→</span></button>
-                            </div>
-                        </article>`;
+                    const imageUrl = safeCatalogImageUrl(item.img) || productImageFallback;
+                    const itemCode = item.code || section.code;
+                    const quoteProduct = item.name + " (" + itemCode + ")";
+                    htmlContent += '<article class="group bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 transition duration-300"><div class="h-48 bg-slate-100 overflow-hidden"><img src="' + escapeCatalogText(imageUrl) + '" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="' + escapeCatalogText(item.imgAlt || item.name) + '" loading="lazy"></div><div class="p-5 md:p-6 flex flex-col flex-1">' +
+                        (item.subCategory ? '<p class="text-xs font-bold uppercase tracking-wide text-blue-700 mb-2">' + escapeCatalogText(item.subCategory) + '</p>' : '') +
+                        '<h3 class="font-bold text-navy-900 text-lg mb-2 leading-snug">' + escapeCatalogText(item.name) + '</h3><p class="text-gray-600 text-sm mb-4 flex-1">' + escapeCatalogText(item.desc) + '</p><button type="button" data-quote-product="' + escapeCatalogText(quoteProduct) + '" class="catalog-quote-button w-full text-center bg-white text-blue-800 font-extrabold py-3 uppercase text-xs tracking-wider hover:bg-blue-700 hover:text-white transition border border-blue-200 rounded-md">Request pricing <span aria-hidden="true">→</span></button></div></article>';
                 });
 
-                htmlContent += `
-                        </div>
-                    </div>
-                </section>`;
+                htmlContent += '</div></div></section>';
             });
+
             catalogRenderer.innerHTML = htmlContent;
+            catalogRenderer.querySelectorAll(".catalog-quote-button").forEach(button => {
+                button.addEventListener("click", () => window.openQuoteModal(button.dataset.quoteProduct));
+            });
+        }
+
+        function groupPublishedProducts(products) {
+            const categories = new Map();
+            products.forEach(product => {
+                const categoryName = typeof product.category === "string" ? product.category.trim() : "";
+                if (!categoryName || !product.name) return;
+                if (!categories.has(categoryName)) categories.set(categoryName, []);
+                const firstImage = Array.isArray(product.images) ? product.images[0] : null;
+                categories.get(categoryName).push({
+                    name: product.name,
+                    desc: product.description || "Contact us for specifications, order quantities, and sourcing details.",
+                    img: firstImage && firstImage.url,
+                    imgAlt: firstImage && firstImage.alt,
+                    subCategory: product.subCategory || "",
+                    code: product.hsCode ? "HS " + product.hsCode : "Product"
+                });
+            });
+
+            return Array.from(categories.entries()).map(([title, items], index) => ({
+                code: "Product category",
+                title,
+                desc: "Explore products across " + new Set(items.map(item => item.subCategory).filter(Boolean)).size + " product types",
+                bgClass: index % 2 === 0 ? "bg-gray-50" : "bg-white",
+                items
+            }));
+        }
+
+        if (catalogRenderer) {
+            renderProductCatalog(productCatalog);
+            fetch(RENDER_API_URL + "/api/products")
+                .then(response => response.ok ? response.json() : null)
+                .then(data => {
+                    if (!data || !data.success || !Array.isArray(data.products) || !data.products.length) return;
+                    const publishedCatalog = groupPublishedProducts(data.products);
+                    if (publishedCatalog.length) renderProductCatalog(productCatalog.concat(publishedCatalog));
+                })
+                .catch(() => {
+                    // Keep the existing catalog visible when the API is unavailable.
+                });
         }
 
         // --- Toast Logic ---
