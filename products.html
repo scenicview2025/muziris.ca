@@ -7,10 +7,7 @@
     
     <!-- 🟢 B2B SEO META TAGS -->
     <meta name="description" content="Explore Muziris International’s B2B range of adhesive tapes, vinyl films, packaging materials, and polyethylene sheets sourced from India.">
-    
-ipt>
-         
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -292,14 +289,14 @@ ipt>
         function renderProductCatalog(sections) {
             if (!catalogRenderer) return;
 
-            let htmlContent = '<div class="bg-slate-50 px-6 md:px-16 py-8 border-b border-gray-200"><div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-5"><div><p class="text-blue-700 text-xs font-extrabold uppercase tracking-[0.2em]">Browse by category</p><p class="text-slate-600 text-sm mt-1">Find the right material for your application.</p></div><nav aria-label="Catalog categories" class="flex flex-wrap gap-2">';
+            let htmlContent = '<div class="bg-slate-50 px-6 md:px-16 py-6 md:py-8 border-b border-gray-200 sticky top-16 md:top-0 z-30 shadow-sm"><div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-5"><div><p class="text-blue-700 text-xs font-extrabold uppercase tracking-[0.2em]">Browse by category</p><p class="text-slate-600 text-sm mt-1">Find the right material for your application.</p></div><nav aria-label="Catalog categories" class="flex flex-wrap gap-2">';
             sections.forEach((section, sectionIndex) => {
                 htmlContent += '<a href="#catalog-category-' + sectionIndex + '" class="rounded-full bg-white border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:border-blue-600 hover:text-blue-700 transition">' + escapeCatalogText(section.title) + '</a>';
             });
             htmlContent += '</nav></div></div>';
 
             sections.forEach((section, sectionIndex) => {
-                htmlContent += '<section id="catalog-category-' + sectionIndex + '" class="scroll-mt-6 py-14 md:py-20 px-6 md:px-16 ' + section.bgClass + ' border-b border-gray-200"><div class="max-w-7xl mx-auto"><div class="mb-10 border-b border-gray-200 pb-6"><span class="inline-flex items-center gap-2 bg-blue-50 text-blue-800 text-xs font-extrabold px-3 py-1.5 uppercase tracking-widest mb-4 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> ' + escapeCatalogText(section.code) + '</span><h2 class="text-3xl md:text-4xl font-black text-navy-900 tracking-tight">' + escapeCatalogText(section.title) + '</h2><p class="text-gray-600 mt-2 font-medium">' + escapeCatalogText(section.desc) + ' <span class="text-gray-400 mx-2">·</span> ' + section.items.length + ' product options</p></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">';
+                htmlContent += '<section id="catalog-category-' + sectionIndex + '" class="scroll-mt-52 md:scroll-mt-28 py-14 md:py-20 px-6 md:px-16 ' + section.bgClass + ' border-b border-gray-200"><div class="max-w-7xl mx-auto"><div class="mb-10 border-b border-gray-200 pb-6"><span class="inline-flex items-center gap-2 bg-blue-50 text-blue-800 text-xs font-extrabold px-3 py-1.5 uppercase tracking-widest mb-4 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> ' + escapeCatalogText(section.code) + '</span><h2 class="text-3xl md:text-4xl font-black text-navy-900 tracking-tight">' + escapeCatalogText(section.title) + '</h2><p class="text-gray-600 mt-2 font-medium">' + escapeCatalogText(section.desc) + ' <span class="text-gray-400 mx-2">·</span> ' + section.items.length + ' product options</p></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">';
 
                 section.items.forEach(item => {
                     const imageUrl = safeCatalogImageUrl(item.img) || productImageFallback;
