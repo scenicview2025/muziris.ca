@@ -84,6 +84,34 @@
             background-attachment: fixed;
         }
 
+        .route-line {
+            stroke-dasharray: 8 12;
+            animation: route-flow 14s linear infinite;
+        }
+        @keyframes route-flow { to { stroke-dashoffset: -80; } }
+        .route-pulse {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: route-pulse 2.8s ease-out infinite;
+        }
+        .route-pulse-two { animation-delay: 0.75s; }
+        .route-pulse-three { animation-delay: 1.5s; }
+        .service-card { transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease; }
+        .service-card:hover {
+            transform: translateY(-4px);
+            border-color: #b8c9e7;
+            box-shadow: 0 18px 35px rgba(10, 25, 47, 0.10);
+        }
+        @keyframes route-pulse {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .route-line, .route-pulse { animation: none; }
+            .service-card { transition: none; }
+            .service-card:hover { transform: none; }
+        }
+
         /* Custom form input styling */
         .ref-input {
             width: 100%;
@@ -277,119 +305,93 @@
             </a>
         </section>
 
-        <!-- SERVICES / WHY US SECTION -->
-        <section id="services" class="services-bg text-white py-16 md:py-20 px-6 md:px-16">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
-                
-                <!-- Left Column: Why Us -->
+        <!-- WHY MUZIRIS -->
+        <section id="why-muziris" class="bg-slate-50 py-16 md:py-24 px-6 md:px-16">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                 <div>
-                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mb-6 uppercase">Why Muziris?</h2>
-                    <p class="text-gray-100 font-medium leading-relaxed mb-8 text-sm sm:text-base">
-                        We are your Canada-based point of contact for sourcing in India. Request delivered-cost quotes, review samples and follow production through factory updates. Choose a shipping plan that fits your order—from courier and air to LCL and full containers—with customs support for delivery in Canada.
+                    <p class="text-brandBlue font-extrabold text-xs md:text-sm tracking-[0.2em] uppercase mb-4">Why MUZIRIS</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-navy-900 leading-tight mb-6">A clearer way to buy from India.</h2>
+                    <p class="text-slate-600 text-base md:text-lg leading-relaxed mb-9 max-w-2xl">
+                        Work with one Canadian point of contact from the first supplier quote through delivery. Compare landed costs, review complimentary samples and follow production progress before your order ships.
                     </p>
-
-                    <!-- Two column bullet list -->
-                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs sm:text-sm font-bold uppercase tracking-wide">
-                        <li class="flex items-start gap-2">
-                            <span class="text-white mt-1">•</span>
-                            Factory updates and quality checks
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-white mt-1">•</span>
-                            Delivered-cost quotations
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-white mt-1">•</span>
-                            Canadian corporate payment option
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-white mt-1">•</span>
-                            Samples and product review
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-white mt-1">•</span>
-                            Pay locally through Muziris
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-white mt-1">•</span>
-                            Customs and delivery coordination
-                        </li>
-                    </ul>
-
-                    <a href="#contact" class="inline-block mt-10 md:mt-12 w-full sm:w-auto text-center bg-white text-navy-900 font-bold px-8 py-4 uppercase text-sm hover:bg-gray-200 transition">
-                        TALK WITH OUR TEAM &rarr;
+                    <div class="space-y-5 max-w-2xl">
+                        <div class="flex gap-4 border-t border-slate-200 pt-5">
+                            <span class="flex-shrink-0 w-9 h-9 rounded-full bg-blue-100 text-brandBlue flex items-center justify-center font-black text-sm">01</span>
+                            <div><h3 class="font-bold text-navy-900 mb-1">Know the delivered cost</h3><p class="text-slate-600 text-sm leading-relaxed">Request a DDP quotation to compare product and shipping costs before you commit.</p></div>
+                        </div>
+                        <div class="flex gap-4 border-t border-slate-200 pt-5">
+                            <span class="flex-shrink-0 w-9 h-9 rounded-full bg-blue-100 text-brandBlue flex items-center justify-center font-black text-sm">02</span>
+                            <div><h3 class="font-bold text-navy-900 mb-1">Review before a larger order</h3><p class="text-slate-600 text-sm leading-relaxed">Request complimentary samples and factory photos or video to review products and production.</p></div>
+                        </div>
+                        <div class="flex gap-4 border-t border-slate-200 pt-5">
+                            <span class="flex-shrink-0 w-9 h-9 rounded-full bg-blue-100 text-brandBlue flex items-center justify-center font-black text-sm">03</span>
+                            <div><h3 class="font-bold text-navy-900 mb-1">Pay locally through MUZIRIS</h3><p class="text-slate-600 text-sm leading-relaxed">Work through our Canadian business while we coordinate with your supplier in India.</p></div>
+                        </div>
+                    </div>
+                    <a href="#contact" class="inline-flex items-center gap-3 mt-9 bg-brandBlue text-white font-bold px-7 py-4 text-sm hover:bg-brandBlue-dark transition group">
+                        TALK WITH OUR TEAM
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
                 </div>
-
-                <!-- Right Column: 2x2 Grid of Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                    
-                    <!-- Card 1 -->
-                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy-900 via-[#12395c] to-[#0d5c75] p-7 sm:p-9 md:p-11 text-white shadow-2xl">
+                    <div class="absolute -right-16 -top-16 w-56 h-56 rounded-full border border-white/10"></div>
+                    <div class="absolute -right-5 -top-5 w-36 h-36 rounded-full border border-white/10"></div>
+                    <div class="relative">
+                        <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-bold tracking-[0.18em] uppercase text-white/80">India <span aria-hidden="true">↔</span> Canada</span>
+                        <h3 class="text-2xl md:text-3xl font-black mt-5 mb-2">One local point of contact.</h3>
+                        <p class="text-blue-100 text-sm md:text-base leading-relaxed max-w-md">Sourcing, production visibility and shipment coordination—connected in one clear route.</p>
+                        <svg class="w-full h-auto mt-6 mb-2 overflow-visible" viewBox="0 0 500 180" role="img" aria-labelledby="route-title route-desc">
+                            <title id="route-title">India to Canada sourcing route</title>
+                            <desc id="route-desc">A three-step route connecting Canadian buyers with suppliers in India and delivery back to Canada.</desc>
+                            <path class="route-line" d="M40 118 C100 26 175 26 250 90 S400 154 460 54" fill="none" stroke="#9edcf0" stroke-width="3" stroke-linecap="round"/>
+                            <circle class="route-pulse route-pulse-one" cx="40" cy="118" r="12" fill="none" stroke="#f4c66a" stroke-width="2"/>
+                            <circle class="route-pulse route-pulse-two" cx="250" cy="90" r="12" fill="none" stroke="#f4c66a" stroke-width="2"/>
+                            <circle class="route-pulse route-pulse-three" cx="460" cy="54" r="12" fill="none" stroke="#f4c66a" stroke-width="2"/>
+                            <circle cx="40" cy="118" r="6" fill="#f4c66a"/><circle cx="250" cy="90" r="6" fill="#f4c66a"/><circle cx="460" cy="54" r="6" fill="#f4c66a"/>
                         </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">DIRECT SOURCING</h3>
-                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
-                            We help Canadian buyers connect with Indian manufacturers for plastics, films, packaging, tapes and related goods.
-                        </p>
+                        <div class="grid grid-cols-3 gap-3 border-t border-white/20 pt-4">
+                            <div><p class="text-[10px] font-bold tracking-[0.15em] uppercase text-blue-100/70">Canada</p><p class="text-xs md:text-sm font-semibold mt-1">Plan &amp; quote</p></div>
+                            <div class="text-center"><p class="text-[10px] font-bold tracking-[0.15em] uppercase text-blue-100/70">India</p><p class="text-xs md:text-sm font-semibold mt-1">Source &amp; review</p></div>
+                            <div class="text-right"><p class="text-[10px] font-bold tracking-[0.15em] uppercase text-blue-100/70">Canada</p><p class="text-xs md:text-sm font-semibold mt-1">Ship &amp; deliver</p></div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <!-- Card 2 -->
-                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">OCEAN & AIR FREIGHT</h3>
-                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
-                            Compare courier, air, LCL and FCL options based on your shipment size, timing and delivery requirements.
-                        </p>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">CUSTOMS CLEARANCE</h3>
-                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
-                            We help coordinate Canadian customs requirements and documentation as goods move across the border.
-                        </p>
-                    </div>
-
-                    <!-- Card 4 -->
-                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                        </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">DOOR TO DOOR HANDLING</h3>
-                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
-                            We coordinate the shipment from pickup in India through delivery in Canada, with the service scope agreed for each shipment.
-                        </p>
-                    </div>
-
-                    <!-- Card 5 -->
-                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">LANDED-COST QUOTES</h3>
-                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
-                            Request a DDP delivered-cost quote to compare product and shipping options before you commit.
-                        </p>
-                    </div>
-
-                    <!-- Card 6 -->
-                    <div class="bg-white text-center p-6 md:p-8 flex flex-col items-center justify-center shadow-2xl">
-                        <svg class="w-10 h-10 md:w-12 md:h-12 text-brandBlue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <h3 class="text-brandBlue font-extrabold uppercase mb-2 md:mb-3 text-xs md:text-sm tracking-widest">SAMPLES &amp; QUALITY REVIEW</h3>
-                        <p class="text-gray-600 text-xs md:text-sm font-medium leading-relaxed">
-                            Request complimentary samples in Canada, plus factory photos or video, to review products and production before a larger order.
-                        </p>
-                    </div>
-
+        <!-- SERVICES -->
+        <section id="services" class="bg-[#edf3f8] py-16 md:py-24 px-6 md:px-16">
+            <div class="max-w-7xl mx-auto">
+                <div class="max-w-3xl mb-10 md:mb-14">
+                    <p class="text-brandBlue font-extrabold text-xs md:text-sm tracking-[0.2em] uppercase mb-4">Services</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-navy-900 leading-tight mb-4">Practical support at every step.</h2>
+                    <p class="text-slate-600 text-base md:text-lg leading-relaxed">Choose the support that fits your order—from finding a supplier to coordinating delivery in Canada.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                    <article class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
+                        <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+                        <h3 class="text-lg font-extrabold text-navy-900 mb-2">Find the right supplier</h3><p class="text-slate-600 text-sm leading-relaxed">Connect with Indian manufacturers for plastics, films, packaging, tapes and related goods.</p>
+                    </article>
+                    <article class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
+                        <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M8 7h8m-8 4h8m-8 4h5m-7 6h12a2 2 0 002-2V5a2 2 0 00-2-2H8L4 7v12a2 2 0 002 2z"/></svg></div>
+                        <h3 class="text-lg font-extrabold text-navy-900 mb-2">Clear, delivered-cost quotes</h3><p class="text-slate-600 text-sm leading-relaxed">Request a DDP quotation to compare product and shipping options before placing an order.</p>
+                    </article>
+                    <article class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
+                        <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                        <h3 class="text-lg font-extrabold text-navy-900 mb-2">Samples &amp; production visibility</h3><p class="text-slate-600 text-sm leading-relaxed">Request complimentary samples and factory photos or video to review products and production.</p>
+                    </article>
+                    <article class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
+                        <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M3 7h11v10H3zM14 10h4l3 3v4h-7zM7 20a2 2 0 100-4 2 2 0 000 4zm11 0a2 2 0 100-4 2 2 0 000 4z"/></svg></div>
+                        <h3 class="text-lg font-extrabold text-navy-900 mb-2">Shipping that fits your order</h3><p class="text-slate-600 text-sm leading-relaxed">Compare courier, air, LCL and FCL options around your shipment size and timing.</p>
+                    </article>
+                    <article class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
+                        <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M9 12l2 2 4-4m5.6-2A11.9 11.9 0 0112 5a11.9 11.9 0 01-6.6 3A12 12 0 003 11c0 5 3.8 9.3 9 10.6 5.2-1.3 9-5.6 9-10.6 0-.7-.1-1.4-.2-2z"/></svg></div>
+                        <h3 class="text-lg font-extrabold text-navy-900 mb-2">Customs support</h3><p class="text-slate-600 text-sm leading-relaxed">Coordinate Canadian import requirements and documentation as goods move across the border.</p>
+                    </article>
+                    <article class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
+                        <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M8 7h12m0 0l-4-4m4 4l-4 4M4 17h12m0 0l-4-4m4 4l-4 4"/></svg></div>
+                        <h3 class="text-lg font-extrabold text-navy-900 mb-2">Door-to-door coordination</h3><p class="text-slate-600 text-sm leading-relaxed">Coordinate pickup in India through delivery in Canada, with the service scope agreed for each shipment.</p>
+                    </article>
                 </div>
             </div>
         </section>
