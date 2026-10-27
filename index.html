@@ -629,7 +629,7 @@
 
         const handleSend = async () => {
             const text = inputField.value.trim();
-            if (!text) return;
+            if (!text || sendChatBtn.disabled) return;
 
             inputField.value = '';
             inputField.disabled = true;
@@ -646,47 +646,37 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
             try {
-                const geminiHistory = chatHistory.map(msg => ({
-                    role: msg.role === 'model' ? 'model' : 'user',
-                    parts: [{ text: msg.parts[0].text }]
-                }));
-                geminiHistory.push({ role: 'user', parts: [{ text }] });
-
-                const payload = {
-                    contents: geminiHistory,
-                    systemInstruction: {
-                        parts: [{ text: "You are the Muziris sourcing assistant. Help Canadian business buyers understand Muziris services: sourcing from India, freight coordination, customs support and delivery planning. Be concise and professional. Do not promise tariff savings, specific rates, customs outcomes, supplier audits or delivery timelines. For quotes and shipment-specific questions, direct visitors to the contact form." }]
-                    }
-                };
-
-                const apiKey = ""; // API key is injected automatically by the Canvas runtime
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                const response = await fetch(apiUrl, {
+                const response = await fetch(`${RENDER_API_URL}/api/public-web-chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ message: text, chatHistory: chatHistory.slice(-20) }),
+                    signal: AbortSignal.timeout(60000)
                 });
 
                 const result = await response.json();
-                document.getElementById('ai-loading').remove();
-                
-                if (result.candidates && result.candidates[0].content) {
-                    const replyText = result.candidates[0].content.parts[0].text;
-                    addMessageToUI(replyText, false);
-                    chatHistory.push({ role: "user", parts: [{ text: text }] });
-                    chatHistory.push({ role: "model", parts: [{ text: replyText }] });
-                } else {
-                    addMessageToUI("I'm currently undergoing maintenance. Please use the contact form above!", false);
+                if (!response.ok || result.success !== true ||
+                    typeof result.reply !== 'string' || !result.reply.trim()) {
+                    throw new Error('Chat service unavailable');
                 }
-            } catch (error) {
-                document.getElementById('ai-loading')?.remove();
-                addMessageToUI("Network error. Please use the contact form.", false);
-            }
 
-            inputField.disabled = false;
-            sendChatBtn.disabled = false;
-            inputField.focus();
+                const replyText = result.reply.trim();
+                addMessageToUI(replyText, false);
+                chatHistory.push({ role: 'user', parts: [{ text }] });
+                chatHistory.push({ role: 'model', parts: [{ text: replyText }] });
+                chatHistory = chatHistory.slice(-20);
+            } catch (error) {
+                addMessageToUI(
+                    error.name === 'TimeoutError'
+                        ? 'The assistant is taking longer than expected. Please try again or use the contact form.'
+                        : 'The assistant is temporarily unavailable. Please try again or use the contact form.',
+                    false
+                );
+            } finally {
+                loadingDiv.remove();
+                inputField.disabled = false;
+                sendChatBtn.disabled = false;
+                inputField.focus();
+            }
         };
 
         sendChatBtn.addEventListener('click', handleSend);
