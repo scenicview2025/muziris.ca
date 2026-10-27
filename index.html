@@ -144,6 +144,7 @@
             opacity: 1;
         }
     </style>
+    <link rel="stylesheet" href="public-enquiry.css">
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden w-full max-w-[100vw]">
 
@@ -547,141 +548,6 @@
             }, 4000);
         }
 
-        // ==========================================
-        // 1. CONTACT FORM LOGIC
-        // ==========================================
-        const contactForm = document.getElementById('contact-form');
-        
-        if (contactForm) {
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                // 1. Instantly change button to a short success message (No loading spinner)
-                const originalBtnText = submitBtn.innerHTML;
-                submitBtn.innerHTML = "MESSAGE SENT ✓";
-                submitBtn.classList.add('!bg-green-600'); // Turn button green
-                submitBtn.disabled = true;
-
-                // 2. Instantly show the success toast
-                showToast("Thanks! We will contact you shortly.", "success");
-
-                // 3. Gather form data
-                const formData = {
-                    name: document.getElementById('contact-name').value,
-                    company: document.getElementById('contact-company').value,
-                    phone: document.getElementById('contact-phone').value,
-                    email: document.getElementById('contact-email').value,
-                    message: document.getElementById('contact-message').value
-                };
-
-                // 4. Send in the background! (keepalive ensures it sends even if they close the tab)
-                fetch(`${RENDER_API_URL}/api/contact`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
-                    keepalive: true 
-                }).catch(err => console.log("Background email send error", err));
-
-                // 5. Reset the form and button after 4 seconds
-                setTimeout(() => {
-                    contactForm.reset();
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.classList.remove('!bg-green-600');
-                    submitBtn.disabled = false;
-                }, 4000);
-            });
-        }
-
-        // ==========================================
-        // 2. AI CHATBOT LOGIC
-        // ==========================================
-        const aiToggleBtn = document.getElementById('ai-chat-toggle');
-        const aiCloseBtn = document.getElementById('ai-chat-close');
-        const chatWindow = document.getElementById('ai-chat-window');
-        const messagesContainer = document.getElementById('ai-chat-messages');
-        const inputField = document.getElementById('ai-chat-input');
-        const sendChatBtn = document.getElementById('ai-chat-send');
-
-        let chatHistory = [];
-
-        const toggleChat = () => {
-            chatWindow.classList.toggle('hidden');
-            chatWindow.classList.toggle('flex');
-            if (!chatWindow.classList.contains('hidden')) setTimeout(() => inputField.focus(), 100);
-        };
-
-        aiToggleBtn.addEventListener('click', toggleChat);
-        aiCloseBtn.addEventListener('click', toggleChat);
-
-        const addMessageToUI = (text, isUser) => {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `p-3 max-w-[85%] shadow-sm leading-relaxed text-sm font-medium ${
-                isUser 
-                ? 'bg-navy-900 text-white self-end rounded-tl-xl rounded-br-xl rounded-bl-xl' 
-                : 'bg-white border border-gray-200 text-gray-800 self-start rounded-tr-xl rounded-br-xl rounded-bl-xl'
-            }`;
-            msgDiv.textContent = text;
-            messagesContainer.appendChild(msgDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        };
-
-        const handleSend = async () => {
-            const text = inputField.value.trim();
-            if (!text || sendChatBtn.disabled) return;
-
-            inputField.value = '';
-            inputField.disabled = true;
-            sendChatBtn.disabled = true;
-
-            addMessageToUI(text, true);
-
-            // Add Loading dots
-            const loadingDiv = document.createElement('div');
-            loadingDiv.id = 'ai-loading';
-            loadingDiv.className = 'bg-white border border-gray-200 text-gray-500 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm flex items-center gap-2';
-            loadingDiv.innerHTML = '<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>';
-            messagesContainer.appendChild(loadingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            try {
-                const response = await fetch(`${RENDER_API_URL}/api/public-web-chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text, chatHistory: chatHistory.slice(-20) }),
-                    signal: AbortSignal.timeout(60000)
-                });
-
-                const result = await response.json();
-                if (!response.ok || result.success !== true ||
-                    typeof result.reply !== 'string' || !result.reply.trim()) {
-                    throw new Error('Chat service unavailable');
-                }
-
-                const replyText = result.reply.trim();
-                addMessageToUI(replyText, false);
-                chatHistory.push({ role: 'user', parts: [{ text }] });
-                chatHistory.push({ role: 'model', parts: [{ text: replyText }] });
-                chatHistory = chatHistory.slice(-20);
-            } catch (error) {
-                addMessageToUI(
-                    error.name === 'TimeoutError'
-                        ? 'The assistant is taking longer than expected. Please try again or use the contact form.'
-                        : 'The assistant is temporarily unavailable. Please try again or use the contact form.',
-                    false
-                );
-            } finally {
-                loadingDiv.remove();
-                inputField.disabled = false;
-                sendChatBtn.disabled = false;
-                inputField.focus();
-            }
-        };
-
-        sendChatBtn.addEventListener('click', handleSend);
-        inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
-
         // --- Mobile Menu Toggle Logic ---
         const mobBtn = document.getElementById('mobile-menu-btn');
         const mobMenu = document.getElementById('mobile-menu');
@@ -709,5 +575,7 @@
     </script>
 
 
+    <script src="public-enquiry.js" data-api="https://muziris-api.onrender.com"></script>
 </body>
 </html>
+

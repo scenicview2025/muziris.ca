@@ -1,0 +1,32 @@
+/* Generated from brand/muziris-theme.json; keep shared token values synchronized. */
+:root {
+  --muziris-navy:#0A192F; --muziris-blue:#0033A0; --muziris-gold:#F4C66A;
+  --muziris-ocean:#0D5C75; --muziris-white:#FFFFFF; --muziris-mist:#EDF3F8;
+  --muziris-ink:#1F2937; --muziris-muted:#596776;
+  --muziris-font-body:Arial,Helvetica,sans-serif;
+}
+.m-enquiry-consent,.m-enquiry-help,.m-enquiry-status,.m-enquiry-form {font-family:var(--muziris-font-body);color:var(--muziris-ink);font-size:14px;line-height:1.5}
+.m-enquiry-consent {display:flex;gap:10px;align-items:flex-start;margin:16px 0;text-align:left}
+.m-enquiry-consent input {margin-top:4px;flex:0 0 auto;width:18px;height:18px;accent-color:var(--muziris-blue)}
+.m-enquiry-status {margin-top:12px;overflow-wrap:anywhere}
+.m-enquiry-help {padding:8px 12px;color:var(--muziris-muted);font-size:12px}
+.m-enquiry-trap {position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important}
+.m-enquiry-review,.m-enquiry-form button {background:var(--muziris-blue);color:var(--muziris-white);border:0;padding:12px 16px;cursor:pointer;font:600 14px var(--muziris-font-body)}
+.m-enquiry-review {margin:8px 12px 0}
+.m-enquiry-review:focus-visible,.m-enquiry-form :focus-visible,.m-enquiry-consent input:focus-visible {outline:3px solid var(--muziris-ocean);outline-offset:3px}
+.m-enquiry-form {padding:16px;overflow-y:auto;min-height:0;background:var(--muziris-white)}
+.m-enquiry-form h3 {font-weight:600;font-size:18px;color:var(--muziris-navy);margin-bottom:8px}
+.m-enquiry-form label {display:block;margin-top:12px}
+.m-enquiry-form input:not([type=checkbox]),.m-enquiry-form textarea {display:block;width:100%;min-width:0;padding:10px;border:1px solid var(--muziris-muted);color:var(--muziris-ink);background:var(--muziris-white);font:16px/1.4 var(--muziris-font-body)}
+.m-enquiry-form textarea {min-height:90px;resize:vertical}
+.m-enquiry-form label.m-enquiry-consent {display:flex}
+.m-enquiry-form .m-enquiry-back {background:var(--muziris-mist);color:var(--muziris-navy);margin-left:6px}
+.m-enquiry-form button:disabled,.m-enquiry-review:disabled {opacity:.6;cursor:wait}
+.m-enquiry-message {white-space:pre-wrap;background:var(--muziris-white);color:var(--muziris-ink);padding:12px;max-width:90%;align-self:flex-start;border:1px solid var(--muziris-mist);font:14px/1.5 var(--muziris-font-body);overflow-wrap:anywhere}
+.m-enquiry-message.m-enquiry-user {background:var(--muziris-navy);color:var(--muziris-white);align-self:flex-end}
+#ai-chat-window {max-height:min(720px,calc(100dvh - 160px))}
+#ai-chat-window > div:first-child {flex-shrink:0}
+#ai-chat-window .m-enquiry-form {flex:1 1 auto}
+#ai-chat-input {min-width:0}
+#ai-chat-window [hidden] {display:none!important}
+
