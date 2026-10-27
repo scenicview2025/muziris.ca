@@ -658,7 +658,7 @@
                 const result = await response.json();
                 if (!response.ok || result.success !== true ||
                     typeof result.reply !== 'string' || !result.reply.trim()) {
-                    throw new Error('Chat service unavailable');
+                    throw Object.assign(new Error('Chat service unavailable'), {status: response.status});
                 }
 
                 const replyText = result.reply.trim();
@@ -678,10 +678,13 @@
                 chatHistory.push({ role: 'model', parts: [{ text: replyText }] });
                 chatHistory = chatHistory.slice(-20);
             } catch (error) {
+                if (!inputField.value) inputField.value = text;
                 addMessageToUI(
-                    error.name === 'TimeoutError'
-                        ? 'The assistant is taking longer than expected. Please try again or use the contact form.'
-                        : 'The assistant is temporarily unavailable. Please try again or use the contact form.',
+                    error.status === 429
+                        ? 'Our assistant is busy right now. Please try again later, or use the enquiry form to reach our team.'
+                        : error.name === 'TimeoutError'
+                            ? 'The assistant is taking longer than expected. Please try again or use the contact form.'
+                            : 'The assistant is temporarily unavailable. Please try again or use the contact form.',
                     false
                 );
             } finally {
