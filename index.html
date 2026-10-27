@@ -144,6 +144,7 @@
             opacity: 1;
         }
     </style>
+    <link rel="stylesheet" href="public-enquiry.css">
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden w-full max-w-[100vw]">
 
@@ -493,7 +494,7 @@
         <!-- Messages Area -->
         <div id="ai-chat-messages" class="p-5 h-80 overflow-y-auto flex flex-col gap-4 bg-[#f8fafc] text-sm font-medium">
             <div class="bg-white border border-gray-200 text-gray-800 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm leading-relaxed">
-                Hello! I’m the Muziris sourcing assistant. Ask me about sourcing from India, freight options or import support in Canada.
+                Hi! How can I help you today?
             </div>
         </div>
 
@@ -547,151 +548,6 @@
             }, 4000);
         }
 
-        // ==========================================
-        // 1. CONTACT FORM LOGIC
-        // ==========================================
-        const contactForm = document.getElementById('contact-form');
-        
-        if (contactForm) {
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                // 1. Instantly change button to a short success message (No loading spinner)
-                const originalBtnText = submitBtn.innerHTML;
-                submitBtn.innerHTML = "MESSAGE SENT ✓";
-                submitBtn.classList.add('!bg-green-600'); // Turn button green
-                submitBtn.disabled = true;
-
-                // 2. Instantly show the success toast
-                showToast("Thanks! We will contact you shortly.", "success");
-
-                // 3. Gather form data
-                const formData = {
-                    name: document.getElementById('contact-name').value,
-                    company: document.getElementById('contact-company').value,
-                    phone: document.getElementById('contact-phone').value,
-                    email: document.getElementById('contact-email').value,
-                    message: document.getElementById('contact-message').value
-                };
-
-                // 4. Send in the background! (keepalive ensures it sends even if they close the tab)
-                fetch(`${RENDER_API_URL}/api/contact`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
-                    keepalive: true 
-                }).catch(err => console.log("Background email send error", err));
-
-                // 5. Reset the form and button after 4 seconds
-                setTimeout(() => {
-                    contactForm.reset();
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.classList.remove('!bg-green-600');
-                    submitBtn.disabled = false;
-                }, 4000);
-            });
-        }
-
-        // ==========================================
-        // 2. AI CHATBOT LOGIC
-        // ==========================================
-        const aiToggleBtn = document.getElementById('ai-chat-toggle');
-        const aiCloseBtn = document.getElementById('ai-chat-close');
-        const chatWindow = document.getElementById('ai-chat-window');
-        const messagesContainer = document.getElementById('ai-chat-messages');
-        const inputField = document.getElementById('ai-chat-input');
-        const sendChatBtn = document.getElementById('ai-chat-send');
-
-        let chatHistory = [];
-
-        const toggleChat = () => {
-            chatWindow.classList.toggle('hidden');
-            chatWindow.classList.toggle('flex');
-            if (!chatWindow.classList.contains('hidden')) setTimeout(() => inputField.focus(), 100);
-        };
-
-        aiToggleBtn.addEventListener('click', toggleChat);
-        aiCloseBtn.addEventListener('click', toggleChat);
-
-        const addMessageToUI = (text, isUser) => {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `p-3 max-w-[85%] shadow-sm leading-relaxed text-sm font-medium ${
-                isUser 
-                ? 'bg-navy-900 text-white self-end rounded-tl-xl rounded-br-xl rounded-bl-xl' 
-                : 'bg-white border border-gray-200 text-gray-800 self-start rounded-tr-xl rounded-br-xl rounded-bl-xl'
-            }`;
-            msgDiv.textContent = text;
-            messagesContainer.appendChild(msgDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        };
-
-        const handleSend = async () => {
-            const text = inputField.value.trim();
-            if (!text) return;
-
-            inputField.value = '';
-            inputField.disabled = true;
-            sendChatBtn.disabled = true;
-
-            addMessageToUI(text, true);
-
-            // Add Loading dots
-            const loadingDiv = document.createElement('div');
-            loadingDiv.id = 'ai-loading';
-            loadingDiv.className = 'bg-white border border-gray-200 text-gray-500 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm flex items-center gap-2';
-            loadingDiv.innerHTML = '<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>';
-            messagesContainer.appendChild(loadingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            try {
-                const geminiHistory = chatHistory.map(msg => ({
-                    role: msg.role === 'model' ? 'model' : 'user',
-                    parts: [{ text: msg.parts[0].text }]
-                }));
-                geminiHistory.push({ role: 'user', parts: [{ text }] });
-
-                const payload = {
-                    contents: geminiHistory,
-                    systemInstruction: {
-                        parts: [{ text: "You are the Muziris sourcing assistant. Help Canadian business buyers understand Muziris services: sourcing from India, freight coordination, customs support and delivery planning. Be concise and professional. Do not promise tariff savings, specific rates, customs outcomes, supplier audits or delivery timelines. For quotes and shipment-specific questions, direct visitors to the contact form." }]
-                    }
-                };
-
-                const apiKey = ""; // API key is injected automatically by the Canvas runtime
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                document.getElementById('ai-loading').remove();
-                
-                if (result.candidates && result.candidates[0].content) {
-                    const replyText = result.candidates[0].content.parts[0].text;
-                    addMessageToUI(replyText, false);
-                    chatHistory.push({ role: "user", parts: [{ text: text }] });
-                    chatHistory.push({ role: "model", parts: [{ text: replyText }] });
-                } else {
-                    addMessageToUI("I'm currently undergoing maintenance. Please use the contact form above!", false);
-                }
-            } catch (error) {
-                document.getElementById('ai-loading')?.remove();
-                addMessageToUI("Network error. Please use the contact form.", false);
-            }
-
-            inputField.disabled = false;
-            sendChatBtn.disabled = false;
-            inputField.focus();
-        };
-
-        sendChatBtn.addEventListener('click', handleSend);
-        inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
-
         // --- Mobile Menu Toggle Logic ---
         const mobBtn = document.getElementById('mobile-menu-btn');
         const mobMenu = document.getElementById('mobile-menu');
@@ -719,5 +575,7 @@
     </script>
 
 
+    <script src="public-enquiry.js" data-api="https://muziris-api.onrender.com"></script>
 </body>
 </html>
+

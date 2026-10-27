@@ -60,6 +60,7 @@ ipt>
             backdrop-filter: blur(4px);
         }
     </style>
+    <link rel="stylesheet" href="public-enquiry.css">
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden">
 
@@ -156,7 +157,7 @@ ipt>
         </div>
         <div id="ai-chat-messages" class="p-5 h-80 overflow-y-auto flex flex-col gap-4 bg-[#f8fafc] text-sm font-medium">
             <div class="bg-white border border-gray-200 text-gray-800 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm leading-relaxed">
-                Hello! I'm the Muziris AI Sourcing Assistant. Need help finding a specific packaging material or plastic wrap to bypass the 50% US tariff?
+                Hi! How can I help you today?
             </div>
         </div>
         <div class="p-3 border-t border-gray-200 bg-white flex gap-2">
@@ -409,121 +410,6 @@ ipt>
             if(e.target === quoteModal) closeQuoteModal();
         });
 
-        // --- Quote Form Submit Logic ---
-        quoteForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const originalBtnText = quoteSubmitBtn.innerHTML;
-            quoteSubmitBtn.innerHTML = "SENDING... <svg class='w-4 h-4 animate-spin inline' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'></path></svg>";
-            quoteSubmitBtn.disabled = true;
-
-            const formData = {
-                name: document.getElementById('quote-name').value,
-                company: document.getElementById('quote-company').value,
-                phone: document.getElementById('quote-phone').value,
-                email: document.getElementById('quote-email').value,
-                message: `[Product Request: ${quoteProductInput.value}] \n\n${document.getElementById('quote-message').value}`
-            };
-
-            try {
-                const response = await fetch(`${RENDER_API_URL}/api/contact`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    showToast("Quote Request Sent Successfully!", "success");
-                    closeQuoteModal();
-                } else {
-                    showToast("Something went wrong. Please try again or call us.", "error");
-                }
-            } catch (err) {
-                showToast("Network error. Please try again.", "error");
-            } finally {
-                quoteSubmitBtn.innerHTML = originalBtnText;
-                quoteSubmitBtn.disabled = false;
-            }
-        });
-
-        // --- AI Chatbot Logic ---
-        const aiToggleBtn = document.getElementById('ai-chat-toggle');
-        const aiCloseBtn = document.getElementById('ai-chat-close');
-        const chatWindow = document.getElementById('ai-chat-window');
-        const messagesContainer = document.getElementById('ai-chat-messages');
-        const inputField = document.getElementById('ai-chat-input');
-        const sendChatBtn = document.getElementById('ai-chat-send');
-
-        let chatHistory = [];
-
-        const toggleChat = () => {
-            chatWindow.classList.toggle('hidden');
-            chatWindow.classList.toggle('flex');
-            if (!chatWindow.classList.contains('hidden')) setTimeout(() => inputField.focus(), 100);
-        };
-
-        aiToggleBtn.addEventListener('click', toggleChat);
-        aiCloseBtn.addEventListener('click', toggleChat);
-
-        const addMessageToUI = (text, isUser) => {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `p-3 max-w-[85%] shadow-sm leading-relaxed text-sm font-medium ${
-                isUser 
-                ? 'bg-navy-900 text-white self-end rounded-tl-xl rounded-br-xl rounded-bl-xl' 
-                : 'bg-white border border-gray-200 text-gray-800 self-start rounded-tr-xl rounded-br-xl rounded-bl-xl'
-            }`;
-            msgDiv.textContent = text;
-            messagesContainer.appendChild(msgDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        };
-
-        const handleSend = async () => {
-            const text = inputField.value.trim();
-            if (!text) return;
-
-            inputField.value = '';
-            inputField.disabled = true;
-            sendChatBtn.disabled = true;
-
-            addMessageToUI(text, true);
-
-            const loadingDiv = document.createElement('div');
-            loadingDiv.id = 'ai-loading';
-            loadingDiv.className = 'bg-white border border-gray-200 text-gray-500 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm flex items-center gap-2';
-            loadingDiv.innerHTML = '<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>';
-            messagesContainer.appendChild(loadingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            try {
-                const response = await fetch(`${RENDER_API_URL}/api/public-web-chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text, chatHistory: chatHistory })
-                });
-
-                const data = await response.json();
-                document.getElementById('ai-loading').remove();
-                
-                if (data.success) {
-                    addMessageToUI(data.reply, false);
-                    chatHistory.push({ role: "user", parts: [{ text: text }] });
-                    chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
-                } else {
-                    addMessageToUI(data.reply || "Error connecting to AI.", false);
-                }
-            } catch (error) {
-                document.getElementById('ai-loading').remove();
-                addMessageToUI("Network error. Please call our team directly.", false);
-            }
-
-            inputField.disabled = false;
-            sendChatBtn.disabled = false;
-            inputField.focus();
-        };
-
-        sendChatBtn.addEventListener('click', handleSend);
-        inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
-
         // --- Mobile Menu Toggle Logic ---
         const mobBtn = document.getElementById('mobile-menu-btn');
         const mobMenu = document.getElementById('mobile-menu');
@@ -549,5 +435,7 @@ ipt>
         mobLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
     });
     </script>
+    <script src="public-enquiry.js" data-api="https://muziris-api.onrender.com"></script>
 </body>
 </html>
+
