@@ -156,7 +156,7 @@ ipt>
         </div>
         <div id="ai-chat-messages" class="p-5 h-80 overflow-y-auto flex flex-col gap-4 bg-[#f8fafc] text-sm font-medium">
             <div class="bg-white border border-gray-200 text-gray-800 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm leading-relaxed">
-                Hello! I'm the Muziris AI Sourcing Assistant. Need help finding a specific packaging material or plastic wrap to bypass the 50% US tariff?
+                Hi! How can I help you today?
             </div>
         </div>
         <div class="p-3 border-t border-gray-200 bg-white flex gap-2">
@@ -455,6 +455,8 @@ ipt>
         const sendChatBtn = document.getElementById('ai-chat-send');
 
         let chatHistory = [];
+        inputField.maxLength = 4000;
+        const prefilled = new Map();
 
         const toggleChat = () => {
             chatWindow.classList.toggle('hidden');
@@ -479,7 +481,7 @@ ipt>
 
         const handleSend = async () => {
             const text = inputField.value.trim();
-            if (!text) return;
+            if (!text || sendChatBtn.disabled) return;
 
             inputField.value = '';
             inputField.disabled = true;
@@ -487,6 +489,7 @@ ipt>
 
             addMessageToUI(text, true);
 
+            // Add Loading dots
             const loadingDiv = document.createElement('div');
             loadingDiv.id = 'ai-loading';
             loadingDiv.className = 'bg-white border border-gray-200 text-gray-500 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm flex items-center gap-2';
@@ -498,27 +501,45 @@ ipt>
                 const response = await fetch(`${RENDER_API_URL}/api/public-web-chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text, chatHistory: chatHistory })
+                    body: JSON.stringify({ message: text, chatHistory: chatHistory.slice(-20) }),
+                    signal: AbortSignal.timeout(60000)
                 });
 
-                const data = await response.json();
-                document.getElementById('ai-loading').remove();
-                
-                if (data.success) {
-                    addMessageToUI(data.reply, false);
-                    chatHistory.push({ role: "user", parts: [{ text: text }] });
-                    chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
-                } else {
-                    addMessageToUI(data.reply || "Error connecting to AI.", false);
+                const result = await response.json();
+                if (!response.ok || result.success !== true ||
+                    typeof result.reply !== 'string' || !result.reply.trim()) {
+                    throw new Error('Chat service unavailable');
                 }
-            } catch (error) {
-                document.getElementById('ai-loading').remove();
-                addMessageToUI("Network error. Please call our team directly.", false);
-            }
 
-            inputField.disabled = false;
-            sendChatBtn.disabled = false;
-            inputField.focus();
+                const replyText = result.reply.trim();
+                addMessageToUI(replyText, false);
+                // Drafts fill the existing form only; the visitor must review and submit it.
+                const prefix = document.getElementById('contact-form') ? 'contact' : 'quote';
+                for (const field of ['name', 'company', 'email', 'phone', 'message']) {
+                    const element = document.getElementById(prefix + '-' + field);
+                    const value = result.draft?.[field];
+                    if (element && typeof value === 'string' && value.trim() &&
+                        (!element.value.trim() || element.value === prefilled.get(field))) {
+                        element.value = value.trim().slice(0, field === 'message' ? 5000 : 254);
+                        prefilled.set(field, element.value);
+                    }
+                }
+                chatHistory.push({ role: 'user', parts: [{ text }] });
+                chatHistory.push({ role: 'model', parts: [{ text: replyText }] });
+                chatHistory = chatHistory.slice(-20);
+            } catch (error) {
+                addMessageToUI(
+                    error.name === 'TimeoutError'
+                        ? 'The assistant is taking longer than expected. Please try again or use the contact form.'
+                        : 'The assistant is temporarily unavailable. Please try again or use the contact form.',
+                    false
+                );
+            } finally {
+                loadingDiv.remove();
+                inputField.disabled = false;
+                sendChatBtn.disabled = false;
+                inputField.focus();
+            }
         };
 
         sendChatBtn.addEventListener('click', handleSend);
