@@ -64,53 +64,16 @@
         .category-hero-overlay { background:linear-gradient(90deg,rgba(10,25,47,.96) 0%,rgba(10,25,47,.86) 42%,rgba(10,25,47,.58) 100%); }
         @media(max-width:767px) { .category-hero-overlay { background:linear-gradient(90deg,rgba(10,25,47,.88),rgba(10,25,47,.76)); } }
         </style>
+<script src="assets/catalogue-navigation.js" defer></script>
+<link rel="stylesheet" href="assets/uniform-navigation.css">
+<script src="assets/shared-sourcing.js" defer></script>
+<link rel="stylesheet" href="assets/rail-navigation.css">
+<script src="assets/rail-navigation.js" defer></script>
+<link rel="canonical" href="https://muziris.ca/paper-packaging.html">
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden">
-
-    <header class="md:hidden fixed top-0 left-0 w-full h-16 bg-navy-900 flex items-center justify-between px-4 z-[60] border-b border-gray-700 shadow-md">
-        <a href="catalogue.html" class="text-white font-extrabold text-lg tracking-widest uppercase">Muziris</a>
-        <button id="mobile-menu-btn" type="button" aria-label="Open navigation" aria-controls="mobile-menu" aria-expanded="false" class="text-white p-2">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-        </button>
-    </header>
-
-    <div id="mobile-menu" class="fixed inset-0 bg-navy-900 z-[55] hidden flex-col pt-24 px-6 pb-6 transform transition-transform duration-300">
-        <a href="catalogue.html" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:underline transition">HOME</a>
-        <a href="catalogue.html" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 transition">CATALOG</a>
-        <a href="catalogue.html#contact" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:underline transition">CONTACT US</a>
+<body class="uniform-site rail-site uniform-product"><a class="unf-skip" href="#main">Skip to content</a><aside id="rail-sidebar" class="rail-sidebar" aria-label="Main navigation"><button id="rail-menu-toggle" class="rail-menu-toggle" type="button" aria-label="Open navigation" aria-controls="rail-menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><nav id="rail-links" class="rail-links" aria-label="Website sections"><a data-rail-section="products" href="catalogue.html">PRODUCTS</a><a data-rail-section="sourcing" href="index.html#sourcing">SOURCING</a><a data-rail-section="logistics" href="index.html#logistics">LOGISTICS</a></nav><a id="rail-brand" class="rail-brand" href="index.html" aria-label="MUZIRIS home">MUZIRIS</a></aside><header id="rail-mobile-header" class="rail-mobile-header"><a class="rail-mobile-brand" href="index.html">MUZIRIS</a><button id="rail-mobile-toggle" class="rail-mobile-toggle" type="button" aria-label="Open navigation" aria-controls="rail-menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></header><nav id="rail-topnav" class="rail-topnav" aria-label="Quick navigation"><a data-rail-section="products" href="catalogue.html">CATALOG <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14v11H5zM8 9V5h8v4M5 13h14M9 5V3h6v2"/></svg></a><a data-rail-section="services" href="index.html#services">ALL SERVICES <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V3m-7 7 7-7 7 7"/></svg></a><a data-rail-section="contact" href="index.html#contact"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="6" r="3"/><path d="M3 21v-5a6 6 0 0 1 12 0v5M6 21v-5m6 5v-5M18 9a3 3 0 1 0-1-5m1 8a5 5 0 0 1 4 5v4"/></svg> CONTACT US <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-7-7 7 7-7 7"/></svg></a></nav><main id="main" class="uniform-main">
         
-        <div class="mt-auto pt-8">
-            <p class="text-gray-400 text-sm mb-2 font-bold tracking-widest">CALL US TODAY</p>
-            <p class="text-white text-2xl font-black">+1-636-689-4747</p>
-        </div>
-    </div>
-
-    <aside class="hidden md:flex fixed left-0 top-0 h-full w-sidebar md:w-sidebar-md bg-navy-900 border-r border-gray-700 flex-col justify-between items-center py-6 z-50">
-        <a href="catalogue.html" class="w-full flex justify-center pb-6 border-b border-gray-700 hover:bg-navy-800 transition py-2">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-        </a>
-        <div class="flex-grow flex flex-col justify-center items-center gap-12 text-gray-400 text-sm font-bold tracking-widest">
-            <a href="catalogue.html" class="vertical-text text-white transition cursor-pointer">CATALOG</a>
-            <a href="catalogue.html#services" class="vertical-text hover:text-white transition cursor-pointer">SOURCING</a>
-            <a href="catalogue.html#logistics" class="vertical-text hover:text-white transition cursor-pointer">LOGISTICS</a>
-        </div>
-        <div class="pb-8">
-            <span class="vertical-text text-white font-extrabold text-xl tracking-widest">MUZIRIS</span>
-        </div>
-    </aside>
-
-    <main class="flex-1 w-full flex flex-col mt-16 md:mt-0 md:ml-sidebar-md relative bg-white">
         
-        <div class="absolute top-0 right-0 z-40 hidden md:flex">
-            <a href="catalogue.html" class="bg-navy-800 text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-navy-700 transition">
-                HOME
-            </a>
-            <a href="catalogue.html#contact" class="bg-brandBlue text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-brandBlue-dark transition shadow-md">
-                CONTACT US <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </a>
-        </div>
 
         <section class="bg-navy-900 pt-16 md:pt-28 pb-16 md:pb-20 px-6 md:px-16 text-left relative overflow-hidden">
             <div aria-hidden="true" class="absolute inset-0 category-hero-image" style="background-image:url('https://res.cloudinary.com/dh6lyhlki/image/upload/v1791859834/muziris/categories/paper-packaging-hero-20261012-v1.png')"></div>
@@ -119,6 +82,7 @@
             <div class="absolute -right-8 -bottom-24 w-64 h-64 rounded-full border border-white/10"></div>
             <div class="relative z-10 max-w-7xl mx-auto mt-4"><nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-200"><a href="catalogue.html" class="underline underline-offset-4">Catalogue overview</a><span aria-hidden="true"> / </span><span>Paper Packaging</span></nav>
                 <p class="inline-flex items-center gap-2 text-blue-200 font-bold tracking-[0.22em] mb-5 text-xs uppercase"><span class="w-8 h-px bg-blue-300"></span> Muziris · Custom sourcing</p>
+                
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight mb-6 leading-[1.05] max-w-4xl">Paper packaging,<br><span class="text-blue-200">planned around your order.</span></h1>
                 <p class="text-gray-200 text-base md:text-lg leading-relaxed max-w-2xl">Explore boxes, cartons, sacks and bags for your packing needs. Send a sourcing enquiry; specifications, availability and quotations are confirmed with the supplier.</p>
                 <a href="#catalog" class="inline-flex items-center gap-3 mt-8 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-4 transition shadow-lg shadow-blue-950/30">Explore the catalog <span aria-hidden="true">↓</span></a>
@@ -132,16 +96,9 @@
 
 <section id="custom-sourcing" class="px-6 md:px-16 py-12 bg-slate-50 border-t border-gray-200"><div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 md:items-center md:justify-between"><div><h2 class="text-2xl font-bold text-navy-900 mb-2">Can't find your product?</h2><p class="text-gray-600 max-w-2xl">Share the product type, intended use and quantity. Supplier options, specifications and pricing are reviewed for your enquiry.</p></div><button type="button" id="custom-sourcing-button" onclick="openQuoteModal('', true)" class="bg-brandBlue text-white font-bold px-6 py-4 rounded-md">Request custom sourcing →</button></div></section>
         <!-- Footer -->
-        <footer class="bg-navy-900 border-t border-gray-800 text-center py-10 flex flex-col items-center justify-center">
-            <p class="text-gray-400 font-bold text-sm tracking-widest uppercase mb-2">Draft preview · © 2026 Muziris International Inc.</p>
-            <div class="flex items-center gap-3 text-xs tracking-widest uppercase font-bold">
-                <span class="text-brandBlue">Based in Canada</span>
-                <span class="text-gray-600">•</span>
-                <span class="text-gray-400">Rooted in India</span>
-            </div>
-        </footer>
+        
 
-    </main>
+    </main><footer id="uniform-footer" class="unf-footer"><div class="unf-footer-inner"><div><a class="unf-footer-brand" href="index.html">MUZIRIS</a><p>Canada-based sourcing · Connected with India</p></div><nav aria-label="Footer navigation"><a href="index.html">Home</a><a href="catalogue.html">Catalogue</a><a href="index.html#services">Sourcing &amp; logistics</a><a href="index.html#contact">Contact</a></nav></div></footer>
     
     <!-- AI Chatbot Toggle Button -->
     <button id="ai-chat-toggle" class="fixed bottom-6 right-4 md:bottom-10 md:right-10 bg-brandBlue text-white p-4 shadow-2xl hover:bg-brandBlue-dark transition-transform hover:scale-105 z-50 flex items-center justify-center border-2 border-white/20 rounded-full md:rounded-none">
@@ -573,9 +530,7 @@
 
         // --- Quote Form Submit Logic ---
         quoteForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!window.MUZIRIS_CATALOGUE_TEST_TRANSPORT) { showToast('Review preview: enquiry delivery is disabled.', 'error'); return; }
-            const originalBtnText = quoteSubmitBtn.innerHTML;
+            e.preventDefault();            const originalBtnText = quoteSubmitBtn.innerHTML;
             quoteSubmitBtn.innerHTML = "SENDING... <svg class='w-4 h-4 animate-spin inline' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'></path></svg>";
             quoteSubmitBtn.disabled = true;
 
@@ -618,6 +573,8 @@
         const sendChatBtn = document.getElementById('ai-chat-send');
 
         let chatHistory = [];
+        inputField.maxLength = 4000;
+        const prefilled = new Map();
 
         const toggleChat = () => {
             chatWindow.classList.toggle('hidden');
@@ -641,9 +598,8 @@
         };
 
         const handleSend = async () => {
-            if (!window.MUZIRIS_CATALOGUE_TEST_TRANSPORT) { addMessageToUI('Review preview: chat is disabled.', false); return; }
             const text = inputField.value.trim();
-            if (!text) return;
+            if (!text || sendChatBtn.disabled) return;
 
             inputField.value = '';
             inputField.disabled = true;
@@ -651,6 +607,7 @@
 
             addMessageToUI(text, true);
 
+            // Add Loading dots
             const loadingDiv = document.createElement('div');
             loadingDiv.id = 'ai-loading';
             loadingDiv.className = 'bg-white border border-gray-200 text-gray-500 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm flex items-center gap-2';
@@ -659,24 +616,51 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
             try {
-                const data = { success: true, reply: "For product sourcing, select a product and send an enquiry with your dimensions, quantity and intended use. Our team follows up with supplier-confirmed specifications, availability and a quotation." };
-                document.getElementById('ai-loading').remove();
-                
-                if (data.success) {
-                    addMessageToUI(data.reply, false);
-                    chatHistory.push({ role: "user", parts: [{ text: text }] });
-                    chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
-                } else {
-                    addMessageToUI(data.reply || "Error connecting to AI.", false);
-                }
-            } catch (error) {
-                document.getElementById('ai-loading').remove();
-                addMessageToUI("Network error. Please call our team directly.", false);
-            }
+                const response = await fetch(`${RENDER_API_URL}/api/public-web-chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, chatHistory: chatHistory.slice(-20) }),
+                    signal: AbortSignal.timeout(60000)
+                });
 
-            inputField.disabled = false;
-            sendChatBtn.disabled = false;
-            inputField.focus();
+                const result = await response.json();
+                if (!response.ok || result.success !== true ||
+                    typeof result.reply !== 'string' || !result.reply.trim()) {
+                    throw Object.assign(new Error('Chat service unavailable'), {status: response.status});
+                }
+
+                const replyText = result.reply.trim();
+                addMessageToUI(replyText, false);
+                // Drafts fill the existing form only; the visitor must review and submit it.
+                const prefix = document.getElementById('contact-form') ? 'contact' : 'quote';
+                for (const field of ['name', 'company', 'email', 'phone', 'message']) {
+                    const element = document.getElementById(prefix + '-' + field);
+                    const value = result.draft?.[field];
+                    if (element && typeof value === 'string' && value.trim() &&
+                        (!element.value.trim() || element.value === prefilled.get(field))) {
+                        element.value = value.trim().slice(0, field === 'message' ? 5000 : 254);
+                        prefilled.set(field, element.value);
+                    }
+                }
+                chatHistory.push({ role: 'user', parts: [{ text }] });
+                chatHistory.push({ role: 'model', parts: [{ text: replyText }] });
+                chatHistory = chatHistory.slice(-20);
+            } catch (error) {
+                if (!inputField.value) inputField.value = text;
+                addMessageToUI(
+                    error.status === 429
+                        ? 'Our assistant is busy right now. Please try again later, or use the enquiry form to reach our team.'
+                        : error.name === 'TimeoutError'
+                            ? 'The assistant is taking longer than expected. Please try again or use the contact form.'
+                            : 'The assistant is temporarily unavailable. Please try again or use the contact form.',
+                    false
+                );
+            } finally {
+                loadingDiv.remove();
+                inputField.disabled = false;
+                sendChatBtn.disabled = false;
+                inputField.focus();
+            }
         };
 
         sendChatBtn.addEventListener('click', handleSend);
@@ -709,5 +693,19 @@
         mobLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
     });
     </script>
-</body>
+<dialog id="sourcing-dialog" aria-labelledby="source-title" aria-describedby="source-intro">
+ <div class="dialog-card">
+  <header class="dialog-header"><div><p class="eyebrow">CUSTOM SOURCING</p><h2 id="source-title">Tell us what you need.</h2></div><button id="sourcing-close" class="close-button" type="button" aria-label="Close sourcing request">×</button></header>
+  <p id="source-intro">A product name or a reference is enough to start. Add any specifications you already know.</p>
+  <p class="sourcing-notice">Share your requirements and contact details for a supplier sourcing review.</p>
+  <form id="custom-source-form">
+   <label for="source-product">Product or application <span aria-hidden="true">*</span></label><input id="source-product" name="product" required maxlength="160" placeholder="What would you like to source?">
+   <div class="field-grid"><div><label for="source-quantity">Approximate quantity</label><input id="source-quantity" name="quantity" maxlength="120" placeholder="e.g. 500 units"></div><div><label for="source-location">Canadian delivery location</label><input id="source-location" name="location" maxlength="160" placeholder="City or postal code"></div></div>
+   <label for="source-reference">Reference link <span class="optional">(optional)</span></label><input id="source-reference" name="reference" type="url" maxlength="1000" placeholder="https://">
+   <label for="source-details">Requirements <span class="optional">(optional)</span></label><textarea id="source-details" name="details" rows="3" maxlength="2500" placeholder="Dimensions, material, intended use, printing or anything you need help choosing."></textarea>
+   <div class="contact-fields"><div class="field-grid"><div><label for="source-name">Your name *</label><input id="source-name" name="name" autocomplete="name" required maxlength="160"></div><div><label for="source-email">Email *</label><input id="source-email" name="email" type="email" autocomplete="email" required maxlength="254"></div></div><div class="field-grid"><div><label for="source-company">Company (optional)</label><input id="source-company" name="company" autocomplete="organization" maxlength="160"></div><div><label for="source-phone">Phone (optional)</label><input id="source-phone" name="phone" type="tel" autocomplete="tel" maxlength="80"></div></div></div><button class="primary-button form-submit" type="submit">Send sourcing enquiry <span aria-hidden="true">→</span></button>
+  </form>
+  <div id="source-preview" class="source-preview" role="status" hidden></div>
+ </div>
+</dialog><dialog id="rail-menu" class="rail-menu" aria-label="Website navigation"><div class="rail-menu-panel"><div class="rail-menu-heading"><a class="rail-menu-word" href="index.html">MUZIRIS</a><button id="rail-menu-close" class="rail-menu-close" type="button" aria-label="Close navigation">×</button></div><nav id="rail-menu-links" class="rail-menu-links" aria-label="Expanded navigation"><a data-rail-section="home" href="index.html">HOME</a><a data-rail-section="products" href="catalogue.html">CATALOG</a><a data-rail-section="sourcing" href="index.html#sourcing">SOURCING</a><a data-rail-section="logistics" href="index.html#logistics">LOGISTICS</a><a data-rail-section="contact" href="index.html#contact">CONTACT US</a></nav><details class="rail-menu-categories"><summary>Browse categories</summary><nav id="rail-menu-categories" aria-label="Catalogue categories"><a href="paper-packaging.html">Paper Packaging</a><a href="wooden-shipping.html">Wooden Shipping Packaging</a><a href="products.html#catalog-category-0">Adhesive Tapes &amp; Rolls</a><a href="products.html#catalog-category-1">Labels &amp; Signage</a><a href="products.html#catalog-category-2">Films &amp; Sheets</a></nav></details><button id="rail-request-sourcing" class="rail-request" type="button">Request custom sourcing <span aria-hidden="true">↗</span></button></div></dialog></body>
 </html>
