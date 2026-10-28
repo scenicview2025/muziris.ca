@@ -433,8 +433,9 @@
         
         <!-- Messages Area -->
         <div id="ai-chat-messages" class="p-5 h-80 overflow-y-auto flex flex-col gap-4 bg-[#f8fafc] text-sm font-medium">
-            <div class="bg-white border border-gray-200 text-gray-800 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm leading-relaxed">
-                Hi! How can I help you today?
+            <div id="ai-chat-welcome" aria-live="polite" aria-atomic="true" class="bg-white border border-gray-200 text-gray-800 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[85%] self-start shadow-sm leading-relaxed">
+                <span id="ai-welcome-visual" aria-hidden="true">Welcome to MUZIRIS! How can I help you today?</span>
+                <span id="ai-welcome-announcement" class="sr-only"></span>
             </div>
         </div>
 
@@ -549,11 +550,61 @@
         inputField.maxLength = 4000;
         const prefilled = new Map();
 
+        const welcomeText = 'Welcome to MUZIRIS! How can I help you today?';
+        const welcomeMessage = document.getElementById('ai-chat-welcome');
+        const welcomeVisual = document.getElementById('ai-welcome-visual');
+        const welcomeAnnouncement = document.getElementById('ai-welcome-announcement');
+        let welcomeStarted = false;
+        let welcomeFinished = false;
+        let welcomeTimer;
+
+        const finishWelcome = () => {
+            if (welcomeFinished) return;
+            welcomeFinished = true;
+            clearTimeout(welcomeTimer);
+            welcomeVisual.textContent = welcomeText;
+            welcomeAnnouncement.textContent = welcomeText;
+            welcomeMessage.removeAttribute('aria-busy');
+        };
+
+        const startWelcome = () => {
+            if (welcomeStarted) return;
+            welcomeStarted = true;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                finishWelcome();
+                return;
+            }
+            let characters = 0;
+            welcomeVisual.textContent = '';
+            welcomeMessage.setAttribute('aria-busy', 'true');
+            const typeCharacter = () => {
+                welcomeVisual.textContent = welcomeText.slice(0, ++characters);
+                if (characters < welcomeText.length) {
+                    welcomeTimer = setTimeout(typeCharacter, 24);
+                } else {
+                    finishWelcome();
+                }
+            };
+            typeCharacter();
+        };
+
         const toggleChat = () => {
             chatWindow.classList.toggle('hidden');
             chatWindow.classList.toggle('flex');
-            if (!chatWindow.classList.contains('hidden')) setTimeout(() => inputField.focus(), 100);
+            const isOpen = !chatWindow.classList.contains('hidden');
+            aiToggleBtn.setAttribute('aria-expanded', String(isOpen));
+            if (isOpen) {
+                startWelcome();
+                setTimeout(() => inputField.focus(), 100);
+            } else if (welcomeStarted) {
+                finishWelcome();
+            }
         };
+
+        // Let a customer start immediately without waiting for the welcome to finish.
+        inputField.addEventListener('input', () => {
+            if (welcomeStarted) finishWelcome();
+        });
 
         aiToggleBtn.addEventListener('click', toggleChat);
         aiCloseBtn.addEventListener('click', toggleChat);
@@ -573,6 +624,7 @@
         const handleSend = async () => {
             const text = inputField.value.trim();
             if (!text || sendChatBtn.disabled) return;
+            finishWelcome();
 
             inputField.value = '';
             inputField.disabled = true;
