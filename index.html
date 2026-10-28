@@ -588,6 +588,11 @@
             typeCharacter();
         };
 
+        let finishActiveReply = null;
+        const finishReplyTyping = () => {
+            if (finishActiveReply) finishActiveReply();
+        };
+
         const toggleChat = () => {
             chatWindow.classList.toggle('hidden');
             chatWindow.classList.toggle('flex');
@@ -598,12 +603,14 @@
                 setTimeout(() => inputField.focus(), 100);
             } else if (welcomeStarted) {
                 finishWelcome();
+                finishReplyTyping();
             }
         };
 
         // Let a customer start immediately without waiting for the welcome to finish.
         inputField.addEventListener('input', () => {
             if (welcomeStarted) finishWelcome();
+            finishReplyTyping();
         });
 
         aiToggleBtn.addEventListener('click', toggleChat);
@@ -616,7 +623,57 @@
                 ? 'bg-navy-900 text-white self-end rounded-tl-xl rounded-br-xl rounded-bl-xl' 
                 : 'bg-white border border-gray-200 text-gray-800 self-start rounded-tr-xl rounded-br-xl rounded-bl-xl'
             }`;
-            msgDiv.textContent = text;
+            if (isUser) {
+                msgDiv.textContent = text;
+            } else {
+                finishReplyTyping();
+                const visual = document.createElement('span');
+                visual.setAttribute('aria-hidden', 'true');
+                const announcement = document.createElement('span');
+                announcement.className = 'sr-only';
+                msgDiv.setAttribute('role', 'status');
+                msgDiv.setAttribute('aria-live', 'polite');
+                msgDiv.setAttribute('aria-atomic', 'true');
+                msgDiv.style.whiteSpace = 'pre-wrap';
+                msgDiv.append(visual, announcement);
+                const characters = Array.from(text);
+                // Keep longer replies moving while using the welcome's typing cadence.
+                const step = Math.max(1, Math.ceil(characters.length / 180));
+                let position = 0;
+                let timer;
+                let finished = false;
+                const showText = value => {
+                    const following = messagesContainer.scrollHeight - messagesContainer.scrollTop - messagesContainer.clientHeight < 64;
+                    visual.textContent = value;
+                    if (following) messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                };
+                const finish = () => {
+                    if (finished) return;
+                    finished = true;
+                    clearTimeout(timer);
+                    showText(text);
+                    announcement.textContent = text;
+                    msgDiv.removeAttribute('aria-busy');
+                    if (finishActiveReply === finish) finishActiveReply = null;
+                };
+                const typeCharacters = () => {
+                    position = Math.min(characters.length, position + step);
+                    showText(characters.slice(0, position).join(''));
+                    if (position < characters.length) timer = setTimeout(typeCharacters, 24);
+                    else finish();
+                };
+                messagesContainer.appendChild(msgDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                if (chatWindow.classList.contains('hidden') ||
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    finish();
+                } else {
+                    finishActiveReply = finish;
+                    msgDiv.setAttribute('aria-busy', 'true');
+                    typeCharacters();
+                }
+                return;
+            }
             messagesContainer.appendChild(msgDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         };
@@ -625,6 +682,7 @@
             const text = inputField.value.trim();
             if (!text || sendChatBtn.disabled) return;
             finishWelcome();
+            finishReplyTyping();
 
             inputField.value = '';
             inputField.disabled = true;
