@@ -1,0 +1,49 @@
+/* MUZIRIS foundation. Import explicitly; no global element styles.
+   Keep tokens synchronized with muziris-theme.json. URLs resolve relative to this file. */
+@font-face {
+  font-family: "Cinzel";
+  src: url("fonts/Cinzel-SemiBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("fonts/Montserrat-SemiBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+:root {
+  --muziris-navy: #0A192F;
+  --muziris-blue: #0033A0;
+  --muziris-gold: #F4C66A;
+  --muziris-ocean: #0D5C75;
+  --muziris-white: #FFFFFF;
+  --muziris-mist: #EDF3F8;
+  --muziris-ink: #1F2937;
+  --muziris-muted: #596776;
+  --muziris-font-brand: "Cinzel", Georgia, serif;
+  --muziris-font-heading: "Montserrat", Arial, Helvetica, sans-serif;
+  --muziris-font-body: Arial, Helvetica, sans-serif;
+  --muziris-heading-weight: 600;
+  --muziris-brand-tracking: 0.08em;
+  --muziris-descriptor-tracking: 0.16em;
+  --muziris-body-size: 1rem;
+  --muziris-body-line-height: 1.4;
+  --muziris-page-background: var(--muziris-white);
+  --muziris-header-background: var(--muziris-navy);
+  --muziris-header-text: var(--muziris-white);
+  --muziris-section-heading: var(--muziris-blue);
+  --muziris-body-text: var(--muziris-ink);
+  --muziris-secondary-text: var(--muziris-muted);
+  --muziris-table-header-background: var(--muziris-navy);
+  --muziris-table-header-text: var(--muziris-white);
+  --muziris-table-alternate-background: var(--muziris-mist);
+  --muziris-table-border: var(--muziris-mist);
+  --muziris-emphasized-price: var(--muziris-blue);
+  --muziris-decorative-accent: var(--muziris-gold);
+  --muziris-action-background: var(--muziris-blue);
+  --muziris-action-text: var(--muziris-white);
+  --muziris-focus: var(--muziris-ocean);
+}

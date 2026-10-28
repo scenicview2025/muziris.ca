@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MUZIRIS | India–Canada Sourcing</title>
     
     <!-- 🟢 B2B SEO META TAGS -->
@@ -144,75 +144,16 @@
             opacity: 1;
         }
     </style>
+<link rel="stylesheet" href="assets/muziris-theme.css"><link rel="stylesheet" href="assets/uniform-navigation.css"><link rel="stylesheet" href="assets/rail-navigation.css"><script src="assets/catalogue-navigation.js" defer></script><script src="assets/shared-sourcing.js" defer></script><script src="assets/rail-navigation.js" defer></script>
+<link rel="canonical" href="https://muziris.ca/">
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col md:flex-row min-h-screen antialiased overflow-x-hidden w-full max-w-[100vw]">
+<body class="uniform-site rail-site uniform-home"><a class="unf-skip" href="#main">Skip to content</a><aside id="rail-sidebar" class="rail-sidebar" aria-label="Main navigation"><button id="rail-menu-toggle" class="rail-menu-toggle" type="button" aria-label="Open navigation" aria-controls="rail-menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><nav id="rail-links" class="rail-links" aria-label="Website sections"><a data-rail-section="products" href="catalogue.html">PRODUCTS</a><a data-rail-section="sourcing" href="index.html#sourcing">SOURCING</a><a data-rail-section="logistics" href="index.html#logistics">LOGISTICS</a></nav><a id="rail-brand" class="rail-brand" href="index.html" aria-label="MUZIRIS home">MUZIRIS</a></aside><header id="rail-mobile-header" class="rail-mobile-header"><a class="rail-mobile-brand" href="index.html">MUZIRIS</a><button id="rail-mobile-toggle" class="rail-mobile-toggle" type="button" aria-label="Open navigation" aria-controls="rail-menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></header><nav id="rail-topnav" class="rail-topnav" aria-label="Quick navigation"><a data-rail-section="products" href="catalogue.html">CATALOG <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14v11H5zM8 9V5h8v4M5 13h14M9 5V3h6v2"/></svg></a><a data-rail-section="services" href="index.html#services">ALL SERVICES <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V3m-7 7 7-7 7 7"/></svg></a><a data-rail-section="contact" href="index.html#contact"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="6" r="3"/><path d="M3 21v-5a6 6 0 0 1 12 0v5M6 21v-5m6 5v-5M18 9a3 3 0 1 0-1-5m1 8a5 5 0 0 1 4 5v4"/></svg> CONTACT US <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-7-7 7 7-7 7"/></svg></a></nav>
 
-    <!-- Mobile Header (Sticky Top) -->
-    <header class="md:hidden fixed top-0 left-0 w-full h-16 bg-navy-900 flex items-center justify-between px-4 z-[60] border-b border-gray-700 shadow-md">
-        <span class="text-white font-extrabold text-lg tracking-widest uppercase">Muziris</span>
-        <button id="mobile-menu-btn" class="text-white p-2 focus:outline-none">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-        </button>
-    </header>
 
-    <!-- Mobile Fullscreen Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-navy-900 z-[55] hidden flex-col pt-24 px-6 pb-6 transform transition-transform duration-300">
-        <a href="products.html" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">PRODUCTS</a>
-        <a href="#services" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">SOURCING</a>
-        <a href="#services" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">LOGISTICS</a>
-        <a href="#contact" class="mobile-link text-white text-2xl font-bold py-4 border-b border-gray-700 hover:text-brandBlue transition">CONTACT US</a>
-        
-        <div class="mt-auto pt-8">
-            <p class="text-gray-400 text-sm mb-2 font-bold tracking-widest">CALL US TODAY</p>
-            <p class="text-white text-2xl font-black">+1-636-689-4747</p>
-        </div>
-    </div>
-
-    <!-- Fixed Left Sidebar (Desktop Only) -->
-    <aside class="hidden md:flex fixed left-0 top-0 h-full w-sidebar md:w-sidebar-md bg-navy-900 border-r border-gray-700 flex-col justify-between items-center py-6 z-50">
-        <!-- Top Menu Icon -->
-        <div class="w-full flex justify-center pb-6 border-b border-gray-700 cursor-pointer hover:bg-navy-800 transition py-2">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-        </div>
-
-        <!-- Middle Vertical Links -->
-        <div class="flex-grow flex flex-col justify-center items-center gap-12 text-gray-400 text-sm font-bold tracking-widest">
-            <a href="products.html" class="vertical-text hover:text-white transition cursor-pointer">PRODUCTS</a>
-            <a href="#services" class="vertical-text hover:text-white transition cursor-pointer">SOURCING</a>
-            <a href="#services" class="vertical-text hover:text-white transition cursor-pointer">LOGISTICS</a>
-        </div>
-
-        <!-- Bottom Brand Name -->
-        <div class="pb-8">
-            <span class="vertical-text text-white font-extrabold text-xl tracking-widest">
-                MUZIRIS
-            </span>
-        </div>
-    </aside>
-
-    <!-- Main Content Wrapper -->
-    <main class="flex-1 w-full flex flex-col mt-16 md:mt-0 md:ml-sidebar-md relative overflow-x-hidden">
+<main id="main" class="uniform-main">
         
         <!-- Top Right Navigation (Absolute, hidden on mobile) -->
-        <div class="absolute top-0 right-0 z-40 hidden md:flex">
-            <a href="products.html" class="bg-navy-800 text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-navy-700 transition">
-                CATALOG
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-            </a>
-            <a href="#services" class="bg-brandBlue text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-brandBlue-dark transition">
-                ALL SERVICES 
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-            </a>
-            <a href="#contact" class="bg-navy-900 text-white font-bold px-6 py-4 md:px-8 text-sm flex items-center gap-2 hover:bg-navy-800 transition border-l border-gray-700">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                CONTACT US 
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </a>
-        </div>
+        
 
         <!-- HERO SECTION -->
         <section class="min-h-[calc(100vh-4rem)] md:min-h-screen relative flex flex-col justify-center px-6 md:px-16 pt-20 md:pt-24 pb-10 overflow-hidden">
@@ -234,7 +175,7 @@
                         TALK TO OUR TEAM
                         <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
-                    <a href="products.html" class="inline-flex items-center justify-center w-full sm:w-auto gap-3 border border-white/70 text-white font-bold px-8 py-4 text-sm hover:bg-white/10 transition">
+                    <a href="catalogue.html" class="inline-flex items-center justify-center w-full sm:w-auto gap-3 border border-white/70 text-white font-bold px-8 py-4 text-sm hover:bg-white/10 transition">
                         EXPLORE PRODUCTS
                     </a>
                 </div>
@@ -265,13 +206,13 @@
                     <p class="text-brandBlue font-bold text-sm tracking-widest mb-2 uppercase">What we source</p>
                     <h2 class="text-3xl md:text-5xl font-black text-navy-900 leading-tight">Products for real-world operations</h2>
                 </div>
-                <a href="products.html" class="hidden md:inline-flex items-center gap-2 text-brandBlue font-bold hover:text-brandBlue-dark transition">
+                <a href="catalogue.html" class="hidden md:inline-flex items-center gap-2 text-brandBlue font-bold hover:text-brandBlue-dark transition">
                     VIEW FULL CATALOG <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </a>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <a href="products.html" class="group block cursor-pointer">
+                <a href="catalogue.html" class="group block cursor-pointer">
                     <div class="bg-gray-100 h-64 w-full mb-4 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Industrial Plastics">
                         <div class="absolute inset-0 bg-navy-900/10 group-hover:bg-transparent transition"></div>
@@ -280,7 +221,7 @@
                     <p class="text-gray-500 text-sm font-medium">Films, sheets and self-adhesive materials</p>
                 </a>
                 
-                <a href="products.html" class="group block cursor-pointer">
+                <a href="catalogue.html" class="group block cursor-pointer">
                     <div class="bg-gray-100 h-64 w-full mb-4 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Commercial Packaging">
                         <div class="absolute inset-0 bg-navy-900/10 group-hover:bg-transparent transition"></div>
@@ -289,7 +230,7 @@
                     <p class="text-gray-500 text-sm font-medium">HS 3923.21 | High-Volume Polyethylene</p>
                 </a>
 
-                <a href="products.html" class="group block cursor-pointer sm:hidden lg:block">
+                <a href="catalogue.html" class="group block cursor-pointer sm:hidden lg:block">
                     <div class="bg-gray-100 h-64 w-full mb-4 overflow-hidden relative">
                         <!-- Fixed Manufacturing Mold Image -->
                         <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Manufacturing Molds">
@@ -300,7 +241,7 @@
                 </a>
             </div>
             
-            <a href="products.html" class="mt-8 inline-flex md:hidden items-center justify-center w-full gap-2 border-2 border-brandBlue text-brandBlue font-bold py-4 hover:bg-brandBlue hover:text-white transition">
+            <a href="catalogue.html" class="mt-8 inline-flex md:hidden items-center justify-center w-full gap-2 border-2 border-brandBlue text-brandBlue font-bold py-4 hover:bg-brandBlue hover:text-white transition">
                 VIEW FULL CATALOG
             </a>
         </section>
@@ -368,7 +309,7 @@
                     <p class="text-slate-600 text-base md:text-lg leading-relaxed">Choose the support that fits your order—from finding a supplier to coordinating delivery in Canada.</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                    <article class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
+                    <article id="sourcing" class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
                         <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
                         <h3 class="text-lg font-extrabold text-navy-900 mb-2">Find the right supplier</h3><p class="text-slate-600 text-sm leading-relaxed">Connect with Indian manufacturers for plastics, films, packaging, tapes and related goods.</p>
                     </article>
@@ -380,7 +321,7 @@
                         <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
                         <h3 class="text-lg font-extrabold text-navy-900 mb-2">Samples &amp; production visibility</h3><p class="text-slate-600 text-sm leading-relaxed">Request complimentary samples and factory photos or video to review products and production.</p>
                     </article>
-                    <article class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
+                    <article id="logistics" class="service-card rounded-xl border border-slate-200 bg-white p-6 md:p-7 shadow-sm">
                         <div class="w-11 h-11 rounded-lg bg-blue-50 text-brandBlue flex items-center justify-center mb-5"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M3 7h11v10H3zM14 10h4l3 3v4h-7zM7 20a2 2 0 100-4 2 2 0 000 4zm11 0a2 2 0 100-4 2 2 0 000 4z"/></svg></div>
                         <h3 class="text-lg font-extrabold text-navy-900 mb-2">Shipping that fits your order</h3><p class="text-slate-600 text-sm leading-relaxed">Compare courier, air, LCL and FCL options around your shipment size and timing.</p>
                     </article>
@@ -472,7 +413,7 @@
             </div>
         </section>
 
-    <!-- AI Chatbot Toggle Button -->
+    </main><footer id="uniform-footer" class="unf-footer"><div class="unf-footer-inner"><div><a class="unf-footer-brand" href="index.html">MUZIRIS</a><p>Canada-based sourcing · Connected with India</p></div><nav aria-label="Footer navigation"><a href="index.html">Home</a><a href="catalogue.html">Catalogue</a><a href="index.html#services">Sourcing &amp; logistics</a><a href="index.html#contact">Contact</a></nav></div></footer><!-- AI Chatbot Toggle Button -->
     <button id="ai-chat-toggle" class="fixed bottom-6 right-4 md:bottom-10 md:right-10 bg-brandBlue text-white p-4 shadow-2xl hover:bg-brandBlue-dark transition-transform hover:scale-105 z-50 flex items-center justify-center border-2 border-white/20 rounded-full md:rounded-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
     </button>
@@ -725,6 +666,19 @@
     </script>
 
 
-</body>
+<dialog id="sourcing-dialog" aria-labelledby="source-title" aria-describedby="source-intro">
+ <div class="dialog-card">
+  <header class="dialog-header"><div><p class="eyebrow">CUSTOM SOURCING</p><h2 id="source-title">Tell us what you need.</h2></div><button id="sourcing-close" class="close-button" type="button" aria-label="Close sourcing request">×</button></header>
+  <p id="source-intro">A product name or a reference is enough to start. Add any specifications you already know.</p>
+  <p class="sourcing-notice">Share your requirements and contact details for a supplier sourcing review.</p>
+  <form id="custom-source-form">
+   <label for="source-product">Product or application <span aria-hidden="true">*</span></label><input id="source-product" name="product" required maxlength="160" placeholder="What would you like to source?">
+   <div class="field-grid"><div><label for="source-quantity">Approximate quantity</label><input id="source-quantity" name="quantity" maxlength="120" placeholder="e.g. 500 units"></div><div><label for="source-location">Canadian delivery location</label><input id="source-location" name="location" maxlength="160" placeholder="City or postal code"></div></div>
+   <label for="source-reference">Reference link <span class="optional">(optional)</span></label><input id="source-reference" name="reference" type="url" maxlength="1000" placeholder="https://">
+   <label for="source-details">Requirements <span class="optional">(optional)</span></label><textarea id="source-details" name="details" rows="3" maxlength="2500" placeholder="Dimensions, material, intended use, printing or anything you need help choosing."></textarea>
+   <div class="contact-fields"><div class="field-grid"><div><label for="source-name">Your name *</label><input id="source-name" name="name" autocomplete="name" required maxlength="160"></div><div><label for="source-email">Email *</label><input id="source-email" name="email" type="email" autocomplete="email" required maxlength="254"></div></div><div class="field-grid"><div><label for="source-company">Company (optional)</label><input id="source-company" name="company" autocomplete="organization" maxlength="160"></div><div><label for="source-phone">Phone (optional)</label><input id="source-phone" name="phone" type="tel" autocomplete="tel" maxlength="80"></div></div></div><button class="primary-button form-submit" type="submit">Send sourcing enquiry <span aria-hidden="true">→</span></button>
+  </form>
+  <div id="source-preview" class="source-preview" role="status" hidden></div>
+ </div>
+</dialog><dialog id="rail-menu" class="rail-menu" aria-label="Website navigation"><div class="rail-menu-panel"><div class="rail-menu-heading"><a class="rail-menu-word" href="index.html">MUZIRIS</a><button id="rail-menu-close" class="rail-menu-close" type="button" aria-label="Close navigation">×</button></div><nav id="rail-menu-links" class="rail-menu-links" aria-label="Expanded navigation"><a data-rail-section="home" href="index.html">HOME</a><a data-rail-section="products" href="catalogue.html">CATALOG</a><a data-rail-section="sourcing" href="index.html#sourcing">SOURCING</a><a data-rail-section="logistics" href="index.html#logistics">LOGISTICS</a><a data-rail-section="contact" href="index.html#contact">CONTACT US</a></nav><details class="rail-menu-categories"><summary>Browse categories</summary><nav id="rail-menu-categories" aria-label="Catalogue categories"><a href="paper-packaging.html">Paper Packaging</a><a href="wooden-shipping.html">Wooden Shipping Packaging</a><a href="products.html#catalog-category-0">Adhesive Tapes &amp; Rolls</a><a href="products.html#catalog-category-1">Labels &amp; Signage</a><a href="products.html#catalog-category-2">Films &amp; Sheets</a></nav></details><button id="rail-request-sourcing" class="rail-request" type="button">Request custom sourcing <span aria-hidden="true">↗</span></button></div></dialog></body>
 </html>
-

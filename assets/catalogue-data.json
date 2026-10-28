@@ -1,0 +1,581 @@
+{
+  "updated": "2026-10-27",
+  "scope": "Catalogue product families and styles for sourcing enquiries; not an inventory statement",
+  "categories": [
+    {
+      "id": "paper",
+      "title": "Paper Packaging",
+      "eyebrow": "BOXES, CARTONS, SACKS & BAGS",
+      "description": "Paper-based formats for packing, presenting and protecting your products.",
+      "href": "paper-packaging.html",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1791857953/muziris/products/die-cut-corrugated-mailer-representative-20261012-v1.png",
+          "alt": "Die-Cut Mailer Boxes"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1791858359/muziris/products/twisted-handle-kraft-bag-representative-20261012-v1.png",
+          "alt": "Twisted-Handle Paper Bags"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1791858365/muziris/products/pasted-valve-paper-sack-representative-20261012-v1.png",
+          "alt": "Pasted-Valve Paper Sacks"
+        }
+      ],
+      "subcategories": [
+        {
+          "label": "Boxes & cartons",
+          "href": "paper-packaging.html#catalog-category-0"
+        },
+        {
+          "label": "Sacks & bags",
+          "href": "paper-packaging.html#catalog-category-1"
+        },
+        {
+          "label": "Paper containers",
+          "href": "paper-packaging.html#catalog-category-2"
+        }
+      ],
+      "keywords": [
+        "paperboard",
+        "paper bags",
+        "carton",
+        "boxes",
+        "valve sacks",
+        "file boxes",
+        "documents"
+      ]
+    },
+    {
+      "id": "wood",
+      "title": "Wooden Shipping Packaging",
+      "eyebrow": "CASES, PALLETS & CABLE REELS",
+      "description": "Wooden packing formats to review around your cargo and handling needs.",
+      "href": "wooden-shipping.html",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1791858511/muziris/products/solid-board-wooden-case-representative-20261012-v1.png",
+          "alt": "Solid-Board Wooden Shipping Cases"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1791826339/muziris/products/wooden-pallets-representative-20261012-v1.png",
+          "alt": "Wooden Pallets"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1791858381/muziris/products/plywood-cable-reel-representative-20261012-v1.png",
+          "alt": "Plywood Cable Reels"
+        }
+      ],
+      "subcategories": [
+        {
+          "label": "Cases & crates",
+          "href": "wooden-shipping.html#catalog-category-0"
+        },
+        {
+          "label": "Pallets & load boards",
+          "href": "wooden-shipping.html#catalog-category-1"
+        },
+        {
+          "label": "Cable drums",
+          "href": "wooden-shipping.html#catalog-category-2"
+        }
+      ],
+      "keywords": [
+        "wood",
+        "wooden",
+        "timber",
+        "plywood",
+        "crate",
+        "pallet",
+        "cable drum",
+        "reel",
+        "shipping case"
+      ]
+    },
+    {
+      "id": "tapes",
+      "title": "Adhesive Tapes & Rolls",
+      "eyebrow": "SEALING, MOUNTING & MASKING",
+      "description": "Tape types for packing, bonding, masking and insulation applications.",
+      "href": "products.html#catalog-category-0",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790124075/BOPP_Packaging_Tape_n8de1k.png",
+          "alt": "BOPP Packaging Tape"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790125740/Double-Sided_Acrylic_Foam_Tape_q3kgih.png",
+          "alt": "Double-Sided Acrylic Foam Tape"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790126031/Electrical_Insulation_Tape_adbzmt.png",
+          "alt": "Electrical Insulation Tape"
+        }
+      ],
+      "subcategories": [
+        {
+          "label": "Box-sealing tape",
+          "href": "products.html#product-legacy-bopp-packaging-tape"
+        },
+        {
+          "label": "Mounting tape",
+          "href": "products.html#product-legacy-double-sided-acrylic-foam-tape"
+        },
+        {
+          "label": "Masking tape",
+          "href": "products.html#product-legacy-masking-painter-s-tape"
+        }
+      ],
+      "keywords": [
+        "adhesive",
+        "tape",
+        "bopp",
+        "foam",
+        "electrical",
+        "insulation",
+        "masking",
+        "rolls",
+        "retail labels"
+      ]
+    },
+    {
+      "id": "labels",
+      "title": "Labels & Signage",
+      "eyebrow": "STICKERS, LABELS & ADHESIVE FILMS",
+      "description": "Labelling, display and protective-surface materials for your application.",
+      "href": "products.html#catalog-category-1",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790129816/Product_Labels_Roll-fed_zhbxff.jpg",
+          "alt": "Product Labels (Roll-fed)"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790127629/Die-Cut_Vinyl_Stickers_w7upbw.jpg",
+          "alt": "Die-Cut Vinyl Stickers"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790130989/Surface_Protection_Film_dxzcuy.jpg",
+          "alt": "Surface Protection Film"
+        }
+      ],
+      "subcategories": [
+        {
+          "label": "Stickers & decals",
+          "href": "products.html#product-legacy-die-cut-vinyl-stickers"
+        },
+        {
+          "label": "Printed labels",
+          "href": "products.html#product-legacy-product-labels-roll-fed"
+        },
+        {
+          "label": "Protection films",
+          "href": "products.html#product-legacy-surface-protection-film"
+        }
+      ],
+      "keywords": [
+        "label",
+        "labels",
+        "sticker",
+        "decal",
+        "vinyl",
+        "signage",
+        "reflective",
+        "protection film",
+        "wrap"
+      ]
+    },
+    {
+      "id": "films",
+      "title": "Films & Sheets",
+      "eyebrow": "WRAPPING, COVERING & SHEETING",
+      "description": "Non-adhesive films and sheets for wrapping, covering and packing needs.",
+      "href": "products.html#catalog-category-2",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790131983/Pallet_Stretch_Wrap_LLDPE_jfyamq.jpg",
+          "alt": "Pallet Stretch Wrap (LLDPE)"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790132478/Polyethylene_Shrink_Film_hd2f6p.jpg",
+          "alt": "Polyethylene Shrink Film"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1790133307/Construction_Vapor_Barrier_fbi5o3.jpg",
+          "alt": "Construction Vapor Barrier"
+        }
+      ],
+      "subcategories": [
+        {
+          "label": "Stretch wrap",
+          "href": "products.html#product-legacy-pallet-stretch-wrap-lldpe"
+        },
+        {
+          "label": "Shrink film",
+          "href": "products.html#product-legacy-polyethylene-shrink-film"
+        },
+        {
+          "label": "Construction film",
+          "href": "products.html#product-legacy-construction-vapor-barrier"
+        }
+      ],
+      "keywords": [
+        "film",
+        "sheet",
+        "wrap",
+        "stretch",
+        "shrink",
+        "polyethylene",
+        "lldpe",
+        "mulch",
+        "vapor",
+        "vapour",
+        "cling",
+        "agricultural"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "id": "corrugated-paper-boxes",
+      "name": "Corrugated Paper Boxes",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Family overview",
+      "href": "paper-packaging.html#product-corrugated-paper-boxes",
+      "keywords": []
+    },
+    {
+      "id": "folding-paperboard-cartons",
+      "name": "Folding Paperboard Cartons",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Family overview",
+      "href": "paper-packaging.html#product-folding-paperboard-cartons",
+      "keywords": []
+    },
+    {
+      "id": "wide-base-paper-sacks",
+      "name": "Wide-Base Paper Sacks",
+      "categoryId": "paper",
+      "subcategory": "Paper sacks & bags",
+      "kind": "Product family",
+      "href": "paper-packaging.html#product-wide-base-paper-sacks",
+      "keywords": []
+    },
+    {
+      "id": "paper-packing-bags",
+      "name": "Paper Packing Bags",
+      "categoryId": "paper",
+      "subcategory": "Paper sacks & bags",
+      "kind": "Product family",
+      "href": "paper-packaging.html#product-paper-packing-bags",
+      "keywords": []
+    },
+    {
+      "id": "wooden-packing-crates",
+      "name": "Wooden Packing Crates",
+      "categoryId": "wood",
+      "subcategory": "Cases & crates",
+      "kind": "Product family",
+      "href": "wooden-shipping.html#product-wooden-packing-crates",
+      "keywords": []
+    },
+    {
+      "id": "wooden-pallets",
+      "name": "Wooden Pallets",
+      "categoryId": "wood",
+      "subcategory": "Pallets & load boards",
+      "kind": "Product family",
+      "href": "wooden-shipping.html#product-wooden-pallets",
+      "keywords": []
+    },
+    {
+      "id": "paper-packing-containers",
+      "name": "Paper Packing Containers",
+      "categoryId": "paper",
+      "subcategory": "Paper containers",
+      "kind": "Product family",
+      "href": "paper-packaging.html#product-paper-packing-containers",
+      "keywords": []
+    },
+    {
+      "id": "paper-file-boxes",
+      "name": "Paper File Boxes",
+      "categoryId": "paper",
+      "subcategory": "Document boxes",
+      "kind": "Product family",
+      "href": "paper-packaging.html#product-paper-file-boxes",
+      "keywords": []
+    },
+    {
+      "id": "wooden-cable-drums",
+      "name": "Wooden Cable Drums",
+      "categoryId": "wood",
+      "subcategory": "Cable drums",
+      "kind": "Product family",
+      "href": "wooden-shipping.html#product-wooden-cable-drums",
+      "keywords": []
+    },
+    {
+      "id": "wooden-box-pallets",
+      "name": "Wooden Box Pallets",
+      "categoryId": "wood",
+      "subcategory": "Pallets & load boards",
+      "kind": "Product family",
+      "href": "wooden-shipping.html#product-wooden-box-pallets",
+      "keywords": []
+    },
+    {
+      "id": "rsc-shipping-box",
+      "name": "Regular Slotted Shipping Boxes",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Corrugated-box style",
+      "href": "paper-packaging.html#product-rsc-shipping-box",
+      "keywords": []
+    },
+    {
+      "id": "die-cut-corrugated-mailer",
+      "name": "Die-Cut Mailer Boxes",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Corrugated-box style",
+      "href": "paper-packaging.html#product-die-cut-corrugated-mailer",
+      "keywords": []
+    },
+    {
+      "id": "full-telescope-corrugated-box",
+      "name": "Two-Piece Telescopic Boxes",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Corrugated-box style",
+      "href": "paper-packaging.html#product-full-telescope-corrugated-box",
+      "keywords": []
+    },
+    {
+      "id": "auto-lock-bottom-carton",
+      "name": "Auto-Lock Bottom Cartons",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Folding-carton style",
+      "href": "paper-packaging.html#product-auto-lock-bottom-carton",
+      "keywords": []
+    },
+    {
+      "id": "twisted-handle-kraft-bag",
+      "name": "Twisted-Handle Paper Bags",
+      "categoryId": "paper",
+      "subcategory": "Paper sacks & bags",
+      "kind": "Product style",
+      "href": "paper-packaging.html#product-twisted-handle-kraft-bag",
+      "keywords": []
+    },
+    {
+      "id": "pasted-valve-paper-sack",
+      "name": "Pasted-Valve Paper Sacks",
+      "categoryId": "paper",
+      "subcategory": "Paper sacks & bags",
+      "kind": "Product style",
+      "href": "paper-packaging.html#product-pasted-valve-paper-sack",
+      "keywords": []
+    },
+    {
+      "id": "clip-lock-plywood-case",
+      "name": "Clip-Lock Plywood Shipping Cases",
+      "categoryId": "wood",
+      "subcategory": "Cases & crates",
+      "kind": "Product style",
+      "href": "wooden-shipping.html#product-clip-lock-plywood-case",
+      "keywords": []
+    },
+    {
+      "id": "open-slatted-wooden-crate",
+      "name": "Open Slatted Wooden Crates",
+      "categoryId": "wood",
+      "subcategory": "Cases & crates",
+      "kind": "Product style",
+      "href": "wooden-shipping.html#product-open-slatted-wooden-crate",
+      "keywords": []
+    },
+    {
+      "id": "solid-board-wooden-case",
+      "name": "Solid-Board Wooden Shipping Cases",
+      "categoryId": "wood",
+      "subcategory": "Cases & crates",
+      "kind": "Product style",
+      "href": "wooden-shipping.html#product-solid-board-wooden-case",
+      "keywords": []
+    },
+    {
+      "id": "plywood-cable-reel",
+      "name": "Plywood Cable Reels",
+      "categoryId": "wood",
+      "subcategory": "Cable drums",
+      "kind": "Product style",
+      "href": "wooden-shipping.html#product-plywood-cable-reel",
+      "keywords": []
+    },
+    {
+      "id": "straight-tuck-end-carton",
+      "name": "Straight Tuck-End Cartons",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Folding-carton style",
+      "href": "paper-packaging.html#product-straight-tuck-end-carton",
+      "keywords": []
+    },
+    {
+      "id": "reverse-tuck-end-carton",
+      "name": "Reverse Tuck-End Cartons",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Folding-carton style",
+      "href": "paper-packaging.html#product-reverse-tuck-end-carton",
+      "keywords": []
+    },
+    {
+      "id": "snap-lock-bottom-carton",
+      "name": "Snap-Lock Bottom Cartons",
+      "categoryId": "paper",
+      "subcategory": "Boxes & cartons",
+      "kind": "Folding-carton style",
+      "href": "paper-packaging.html#product-snap-lock-bottom-carton",
+      "keywords": []
+    },
+    {
+      "id": "legacy-bopp-packaging-tape",
+      "name": "BOPP Packaging Tape",
+      "categoryId": "tapes",
+      "subcategory": "Box-sealing tape",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-bopp-packaging-tape",
+      "keywords": []
+    },
+    {
+      "id": "legacy-double-sided-acrylic-foam-tape",
+      "name": "Double-Sided Acrylic Foam Tape",
+      "categoryId": "tapes",
+      "subcategory": "Mounting tape",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-double-sided-acrylic-foam-tape",
+      "keywords": []
+    },
+    {
+      "id": "legacy-electrical-insulation-tape",
+      "name": "Electrical Insulation Tape",
+      "categoryId": "tapes",
+      "subcategory": "Electrical insulation",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-electrical-insulation-tape",
+      "keywords": []
+    },
+    {
+      "id": "legacy-masking-painter-s-tape",
+      "name": "Masking & Painter's Tape",
+      "categoryId": "tapes",
+      "subcategory": "Masking tape",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-masking-painter-s-tape",
+      "keywords": []
+    },
+    {
+      "id": "legacy-retail-barcode-price-labels",
+      "name": "Retail Barcode & Price Labels",
+      "categoryId": "tapes",
+      "subcategory": "Retail labels",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-retail-barcode-price-labels",
+      "keywords": []
+    },
+    {
+      "id": "legacy-die-cut-vinyl-stickers",
+      "name": "Die-Cut Vinyl Stickers",
+      "categoryId": "labels",
+      "subcategory": "Stickers & decals",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-die-cut-vinyl-stickers",
+      "keywords": []
+    },
+    {
+      "id": "legacy-vinyl-wrap-signage-film",
+      "name": "Vinyl Wrap & Signage Film",
+      "categoryId": "labels",
+      "subcategory": "Wrap & signage films",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-vinyl-wrap-signage-film",
+      "keywords": []
+    },
+    {
+      "id": "legacy-product-labels-roll-fed",
+      "name": "Product Labels (Roll-fed)",
+      "categoryId": "labels",
+      "subcategory": "Printed labels",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-product-labels-roll-fed",
+      "keywords": []
+    },
+    {
+      "id": "legacy-surface-protection-film",
+      "name": "Surface Protection Film",
+      "categoryId": "labels",
+      "subcategory": "Surface protection films",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-surface-protection-film",
+      "keywords": []
+    },
+    {
+      "id": "legacy-reflective-sheeting",
+      "name": "Reflective Sheeting",
+      "categoryId": "labels",
+      "subcategory": "Reflective sheeting",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-reflective-sheeting",
+      "keywords": []
+    },
+    {
+      "id": "legacy-pallet-stretch-wrap-lldpe",
+      "name": "Pallet Stretch Wrap (LLDPE)",
+      "categoryId": "films",
+      "subcategory": "Stretch wrap",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-pallet-stretch-wrap-lldpe",
+      "keywords": []
+    },
+    {
+      "id": "legacy-polyethylene-shrink-film",
+      "name": "Polyethylene Shrink Film",
+      "categoryId": "films",
+      "subcategory": "Shrink film",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-polyethylene-shrink-film",
+      "keywords": []
+    },
+    {
+      "id": "legacy-agricultural-mulch-film",
+      "name": "Agricultural Mulch Film",
+      "categoryId": "films",
+      "subcategory": "Agricultural film",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-agricultural-mulch-film",
+      "keywords": []
+    },
+    {
+      "id": "legacy-construction-vapor-barrier",
+      "name": "Construction Vapor Barrier",
+      "categoryId": "films",
+      "subcategory": "Construction film",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-construction-vapor-barrier",
+      "keywords": []
+    },
+    {
+      "id": "legacy-food-grade-cling-wrap",
+      "name": "Food-Grade Cling Wrap",
+      "categoryId": "films",
+      "subcategory": "Food wrapping film",
+      "kind": "Product type",
+      "href": "products.html#product-legacy-food-grade-cling-wrap",
+      "keywords": []
+    }
+  ]
+}

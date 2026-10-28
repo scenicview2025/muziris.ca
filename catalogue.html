@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product catalogue | MUZIRIS</title>
+<meta name="description" content="Explore MUZIRIS sourcing categories, find a product type and share your specifications for supplier review.">
+<link rel="stylesheet" href="assets/muziris-theme.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/catalogue-hub.css">
+<script src="assets/catalogue-hub.js" defer></script>
+<link rel="stylesheet" href="assets/uniform-navigation.css">
+<script src="assets/shared-sourcing.js" defer></script>
+<link rel="stylesheet" href="assets/rail-navigation.css">
+<script src="assets/rail-navigation.js" defer></script>
+<link rel="stylesheet" href="assets/catalogue-banner.css">
+<link rel="canonical" href="https://muziris.ca/catalogue.html">
+</head>
+<body class="uniform-site rail-site uniform-hub"><a class="unf-skip" href="#main">Skip to content</a><aside id="rail-sidebar" class="rail-sidebar" aria-label="Main navigation"><button id="rail-menu-toggle" class="rail-menu-toggle" type="button" aria-label="Open navigation" aria-controls="rail-menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><nav id="rail-links" class="rail-links" aria-label="Website sections"><a data-rail-section="products" href="catalogue.html">PRODUCTS</a><a data-rail-section="sourcing" href="index.html#sourcing">SOURCING</a><a data-rail-section="logistics" href="index.html#logistics">LOGISTICS</a></nav><a id="rail-brand" class="rail-brand" href="index.html" aria-label="MUZIRIS home">MUZIRIS</a></aside><header id="rail-mobile-header" class="rail-mobile-header"><a class="rail-mobile-brand" href="index.html">MUZIRIS</a><button id="rail-mobile-toggle" class="rail-mobile-toggle" type="button" aria-label="Open navigation" aria-controls="rail-menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></header><nav id="rail-topnav" class="rail-topnav" aria-label="Quick navigation"><a data-rail-section="products" href="catalogue.html">CATALOG <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14v11H5zM8 9V5h8v4M5 13h14M9 5V3h6v2"/></svg></a><a data-rail-section="services" href="index.html#services">ALL SERVICES <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V3m-7 7 7-7 7 7"/></svg></a><a data-rail-section="contact" href="index.html#contact"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="6" r="3"/><path d="M3 21v-5a6 6 0 0 1 12 0v5M6 21v-5m6 5v-5M18 9a3 3 0 1 0-1-5m1 8a5 5 0 0 1 4 5v4"/></svg> CONTACT US <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-7-7 7 7-7 7"/></svg></a></nav>
+
+
+<main id="main">
+ <section id="catalogue-banner" class="catalogue-banner" aria-labelledby="catalogue-title"><img class="catalogue-banner-image" src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&amp;w=1800&amp;auto=format&amp;fit=crop" alt="" aria-hidden="true" fetchpriority="high" width="1800" height="600"><div class="catalogue-banner-shade" aria-hidden="true"></div><div class="wrap catalogue-banner-content"><div class="catalogue-banner-meta"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><span>Catalogue</span></nav></div><h1 id="catalogue-title">Product <span>Catalogue</span></h1><p class="catalogue-banner-copy">Explore product types for your next sourcing enquiry.</p></div></section><div class="intro wrap catalogue-search-intro">
+  <div class="search-area">
+   <label for="catalogue-search" class="search-label">What are you looking to source?</label>
+   <div class="search-field"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg><input id="catalogue-search" type="search" autocomplete="off" maxlength="120" placeholder="Search boxes, tapes, pallets…" aria-controls="search-results category-grid" aria-describedby="result-status"><button id="search-clear" type="button" aria-label="Clear search" hidden>×</button><span class="search-hint" aria-hidden="true">Find a product or category</span></div>
+   <div class="search-examples"><span>Try a product:</span><button type="button" data-query="boxes">Boxes</button><button type="button" data-query="tape">Tape</button><button type="button" data-query="pallet">Pallets</button><button type="button" data-query="label">Labels</button></div>
+  </div>
+ </div>
+ <section class="directory" aria-labelledby="browse-heading">
+  <div class="wrap">
+   <div class="section-top"><div><p class="eyebrow section-eyebrow">THE CATALOGUE</p><h2 id="browse-heading">Browse by category</h2></div><p id="result-status" role="status" aria-live="polite">Loading categories…</p></div>
+   <div id="category-grid" class="category-grid"></div>
+   <section id="search-results" class="results-panel" aria-label="Search results" hidden><div id="category-suggestions" class="category-suggestions"></div><div id="product-results" class="product-results"></div></section>
+   <div id="empty-state" class="empty-state" hidden><span class="empty-icon" aria-hidden="true">↗</span><h3>Let’s start with your requirements.</h3><p>We haven’t listed a matching product type yet. Share what you need so we can review sourcing options with you.</p><button id="empty-sourcing" class="primary-button" type="button">Request custom sourcing <span aria-hidden="true">→</span></button><button class="text-button" id="empty-clear" type="button">Browse all categories</button></div>
+   <noscript><p>Enable JavaScript to search and browse the visual catalogue. You can also open <a href="paper-packaging.html">Paper Packaging</a>, <a href="wooden-shipping.html">Wooden Shipping Packaging</a> or <a href="products.html">Tapes, Labels &amp; Films</a>.</p></noscript>
+  </div>
+ </section>
+ <section class="how-it-works wrap" aria-labelledby="process-heading"><div class="process-intro"><p class="eyebrow">FROM PRODUCT TO ENQUIRY</p><h2 id="process-heading">Built around<br>your requirements.</h2></div><ol class="process-steps"><li><span class="step-number">01</span><div><h3>Choose a product type</h3><p>Start with a category or a style that fits your application.</p></div></li><li><span class="step-number">02</span><div><h3>Share the details</h3><p>Tell us about specifications, quantity and your Canadian delivery location.</p></div></li><li><span class="step-number">03</span><div><h3>Review supplier options</h3><p>Confirm the suitable construction and quotation scope for your order.</p></div></li></ol></section>
+ <section class="help-strip"><div class="wrap help-inner"><div><p class="eyebrow">A DIFFERENT PRODUCT IN MIND?</p><h2>Your search doesn’t have to end here.</h2><p>Share a product name, reference link or specification for a sourcing review.</p></div><button class="light-button" type="button" data-open-sourcing>Request custom sourcing <span aria-hidden="true">↗</span></button></div></section>
+</main>
+
+
+<footer id="uniform-footer" class="unf-footer"><div class="unf-footer-inner"><div><a class="unf-footer-brand" href="index.html">MUZIRIS</a><p>Canada-based sourcing · Connected with India</p></div><nav aria-label="Footer navigation"><a href="index.html">Home</a><a href="catalogue.html">Catalogue</a><a href="index.html#services">Sourcing &amp; logistics</a><a href="index.html#contact">Contact</a></nav></div></footer><dialog id="sourcing-dialog" aria-labelledby="source-title" aria-describedby="source-intro">
+ <div class="dialog-card">
+  <header class="dialog-header"><div><p class="eyebrow">CUSTOM SOURCING</p><h2 id="source-title">Tell us what you need.</h2></div><button id="sourcing-close" class="close-button" type="button" aria-label="Close sourcing request">×</button></header>
+  <p id="source-intro">A product name or a reference is enough to start. Add any specifications you already know.</p>
+  <p class="sourcing-notice">Share your requirements and contact details for a supplier sourcing review.</p>
+  <form id="custom-source-form">
+   <label for="source-product">Product or application <span aria-hidden="true">*</span></label><input id="source-product" name="product" required maxlength="160" placeholder="What would you like to source?">
+   <div class="field-grid"><div><label for="source-quantity">Approximate quantity</label><input id="source-quantity" name="quantity" maxlength="120" placeholder="e.g. 500 units"></div><div><label for="source-location">Canadian delivery location</label><input id="source-location" name="location" maxlength="160" placeholder="City or postal code"></div></div>
+   <label for="source-reference">Reference link <span class="optional">(optional)</span></label><input id="source-reference" name="reference" type="url" maxlength="1000" placeholder="https://">
+   <label for="source-details">Requirements <span class="optional">(optional)</span></label><textarea id="source-details" name="details" rows="3" maxlength="2500" placeholder="Dimensions, material, intended use, printing or anything you need help choosing."></textarea>
+   <div class="contact-fields"><div class="field-grid"><div><label for="source-name">Your name *</label><input id="source-name" name="name" autocomplete="name" required maxlength="160"></div><div><label for="source-email">Email *</label><input id="source-email" name="email" type="email" autocomplete="email" required maxlength="254"></div></div><div class="field-grid"><div><label for="source-company">Company (optional)</label><input id="source-company" name="company" autocomplete="organization" maxlength="160"></div><div><label for="source-phone">Phone (optional)</label><input id="source-phone" name="phone" type="tel" autocomplete="tel" maxlength="80"></div></div></div><button class="primary-button form-submit" type="submit">Send sourcing enquiry <span aria-hidden="true">→</span></button>
+  </form>
+  <div id="source-preview" class="source-preview" role="status" hidden></div>
+ </div>
+</dialog><dialog id="rail-menu" class="rail-menu" aria-label="Website navigation"><div class="rail-menu-panel"><div class="rail-menu-heading"><a class="rail-menu-word" href="index.html">MUZIRIS</a><button id="rail-menu-close" class="rail-menu-close" type="button" aria-label="Close navigation">×</button></div><nav id="rail-menu-links" class="rail-menu-links" aria-label="Expanded navigation"><a data-rail-section="home" href="index.html">HOME</a><a data-rail-section="products" href="catalogue.html">CATALOG</a><a data-rail-section="sourcing" href="index.html#sourcing">SOURCING</a><a data-rail-section="logistics" href="index.html#logistics">LOGISTICS</a><a data-rail-section="contact" href="index.html#contact">CONTACT US</a></nav><details class="rail-menu-categories"><summary>Browse categories</summary><nav id="rail-menu-categories" aria-label="Catalogue categories"><a href="paper-packaging.html">Paper Packaging</a><a href="wooden-shipping.html">Wooden Shipping Packaging</a><a href="products.html#catalog-category-0">Adhesive Tapes &amp; Rolls</a><a href="products.html#catalog-category-1">Labels &amp; Signage</a><a href="products.html#catalog-category-2">Films &amp; Sheets</a></nav></details><button id="rail-request-sourcing" class="rail-request" type="button">Request custom sourcing <span aria-hidden="true">↗</span></button></div></dialog></body>
+</html>
