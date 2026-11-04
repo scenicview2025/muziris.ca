@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03",
+  "updated": "2026-11-04",
   "scope": "Catalogue product families and styles for sourcing enquiries; not an inventory statement",
   "categories": [
     {
@@ -28,12 +28,16 @@
           "href": "paper-packaging.html#catalog-category-0"
         },
         {
-          "label": "Sacks & bags",
+          "label": "Paper sacks & bags",
           "href": "paper-packaging.html#catalog-category-1"
         },
         {
           "label": "Paper containers",
           "href": "paper-packaging.html#catalog-category-2"
+        },
+        {
+          "label": "Document boxes",
+          "href": "paper-packaging.html#catalog-category-3"
         },
         {
           "label": "Paper food-serviceware",
@@ -137,8 +141,16 @@
           "href": "products.html#product-legacy-double-sided-acrylic-foam-tape"
         },
         {
+          "label": "Electrical insulation",
+          "href": "products.html#product-legacy-electrical-insulation-tape"
+        },
+        {
           "label": "Masking tape",
           "href": "products.html#product-legacy-masking-painter-s-tape"
+        },
+        {
+          "label": "Retail labels",
+          "href": "products.html#product-legacy-retail-barcode-price-labels"
         }
       ],
       "keywords": [
@@ -179,12 +191,20 @@
           "href": "products.html#product-legacy-die-cut-vinyl-stickers"
         },
         {
+          "label": "Wrap & signage films",
+          "href": "products.html#product-legacy-vinyl-wrap-signage-film"
+        },
+        {
           "label": "Printed labels",
           "href": "products.html#product-legacy-product-labels-roll-fed"
         },
         {
-          "label": "Protection films",
+          "label": "Surface protection films",
           "href": "products.html#product-legacy-surface-protection-film"
+        },
+        {
+          "label": "Reflective sheeting",
+          "href": "products.html#product-legacy-reflective-sheeting"
         }
       ],
       "keywords": [
@@ -229,8 +249,16 @@
           "href": "products.html#product-legacy-polyethylene-shrink-film"
         },
         {
+          "label": "Agricultural film",
+          "href": "products.html#product-legacy-agricultural-mulch-film"
+        },
+        {
           "label": "Construction film",
           "href": "products.html#product-legacy-construction-vapor-barrier"
+        },
+        {
+          "label": "Food wrapping film",
+          "href": "products.html#product-legacy-food-grade-cling-wrap"
         }
       ],
       "keywords": [
