@@ -42,7 +42,7 @@
  }
  function safeHref(value){
   const url=new URL(value,location.href);
-  if(url.origin!==location.origin||!/(?:products|paper-packaging|wooden-shipping)\.html$/.test(url.pathname)||url.search)throw new Error('Invalid category link');
+  if(url.origin!==location.origin||!/(?:products|paper-packaging|wooden-shipping|industrial-bags)\.html$/.test(url.pathname)||url.search)throw new Error('Invalid category link');
   if(url.hash&&!/^#(?:catalog-category-\d+|product-[a-z0-9-]+)$/.test(url.hash))throw new Error('Invalid subcategory anchor');
   return url.pathname.split('/').pop()+url.hash;
  }

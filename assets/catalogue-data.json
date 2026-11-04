@@ -275,6 +275,52 @@
         "cling",
         "agricultural"
       ]
+    },
+    {
+      "id": "industrial-bags",
+      "title": "Industrial Bags & Sacks",
+      "eyebrow": "BULK BAGS, WOVEN SACKS & PACKING POUCHES",
+      "description": "Bag and sack formats for bulk handling and smaller packing needs. Review the application, construction and supplier specification for your enquiry.",
+      "href": "industrial-bags.html",
+      "images": [
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1793807961/muziris/products/u-panel-fibc-bulk-bags-representative-20261104-v1.png",
+          "alt": "U-Panel FIBC Bulk Bags"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1793807956/muziris/products/jute-hessian-packing-sacks-representative-20261104-v1.png",
+          "alt": "Jute / Hessian Packing Sacks"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh6lyhlki/image/upload/v1793807969/muziris/products/cotton-drawstring-packing-bags-representative-20261104-v1.png",
+          "alt": "Cotton Drawstring Packing Bags"
+        }
+      ],
+      "subcategories": [
+        {
+          "label": "Flexible bulk containers",
+          "href": "industrial-bags.html#catalog-category-0"
+        },
+        {
+          "label": "Woven polypropylene sacks",
+          "href": "industrial-bags.html#catalog-category-1"
+        },
+        {
+          "label": "Natural-fibre packing bags",
+          "href": "industrial-bags.html#catalog-category-2"
+        }
+      ],
+      "keywords": [
+        "bulk bags",
+        "jumbo bags",
+        "fibc",
+        "woven pp sacks",
+        "jute",
+        "hessian",
+        "cotton",
+        "drawstring",
+        "pouch"
+      ]
     }
   ],
   "entries": [
@@ -690,6 +736,107 @@
       "keywords": [
         "Product CAD/dimensions, mass, accessories and sensitive surfaces",
         "Existing outer-pack internal dimensions and shipping route"
+      ]
+    },
+    {
+      "id": "u-panel-fibc-bulk-bags",
+      "name": "U-Panel FIBC Bulk Bags",
+      "categoryId": "industrial-bags",
+      "subcategory": "Flexible bulk containers",
+      "kind": "Body construction",
+      "href": "industrial-bags.html#product-u-panel-fibc-bulk-bags",
+      "keywords": [
+        "u",
+        "panel",
+        "fibc",
+        "bulk",
+        "bags",
+        "Bulk grains, minerals and construction materials.",
+        "bulk bags",
+        "jumbo bags",
+        "FIBC"
+      ]
+    },
+    {
+      "id": "baffled-fibc-bulk-bags",
+      "name": "Baffled FIBC Bulk Bags",
+      "categoryId": "industrial-bags",
+      "subcategory": "Flexible bulk containers",
+      "kind": "Construction feature",
+      "href": "industrial-bags.html#product-baffled-fibc-bulk-bags",
+      "keywords": [
+        "baffled",
+        "fibc",
+        "bulk",
+        "bags",
+        "Bulk packing where the filled footprint and shape matter.",
+        "bulk bags",
+        "jumbo bags",
+        "FIBC"
+      ]
+    },
+    {
+      "id": "ventilated-fibc-bulk-bags",
+      "name": "Ventilated FIBC Bulk Bags",
+      "categoryId": "industrial-bags",
+      "subcategory": "Flexible bulk containers",
+      "kind": "Construction feature",
+      "href": "industrial-bags.html#product-ventilated-fibc-bulk-bags",
+      "keywords": [
+        "ventilated",
+        "fibc",
+        "bulk",
+        "bags",
+        "Produce such as potatoes and onions where airflow is needed.",
+        "bulk bags",
+        "jumbo bags",
+        "FIBC"
+      ]
+    },
+    {
+      "id": "open-mouth-woven-pp-sacks",
+      "name": "Open-Mouth Woven PP Sacks",
+      "categoryId": "industrial-bags",
+      "subcategory": "Woven polypropylene sacks",
+      "kind": "Product type",
+      "href": "industrial-bags.html#product-open-mouth-woven-pp-sacks",
+      "keywords": [
+        "open",
+        "mouth",
+        "woven",
+        "pp",
+        "sacks",
+        "Grains, fertiliser, sand and other packed materials."
+      ]
+    },
+    {
+      "id": "jute-hessian-packing-sacks",
+      "name": "Jute / Hessian Packing Sacks",
+      "categoryId": "industrial-bags",
+      "subcategory": "Natural-fibre packing bags",
+      "kind": "Product type",
+      "href": "industrial-bags.html#product-jute-hessian-packing-sacks",
+      "keywords": [
+        "jute",
+        "hessian",
+        "packing",
+        "sacks",
+        "Coffee, cocoa and similar agricultural goods."
+      ]
+    },
+    {
+      "id": "cotton-drawstring-packing-bags",
+      "name": "Cotton Drawstring Packing Bags",
+      "categoryId": "industrial-bags",
+      "subcategory": "Natural-fibre packing bags",
+      "kind": "Product type",
+      "href": "industrial-bags.html#product-cotton-drawstring-packing-bags",
+      "keywords": [
+        "cotton",
+        "drawstring",
+        "packing",
+        "bags",
+        "Jewellery, gifts and small product packaging."
       ]
     }
   ]

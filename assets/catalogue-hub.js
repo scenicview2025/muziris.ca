@@ -7,7 +7,7 @@
  const arrow=()=>{const el=document.createElement('span');el.textContent='→';el.setAttribute('aria-hidden','true');return el;};
  function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;}
  function link(text,href,className){const a=el('a',className,text);a.href=safeHref(href);return a;}
- function safeHref(href){const u=new URL(href,location.href);if(u.origin!==location.origin||!/(?:products|paper-packaging|wooden-shipping)\.html$/.test(u.pathname))throw new Error('Invalid catalogue link');return u.pathname.split('/').pop()+u.search+u.hash;}
+ function safeHref(href){const u=new URL(href,location.href);if(u.origin!==location.origin||!/(?:products|paper-packaging|wooden-shipping|industrial-bags)\.html$/.test(u.pathname))throw new Error('Invalid catalogue link');return u.pathname.split('/').pop()+u.search+u.hash;}
  function imageUrl(url){if(!url.startsWith('https://res.cloudinary.com/dh6lyhlki/image/upload/'))throw new Error('Invalid catalogue image');return url.replace('/image/upload/','/image/upload/f_auto,q_auto,w_540,c_limit/');}
  function openSourcing(prefill,source){window.MuzirisSourcing.open(prefill,source);}
  $('empty-sourcing').addEventListener('click',event=>openSourcing(input.value.trim(),event.currentTarget));
