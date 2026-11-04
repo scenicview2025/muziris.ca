@@ -1,12 +1,12 @@
 {
-  "updated": "2026-10-27",
+  "updated": "2026-11-03",
   "scope": "Catalogue product families and styles for sourcing enquiries; not an inventory statement",
   "categories": [
     {
       "id": "paper",
       "title": "Paper Packaging",
-      "eyebrow": "BOXES, CARTONS, SACKS & BAGS",
-      "description": "Paper-based formats for packing, presenting and protecting your products.",
+      "eyebrow": "BOXES, BAGS, FOOD SERVICE & MOULDED PULP",
+      "description": "Paper-based formats for packing, food service and product protection, reviewed around your requirements.",
       "href": "paper-packaging.html",
       "images": [
         {
@@ -34,6 +34,14 @@
         {
           "label": "Paper containers",
           "href": "paper-packaging.html#catalog-category-2"
+        },
+        {
+          "label": "Paper food-serviceware",
+          "href": "paper-packaging.html#catalog-category-4"
+        },
+        {
+          "label": "Moulded-pulp packaging",
+          "href": "paper-packaging.html#catalog-category-5"
         }
       ],
       "keywords": [
@@ -43,7 +51,14 @@
         "boxes",
         "valve sacks",
         "file boxes",
-        "documents"
+        "documents",
+        "paper cup",
+        "paperboard plate",
+        "food tray",
+        "moulded pulp",
+        "egg tray",
+        "cup carrier",
+        "protective insert"
       ]
     },
     {
@@ -576,6 +591,78 @@
       "kind": "Product type",
       "href": "products.html#product-legacy-food-grade-cling-wrap",
       "keywords": []
+    },
+    {
+      "id": "single-wall-paper-hot-cups",
+      "name": "Single-Wall Paper Hot Cups",
+      "categoryId": "paper",
+      "subcategory": "Paper food-serviceware",
+      "kind": "Product type",
+      "href": "paper-packaging.html#product-single-wall-paper-hot-cups",
+      "keywords": [
+        "Capacity and brimful/working volume",
+        "Rim and base diameters; height; lid fit"
+      ]
+    },
+    {
+      "id": "paperboard-plates",
+      "name": "Paperboard Plates",
+      "categoryId": "paper",
+      "subcategory": "Paper food-serviceware",
+      "kind": "Product type",
+      "href": "paper-packaging.html#product-paperboard-plates",
+      "keywords": [
+        "Diameter, usable base and rim dimensions",
+        "Board thickness/grammage and forming construction"
+      ]
+    },
+    {
+      "id": "open-paperboard-food-trays",
+      "name": "Open Paperboard Food Trays",
+      "categoryId": "paper",
+      "subcategory": "Paper food-serviceware",
+      "kind": "Product type",
+      "href": "paper-packaging.html#product-open-paperboard-food-trays",
+      "keywords": [
+        "Internal/external length, width, depth and rim",
+        "Formed-paperboard construction and material specification"
+      ]
+    },
+    {
+      "id": "moulded-pulp-egg-trays",
+      "name": "Moulded-Pulp Egg Trays",
+      "categoryId": "paper",
+      "subcategory": "Moulded-pulp packaging",
+      "kind": "Product type",
+      "href": "paper-packaging.html#product-moulded-pulp-egg-trays",
+      "keywords": [
+        "Egg size/weight band and pocket count",
+        "Tray footprint, pocket depth and stacking arrangement"
+      ]
+    },
+    {
+      "id": "moulded-pulp-cup-carriers",
+      "name": "Moulded-Pulp Cup Carriers",
+      "categoryId": "paper",
+      "subcategory": "Moulded-pulp packaging",
+      "kind": "Product type",
+      "href": "paper-packaging.html#product-moulded-pulp-cup-carriers",
+      "keywords": [
+        "Cup base/body dimensions, height and filled weight",
+        "Number of positions and any separable construction"
+      ]
+    },
+    {
+      "id": "moulded-pulp-protective-inserts",
+      "name": "Moulded-Pulp Protective Inserts",
+      "categoryId": "paper",
+      "subcategory": "Moulded-pulp packaging",
+      "kind": "Product type",
+      "href": "paper-packaging.html#product-moulded-pulp-protective-inserts",
+      "keywords": [
+        "Product CAD/dimensions, mass, accessories and sensitive surfaces",
+        "Existing outer-pack internal dimensions and shipping route"
+      ]
     }
   ]
 }
